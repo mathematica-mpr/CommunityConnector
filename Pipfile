@@ -13,6 +13,8 @@ requests = "*"
 urllib2 = "*"
 xlrd = "*"
 pandas = "*"
+selenium = "*"
+regex = "*"
 
 [requires]
 python_version = "3.7"
