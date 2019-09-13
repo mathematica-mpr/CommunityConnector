@@ -1,2 +1,7 @@
 
 output/
+.ipynb_checkpoints/
+codes/chromedriver.exe
+codes/geckodriver.log
+codes/.ipynb_checkpoints/
+
