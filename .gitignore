@@ -1,7 +1,7 @@
 
 output/
 .ipynb_checkpoints/
-codes/chromedriver.exe
+codes/02_SDoH/chromedriver.exe
 codes/geckodriver.log
 codes/.ipynb_checkpoints/
 
