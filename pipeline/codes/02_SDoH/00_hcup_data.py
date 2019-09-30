@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 options = Options()
 # options.add_argument('--headless')
@@ -25,7 +26,7 @@ website = "https://hcupnet.ahrq.gov"
 
 # Selections for pulling data from the portal
 selections_list = [['DP','Major Diagnostic Categories (MDC)', '11 Diseases & Disorders Of The Kidney & Urinary Tract']]
-msdrg_selections = ['8 Simultaneous pancreas/kidney trasnplant',
+msdrg_selections = ['8 Simultaneous pancreas/kidney transplant',
                     '619 O.R. procedures for obesity w mcc',
                     '620 O.R. procedures for obesity w cc',
                     '652 Kidney transplant',
@@ -59,7 +60,7 @@ def connect(website, timeout):
     """
     # For this to work, need to move chromedriver.exe to python Scripts/ folder
     # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
-    driver = webdriver.Chrome(chrome_options=options)
+    driver = webdriver.Chrome(options=options)
     driver.set_page_load_timeout(timeout)
     driver.delete_all_cookies()
     driver.get(website)
@@ -123,8 +124,21 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     if analysis_selection == "DP":
         click_button(driver, "ID", "question-6")
         click_button(driver, "text", classifier_selection)
-        click_button(driver, "class", "bs-placeholder")
-        click_button(driver, "text", diagnosis_selection)
+        click_button(driver, "class", "bs-placeholder", 15)
+
+        if classifier_selection == "Medicare-Severity Diagnosis Related Groups (MS-DRG)":
+            time.sleep(3)
+            # search = driver.find_element_by_class_name("bs-searchbox")
+            # search = driver.find_element_by_class_name("form-control")
+            # search = driver.find_element_by_id("search-control") # element not interactible
+            search = driver.find_element_by_class_name("task-modal") # this might work??
+            time.sleep(10)
+            search = driver.find_element_by_xpath("/html/body/div[6]/div/div/input")
+            # search = driver.find_element_by_class_name()
+            search.send_keys(diagnosis_selection)
+            search.send_keys(Keys.RETURN)
+        else:
+            click_button(driver, "text", diagnosis_selection)
 
     # If Quality Indicators --> Preventative/Pediatric --> Composite/Acute/Diabetes
     # If All Stays --> Create Analysis
@@ -132,13 +146,17 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
         pass
 
     click_button(driver, "class", "btn-block")
-    click_button(driver, "ID", "accept-dua")
 
-    # Downloading CSV requires more than the standard click_button
-    placeholder = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "file-text-o")))
-    placeholder = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "file-text-o")))
+    # Accepting & downloading CSV requires more than the standard click_button
     time.sleep(10)
-    csv = driver.find_element_by_class_name("file-text-o")
+    click_button(driver, "ID", "accept-dua")
+    # sometimes file-text-o works...
+    # csv_class = "file-text-o"
+    csv_class = "export-csv"
+    placeholder = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, csv_class)))
+    placeholder = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, csv_class)))
+    time.sleep(30)
+    csv = driver.find_element_by_class_name(csv_class)
     csv.click()
     
     # This file ends up in Downloads. Export the most recent Download to our data folder
@@ -166,9 +184,9 @@ if __name__ == "__main__":
 
     # Note: this is much faster at work than at home. At home, may need to adjust the threshold or try on wired connection
     # At work, 10 minute (600) threshold is more than enough
-    print('connecting')
-    connect(website, 600)
-    print('done connecting')
+    # print('connecting')
+    # connect(website, 600)
+    # print('done connecting')
 
     num = 0
     for parameters in selections_list:
