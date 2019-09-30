@@ -66,11 +66,12 @@ def connect(website, timeout):
     driver.get(website)
     driver.quit()
 
-def click_button(element_type, element_name, time_to_wait):
+def click_button(driver, element_type, element_name, time_to_wait = 10):
     """
     Wait for element to be clickable, then find and click on the element
 
     Args: 
+        driver
         element_type (string)
         element_name (string)
         time_to_wait (integer)
@@ -87,6 +88,8 @@ def click_button(element_type, element_name, time_to_wait):
         placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.LINK_TEXT, element_name)))
         button = driver.find_element_by_link_text(element_name)
     button.click()
+
+    # return driver
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 
@@ -108,79 +111,31 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     driver.delete_all_cookies()
     driver.get(website)
     
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "create-analysis")))
-    create_analysis = driver.find_element_by_class_name("create-analysis")
-    create_analysis.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "DS_COMM")))
-    community = driver.find_element_by_id("DS_COMM")
-    community.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "YEAR_SINGLE")))
-    single_year = driver.find_element_by_id("YEAR_SINGLE")
-    single_year.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "dropdown-toggle")))
-    year = driver.find_element_by_class_name("dropdown-toggle")
-    year.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, "2016")))
-    latest_year = driver.find_element_by_link_text("2016")
-    latest_year.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "bs-placeholder")))
-    area = driver.find_element_by_class_name("bs-placeholder")
-    area.click()
-
-    # could do other states here if necessary
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, state)))
-    state = driver.find_element_by_link_text(state)
-    state.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "CL_COUNTY")))
-    counties = driver.find_element_by_id("CL_COUNTY")
-    counties.click()
-
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, analysis_selection)))
-    analysis = driver.find_element_by_id(analysis_selection)
-    analysis.click()
+    click_button(driver, "class", "create-analysis")
+    click_button(driver, "ID", "DS_COMM")
+    click_button(driver, "ID", "YEAR_SINGLE")
+    click_button(driver, "class", "dropdown-toggle")
+    click_button(driver, "text", "2016")
+    click_button(driver, "class", "bs-placeholder")
+    click_button(driver, "text", state)
+    click_button(driver, "ID", "CL_COUNTY")
+    click_button(driver, "ID", analysis_selection)
 
     if analysis_selection == "DP":
-        # I swear this first one used to work
-        # classify = driver.find_element_by_class_name("bs-placeholder")
-        # classify = driver.find_element_by_class_name("filter-option pull-left")
-        # classify = driver.find_element_by_link_text("Choose a Classification")
-        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "question-6")))
-        classify = driver.find_element_by_id("question-6")
-        classify.click()
+        click_button(driver, "ID", "question-6")
+        click_button(driver, "text", classifier_selection)
+        click_button(driver, "class", "bs-placeholder")
+        click_button(driver, "text", diagnosis_selection)
 
-        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, classifier_selection)))
-        classifier = driver.find_element_by_link_text(classifier_selection)
-        classifier.click()
-
-        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "bs-placeholder")))
-        diagnosis = driver.find_element_by_class_name("bs-placeholder")
-        diagnosis.click()
-
-        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, diagnosis_selection)))
-        diagnosis_selection = driver.find_element_by_link_text(diagnosis_selection)
-        diagnosis_selection.click()
     # If Quality Indicators --> Preventative/Pediatric --> Composite/Acute/Diabetes
     # If All Stays --> Create Analysis
     else:
         pass
 
-    # placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "create-analysis")))
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-block")))
-    analysis = driver.find_element_by_class_name("btn-block")
-    analysis.click()
+    click_button(driver, "class", "btn-block")
+    click_button(driver, "ID", "accept-dua")
 
-    # For some reason, accepting DUA and downloading CSV needs time.sleep
-    # time.sleep(8)
-    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "accept-dua")))
-    agree = driver.find_element_by_id("accept-dua")
-    agree.click()
-
+    # Downloading CSV requires more than the standard click_button
     placeholder = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "file-text-o")))
     placeholder = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "file-text-o")))
     time.sleep(10)
@@ -210,6 +165,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
 if __name__ == "__main__":
 
     # Note: this is much faster at work than at home. At home, may need to adjust the threshold or try on wired connection
+    # At work, 10 minute (600) threshold is more than enough
     print('connecting')
     connect(website, 600)
     print('done connecting')
