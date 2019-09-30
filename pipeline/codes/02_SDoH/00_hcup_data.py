@@ -1,11 +1,7 @@
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), '../../AHRQ/CommunityConnector/pipeline/codes/02_SDoH'))
-	print(os.getcwd())
-except:
-	pass
-
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 options = Options()
@@ -16,6 +12,7 @@ options.add_argument("--proxy-bypass-list=*")
 options.add_argument('--blink-settings=imagesEnabled=false')
 
 import time
+import os
 from os import listdir
 import regex as re
 from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
@@ -26,7 +23,7 @@ n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//02_SDoH/HCUP'
 state = "Colorado"
 website = "https://hcupnet.ahrq.gov"
 
-# # Selections for pulling data from the portal
+# Selections for pulling data from the portal
 selections_list = [['DP','Major Diagnostic Categories (MDC)', '11 Diseases & Disorders Of The Kidney & Urinary Tract']]
 msdrg_selections = ['8 Simultaneous pancreas/kidney trasnplant',
                     '619 O.R. procedures for obesity w mcc',
@@ -52,8 +49,15 @@ drg = [["DP", "Medicare-Severity Diagnosis Related Groups (MS-DRG)", drg] for dr
 selections_list.extend(drg)
 print(selections_list)
 
-# test connection
 def connect(website, timeout):
+    """
+    This function can be used to test the connection to the website. If it doesn't connect within timout seconds, the code will error out
+
+    Args:   
+        website (string): name of website to access
+        timeout (integer): seconds to wait before page times out
+
+    """
     # For this to work, need to move chromedriver.exe to python Scripts/ folder
     # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
     driver = webdriver.Chrome(chrome_options=options)
@@ -62,12 +66,27 @@ def connect(website, timeout):
     driver.get(website)
     driver.quit()
 
-# Note: this is much faster at work than at home. May need to adjust the threshold at home or try on wired connection
-print('connecting')
-connect(website, 600)
-print('done connecting')
-#TODO: if selenium ends up working, use these sources to wait until page loads:
-#https://stackoverflow.com/questions/17462884/is-selenium-slow-or-is-my-code-wrong
+def click_button(element_type, element_name, time_to_wait):
+    """
+    Wait for element to be clickable, then find and click on the element
+
+    Args: 
+        element_type (string)
+        element_name (string)
+        time_to_wait (integer)
+
+    """
+
+    if element_type == "class":
+        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.CLASS_NAME, element_name)))
+        button = driver.find_element_by_class_name(element_name)
+    elif element_type == "ID":
+        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.ID, element_name)))
+        button = driver.find_element_by_id(element_name)
+    elif element_type == "text":
+        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.LINK_TEXT, element_name)))
+        button = driver.find_element_by_link_text(element_name)
+    button.click()
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 
@@ -79,6 +98,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
         analysis_selection (string)
         classifier_selection (string)
         diagnosis_selection (string)
+        num (integer): query number for exporting and saving data
         
     Returns:
         
@@ -87,62 +107,85 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     driver = webdriver.Chrome(chrome_options=options)
     driver.delete_all_cookies()
     driver.get(website)
-    time.sleep(4)
     
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "create-analysis")))
     create_analysis = driver.find_element_by_class_name("create-analysis")
     create_analysis.click()
-    time.sleep(2)
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "DS_COMM")))
     community = driver.find_element_by_id("DS_COMM")
     community.click()
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "YEAR_SINGLE")))
     single_year = driver.find_element_by_id("YEAR_SINGLE")
     single_year.click()
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "dropdown-toggle")))
     year = driver.find_element_by_class_name("dropdown-toggle")
     year.click()
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, "2016")))
     latest_year = driver.find_element_by_link_text("2016")
     latest_year.click()
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "bs-placeholder")))
     area = driver.find_element_by_class_name("bs-placeholder")
     area.click()
 
     # could do other states here if necessary
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, state)))
     state = driver.find_element_by_link_text(state)
     state.click()
+
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "CL_COUNTY")))
     counties = driver.find_element_by_id("CL_COUNTY")
     counties.click()
 
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, analysis_selection)))
     analysis = driver.find_element_by_id(analysis_selection)
     analysis.click()
-    time.sleep(1)
 
     if analysis_selection == "DP":
         # I swear this first one used to work
         # classify = driver.find_element_by_class_name("bs-placeholder")
         # classify = driver.find_element_by_class_name("filter-option pull-left")
         # classify = driver.find_element_by_link_text("Choose a Classification")
+        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "question-6")))
         classify = driver.find_element_by_id("question-6")
         classify.click()
+
+        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, classifier_selection)))
         classifier = driver.find_element_by_link_text(classifier_selection)
         classifier.click()
-        time.sleep(2)
+
+        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "bs-placeholder")))
         diagnosis = driver.find_element_by_class_name("bs-placeholder")
         diagnosis.click()
+
+        placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.LINK_TEXT, diagnosis_selection)))
         diagnosis_selection = driver.find_element_by_link_text(diagnosis_selection)
         diagnosis_selection.click()
-
     # If Quality Indicators --> Preventative/Pediatric --> Composite/Acute/Diabetes
     # If All Stays --> Create Analysis
     else:
         pass
+
+    # placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "create-analysis")))
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CLASS_NAME, "btn-block")))
     analysis = driver.find_element_by_class_name("btn-block")
     analysis.click()
-    time.sleep(1)
+
+    # For some reason, accepting DUA and downloading CSV needs time.sleep
+    # time.sleep(8)
+    placeholder = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "accept-dua")))
     agree = driver.find_element_by_id("accept-dua")
     agree.click()
-    time.sleep(2)
-    # I swear this also used to work
-    time.sleep(5)
+
+    placeholder = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CLASS_NAME, "file-text-o")))
+    placeholder = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.CLASS_NAME, "file-text-o")))
+    time.sleep(10)
     csv = driver.find_element_by_class_name("file-text-o")
     csv.click()
-    time.sleep(1)
     
     # This file ends up in Downloads. Export the most recent Download to our data folder
     files = listdir(dirpath)
@@ -162,10 +205,17 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
             count += 1
 
     shutil.move(dirpath + filename, os.path.join(n_drive, f"HCUP_{num}.csv"))
+    driver.quit()
 
 if __name__ == "__main__":
+
+    # Note: this is much faster at work than at home. At home, may need to adjust the threshold or try on wired connection
+    print('connecting')
+    connect(website, 600)
+    print('done connecting')
+
     num = 0
-    for parameters in selections_list[:1]:
+    for parameters in selections_list:
         print(parameters)   
         hcup_pull(state, parameters[0], parameters[1], parameters[2], num)
         num += 1
