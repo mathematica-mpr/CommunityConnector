@@ -43,11 +43,10 @@ msdrg_selections = ['8 Simultaneous pancreas/kidney trasnplant',
                     '695 Kidney & urinary tract signs & symptoms w mcc',
                     '696 Kidney & urinary tract signs & symptoms w/o mcc'
                    ]
-
 drg = [["DP", "Medicare-Severity Diagnosis Related Groups (MS-DRG)", drg] for drg in msdrg_selections]
-
 selections_list.extend(drg)
 print(selections_list)
+
 
 def connect(website, timeout):
     """
@@ -65,6 +64,7 @@ def connect(website, timeout):
     driver.delete_all_cookies()
     driver.get(website)
     driver.quit()
+
 
 def click_button(driver, element_type, element_name, time_to_wait = 10):
     """
@@ -89,7 +89,6 @@ def click_button(driver, element_type, element_name, time_to_wait = 10):
         button = driver.find_element_by_link_text(element_name)
     button.click()
 
-    # return driver
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 
@@ -148,19 +147,20 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
     entries = ((os.stat(path), path) for path in entries)
     # leave only regular files, insert creation date
-
     #NOTE: on Windows `ST_CTIME` is a creation date 
     #NOTE: use `ST_MTIME` to sort by a modification date
     entries = ((stat[ST_MTIME], path)
                for stat, path in entries if S_ISREG(stat[ST_MODE]))
     count = 0
     for cdate, path in sorted(entries, reverse=True):
+        # keep only the first, most recent file name
         while count == 0:
             filename = os.path.basename(path)
             count += 1
 
     shutil.move(dirpath + filename, os.path.join(n_drive, f"HCUP_{num}.csv"))
     driver.quit()
+
 
 if __name__ == "__main__":
 
