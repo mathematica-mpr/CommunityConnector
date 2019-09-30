@@ -6,6 +6,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 options = Options()
+# TODO: switch to headless & decrease time.sleeps?
 # options.add_argument('--headless')
 # options to try to improve performance
 options.add_argument("--proxy-server='direct://'")
@@ -32,7 +33,7 @@ msdrg_selections = ['8 Simultaneous pancreas/kidney transplant',
                     '652 Kidney transplant',
                     '656 Kidney & ureter procedures for neoplasm w mcc',
                     '657 Kidney & ureter procedures for neoplasm w cc',
-                    '658 Kideny & ureter procedures for neoplasm w/o cc/mcc',
+                    '658 Kidney & ureter procedures for neoplasm w/o cc/mcc',
                     '659 Kidney & ureter procedures for non-neoplasm w mcc',
                     '660 Kidney & ureter procedures for non-neoplasm w cc',
                     '661 Kidney & ureter procedures for non-neoplasm w/o cc/mcc',
@@ -107,11 +108,11 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
         
     """
     
-    driver = webdriver.Chrome(chrome_options=options)
+    driver = webdriver.Chrome(options=options)
     driver.delete_all_cookies()
     driver.get(website)
     
-    click_button(driver, "class", "create-analysis")
+    click_button(driver, "class", "create-analysis", 20)
     click_button(driver, "ID", "DS_COMM")
     click_button(driver, "ID", "YEAR_SINGLE")
     click_button(driver, "class", "dropdown-toggle")
@@ -148,7 +149,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     click_button(driver, "class", "btn-block")
 
     # Accepting & downloading CSV requires more than the standard click_button
-    time.sleep(10)
+    time.sleep(15)
     click_button(driver, "ID", "accept-dua")
     # sometimes file-text-o works...
     # csv_class = "file-text-o"
@@ -188,8 +189,9 @@ if __name__ == "__main__":
     # connect(website, 600)
     # print('done connecting')
 
-    num = 0
-    for parameters in selections_list:
+    start_num = 1
+    num = start_num
+    for parameters in selections_list[start_num:]:
         print(parameters)   
         hcup_pull(state, parameters[0], parameters[1], parameters[2], num)
         num += 1
