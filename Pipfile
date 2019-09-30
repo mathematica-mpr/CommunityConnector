@@ -6,16 +6,8 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-ipykernel = "*"
-bs4 = "*"
-urllib = "*"
-requests = "*"
-urllib2 = "*"
-xlrd = "*"
-pandas = "*"
 selenium = "*"
 regex = "*"
-censusdata = "*"
 
 [requires]
 python_version = "3.7"
