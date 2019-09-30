@@ -1,4 +1,4 @@
-
+.vscode/
 output/
 .ipynb_checkpoints/
 codes/02_SDoH/chromedriver.exe
