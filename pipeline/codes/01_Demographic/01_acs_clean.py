@@ -9,4 +9,6 @@ acs.columns.values[0] = "location"
 acs['FIPS'] = [location[-3:] for location in acs['location']]
 print(acs['FIPS'])
 
+acs.drop(columns = "location", inplace = True)
+
 acs.to_csv(os.path.join(n_drive, "ACS_cleaned.csv"))
