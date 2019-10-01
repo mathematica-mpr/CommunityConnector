@@ -5,3 +5,4 @@ codes/02_SDoH/chromedriver.exe
 codes/geckodriver.log
 codes/.ipynb_checkpoints/
 *.log
+data/*
