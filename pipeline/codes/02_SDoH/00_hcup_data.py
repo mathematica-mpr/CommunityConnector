@@ -21,7 +21,7 @@ from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
-n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//02_SDoH/HCUP'
+n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
 state = "Colorado"
 website = "https://hcupnet.ahrq.gov"
 
