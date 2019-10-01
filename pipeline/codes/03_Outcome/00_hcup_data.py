@@ -50,7 +50,7 @@ selections_list.extend(drg)
 print(selections_list)
 
 import pandas as pd
-selections_df = pd.DataFrame(selections_list, columns = ["Driver", "Element Type", "Element Name"])
+selections_df = pd.DataFrame(selections_list, columns = ["Analysis Selection", "Classification", "Diagnosis"])
 selections_df.to_csv(os.path.join(n_drive, "HCUP_selections.csv"))
 
 
