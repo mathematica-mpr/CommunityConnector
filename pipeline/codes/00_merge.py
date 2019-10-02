@@ -17,13 +17,21 @@ for t in data_types:
             data = pd.read_csv(os.path.join(n_drive, t, "cleaned", file))
             data['FIPS'] = [str(fips)[-3:].zfill(3) for fips in data['FIPS']]
             print(data.shape)
+
+            data_columns = pd.DataFrame({'column_name': data.columns.values,
+                'type': t
+                })
+
             if count == 0:
                 full_data = data
+                columns = data_columns
             else:
                 full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
+                columns = columns.append(data_columns)
 
             count += 1
 
 print(full_data.shape)
 
-full_data.to_csv(os.path.join(n_drive, 'full_data.csv'))
+full_data.to_csv('data/full_data.csv')
+columns.to_csv('data/columns.csv')
