@@ -70,6 +70,6 @@ for i in range(6):
 print(data_dictionary)
 data_dictionary.to_csv('data/data_dictionary.csv')
 
-# PCA on variables?
+# feature selection on variables?
 # which variables indicate the most variation in outcomes?
 # then clustering to get euclidean distance
