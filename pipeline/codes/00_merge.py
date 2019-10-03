@@ -33,5 +33,10 @@ for t in data_types:
 
 print(full_data.shape)
 
+# add sdoh_score1-6 to columns
+sdoh_score_names = [f'sdoh_score{i}' for i in range(1,7)]
+columns = columns.append(pd.DataFrame({'column_name': sdoh_score_names,
+'type': ['aggregate']*6}))
+
 full_data.to_csv('data/full_data.csv')
 columns.to_csv('data/columns.csv')
