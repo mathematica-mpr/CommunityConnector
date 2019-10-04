@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 datafile = "data/full_data.csv"
 
@@ -74,8 +75,6 @@ data_dictionary = data_dictionary[data_dictionary['data_type'] != "unknown"]
 for i in range(6):
     data_dictionary[f'used_sdoh_{i+1}'] = 0
 
-print(data_dictionary)
-
 # remove additional FIPS columns
 for ix, row in data_dictionary.iterrows():
     if row['column_name'] == "FIPS":
@@ -86,6 +85,111 @@ data_dictionary.drop(data_dictionary.index[[38,39]], inplace = True)
 data_dictionary.loc[data_dictionary['column_name'].str.contains('sdoh_score'),'description'] = ['Economic Stability','Neighborhood & Physical Environment',
 'Education','Food','Community','Health Coverage']
 
+# Flag which variables to use in the scores
 # Later, will look into variable reduction/impact on outcomes to determine the most important ones
 
-data_dictionary.to_csv('data/data_dictionary.csv')
+dem_vars = []
+econ_vars = []
+neigh_vars = []
+edu_vars = []
+food_vars = []
+comm_vars = []
+health_vars = []
+outcome_vars = []
+
+# Looking to choose variables that have good coverage and that aren't super correlated with one of the others
+def available_vars(data, data_dictionary, lkp_phrase, corr = False):
+    print("")
+    print(lkp_phrase)
+    cols = data_dictionary.loc[data_dictionary['column_name'].str.lower().str.contains(lkp_phrase, regex = True), 'column_name']
+    print(data[cols].describe())
+    if corr:
+        print("Correlations:")
+        print(data[cols].corr())
+    return cols
+
+# view non-truncated dataframe
+pd.set_option('display.max_colwidth', -1)
+pd.set_option('display.max_columns', 30)
+
+# For now, use the following variables:
+# Demographics: Sex, race, median income, GINI, % rural, Life expectancy, infant mortality
+sex_vars = available_vars(data, data_dictionary, 'sex|female')
+dem_vars.append("% Female")
+
+race_cols = available_vars(data, data_dictionary, 'race')
+race_cols = np.setdiff1d(race_cols, ["RACE_Estimate_Total", "RACE_Estimate_Total_Two_or_more_races_Two_races_including_Some_other_race",
+"RACE_Estimate_Total_Two_or_more_races_Two_races_excluding_Some_other_race_and_three_or_more_races"])
+data[race_cols] = data[race_cols].apply(lambda x: x/data['RACE_Estimate_Total'])
+print(race_cols)
+dem_vars.extend(race_cols)
+
+# median income, gini index
+available_vars(data, data_dictionary,'income')
+dem_vars.extend(['MEDIAN_HOUSEHOLD_INCOME_IN_THE_PAST_12_MONTHS_(IN_2017_INFLATION-ADJUSTED_DOLLARS)_Estimate_Median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)',
+'GINI_INDEX_OF_INCOME_INEQUALITY_Estimate_Gini_Index'])
+
+# % rural
+available_vars(data, data_dictionary, 'rural')
+dem_vars.append('% Rural')
+
+# Life expectancy
+available_vars(data, data_dictionary, "life")
+dem_vars.append("Life Expectancy")
+
+# Infant mortality
+available_vars(data, data_dictionary, "mortality")
+dem_vars.append("Age-Adjusted Mortality")
+
+available_vars(data, data_dictionary, "population")
+dem_vars.append("Population_x")
+
+# How are all of the demographic variables correlated?
+print(dem_vars)
+print(data[dem_vars].corr())
+# if no problematic correlations, flag all of these as demographic variables, and the rest as 0's
+# rural and some races have higher correlations, as does mortality and income, but going to keep them all in for now
+data_dictionary['demographic'] = np.where(data_dictionary['column_name'].isin(dem_vars), 1, 0)
+
+# Economic Stability: % unemployed, % free or reduced lunch
+available_vars(data, data_dictionary, "unemployed|free")
+econ_vars.extend(['% Unemployed','% Free or Reduced Lunch'])
+data_dictionary['used_sdoh_1'] = np.where(data_dictionary['column_name'].isin(econ_vars), 1, 0)
+
+# Neighborhood: Housing units, Occupancy status, violent crime rate
+available_vars(data, data_dictionary, "housing|occupancy|crime")
+data['OCCUPANCY_STATUS_Estimate_Total_Vacant'] = data['OCCUPANCY_STATUS_Estimate_Total_Vacant']/data['OCCUPANCY_STATUS_Estimate_Total']
+neigh_vars.extend(['OCCUPANCY_STATUS_Estimate_Total_Vacant','Violent Crime Rate', '% Severe Housing Problems', '% Severe Housing Cost Burden'])
+print(data[neigh_vars].corr())
+data_dictionary['used_sdoh_2'] = np.where(data_dictionary['column_name'].isin(neigh_vars), 1, 0)
+
+# Education: Graduation rate
+available_vars(data, data_dictionary, "graduation|college")
+edu_vars.extend(['Graduation Rate','% Some College'])
+data_dictionary['used_sdoh_3'] = np.where(data_dictionary['column_name'].isin(edu_vars), 1, 0)
+
+# Food: Food environment index, % food insecure
+available_vars(data, data_dictionary, "food|insecure")
+food_vars.extend(['Food Environment Index','% Food Insecure'])
+data_dictionary['used_sdoh_4'] = np.where(data_dictionary['column_name'].isin(food_vars), 1, 0)
+
+# Community: Hours Worked, mentall unhealthy
+available_vars(data, data_dictionary, "hours|mental", True)
+data['# Mental Health Providers'] = data['# Mental Health Providers']/data['Population_x']
+comm_vars.extend(['MEAN_USUAL_HOURS_WORKED_IN_THE_PAST_12_MONTHS_FOR_WORKERS_16_TO_64_YEARS_Estimate_Total',
+'Mentally Unhealthy Days','# Mental Health Providers'])
+print(data[comm_vars].corr())
+data_dictionary['used_sdoh_5'] = np.where(data_dictionary['column_name'].isin(comm_vars), 1, 0)
+
+# Health Coverage: % Uninsured, PCP Rate, Dentist Rate, MH Rate
+available_vars(data, data_dictionary, "uninsured|pcp|dentist|mh", True)
+health_vars.extend(['% Uninsured_x', 'PCP Rate','Dentist Rate','MHP Rate'])
+data_dictionary['used_sdoh_6'] = np.where(data_dictionary['column_name'].isin(health_vars), 1, 0)
+
+# # Outcome: % obese, % diabetic, kidney...
+available_vars(data, data_dictionary, "obese|kidney|diabete"
+# TODO: we need more kidney and diabetes data
+outcome_vars.extend(['% Obese'])
+
+# data.to_csv('data/full_data_relative.csv')
+# data_dictionary.to_csv('data/data_dictionary.csv')
