@@ -121,7 +121,7 @@ race_cols = available_vars(data, data_dictionary, 'race')
 race_cols = np.setdiff1d(race_cols, ["RACE_Estimate_Total", "RACE_Estimate_Total_Two_or_more_races_Two_races_including_Some_other_race",
 "RACE_Estimate_Total_Two_or_more_races_Two_races_excluding_Some_other_race_and_three_or_more_races"])
 data[race_cols] = data[race_cols].apply(lambda x: x/data['RACE_Estimate_Total'])
-print(race_cols)
+data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(race_cols), 'percentage', data_dictionary['data_type'])
 dem_vars.extend(race_cols)
 
 # median income, gini index
@@ -159,6 +159,7 @@ data_dictionary['used_sdoh_1'] = np.where(data_dictionary['column_name'].isin(ec
 # Neighborhood: Housing units, Occupancy status, violent crime rate
 available_vars(data, data_dictionary, "housing|occupancy|crime")
 data['OCCUPANCY_STATUS_Estimate_Total_Vacant'] = data['OCCUPANCY_STATUS_Estimate_Total_Vacant']/data['OCCUPANCY_STATUS_Estimate_Total']
+data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "OCCUPANCY_STATUS_Estimate_Total_Vacant", 'percentage', data_dictionary['data_type'])
 neigh_vars.extend(['OCCUPANCY_STATUS_Estimate_Total_Vacant','Violent Crime Rate', '% Severe Housing Problems', '% Severe Housing Cost Burden'])
 print(data[neigh_vars].corr())
 data_dictionary['used_sdoh_2'] = np.where(data_dictionary['column_name'].isin(neigh_vars), 1, 0)
@@ -166,6 +167,7 @@ data_dictionary['used_sdoh_2'] = np.where(data_dictionary['column_name'].isin(ne
 # Education: Graduation rate
 available_vars(data, data_dictionary, "graduation|college")
 edu_vars.extend(['Graduation Rate','% Some College'])
+data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "Graduation Rate", 'rate', data_dictionary['data_type'])
 data_dictionary['used_sdoh_3'] = np.where(data_dictionary['column_name'].isin(edu_vars), 1, 0)
 
 # Food: Food environment index, % food insecure
@@ -176,6 +178,7 @@ data_dictionary['used_sdoh_4'] = np.where(data_dictionary['column_name'].isin(fo
 # Community: Hours Worked, mentall unhealthy
 available_vars(data, data_dictionary, "hours|mental", True)
 data['# Mental Health Providers'] = data['# Mental Health Providers']/data['Population_x']
+data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "# Mental Health Providers", 'percentage', data_dictionary['data_type'])
 comm_vars.extend(['MEAN_USUAL_HOURS_WORKED_IN_THE_PAST_12_MONTHS_FOR_WORKERS_16_TO_64_YEARS_Estimate_Total',
 'Mentally Unhealthy Days','# Mental Health Providers'])
 print(data[comm_vars].corr())
@@ -184,12 +187,25 @@ data_dictionary['used_sdoh_5'] = np.where(data_dictionary['column_name'].isin(co
 # Health Coverage: % Uninsured, PCP Rate, Dentist Rate, MH Rate
 available_vars(data, data_dictionary, "uninsured|pcp|dentist|mh", True)
 health_vars.extend(['% Uninsured_x', 'PCP Rate','Dentist Rate','MHP Rate'])
+data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(['PCP Rate','Dentist Rate','MHP Rate']), 'rate', data_dictionary['data_type'])
 data_dictionary['used_sdoh_6'] = np.where(data_dictionary['column_name'].isin(health_vars), 1, 0)
 
-# # Outcome: % obese, % diabetic, kidney...
-available_vars(data, data_dictionary, "obese|kidney|diabete"
-# TODO: we need more kidney and diabetes data
-outcome_vars.extend(['% Obese'])
+# flag all as sdoh_raw
+sdoh_raw_vars = econ_vars
+sdoh_raw_vars.extend(neigh_vars)
+sdoh_raw_vars.extend(comm_vars)
+sdoh_raw_vars.extend(food_vars)
+sdoh_raw_vars.extend(health_vars)
+sdoh_raw_vars.extend(edu_vars)
+data_dictionary['sdoh_raw'] = np.where(data_dictionary['column_name'].isin(sdoh_raw_vars), 1, 0)
 
-# data.to_csv('data/full_data_relative.csv')
-# data_dictionary.to_csv('data/data_dictionary.csv')
+# # Outcome: % obese, % diabetic, kidney...
+available_vars(data, data_dictionary, "obese|kidney|diabete")
+# TODO: we need more kidney and diabetes data
+outcome_vars.append('% Obese')
+data_dictionary['outcome'] = np.where(data_dictionary['column_name'].isin(outcome_vars), 1, 0)
+
+# TODO: more variables could be flagged as sdoh_raw than just the ones that go into the aggregate sdoh scores, if we want
+
+data.to_csv('data/full_data_relative.csv')
+data_dictionary.to_csv('data/data_dictionary.csv')
