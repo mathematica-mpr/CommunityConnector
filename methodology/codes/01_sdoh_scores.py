@@ -1,26 +1,46 @@
 import pandas as pd
+import numpy as np
 
-# For now, use the following variables:
-# Demographics: Sex, race, median income, GINI, % rural, % female, Life expectancy, infant mortality
-# Economic Stability: % unemployed, % free or reduced lunch
-# Neighborhood: Housing units, Occupancy status, violent crime rate
-# Education: Graduation rate
-# Food: Food environment index, % some college, % food insecure
-# Community: Hours Worked, mentall unhealthy
-# Health Coverage: % Uninsured, PCP Rate, Dentist Rate, MH Rate
-# Outcome: % obese, % diabetic, kidney...
+data = pd.read_csv('data/full_data_relative.csv')
+data_dictionary = pd.read_csv('data/data_dictionary.csv')
 
-# Later, will look into variable reduction/impact on outcomes to determine the most important ones
+# will cluster on these columns in the Shiny app
+# Euclidean distance or some sort of multi-variate distance used in clustering
+# TODO: this methodology in the next code
+print(data_dictionary[data_dictionary['demographic'] == 1])
 
-data = pd.read_csv('data/full_data.csv')
-data_dict = pd.read_csv('data/data_dictionary.csv')
-pre_rows = data.shape[1]
-data = data[data_dict['column_name']]
-print(f"# cols dropped: {pre_rows - data.shape[1]}")
+def use_sdoh_normalize(sdoh_score_num):
+    cols = list(data_dictionary[data_dictionary[f'used_sdoh_{sdoh_score_num}'] == 1]['column_name'])
+    print(cols)
 
-print(data['FIPS'])
-# which has the most coverage?
-print(data[['FIPS','SEX_BY_AGE_Estimate_Total_Male','SEX_BY_AGE_Estimate_Total_Female','% Female']])
+    # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
+    # normalize variables to get all values between - and 1
+    # TODO: consider standardizing instead, to get values centered around 0?
+    # the outliers still remain visible
+    # then take the average
 
-demographic_cols = 
-# print(data.head())
+    # x = (data[cols] - data[cols].mean())/data[cols].std()
+    x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
+    
+    # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
+    no_flip_cols = ['Graduation Rate','% Some College','Food Environment Index','# Mental Health Providers','PCP Rate','Dentist Rate','MHP Rate']
+    flip_cols = np.setdiff1d(x.columns.values, no_flip_cols)
+    print(flip_cols)
+    
+    if len(flip_cols) > 0:
+        x[flip_cols] = 1-x[flip_cols]
+
+    avgs = x.mean(axis = 1)
+    return avgs
+
+for i in range(1,7):
+    print(i)
+    data[f'sdoh_score_{i}'] = use_sdoh_normalize(i)
+
+# are any SDoH scores too correlated
+print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
+# not really! woohoo!
+# the most correlated ones are 5/6, 1/3, and 1/5
+# which are: community + health, economic + education, and economic + community. makes sense!
+
+data.to_csv('data/data_sdoh_scores.csv')
