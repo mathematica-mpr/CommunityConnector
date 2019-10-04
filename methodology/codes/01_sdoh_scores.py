@@ -10,14 +10,14 @@ data_dictionary = pd.read_csv('data/data_dictionary.csv')
 print(data_dictionary[data_dictionary['demographic'] == 1])
 
 def use_sdoh_normalize(sdoh_score_num):
-    cols = list(data_dictionary[data_dictionary[f'used_sdoh_{sdoh_score_num}'] == 1]['column_name'])
-    print(cols)
-
     # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
     # normalize variables to get all values between - and 1
     # TODO: consider standardizing instead, to get values centered around 0?
     # the outliers still remain visible
     # then take the average
+    
+    cols = list(data_dictionary[data_dictionary[f'used_sdoh_{sdoh_score_num}'] == 1]['column_name'])
+    print(cols)
 
     # x = (data[cols] - data[cols].mean())/data[cols].std()
     x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
