@@ -60,10 +60,10 @@ def data_type(c):
     elif data[c].dtypes in ['float64','int64']:
         if all(data[c] <= 1) or (('%' in c and '95%' not in c) or (c.count("%") > 1)):
             return 'percentage'
+        elif ('rate' in c.lower()) or ('ratio' in c.lower()):
+            return 'rate'
         else:
             return 'continuous'
-    elif 'Ratio' in c:
-        return 'ratio'
     else:
         return 'unknown'
 
@@ -137,10 +137,6 @@ dem_vars.append('% Rural')
 available_vars(data, data_dictionary, "life")
 dem_vars.append("Life Expectancy")
 
-# Infant mortality
-available_vars(data, data_dictionary, "mortality")
-dem_vars.append("Age-Adjusted Mortality")
-
 available_vars(data, data_dictionary, "population")
 dem_vars.append("Population_x")
 
@@ -167,7 +163,7 @@ data_dictionary['used_sdoh_2'] = np.where(data_dictionary['column_name'].isin(ne
 # Education: Graduation rate
 available_vars(data, data_dictionary, "graduation|college")
 edu_vars.extend(['Graduation Rate','% Some College'])
-data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "Graduation Rate", 'rate', data_dictionary['data_type'])
+# data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "Graduation Rate", 'rate', data_dictionary['data_type'])
 data_dictionary['used_sdoh_3'] = np.where(data_dictionary['column_name'].isin(edu_vars), 1, 0)
 
 # Food: Food environment index, % food insecure
@@ -187,7 +183,7 @@ data_dictionary['used_sdoh_5'] = np.where(data_dictionary['column_name'].isin(co
 # Health Coverage: % Uninsured, PCP Rate, Dentist Rate, MH Rate
 available_vars(data, data_dictionary, "uninsured|pcp|dentist|mh", True)
 health_vars.extend(['% Uninsured_x', 'PCP Rate','Dentist Rate','MHP Rate'])
-data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(['PCP Rate','Dentist Rate','MHP Rate']), 'rate', data_dictionary['data_type'])
+# data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(['PCP Rate','Dentist Rate','MHP Rate']), 'rate', data_dictionary['data_type'])
 data_dictionary['used_sdoh_6'] = np.where(data_dictionary['column_name'].isin(health_vars), 1, 0)
 
 # flag all as sdoh_raw
