@@ -1,6 +1,7 @@
 FROM rocker/rstudio:3.6.1 as base
 
 RUN R -e "install.packages(c('shiny', 'shinydashboard', 'tidyverse', 'devtools', 'DT', 'forcats', 'ggplot2', 'plotly', 'shinytest'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('yaml', 'shinyWidgets'), repos='http://cran.rstudio.com/')"
 
 EXPOSE 8787
 
