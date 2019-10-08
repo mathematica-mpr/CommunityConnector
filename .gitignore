@@ -4,4 +4,4 @@ output/
 codes/chromedriver.exe
 codes/geckodriver.log
 codes/.ipynb_checkpoints/
-
+.env
