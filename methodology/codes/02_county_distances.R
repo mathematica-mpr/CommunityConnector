@@ -95,7 +95,78 @@ for(x in c(1:length(dem_cols))){
   }
 }
 
+# radar charts in order of county similarity
+library(fmsb)
+par(mfrow=c(3,2), 
+    mar = c(0,0,0,0))
+ordered <- data %>% 
+  arrange(distance) %>% 
+  mutate(rank = row_number(),
+         top5 = ifelse(rank == 1, 'county', ifelse(rank <= 6, 1, 0)))
+
+for(i in c(1:nrow(ordered))){
+  radar_data <- ordered[i,]
+  county <- radar_data$County
+  radar_data <- radar_data %>% 
+    dplyr::select(starts_with("sdoh_score"))
+  colnames(radar_data) <- c("econ","env","edu","food","comm","health")
+  # I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
+  radar_data <- rbind(rep(1,6), rep(0,6), radar_data)
+  radarchart(radar_data,
+             pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4,
+             title = county)
+}
+
 # compare health metrics of all and of top 5ish closest counties
+data_dictionary %>% 
+  filter(outcome == 1) %>% 
+  dplyr::select(column_name) %>% 
+  pull()
+county_outcome <- ordered[1,c("X..Obese")]
 
+ggplot(ordered, aes(x = X..Obese)) +
+  geom_density() +
+  geom_rug(size = 2, aes(color = top5)) +
+  scale_color_manual(values = c("black","red","blue")) +
+  geom_vline(xintercept = county_outcome, color = "blue")
 
+# for each county, check top 5 sdoH radar charts and similar outcomes
+for(i in c(1:nrow(data))){
+  countyi_data <- calculate_distance(i)
+  
+  ordered <- countyi_data %>% 
+    arrange(distance) %>% 
+    mutate(rank = row_number(),
+           top5 = ifelse(rank == 1, as.character(County), ifelse(rank <= 6, "1", "0")))
+  this_county <- ordered %>% filter(rank == 1) %>% select(County) %>% pull()
+  
+  par(mfrow=c(3,2), 
+      mar = c(0,0,0,0))
+  
+  for(j in c(1:6)){
+    radar_data <- ordered[j,]
+    county <- radar_data$County
+    radar_data <- radar_data %>% 
+      dplyr::select(starts_with("sdoh_score"))
+    colnames(radar_data) <- c("econ","env","edu","food","comm","health")
+    # I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
+    radar_data <- rbind(rep(1,6), rep(0,6), radar_data)
+    radar <- radarchart(radar_data,
+                        pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4,
+                        title = county)
+    print(radar)
+  }
+  print('radar charts complete')
+  
+  county_outcome <- ordered[1,c("X..Obese")]
+  plt <- ggplot(ordered, aes(x = X..Obese)) +
+    geom_density() +
+    geom_rug(size = 2, aes(color = top5)) +
+    scale_color_manual(values = c("black","red","blue")) +
+    geom_vline(xintercept = county_outcome, color = "blue") +
+    ggtitle(this_county)
+  print(plt) 
+}
 
+# Things to check: How close are the top 5 most similar distance scores?
+# How similar are health outcomes of the top 5 most similar or similar within a certain distance?
