@@ -62,10 +62,13 @@ distancem <- as.matrix(dist(use_data, method = 'euclidean'))
 ###########  Select a county as example  ############
 #####################################################
 
-county_num <- 1
-data$distance <- distancem[,county_num]
-data$flag_county <- ifelse(data$FIPS == head(data$FIPS, county_num), 1, 0)
-data$Population_x
+calculate_distance <- function(county_num){
+  data$distance <- distancem[,county_num]
+  data$flag_county <- ifelse(data$FIPS == head(data$FIPS, county_num), 1, 0)
+  return(data)
+}
+
+data <- calculate_distance(1)
 
 ###################################################
 ###### Look at how the methodology works out ######
