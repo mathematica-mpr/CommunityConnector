@@ -6,3 +6,5 @@ codes/geckodriver.log
 codes/.ipynb_checkpoints/
 *.log
 data/*
+methodology/codes/.Rhistory
+
