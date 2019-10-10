@@ -1,6 +1,6 @@
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(#theme = "styles.css",
-  setBackgroundColor(config$colors$tan),
+  setBackgroundColor(config$colors$tan25),
   
   fluidRow(
     column(width = 4, h2("Community Connector")),
@@ -9,13 +9,15 @@ ui <- fluidPage(#theme = "styles.css",
                    Understand how you compare in health outcomes and utilzation.<br>
                    See what your peers do differently."))),
   fluidRow(
-    column(width = 4,
+    column(width = 2,
            selectInput('county_selection_type', label = 'Select your county by',
                        choices = c('FIPS Code' = 'FIPS', 'County Name' = 'name'), selected = 'FIPS'),
            searchInput('county_selection', label = '', placeholder = 'Search your county',
-                       btnSearch = icon('search'))),
-    column(width = 4),
-    column(width = 4)
+                       btnSearch = icon('search')),
+           textOutput('county_selection_message')),
+    column(width = 5,
+           plotOutput("econ_stab_radar")),
+    column(width = 5)
   ),
   
   fluidRow(
