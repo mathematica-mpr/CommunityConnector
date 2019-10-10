@@ -9,6 +9,7 @@ library(stringr)
 library(forcats)
 library(shinyWidgets)
 library(yaml)
+library(fmsb)
 
 config <- yaml.load_file("./config.yaml")
 
