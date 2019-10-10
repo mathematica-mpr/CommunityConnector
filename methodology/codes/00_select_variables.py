@@ -156,14 +156,18 @@ keep_vars = [c for c in keep_vars if c not in ['% uninsured_y','% uninstured_y.1
 health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate'])
 
 # # Outcome: % obese, % diabetic, kidney...
-available_vars(data, "obese|kidney|diabete")
+available_vars(data, "obese|kidney|diabete|mortality")
 # TODO: we need more kidney and diabetes data
-outcome_vars.append('% obese')
+outcome_vars.extend(['% obese','age-adjusted mortality'])
 
 # # TODO: more variables could be flagged as sdoh_raw than just the ones that go into the aggregate sdoh scores, if we want
 
 # export all column names to a data dictionary with the following format:
 # column_name|description|demographic|sdoh_raw|outcome|sdoh_score|data_type|used_sdoh_score_1|used_sdoh_score_2|used_sdoh_score_3|used_sdoh_score_4|used_sdoh_score_5|used_sdoh_score_6
+keep_vars = [c for c in keep_vars if 'tenure' not in c]
+keep_vars = [c for c in keep_vars if 'bedrooms' not in c]
+keep_vars = [c for c in keep_vars if c != "annual average violent crimes"]
+keep_vars = [c for c in keep_vars if c != "0_y"]
 pre_dict = pd.read_csv('data/columns.csv')
 data_dictionary = pd.DataFrame({'column_name': keep_vars,
 # will change the descriptions to something better later
@@ -206,7 +210,7 @@ for i in range(6):
 for ix, row in data_dictionary.iterrows():
     if row['column_name'] == "fips":
         print(ix)
-data_dictionary.drop(data_dictionary.index[[23, 24]], inplace = True)
+data_dictionary.drop(data_dictionary.index[[13, 14]], inplace = True)
 
 data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(race_cols), 'percentage', data_dictionary['data_type'])
 data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "occupancy_status_estimate_total_vacant", 'percentage', data_dictionary['data_type'])
@@ -233,5 +237,7 @@ sdoh_raw_vars.extend(health_vars)
 sdoh_raw_vars.extend(edu_vars)
 data_dictionary['sdoh_raw'] = np.where(data_dictionary['column_name'].isin(sdoh_raw_vars), 1, 0)
 
+print(data.shape)
+print(data_dictionary.shape)
 data.to_csv('data/full_data_relative.csv')
 data_dictionary.to_csv('data/data_dictionary.csv')
