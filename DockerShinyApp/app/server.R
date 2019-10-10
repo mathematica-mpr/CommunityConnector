@@ -14,12 +14,44 @@ server <- function(input, output) {
 #    county_selection_check
 #  })
   
-  county_dat <- reactive({
-    dat %>% filter(FIPS == input$county_selection)
+
+  county_check <- reactive({
+    if (input$county_selection_type == "FIPS") {
+      input$county_selection %in% dat$FIPS
+    } else if (input$county_selection_type == "name") {
+      input$county_selection %in% dat$County
+    }
   })
   
-  output$econ_stab_radar <- renderPlot({
-    req(input$county_selection %in% dat$FIPS)
+  county_FIPS <- reactive({
+    req(county_check)
+    if (input$county_selection_type == "FIPS") {
+      input$county_selection
+    } else if (input$county_selection_type == "name") {
+      dat %>% filter(County == input$county_selection) %>% pull(FIPS)
+    }
+  })
+  
+  county_name <- reactive({
+    req(county_check)
+    if (input$county_selection_type == "name") {
+      input$county_selection
+    } else if (input$county_selection_type == "FIPS") {
+      dat %>% filter(FIPS == input$county_selection) %>% pull(County)
+    }
+  })
+  
+  county_dat <- reactive({
+    dat %>% filter(FIPS == county_FIPS())
+  })
+
+  output$my_county_name <- renderUI({
+    req(county_check())
+    HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$State, "</h4>"))
+  })
+  
+  output$my_county_radar <- renderPlot({
+    req(county_check())
     df <- rbind(rep(1, 6), rep(0, 6),
                 # 50% circle color
                 rep(.5, 6),
@@ -42,8 +74,7 @@ server <- function(input, output) {
                          paste0(config$colors$grey25, '33'),
                          paste0(config$colors$yellow100, '33')),
                cglcol = config$colors$grey100,
-               seg = 4,
-               vlcex = 0.8)
+               seg = 4, vlcex = 0.8)
     
   })
 

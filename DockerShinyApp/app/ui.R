@@ -16,7 +16,11 @@ ui <- fluidPage(#theme = "styles.css",
                        btnSearch = icon('search')),
            textOutput('county_selection_message')),
     column(width = 5,
-           plotOutput("econ_stab_radar")),
+           fluidRow(htmlOutput("my_county_name")),
+           fluidRow(
+             column(width = 6, plotOutput("my_county_radar")),
+             column(width = 6)),
+           fluidRow()),
     column(width = 5)
   ),
   
