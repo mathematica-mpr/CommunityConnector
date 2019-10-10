@@ -85,6 +85,7 @@ dem_vars.append("% female")
 keep_vars = [c for c in keep_vars if ('sex_by_age' not in c)]
 keep_vars = [c for c in keep_vars if ('mean_usual_hours_work' not in c or 'female' not in c)]
 
+# TODO: could also use % race variables
 race_cols = available_vars(data, 'race')
 drop_race_cols = ["race_estimate_total", "race_estimate_total_two_or_more_races_two_races_including_some_other_race",
 "race_estimate_total_two_or_more_races_two_races_excluding_some_other_race_and_three_or_more_races"]
@@ -156,9 +157,9 @@ keep_vars = [c for c in keep_vars if c not in ['% uninsured_y','% uninstured_y.1
 health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate'])
 
 # # Outcome: % obese, % diabetic, kidney...
-available_vars(data, "obese|kidney|diabete|mortality")
+available_vars(data, "obese|kidney|diabet|mortality")
 # TODO: we need more kidney and diabetes data
-outcome_vars.extend(['% obese','age-adjusted mortality'])
+outcome_vars.extend(['% obese','age-adjusted mortality','% diabetic'])
 
 # # TODO: more variables could be flagged as sdoh_raw than just the ones that go into the aggregate sdoh scores, if we want
 
