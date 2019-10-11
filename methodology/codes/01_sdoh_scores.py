@@ -23,7 +23,7 @@ def use_sdoh_normalize(sdoh_score_num):
     x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
     
     # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
-    no_flip_cols = ['Graduation Rate','% Some College','Food Environment Index','# Mental Health Providers','PCP Rate','Dentist Rate','MHP Rate']
+    no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate']
     flip_cols = np.setdiff1d(x.columns.values, no_flip_cols)
     print(flip_cols)
     
