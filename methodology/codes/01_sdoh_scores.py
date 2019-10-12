@@ -17,14 +17,17 @@ def use_sdoh_normalize(sdoh_score_num):
     # then take the average
     
     cols = list(data_dictionary[data_dictionary[f'used_sdoh_{sdoh_score_num}'] == 1]['column_name'])
-    print(cols)
 
     # x = (data[cols] - data[cols].mean())/data[cols].std()
     x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
     
     # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
-    no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate']
+    no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate',
+    'budget_environmental','budget_water','budget_health_equity','budget_laboratory_svcs','budget_planning','budget_prevention',
+    'mentally unhealthy days', 'budget_disease','budget_emergency','budget_health_info','budget_health_svcs',
+    'hosp_pp_rate','adm_pp_rate','kidn_hosp_pp_rate']
     flip_cols = np.setdiff1d(x.columns.values, no_flip_cols)
+    print("Lower is stronger cols:")
     print(flip_cols)
     
     if len(flip_cols) > 0:

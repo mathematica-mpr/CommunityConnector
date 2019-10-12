@@ -33,7 +33,8 @@ for col in data.columns.values:
     if col == "FIPS":
         fips_colnum = colnum
     # keep the columns that aren't by two variables to start
-    if (("BY" not in col) or (col in ['SEX_BY_AGE_Estimate_Total','SEX_BY_AGE_Estimate_Total_Male','SEX_BY_AGE_Estimate_Total_Female']) or (colnum >= fips_colnum) or
+    if (("BY" not in col) or (col in ['SEX_BY_AGE_Estimate_Total','SEX_BY_AGE_Estimate_Total_Male','SEX_BY_AGE_Estimate_Total_Female']) or
+    (colnum >= fips_colnum) or
     ('RACE_Estimate_Total' in col) or ('MEANS_OF_TRANSPORTATION_TO_WORK_Estimate_Total' in col) or
     ('SEX_OF_WORKERS_BY_TRAVEL_TIME' in col and 'Male' not in col and 'Female' not in col) or
     ('MARITAL_STATUS_BY_SEX_BY_LABOR' in col and 'Male' not in col and 'Female' not in col)):
@@ -155,7 +156,7 @@ print(data[comm_vars].corr())
 available_vars(data, "uninsured|pcp|dentist|mh")
 keep_vars = [c for c in keep_vars if c not in ['% uninsured_y','% uninstured_y.1','other pcp rate']]
 health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate','budget_disease',
-'budget_emergency','budget_health_svcs','budget_health_info'])
+'budget_emergency','budget_health_svcs','budget_health_info','hosp_pp_rate','adm_pp_rate','kidn_hosp_pp_rate'])
 
 # # Outcome: % obese, % diabetic, kidney...
 available_vars(data, "obese|kidney|diabet|mortality")
