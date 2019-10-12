@@ -48,4 +48,12 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
             count += 1
 
     shutil.move(orig_path + filename, os.path.join(new_path, new_name))
+
+import pandas as pd
+
+def pull_population():
+    pop = pd.read_csv('data/cleaned/01_Demographic/RWJF_cleaned.csv')
+    pop = pop[['FIPS','Population_x']]
+    pop.columns.values[1] = 'population'
+    return pop
     
