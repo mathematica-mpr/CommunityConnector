@@ -4,17 +4,17 @@
 import os
 import pandas as pd
 
-n_drive = "N:/Transfer/KSkvoretz/AHRQ/data"
+cleaned_drive = "data/cleaned"
 
 data_types = ['01_Demographic','02_SDoH','03_Outcome']
 
 count = 0
 for t in data_types:
-    cleaned_files = os.listdir(os.path.join(n_drive, t, "cleaned"))
+    cleaned_files = os.listdir(os.path.join(cleaned_drive, t))
 
     for file in cleaned_files:
         if "csv" in file:
-            data = pd.read_csv(os.path.join(n_drive, t, "cleaned", file))
+            data = pd.read_csv(os.path.join(cleaned_drive, t, file))
             data['FIPS'] = [str(fips)[-3:].zfill(3) for fips in data['FIPS']]
             print(data.shape)
 
