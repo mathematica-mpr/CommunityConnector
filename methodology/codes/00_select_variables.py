@@ -130,7 +130,7 @@ econ_vars.extend(['% unemployed','% free or reduced lunch'])
 available_vars(data, "housing|occupancy|crime")
 data['occupancy_status_estimate_total_vacant'] = data['occupancy_status_estimate_total_vacant']/data['occupancy_status_estimate_total']
 neigh_vars.extend(['occupancy_status_estimate_total_vacant','violent crime rate', '% severe housing problems',
-'% severe housing cost burden'])
+'% severe housing cost burden', 'budget_environmental','budget_water'])
 keep_vars = [c for c in keep_vars if c not in ["housing_units_estimate_total","occupancy_status_estimate_total",
 "occupancy_status_estimate_total_occupied","annual average_violent crimes","severe housing cost burden"]]
 print(data[neigh_vars].corr())
@@ -148,13 +148,14 @@ available_vars(data, "hours|mental")
 keep_vars = [c for c in keep_vars if (('mean_usual_hours' not in c) or ('male' not in c))]
 keep_vars = [c for c in keep_vars if c not in ['# mental health providers','% frequent mental health distress']]
 comm_vars.extend(['mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total',
-'mentally unhealthy days'])
+'mentally unhealthy days','budget_laboratory_svcs','budget_health_equity','budget_prevention','budget_planning'])
 print(data[comm_vars].corr())
 
 # Health Coverage: % Uninsured, PCP Rate, Dentist Rate, MH Rate
 available_vars(data, "uninsured|pcp|dentist|mh")
 keep_vars = [c for c in keep_vars if c not in ['% uninsured_y','% uninstured_y.1','other pcp rate']]
-health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate'])
+health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate','budget_disease',
+'budget_emergency','budget_health_svcs','budget_health_info'])
 
 # # Outcome: % obese, % diabetic, kidney...
 available_vars(data, "obese|kidney|diabet|mortality")
@@ -208,10 +209,15 @@ for i in range(6):
     data_dictionary[f'used_sdoh_{i+1}'] = 0
 
 # remove additional FIPS columns
+count = 0
+fips_cols = []
 for ix, row in data_dictionary.iterrows():
     if row['column_name'] == "fips":
         print(ix)
-data_dictionary.drop(data_dictionary.index[[13, 14]], inplace = True)
+        if count > 0:
+            fips_cols.append(ix)
+        count += 1
+data_dictionary.drop(data_dictionary.index[fips_cols], inplace = True)
 
 data_dictionary['data_type'] = np.where(data_dictionary['column_name'].isin(race_cols), 'percentage', data_dictionary['data_type'])
 data_dictionary['data_type'] = np.where(data_dictionary['column_name'] == "occupancy_status_estimate_total_vacant", 'percentage', data_dictionary['data_type'])
