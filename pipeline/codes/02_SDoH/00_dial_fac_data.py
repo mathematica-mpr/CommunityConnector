@@ -32,4 +32,4 @@ output = pd.merge(grouped, num_fac, on = 'county', how = 'outer')
 output.columns = ['county','dial_fac_avg_rating','dial_fac_avg_stations','dial_fac_avg_mort','dial_fac_avg_readm','num_dial_facil']
 print(output)
 
-output.to_csv('data/raw/dial_fac_data.csv')
+output.to_csv('data/raw/dial_fac_data.csv', index = False)
