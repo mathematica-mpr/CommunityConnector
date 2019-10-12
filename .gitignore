@@ -4,6 +4,7 @@ output/
 codes/02_SDoH/chromedriver.exe
 codes/geckodriver.log
 codes/.ipynb_checkpoints/
+.env
 *.log
 data/*
 methodology/codes/.Rhistory
