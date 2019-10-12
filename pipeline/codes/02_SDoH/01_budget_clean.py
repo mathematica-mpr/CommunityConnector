@@ -22,6 +22,7 @@ rows = data.shape[0]
 assert(raw_data.shape[0] == rows)
 
 # make all budget amounts per capita
+# TODO: use function from utilities
 pop = pd.read_csv('data/cleaned/01_Demographic/RWJF_cleaned.csv')
 pop = pop[['FIPS','Population_x']]
 data = pd.merge(data, pop, on = "FIPS", how = 'inner')

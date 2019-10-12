@@ -156,7 +156,8 @@ print(data[comm_vars].corr())
 available_vars(data, "uninsured|pcp|dentist|mh")
 keep_vars = [c for c in keep_vars if c not in ['% uninsured_y','% uninstured_y.1','other pcp rate']]
 health_vars.extend(['% uninsured_x', 'pcp rate','dentist rate','mhp rate','budget_disease',
-'budget_emergency','budget_health_svcs','budget_health_info','hosp_pp_rate','adm_pp_rate','kidn_hosp_pp_rate'])
+'budget_emergency','budget_health_svcs','budget_health_info','hosp_pp_rate','adm_pp_rate','kidn_hosp_pp_rate',
+'dial_fac_avg_stations','dial_fac_avg_mort','dial_fac_avg_mort','dial_fac_avg_readm','dial_facil_pp_rate'])
 
 # # Outcome: % obese, % diabetic, kidney...
 available_vars(data, "obese|kidney|diabet|mortality")

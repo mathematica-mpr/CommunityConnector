@@ -10,6 +10,7 @@ selenium = "*"
 regex = "*"
 pandas = "*"
 sklearn = "*"
+sodapy = "*"
 
 [requires]
 python_version = "3.7"

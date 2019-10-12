@@ -25,7 +25,7 @@ def use_sdoh_normalize(sdoh_score_num):
     no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate',
     'budget_environmental','budget_water','budget_health_equity','budget_laboratory_svcs','budget_planning','budget_prevention',
     'mentally unhealthy days', 'budget_disease','budget_emergency','budget_health_info','budget_health_svcs',
-    'hosp_pp_rate','adm_pp_rate','kidn_hosp_pp_rate']
+    'hosp_pp_rate','kidn_hosp_pp_rate','dial_fac_avg_rating','dial_fac_avg_stations','dial_facil_pp_rate']
     flip_cols = np.setdiff1d(x.columns.values, no_flip_cols)
     print("Lower is stronger cols:")
     print(flip_cols)
