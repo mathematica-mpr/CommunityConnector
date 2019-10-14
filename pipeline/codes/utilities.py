@@ -68,3 +68,17 @@ def available_vars(data, lkp_phrase, corr = False):
         print("Correlations:")
         print(data[cols].corr())
     return cols
+
+import numpy as np
+
+def remove_from_dict(data):
+    data_dict = pd.read_csv('data/data_dictionary.csv')
+    add_cols = data.columns.values
+    add_cols = [c for c in add_cols if c != "FIPS"]
+    # remove if they are already in it
+    rest_cols = pd.DataFrame(np.setdiff1d(data_dict['column_name'], add_cols))
+    rest_cols.columns = ["column_name"]
+    pre_rows = data_dict.shape[0]
+    data_dict = pd.merge(data_dict, rest_cols, on = "column_name")
+    print(f"Dropped {pre_rows - data_dict.shape[0]} existing rows")
+    return data_dict

@@ -21,6 +21,7 @@ def use_sdoh_normalize(sdoh_score_num):
     # x = (data[cols] - data[cols].mean())/data[cols].std()
     x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
     
+    # TODO: update this
     # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
     no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate',
     'budget_environmental','budget_water','budget_health_equity','budget_laboratory_svcs','budget_planning','budget_prevention',
@@ -46,4 +47,4 @@ print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
 # the most correlated ones are 5/6, 1/3, and 1/5
 # which are: community + health, economic + education, and economic + community. makes sense!
 
-data.to_csv('data/data_sdoh_scores.csv')
+data.to_csv('data/data_sdoh_scores.csv', index = False)

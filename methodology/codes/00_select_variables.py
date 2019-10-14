@@ -27,6 +27,8 @@ data_dictionary = pd.read_csv('data/data_dictionary.csv')
 keep_cols = data_dictionary['column_name']
 keep_cols = [col for col in keep_cols if 'sdoh_score' not in col]
 
+print(keep_cols)
+print(len(keep_cols))
 data = data[keep_cols]
 print(data.shape)
 
@@ -64,4 +66,4 @@ print("# columns dropped due to low coverage: " + str(count))
 #     else:
 #         return 'unknown'
 
-data.to_csv('data/full_data_relative.csv')
+data.to_csv('data/full_data_relative.csv', index = False)

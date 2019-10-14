@@ -28,6 +28,7 @@ print(data.shape)
 print(data)
 
 # add to data dictionary
+# TODO: use function from utilities
 data_dict = pd.read_csv('data/data_dictionary.csv')
 add_cols = data.columns.values
 add_cols = [c for c in add_cols if c != "FIPS"]
