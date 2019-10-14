@@ -11,6 +11,7 @@ regex = "*"
 pandas = "*"
 sklearn = "*"
 sodapy = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.7"
