@@ -37,23 +37,25 @@ rest_cols.columns = ["column_name"]
 pre_rows = data_dict.shape[0]
 data_dict = pd.merge(data_dict, rest_cols, on = "column_name")
 print(f"Dropped {pre_rows - data_dict.shape[0]} existing rows")
-# TODO make this into a user input tool?
-add_rows = pd.DataFrame({'column_name': add_cols,
-'description': ['Medicare Dialysis Facilities Avg Rating','Medicare Dialysis Facilities Avg Stations',
- 'Medicare Dialysis Facilities Avg Mortality','Medicare Dialysis Facilities Avg Readmission','Medicare Dialysis Facilities per Person'],
-'demographic': [0, 0, 0, 0, 0],
-'sdoh_raw': [1, 1, 1, 1, 1],
-'outcome': [0, 0, 0, 0, 0],
-'sdoh_score': [0, 0, 0, 0, 0],
-'data_type': ['continuous','continouous','percentage','percentage','rate'],
-'used_sdoh_1': [0, 0, 0, 0, 0],
-'used_sdoh_2': [0, 0, 0, 0, 0],
-'used_sdoh_3': [0, 0, 0, 0, 0],
-'used_sdoh_4': [0, 0, 0, 0, 0],
-'used_sdoh_5': [0, 0, 0, 0, 0],
-'used_sdoh_6': [1, 1, 1, 1, 1]})
 
-data_dict = data_dict.append(add_rows)
+# too low of coverage so no longer keeping these variables
+# TODO make this into a user input tool?
+# add_rows = pd.DataFrame({'column_name': add_cols,
+# 'description': ['Medicare Dialysis Facilities Avg Rating','Medicare Dialysis Facilities Avg Stations',
+#  'Medicare Dialysis Facilities Avg Mortality','Medicare Dialysis Facilities Avg Readmission','Medicare Dialysis Facilities per Person'],
+# 'demographic': [0, 0, 0, 0, 0],
+# 'sdoh_raw': [1, 1, 1, 1, 1],
+# 'outcome': [0, 0, 0, 0, 0],
+# 'sdoh_score': [0, 0, 0, 0, 0],
+# 'data_type': ['continuous','continouous','percentage','percentage','rate'],
+# 'used_sdoh_1': [0, 0, 0, 0, 0],
+# 'used_sdoh_2': [0, 0, 0, 0, 0],
+# 'used_sdoh_3': [0, 0, 0, 0, 0],
+# 'used_sdoh_4': [0, 0, 0, 0, 0],
+# 'used_sdoh_5': [0, 0, 0, 0, 0],
+# 'used_sdoh_6': [1, 1, 1, 1, 1]})
+# data_dict = data_dict.append(add_rows)
 
 data_dict.to_csv('data/data_dictionary.csv')
+
 data.to_csv('data/cleaned/02_SDoH/dial_fac_cleaned.csv', index = False)
