@@ -23,11 +23,11 @@ driver.delete_all_cookies()
 driver.get(website)
 
 click_button(driver, "text","Prevalence State/County Level: All Beneficiaries by Age, 2007-2017 [ZIP, 20MB]")
-time.sleep(40)
-move_from_downloads(downloads, "CC_Prev_State_County",
-output, "cms_prev_data.csv")
+time.sleep(60)
+move_from_downloads(downloads, "CC_Prev_State_County_Age",
+output, "cms_prev_data.zip")
 
 click_button(driver, "text","Spending County Level: All Beneficiaries, 2007-2017 [ZIP, 18MB]")
 time.sleep(60)
-move_from_downloads(downloads, "CC_Spend_County",
-output, "cms_spend_data.csv")
+move_from_downloads(downloads, "CC_Spend_County.zip",
+output, "cms_spend_data.zip")

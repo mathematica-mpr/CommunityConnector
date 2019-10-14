@@ -46,6 +46,7 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
         while count == 0:
             filename = os.path.basename(path)
             count += 1
+            print(filename)
 
     shutil.move(orig_path + filename, os.path.join(new_path, new_name))
 
