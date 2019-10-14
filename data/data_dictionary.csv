@@ -1,95 +1,98 @@
-,Unnamed: 0,column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6
-0,52,race_estimate_total_white_alone,race_estimate_total_white_alone,1,0,0,0,percentage,0,0,0,0,0,0
-1,53,race_estimate_total_black_or_african_american_alone,race_estimate_total_black_or_african_american_alone,1,0,0,0,percentage,0,0,0,0,0,0
-2,54,race_estimate_total_american_indian_and_alaska_native_alone,race_estimate_total_american_indian_and_alaska_native_alone,1,0,0,0,percentage,0,0,0,0,0,0
-3,55,race_estimate_total_asian_alone,race_estimate_total_asian_alone,1,0,0,0,percentage,0,0,0,0,0,0
-4,56,race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,1,0,0,0,percentage,0,0,0,0,0,0
-5,57,race_estimate_total_some_other_race_alone,race_estimate_total_some_other_race_alone,1,0,0,0,percentage,0,0,0,0,0,0
-6,58,race_estimate_total_two_or_more_races,race_estimate_total_two_or_more_races,1,0,0,0,percentage,0,0,0,0,0,0
-7,993,median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars),median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars),1,0,0,0,continuous,0,0,0,0,0,0
-8,1007,gini_index_of_income_inequality_estimate_gini_index,gini_index_of_income_inequality_estimate_gini_index,1,0,0,0,continuous,0,0,0,0,0,0
-9,1053,mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total,mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total,0,1,0,0,continuous,0,0,0,0,1,0
-10,1068,occupancy_status_estimate_total_vacant,occupancy_status_estimate_total_vacant,0,1,0,0,percentage,0,1,0,0,0,0
-11,1125,median_value_(dollars)_estimate_median_value_(dollars),median_value_(dollars)_estimate_median_value_(dollars),0,0,0,0,continuous,0,0,0,0,0,0
-12,1304,fips,fips,0,0,0,0,continuous,0,0,0,0,0,0
-18,12,% fair/poor,% fair/poor,0,0,0,0,percentage,0,0,0,0,0,0
-19,16,physically unhealthy days,physically unhealthy days,0,0,0,0,continuous,0,0,0,0,0,0
-20,20,mentally unhealthy days,mentally unhealthy days,0,1,0,0,continuous,0,0,0,0,1,0
-21,25,% lbw,% lbw,0,0,0,0,percentage,0,0,0,0,0,0
-22,32,% smokers,% smokers,0,0,0,0,percentage,0,0,0,0,0,0
-23,36,% obese,% obese,0,0,1,0,percentage,0,0,0,0,0,0
-24,40,food environment index,food environment index,0,1,0,0,continuous,0,0,0,1,0,0
-25,42,% physically inactive,% physically inactive,0,0,0,0,percentage,0,0,0,0,0,0
-26,46,% with access,% with access,0,0,0,0,percentage,0,0,0,0,0,0
-27,48,% excessive drinking,% excessive drinking,0,0,0,0,percentage,0,0,0,0,0,0
-28,54,% alcohol-impaired,% alcohol-impaired,0,0,0,0,percentage,0,0,0,0,0,0
-29,59,chlamydia rate,chlamydia rate,0,0,0,0,rate,0,0,0,0,0,0
-30,61,teen birth rate,teen birth rate,0,0,0,0,rate,0,0,0,0,0,0
-31,69,% uninsured_x,% uninsured_x,0,1,0,0,percentage,0,0,0,0,0,1
-32,74,pcp rate,pcp rate,0,1,0,0,rate,0,0,0,0,0,1
-34,78,dentist rate,dentist rate,0,1,0,0,rate,0,0,0,0,0,1
-36,82,mhp rate,mhp rate,0,1,0,0,rate,0,0,0,0,0,1
-38,85,preventable hosp. rate,preventable hosp. rate,0,0,0,0,rate,0,0,0,0,0,0
-39,90,% screened,% screened,0,0,0,0,percentage,0,0,0,0,0,0
-40,95,% vaccinated,% vaccinated,0,0,0,0,percentage,0,0,0,0,0,0
-41,100,cohort size,cohort size,0,0,0,0,continuous,0,0,0,0,0,0
-42,101,graduation rate,graduation rate,0,1,0,0,rate,0,0,1,0,0,0
-43,104,population_x,population_x,1,0,0,0,continuous,0,0,0,0,0,0
-44,105,% some college,% some college,0,1,0,0,percentage,0,0,1,0,0,0
-45,110,labor force,labor force,0,0,0,0,continuous,0,0,0,0,0,0
-46,111,% unemployed,% unemployed,0,1,0,0,percentage,1,0,0,0,0,0
-47,113,% children in poverty,% children in poverty,0,0,0,0,percentage,0,0,0,0,0,0
-48,118,% children in poverty (hispanic),% children in poverty (hispanic),0,0,0,0,percentage,0,0,0,0,0,0
-49,119,% children in poverty (white),% children in poverty (white),0,0,0,0,percentage,0,0,0,0,0,0
-50,126,% single-parent households,% single-parent households,0,0,0,0,percentage,0,0,0,0,0,0
-51,131,association rate,association rate,0,0,0,0,rate,0,0,0,0,0,0
-52,134,violent crime rate,violent crime rate,0,1,0,0,rate,0,1,0,0,0,0
-53,137,injury death rate,injury death rate,0,0,0,0,rate,0,0,0,0,0,0
-54,141,average daily pm2.5,average daily pm2.5,0,0,0,0,continuous,0,0,0,0,0,0
-56,145,% severe housing problems,% severe housing problems,0,1,0,0,percentage,0,1,0,0,0,0
-57,149,overcrowding,overcrowding,0,0,0,0,continuous,0,0,0,0,0,0
-58,150,inadequate facilities,inadequate facilities,0,0,0,0,continuous,0,0,0,0,0,0
-59,152,% drive alone,% drive alone,0,0,0,0,percentage,0,0,0,0,0,0
-60,160,% long commute - drives alone,% long commute - drives alone,0,0,0,0,percentage,0,0,0,0,0,0
-61,165,life expectancy,life expectancy,1,0,0,0,continuous,0,0,0,0,0,0
-62,172,age-adjusted mortality,age-adjusted mortality,0,0,1,0,continuous,0,0,0,0,0,0
-63,192,% frequent physical distress,% frequent physical distress,0,0,0,0,percentage,0,0,0,0,0,0
-64,195,% frequent mental distress,% frequent mental distress,0,0,0,0,percentage,0,0,0,0,0,0
-65,198,% diabetic,% diabetic,0,0,1,0,percentage,0,0,0,0,0,0
-66,204,% food insecure,% food insecure,0,1,0,0,percentage,0,0,0,1,0,0
-67,206,% limited access,% limited access,0,0,0,0,percentage,0,0,0,0,0,0
-68,213,% insufficient sleep,% insufficient sleep,0,0,0,0,percentage,0,0,0,0,0,0
-69,221,% uninsured_y.1,% uninsured_y.1,0,0,0,0,percentage,0,0,0,0,0,0
-71,233,% free or reduced lunch,% free or reduced lunch,0,1,0,0,percentage,1,0,0,0,0,0
-72,244,% homeowners,% homeowners,0,0,0,0,percentage,0,0,0,0,0,0
-73,248,% severe housing cost burden,% severe housing cost burden,0,1,0,0,percentage,0,1,0,0,0,0
-74,252,% < 18,% < 18,0,0,0,0,percentage,0,0,0,0,0,0
-75,253,% 65 and over,% 65 and over,0,0,0,0,percentage,0,0,0,0,0,0
-76,255,% african american,% african american,0,0,0,0,percentage,0,0,0,0,0,0
-77,257,% american indian/alaskan native,% american indian/alaskan native,0,0,0,0,percentage,0,0,0,0,0,0
-78,259,% asian,% asian,0,0,0,0,percentage,0,0,0,0,0,0
-79,261,% native hawaiian/other pacific islander,% native hawaiian/other pacific islander,0,0,0,0,percentage,0,0,0,0,0,0
-80,263,% hispanic,% hispanic,0,0,0,0,percentage,0,0,0,0,0,0
-81,265,% non-hispanic white,% non-hispanic white,0,0,0,0,percentage,0,0,0,0,0,0
-82,267,% not proficient in english,% not proficient in english,0,0,0,0,percentage,0,0,0,0,0,0
-83,270,% female,% female,1,0,0,0,percentage,0,0,0,0,0,0
-84,272,% rural,% rural,1,0,0,0,percentage,0,0,0,0,0,0
-85,2,budget_administrative,budget_administrative,0,0,0,0,continuous,0,0,0,0,0,0
-86,3,budget_air,budget_air,0,0,0,0,continuous,0,0,0,0,0,0
-87,4,budget_disease,budget_disease,0,1,0,0,continuous,0,0,0,0,0,1
-88,5,budget_emergency,budget_emergency,0,1,0,0,continuous,0,0,0,0,0,1
-89,6,budget_environmental,budget_environmental,0,1,0,0,continuous,0,1,0,0,0,0
-90,7,budget_waste,budget_waste,0,0,0,0,continuous,0,0,0,0,0,0
-91,8,budget_health_svcs,budget_health_svcs,0,1,0,0,continuous,0,0,0,0,0,1
-92,9,budget_laboratory_svcs,budget_laboratory_svcs,0,1,0,0,continuous,0,0,0,0,1,0
-93,10,budget_health_equity,budget_health_equity,0,1,0,0,continuous,0,0,0,0,1,0
-94,11,budget_prevention,budget_prevention,0,1,0,0,continuous,0,0,0,0,1,0
-95,12,budget_planning,budget_planning,0,1,0,0,continuous,0,0,0,0,1,0
-96,13,budget_water,budget_water,0,1,0,0,continuous,0,1,0,0,0,0
-97,14,budget_health_info,budget_health_info,0,1,0,0,continuous,0,0,0,0,0,1
-98,0,sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0
-99,1,sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0
-100,2,sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0
-101,3,sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0
-102,4,sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0
-103,5,sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0
+column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6
+race_estimate_total_white_alone,race_estimate_total_white_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_black_or_african_american_alone,race_estimate_total_black_or_african_american_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_american_indian_and_alaska_native_alone,race_estimate_total_american_indian_and_alaska_native_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_asian_alone,race_estimate_total_asian_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_some_other_race_alone,race_estimate_total_some_other_race_alone,1,0,0,0,percentage,0,0,0,0,0,0
+race_estimate_total_two_or_more_races,race_estimate_total_two_or_more_races,1,0,0,0,percentage,0,0,0,0,0,0
+median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars),median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars),1,0,0,0,continuous,0,0,0,0,0,0
+gini_index_of_income_inequality_estimate_gini_index,gini_index_of_income_inequality_estimate_gini_index,1,0,0,0,continuous,0,0,0,0,0,0
+mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total,mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total,0,1,0,0,continuous,0,0,0,0,1,0
+occupancy_status_estimate_total_vacant,occupancy_status_estimate_total_vacant,0,1,0,0,percentage,0,1,0,0,0,0
+fips,fips,0,0,0,0,continuous,0,0,0,0,0,0
+% fair/poor,% fair/poor,0,0,0,0,percentage,0,0,0,0,0,0
+physically unhealthy days,physically unhealthy days,0,0,0,0,continuous,0,0,0,0,0,0
+mentally unhealthy days,mentally unhealthy days,0,1,0,0,continuous,0,0,0,0,1,0
+% lbw,% lbw,0,0,0,0,percentage,0,0,0,0,0,0
+% smokers,% smokers,0,0,0,0,percentage,0,0,0,0,0,0
+% obese,% obese,0,0,1,0,percentage,0,0,0,0,0,0
+food environment index,food environment index,0,1,0,0,continuous,0,0,0,1,0,0
+% physically inactive,% physically inactive,0,0,0,0,percentage,0,0,0,0,0,0
+% with access,% with access,0,0,0,0,percentage,0,0,0,0,0,0
+% excessive drinking,% excessive drinking,0,0,0,0,percentage,0,0,0,0,0,0
+% alcohol-impaired,% alcohol-impaired,0,0,0,0,percentage,0,0,0,0,0,0
+chlamydia rate,chlamydia rate,0,0,0,0,rate,0,0,0,0,0,0
+teen birth rate,teen birth rate,0,0,0,0,rate,0,0,0,0,0,0
+% uninsured_x,% uninsured_x,0,1,0,0,percentage,0,0,0,0,0,1
+pcp rate,pcp rate,0,1,0,0,rate,0,0,0,0,0,1
+dentist rate,dentist rate,0,1,0,0,rate,0,0,0,0,0,1
+mhp rate,mhp rate,0,1,0,0,rate,0,0,0,0,0,1
+preventable hosp. rate,preventable hosp. rate,0,0,0,0,rate,0,0,0,0,0,0
+% screened,% screened,0,0,0,0,percentage,0,0,0,0,0,0
+% vaccinated,% vaccinated,0,0,0,0,percentage,0,0,0,0,0,0
+cohort size,cohort size,0,0,0,0,continuous,0,0,0,0,0,0
+graduation rate,graduation rate,0,1,0,0,rate,0,0,1,0,0,0
+population_x,population_x,1,0,0,0,continuous,0,0,0,0,0,0
+% some college,% some college,0,1,0,0,percentage,0,0,1,0,0,0
+labor force,labor force,0,0,0,0,continuous,0,0,0,0,0,0
+% unemployed,% unemployed,0,1,0,0,percentage,1,0,0,0,0,0
+% children in poverty,% children in poverty,0,0,0,0,percentage,0,0,0,0,0,0
+% children in poverty (hispanic),% children in poverty (hispanic),0,0,0,0,percentage,0,0,0,0,0,0
+% children in poverty (white),% children in poverty (white),0,0,0,0,percentage,0,0,0,0,0,0
+% single-parent households,% single-parent households,0,0,0,0,percentage,0,0,0,0,0,0
+association rate,association rate,0,0,0,0,rate,0,0,0,0,0,0
+violent crime rate,violent crime rate,0,1,0,0,rate,0,1,0,0,0,0
+injury death rate,injury death rate,0,0,0,0,rate,0,0,0,0,0,0
+average daily pm2.5,average daily pm2.5,0,0,0,0,continuous,0,0,0,0,0,0
+% severe housing problems,% severe housing problems,0,1,0,0,percentage,0,1,0,0,0,0
+overcrowding,overcrowding,0,0,0,0,continuous,0,0,0,0,0,0
+inadequate facilities,inadequate facilities,0,0,0,0,continuous,0,0,0,0,0,0
+% drive alone,% drive alone,0,0,0,0,percentage,0,0,0,0,0,0
+% long commute - drives alone,% long commute - drives alone,0,0,0,0,percentage,0,0,0,0,0,0
+life expectancy,life expectancy,1,0,0,0,continuous,0,0,0,0,0,0
+age-adjusted mortality,age-adjusted mortality,0,0,1,0,continuous,0,0,0,0,0,0
+% frequent physical distress,% frequent physical distress,0,0,0,0,percentage,0,0,0,0,0,0
+% frequent mental distress,% frequent mental distress,0,0,0,0,percentage,0,0,0,0,0,0
+% diabetic,% diabetic,0,0,1,0,percentage,0,0,0,0,0,0
+% food insecure,% food insecure,0,1,0,0,percentage,0,0,0,1,0,0
+% limited access,% limited access,0,0,0,0,percentage,0,0,0,0,0,0
+% insufficient sleep,% insufficient sleep,0,0,0,0,percentage,0,0,0,0,0,0
+% uninsured_y.1,% uninsured_y.1,0,0,0,0,percentage,0,0,0,0,0,0
+% free or reduced lunch,% free or reduced lunch,0,1,0,0,percentage,1,0,0,0,0,0
+% homeowners,% homeowners,0,0,0,0,percentage,0,0,0,0,0,0
+% severe housing cost burden,% severe housing cost burden,0,1,0,0,percentage,0,1,0,0,0,0
+% < 18,% < 18,0,0,0,0,percentage,0,0,0,0,0,0
+% 65 and over,% 65 and over,0,0,0,0,percentage,0,0,0,0,0,0
+% african american,% african american,0,0,0,0,percentage,0,0,0,0,0,0
+% american indian/alaskan native,% american indian/alaskan native,0,0,0,0,percentage,0,0,0,0,0,0
+% asian,% asian,0,0,0,0,percentage,0,0,0,0,0,0
+% native hawaiian/other pacific islander,% native hawaiian/other pacific islander,0,0,0,0,percentage,0,0,0,0,0,0
+% hispanic,% hispanic,0,0,0,0,percentage,0,0,0,0,0,0
+% non-hispanic white,% non-hispanic white,0,0,0,0,percentage,0,0,0,0,0,0
+% not proficient in english,% not proficient in english,0,0,0,0,percentage,0,0,0,0,0,0
+% female,% female,1,0,0,0,percentage,0,0,0,0,0,0
+% rural,% rural,1,0,0,0,percentage,0,0,0,0,0,0
+budget_administrative,budget_administrative,0,0,0,0,continuous,0,0,0,0,0,0
+budget_air,budget_air,0,0,0,0,continuous,0,0,0,0,0,0
+budget_disease,budget_disease,0,1,0,0,continuous,0,0,0,0,0,1
+budget_emergency,budget_emergency,0,1,0,0,continuous,0,0,0,0,0,1
+budget_environmental,budget_environmental,0,1,0,0,continuous,0,1,0,0,0,0
+budget_waste,budget_waste,0,0,0,0,continuous,0,0,0,0,0,0
+budget_health_svcs,budget_health_svcs,0,1,0,0,continuous,0,0,0,0,0,1
+budget_laboratory_svcs,budget_laboratory_svcs,0,1,0,0,continuous,0,0,0,0,1,0
+budget_health_equity,budget_health_equity,0,1,0,0,continuous,0,0,0,0,1,0
+budget_prevention,budget_prevention,0,1,0,0,continuous,0,0,0,0,1,0
+budget_planning,budget_planning,0,1,0,0,continuous,0,0,0,0,1,0
+budget_water,budget_water,0,1,0,0,continuous,0,1,0,0,0,0
+budget_health_info,budget_health_info,0,1,0,0,continuous,0,0,0,0,0,1
+chronic kidney disease_pct,CMS Prevalence - Chronic Kidney Disease %,0,0,1,0,percentage,0,0,0,0,0,0
+diabetes_pct,CMS Prevalence - Diabetes %,0,0,1,0,percentage,0,0,0,0,0,0
+chronic kidney disease_std_spend,CMS Spend - Chronic Kidney Disease Standardized Spend,0,0,1,0,continuous,0,0,0,0,0,0
+diabetes_std_spend,CMS Spend - Diabetes Standardized Spend,0,0,1,0,continuous,0,0,0,0,0,0
+sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0
+sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0
+sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0
+sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0
+sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0
+sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0
