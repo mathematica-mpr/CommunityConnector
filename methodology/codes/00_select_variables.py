@@ -41,9 +41,6 @@ for var in data.columns.values:
         count += 1
 print("# columns dropped due to low coverage: " + str(count))
 
-# TODO include dialysis facility variables in correct folder & in data dictionary
-# TODO: make sure we have columns from all the sources we want
-
 # # How are all of the demographic variables correlated?
 # print(dem_vars)
 # print(data[dem_vars].corr())
