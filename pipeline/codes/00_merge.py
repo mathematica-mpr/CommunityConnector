@@ -15,9 +15,12 @@ for t in data_types:
     for file in cleaned_files:
         if "csv" in file:
             data = pd.read_csv(os.path.join(cleaned_drive, t, file))
-            data['FIPS'] = [str(fips)[-3:].zfill(3) for fips in data['FIPS']]
+            print(file)
             print(data.shape)
 
+            data['FIPS'] = [int(str(fips)[-3:]) for fips in data['FIPS']]
+            # make sure the file is unique by FIPS
+            print(data['FIPS'].drop_duplicates().shape)
             data_columns = pd.DataFrame({'column_name': data.columns.values,
                 'type': t
                 })
@@ -28,8 +31,12 @@ for t in data_types:
             else:
                 full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
                 columns = columns.append(data_columns)
+            print(full_data.shape)
 
             count += 1
+
+data['FIPS'] = [str(fips).zfill(3) for fips in data['FIPS']]
+print(data['FIPS'].drop_duplicates())
 
 print(full_data.shape)
 

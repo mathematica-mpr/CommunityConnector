@@ -1,4 +1,6 @@
 import pandas as pd
+pd.set_option('display.max_colwidth', -1)
+pd.set_option('display.max_columns', 30)
 import os
 import zipfile
 
@@ -28,7 +30,9 @@ prev.columns.values[4] = 'Dementia'
 prev.columns.values[17] = 'Hepatitis'
 cols_use = prev.columns.values
 prev.columns.values[3:] = [c + "_pct" for c in prev.columns.values[3:]]
-print(prev.head())
+prev = prev[prev['State'].str.contains('Colorado')]
+print(prev.shape)
+print(prev['State/County FIPS Code'].drop_duplicates().shape)
 
 spend = pd.read_excel(os.path.join(raw_output, "County_Table_Chronic_Conditions_Spending_2017.xlsx"),
 sheet_name = "Standardized Spending")
@@ -36,18 +40,30 @@ spend = fix_colnames(spend)
 spend.columns = cols_use
 # replace pct with std_spend
 spend.columns = [c.replace("pct","std_spend") for c in spend.columns.values]
-print(spend.head())
+spend = spend[spend['State'].str.contains('Colorado')]
+print(spend.shape)
+print(spend['State/County FIPS Code'].drop_duplicates().shape)
 
 # merge by state/county FIPS code
-cms = pd.merge(prev, spend, on = ['State/County FIPS Code',"State","County"], how = 'outer')
-cms = cms[cms['State'].str.contains("Colorado")]
-print(cms.shape)
+cms = pd.merge(prev, spend, on = ['State/County FIPS Code'], how = 'outer')
 
-print(cms.columns.values)
+# do this earlier than the merge file because there are issues
+cms = cms[cms['State/County FIPS Code'] != "  "]
+print(cms.shape)
+print(cms['State/County FIPS Code'].drop_duplicates().shape)
+
+cms['FIPS'] = [int(str(fips)[-4:]) for fips in cms['State/County FIPS Code']]
+cms = cms[cms['FIPS'] != 999]
+print(cms[['FIPS','County_x','County_y']].drop_duplicates())
+print(cms['FIPS'].drop_duplicates().shape)
+
 # keep only columns needed
-cms = cms[['State/County FIPS Code','Chronic Kidney Disease_pct','Diabetes_pct','Chronic Kidney Disease_std_spend',
+cms = cms[['FIPS','Chronic Kidney Disease_pct','Diabetes_pct','Chronic Kidney Disease_std_spend',
 'Diabetes_std_spend']]
-cms.columns.values[0] = 'FIPS'
+# replace * with ""
+cms[['Chronic Kidney Disease_pct','Diabetes_pct','Chronic Kidney Disease_std_spend',
+'Diabetes_std_spend']] = cms[['Chronic Kidney Disease_pct','Diabetes_pct','Chronic Kidney Disease_std_spend',
+'Diabetes_std_spend']].replace("* ","", regex = False)
 
 # export
 cms.to_csv(os.path.join(output, "cms_cleaned.csv"), index = False)
