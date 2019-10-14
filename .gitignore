@@ -7,5 +7,6 @@ codes/.ipynb_checkpoints/
 .env
 *.log
 data/*
+!data/data_dictionary.csv
 methodology/codes/.Rhistory
 

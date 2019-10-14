@@ -46,6 +46,7 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
         while count == 0:
             filename = os.path.basename(path)
             count += 1
+            print(filename)
 
     shutil.move(orig_path + filename, os.path.join(new_path, new_name))
 
@@ -57,3 +58,13 @@ def pull_population():
     pop.columns.values[1] = 'population'
     return pop
     
+# Looking to choose variables that have good coverage and that aren't super correlated with one of the others
+def available_vars(data, lkp_phrase, corr = False):
+    print("")
+    print(lkp_phrase)
+    cols = data.filter(regex=lkp_phrase).columns.values
+    print(data[cols].describe())
+    if corr:
+        print("Correlations:")
+        print(data[cols].corr())
+    return cols
