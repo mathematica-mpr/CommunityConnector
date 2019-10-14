@@ -47,6 +47,7 @@ print(cms.columns.values)
 # keep only columns needed
 cms = cms[['State/County FIPS Code','Chronic Kidney Disease_pct','Diabetes_pct','Chronic Kidney Disease_std_spend',
 'Diabetes_std_spend']]
+cms.columns.values[0] = 'FIPS'
 
 # export
 cms.to_csv(os.path.join(output, "cms_cleaned.csv"), index = False)
