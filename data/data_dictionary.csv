@@ -18,7 +18,7 @@ mentally unhealthy days,mentally unhealthy days,0,1,0,0,continuous,0,0,0,0,1,0,R
 % smokers,% smokers,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % obese,% obese,0,0,1,0,percentage,0,0,0,0,0,0,RWJF
 food environment index,food environment index,0,1,0,0,continuous,0,0,0,1,0,0,RWJF
-% physically inactive,% physically inactive,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% physically inactive,% physically inactive,0,0,0,0,percentage,0,1,0,0,0,0,RWJF
 % with access,% with access,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % excessive drinking,% excessive drinking,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % alcohol-impaired,% alcohol-impaired,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
@@ -105,3 +105,9 @@ pop_dens,% Good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF
 pct_deep_poverty,Housing density,0,1,0,0,rate,0,1,0,0,0,0,AHRF
 pct_good_air,% in deep poverty,1,0,0,0,percentage,0,0,0,0,0,0,AHRF
 housing_dens,Elevation,1,0,0,0,continuous,0,0,0,0,0,0,AHRF
+% smokers,% Smokers,1,1,0,0,percentage,0,0,0,0,0,0,RWJF
+% long commute - drives alone,% Long commuters drive alone,0,1,0,0,percentage,0,1,0,0,0,0,RWJF
+average daily pm2.5,Average Daily PM2.5,0,1,0,0,continuous,0,1,0,0,0,0,RWJF
+% single-parent households,% Single-Parent Households,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
+segregation index,Segregation Index,0,1,0,0,rate,0,0,0,0,1,0,RWJF
+% insufficient sleep,% Insufficient Sleep,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
