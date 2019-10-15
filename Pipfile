@@ -12,6 +12,7 @@ pandas = "*"
 sklearn = "*"
 sodapy = "*"
 xlrd = "*"
+censusgeocode = "*"
 
 [requires]
 python_version = "3.7"
