@@ -21,7 +21,9 @@ import regex as re
 from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
 
-from pipeline.codes.utilities import click_button
+import sys
+sys.path.insert(1, 'pipeline/codes')
+from utilities import click_button
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
 n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
