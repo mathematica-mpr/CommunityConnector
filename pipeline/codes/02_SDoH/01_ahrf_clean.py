@@ -63,7 +63,7 @@ grouped.reset_index(inplace = True)
 add_cols = grouped.columns.values
 add_cols = [c for c in add_cols if c != "FIPS"]
 
-data_dict = remove_from_dict(grouped)
+data_dict = remove_from_dict(grouped)[0]
 data_dict['source'] = [""]*data_dict.shape[0]
 print(data_dict)
 
