@@ -116,3 +116,5 @@ Medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS
 Medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS
 Medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,0,0,0,0,0,1,CMS
 Pct_Medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS
+diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE
+overobese_pct,Percent of Adults who are Overweight,0,0,1,0,percentage,0,0,0,0,0,0,CDPHE

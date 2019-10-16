@@ -52,6 +52,7 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
 
 import pandas as pd
 
+# this depends on RWJF data already being cleaned
 def pull_population():
     pop = pd.read_csv('data/cleaned/01_Demographic/RWJF_cleaned.csv')
     pop = pop[['FIPS','Population_x']]
