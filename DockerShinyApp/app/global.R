@@ -10,6 +10,7 @@ library(forcats)
 library(shinyWidgets)
 library(yaml)
 library(fmsb)
+library(r2d3)
 
 config <- yaml.load_file("./config.yaml")
 
