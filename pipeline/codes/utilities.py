@@ -81,4 +81,4 @@ def remove_from_dict(data):
     pre_rows = data_dict.shape[0]
     data_dict = pd.merge(data_dict, rest_cols, on = "column_name")
     print(f"Dropped {pre_rows - data_dict.shape[0]} existing rows")
-    return data_dict
+    return [data_dict, add_cols]
