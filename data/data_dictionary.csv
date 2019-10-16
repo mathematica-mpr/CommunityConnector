@@ -16,6 +16,7 @@ physically unhealthy days,physically unhealthy days,0,0,0,0,continuous,0,0,0,0,0
 mentally unhealthy days,mentally unhealthy days,0,1,0,0,continuous,0,0,0,0,1,0,RWJF
 % lbw,% lbw,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % smokers,% smokers,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% smokers,% Smokers,1,1,0,0,percentage,0,0,0,0,0,0,RWJF
 % obese,% obese,0,0,1,0,percentage,0,0,0,0,0,0,RWJF
 food environment index,food environment index,0,1,0,0,continuous,0,0,0,1,0,0,RWJF
 % physically inactive,% physically inactive,0,0,0,0,percentage,0,1,0,0,0,0,RWJF
@@ -40,14 +41,17 @@ labor force,labor force,0,0,0,0,continuous,0,0,0,0,0,0,RWJF
 % children in poverty (hispanic),% children in poverty (hispanic),0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % children in poverty (white),% children in poverty (white),0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % single-parent households,% single-parent households,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% single-parent households,% Single-Parent Households,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
 violent crime rate,violent crime rate,0,1,0,0,rate,0,1,0,0,0,0,RWJF
 injury death rate,injury death rate,0,0,0,0,rate,0,0,0,0,0,0,RWJF
 average daily pm2.5,average daily pm2.5,0,0,0,0,continuous,0,0,0,0,0,0,RWJF
+average daily pm2.5,Average Daily PM2.5,0,1,0,0,continuous,0,1,0,0,0,0,RWJF
 % severe housing problems,% severe housing problems,0,1,0,0,percentage,0,1,0,0,0,0,RWJF
 overcrowding,overcrowding,0,0,0,0,continuous,0,0,0,0,0,0,RWJF
 inadequate facilities,inadequate facilities,0,0,0,0,continuous,0,0,0,0,0,0,RWJF
 % drive alone,% drive alone,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % long commute - drives alone,% long commute - drives alone,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% long commute - drives alone,% Long commuters drive alone,0,1,0,0,percentage,0,1,0,0,0,0,RWJF
 life expectancy,life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF
 age-adjusted mortality,age-adjusted mortality,0,0,1,0,continuous,0,0,0,0,0,0,RWJF
 % frequent physical distress,% frequent physical distress,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
@@ -56,6 +60,7 @@ age-adjusted mortality,age-adjusted mortality,0,0,1,0,continuous,0,0,0,0,0,0,RWJ
 % food insecure,% food insecure,0,1,0,0,percentage,0,0,0,1,0,0,RWJF
 % limited access,% limited access,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % insufficient sleep,% insufficient sleep,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% insufficient sleep,% Insufficient Sleep,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
 % uninsured_y.1,% uninsured_y.1,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % free or reduced lunch,% free or reduced lunch,0,1,0,0,percentage,1,0,0,0,0,0,RWJF
 % homeowners,% homeowners,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
@@ -105,9 +110,9 @@ pop_dens,% Good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF
 pct_deep_poverty,Housing density,0,1,0,0,rate,0,1,0,0,0,0,AHRF
 pct_good_air,% in deep poverty,1,0,0,0,percentage,0,0,0,0,0,0,AHRF
 housing_dens,Elevation,1,0,0,0,continuous,0,0,0,0,0,0,AHRF
-% smokers,% Smokers,1,1,0,0,percentage,0,0,0,0,0,0,RWJF
-% long commute - drives alone,% Long commuters drive alone,0,1,0,0,percentage,0,1,0,0,0,0,RWJF
-average daily pm2.5,Average Daily PM2.5,0,1,0,0,continuous,0,1,0,0,0,0,RWJF
-% single-parent households,% Single-Parent Households,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
 segregation index,Segregation Index,0,1,0,0,rate,0,0,0,0,1,0,RWJF
-% insufficient sleep,% Insufficient Sleep,0,1,0,0,percentage,0,0,0,0,1,0,RWJF
+Medicare_avg_age,Medicare Average Age,1,0,0,0,continuous,0,0,0,0,0,0,CMS
+Medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS
+Medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS
+Medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,0,0,0,0,0,1,CMS
+Pct_Medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS
