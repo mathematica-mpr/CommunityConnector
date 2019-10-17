@@ -14,6 +14,7 @@ server <- function(input, output) {
 #    county_selection_check
 #  })
   
+  options(DT.options = list(dom = "t", ordering = F))
 
   county_check <- reactive({
     if (input$county_selection_type == "FIPS") {
@@ -50,6 +51,7 @@ server <- function(input, output) {
     HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$State, "</h4>"))
   })
   
+  
   output$my_county_radar <- renderPlot({
     req(county_check())
     dd <- dd %>% 
@@ -72,7 +74,19 @@ server <- function(input, output) {
                          paste0(config$colors$yellow100, '33')),
                cglcol = config$colors$grey100,
                seg = 4, vlcex = 0.8)
-    
+  })
+  
+  output$my_county_demo <- DT::renderDT({
+    req(county_check())
+    dd <- dd %>%
+      filter(grepl("demographics_", column_name))
+    df <- county_dat() %>% select(starts_with("demographics_")) %>%
+      rename_at(vars(dd$column_name), ~ dd$descrip_new) %>%
+      t() %>% data.frame() %>%
+      rownames_to_column()
+    DT::datatable(df, rownames = FALSE, colnames = "", class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt",
+                      background = config$colors$tan25)
   })
   
  # output$test <- renderD3({
