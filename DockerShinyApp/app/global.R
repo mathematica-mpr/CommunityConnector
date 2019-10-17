@@ -11,6 +11,7 @@ library(shinyWidgets)
 library(yaml)
 library(fmsb)
 library(r2d3)
+library(DT)
 
 config <- yaml.load_file("./config.yaml")
 
@@ -37,6 +38,5 @@ dd <- read_csv("./data/sample_dictionary.csv") %>%
   mutate(mid = sub(" ", "\n", mid),
          mid2 = sub(" ", "\n", mid2),
          end = sub(" ", "\n", end),
-         descrip_new = paste0(beg, mid, mid2, end)) %>%
-  select(column_name, descrip_new)
+         descrip_new = paste0(beg, mid, mid2, end)) 
 

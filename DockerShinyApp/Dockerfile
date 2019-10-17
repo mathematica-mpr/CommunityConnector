@@ -14,6 +14,8 @@ RUN R -e "install.packages(c('devtools'), repos='http://cran.rstudio.com/')"
 #RUN R -e "install.packages(c('plotly', 'shinytest'), repos='http://cran.rstudio.com/')"
 RUN R -e "devtools::install_github('rstudio/renv')"
 RUN R -e "devtools::install_github('rstudio/r2d3')"
+RUN R -e "install.packages(c('DT'), repos='http://cran.rstudio.com/')"
+
 
 
 
