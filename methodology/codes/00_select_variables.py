@@ -13,15 +13,6 @@ print(data.shape)
 nrows = data.shape[0]
 data.columns = map(str.lower, data.columns)
 
-# TODO: could also use % race variables
-# TODO: move this to the data processing pipeline
-race_cols = available_vars(data, 'race')
-print(race_cols)
-drop_race_cols = ["race_estimate_total", "race_estimate_total_two_or_more_races_two_races_including_some_other_race",
-"race_estimate_total_two_or_more_races_two_races_excluding_some_other_race_and_three_or_more_races"]
-race_cols = np.setdiff1d(race_cols, drop_race_cols)
-data[race_cols] = data[race_cols].apply(lambda x: x/data['race_estimate_total'])
-
 # keep variables from data dictionary
 data_dictionary = pd.read_csv('data/data_dictionary.csv')
 keep_cols = data_dictionary['column_name']
