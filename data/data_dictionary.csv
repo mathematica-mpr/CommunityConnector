@@ -118,3 +118,4 @@ Medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,
 Pct_Medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS
 diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE
 overobese_pct,Percent of Adults who are Overweight,0,0,1,0,percentage,0,0,0,0,0,0,CDPHE
+pct_lack_basic_literacy,Those lacking Basic prose literacy skills include those who scored Below Basic in prose and those who could not be tested due to language barriers.,1,0,0,0,percentage,0,0,0,0,0,0,NCES
