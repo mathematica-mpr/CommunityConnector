@@ -52,18 +52,15 @@ server <- function(input, output) {
   
   output$my_county_radar <- renderPlot({
     req(county_check())
+    dd <- dd %>% 
+      filter(grepl("sdoh_score", column_name))
     df <- rbind(rep(1, 6), rep(0, 6),
                 # 50% circle color
                 rep(.5, 6),
                 # 100 % circle color
                 rep(1, 6),
                 county_dat() %>% select(starts_with("sdoh_score"))) %>%
-      rename(`Economic Stability`                      = sdoh_score_1,
-             `Neighborhood\nand Physical\nEnvironment` = sdoh_score_2,
-             `Education`                               = sdoh_score_3,
-             `Food`                                    = sdoh_score_4,
-             `Community\nand Social\nContext`          = sdoh_score_5,
-             `Health Care\nSystem`                     = sdoh_score_6)
+      rename_at(vars(dd$column_name), ~ dd$descrip_new)
     
     par(bg = config$colors$tan25)
     radarchart(df, 
@@ -77,6 +74,13 @@ server <- function(input, output) {
                seg = 4, vlcex = 0.8)
     
   })
+  
+ # output$test <- renderD3({
+ #   r2d3(
+ #     c(0.3, 0.6, 0.8, 0.95, 0.40, 0.20),
+ #     script = "./d3/radar_chart.js"
+ #   )
+ # })
 
   
 }
