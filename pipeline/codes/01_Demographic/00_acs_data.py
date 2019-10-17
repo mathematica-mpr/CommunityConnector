@@ -141,9 +141,14 @@ for variable in variables:
         full_data = full_data.join(data, how = 'outer')
     count += 1
 
-print(full_data.shape)
+full_data.columns.values[0] = "location"
+full_data['FIPS'] = [location[-3:] for location in full_data['location']]
+print(full_data['FIPS'])
+full_data.drop(columns = "location", inplace = True)
 
+print(full_data.shape)
 print(output)
+
 full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'))
 
 
