@@ -4,10 +4,8 @@ import numpy as np
 data = pd.read_csv('data/full_data_relative.csv')
 data_dictionary = pd.read_csv('data/data_dictionary.csv')
 
-# will cluster on these columns in the Shiny app
-# Euclidean distance or some sort of multi-variate distance used in clustering
-# TODO: this methodology in the next code
-print(data_dictionary[data_dictionary['demographic'] == 1])
+# number of columns in data should equal number of variables in data dictionary
+assert(data.shape[1] == data_dictionary[~data_dictionary['column_name'].str.contains('sdoh_score')].shape[0])
 
 def use_sdoh_normalize(sdoh_score_num):
     # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
@@ -23,10 +21,8 @@ def use_sdoh_normalize(sdoh_score_num):
     
     # TODO: update this
     # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
-    no_flip_cols = ['graduation rate','% some college','food environment index','pcp rate','dentist rate','mhp rate',
-    'budget_environmental','budget_water','budget_health_equity','budget_laboratory_svcs','budget_planning','budget_prevention',
-    'mentally unhealthy days', 'budget_disease','budget_emergency','budget_health_info','budget_health_svcs',
-    'hosp_pp_rate','kidn_hosp_pp_rate','dial_fac_avg_rating','dial_fac_avg_stations','dial_facil_pp_rate']
+    no_flip_cols = list(data_dictionary[(data_dictionary[f'used_sdoh_{sdoh_score_num}'] == 1) &
+    (data_dictionary['higher_better'] == 1)]['column_name'])
     flip_cols = np.setdiff1d(x.columns.values, no_flip_cols)
     print("Lower is stronger cols:")
     print(flip_cols)
