@@ -31,12 +31,13 @@ for t in data_types:
             else:
                 full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
                 columns = columns.append(data_columns)
+            print(f"Completed {file}")
             print(full_data.shape)
+            print('')
 
             count += 1
 
 data['FIPS'] = [str(fips).zfill(3) for fips in data['FIPS']]
-print(data['FIPS'].drop_duplicates())
 
 print(full_data.shape)
 
