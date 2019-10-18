@@ -4,6 +4,9 @@ import numpy as np
 data = pd.read_csv('data/full_data_relative.csv')
 data_dictionary = pd.read_csv('data/data_dictionary.csv')
 
+# number of columns in data should equal number of variables in data dictionary
+assert(data.shape[1] == data_dictionary[~data_dictionary['column_name'].str.contains('sdoh_score')].shape[0])
+
 def use_sdoh_normalize(sdoh_score_num):
     # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
     # normalize variables to get all values between - and 1
