@@ -84,9 +84,30 @@ server <- function(input, output) {
       rename_at(vars(dd$column_name), ~ dd$descrip_new) %>%
       t() %>% data.frame() %>%
       rownames_to_column()
-    DT::datatable(df, rownames = FALSE, colnames = "", class = "stripe") %>%
+    DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt",
                       background = config$colors$tan25)
+  })
+  
+  output$health_outcomes_density <- renderPlot({
+    req(county_check())
+    
+    outcomes <- grep("outcome_", names(dat), value = T)
+    
+    dd <- dd %>% 
+      filter(grepl("outcome_", column_name)) %>% 
+      select(column_name, description)
+    
+    # need to filter geom_vline by selected county and matches to selected county
+    # need to add coloring to the vlines
+    dat %>% select(FIPS, State, County, outcomes) %>%
+      pivot_longer(cols = outcomes) %>%
+      # left join data dictionary to get real outcome names
+      rename(column_name = name) %>%
+      left_join(dd, by = "column_name") %>%
+      ggplot(aes(x=value)) + geom_density() +
+      geom_vline(aes(xintercept=value)) +
+      facet_wrap(~description, scales = "free", ncol = 1) 
   })
   
  # output$test <- renderD3({

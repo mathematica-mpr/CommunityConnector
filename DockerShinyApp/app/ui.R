@@ -28,7 +28,7 @@ ui <- fluidPage(#theme = "styles.css",
   ),
   
   fluidRow(
-    column(width = 4),
+    column(width = 4, plotOutput("health_outcomes_density")),
     column(width = 4),
     column(width = 4)
   )
