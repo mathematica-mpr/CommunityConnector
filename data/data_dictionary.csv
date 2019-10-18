@@ -45,19 +45,19 @@ pct_lack_basic_literacy,Percentage lacking Basic prose literacy skills include t
 adm_pp_rate,Hospitals per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF
 % children in poverty (hispanic),Percentage of hispanic people under age 18 in poverty,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 average daily pm2.5,Average Daily PM2.5,0,1,0,0,continuous,0,1,0,0,0,0,RWJF
-budget_administrative,% of budget spent on Administrative and Financial Services Division,0,0,0,0,continuous,0,0,0,0,0,0,colorado.gov
-budget_air,% of budget spent on Air Pollution Control Division,0,0,0,0,continuous,0,0,0,0,0,0,colorado.gov
-budget_disease,% of budget spent on Disease Control and Environmental Epidemiology,0,1,0,0,continuous,0,0,0,0,0,1,colorado.gov
-budget_emergency,% of budget spent on Emergency Preparedness and Response Division,0,1,0,0,continuous,0,0,0,0,0,1,colorado.gov
-budget_environmental,% of budget spent on Environmental Health and Sustainability Division,0,1,0,0,continuous,0,1,0,0,0,0,colorado.gov
-budget_health_equity,% of budget spent on Office of Health Equity,0,1,0,0,continuous,0,0,0,0,1,0,colorado.gov
-budget_health_info,% of budget spent on Center for Health and Environmental Information & Statistics,0,1,0,0,continuous,0,0,0,0,0,1,colorado.gov
-budget_health_svcs,% of budget spent on Health Facilities and Emergency Medical Services Division,0,1,0,0,continuous,0,0,0,0,0,1,colorado.gov
-budget_laboratory_svcs,% of budget spent on Laboratory Services Division,0,1,0,0,continuous,0,0,0,0,1,0,colorado.gov
-budget_planning,% of budget spent on Office of Planning & Partnership,0,1,0,0,continuous,0,0,0,0,1,0,colorado.gov
-budget_prevention,% of budget spent on Prevention Services Division,0,1,0,0,continuous,0,0,0,0,1,0,colorado.gov
-budget_waste,% of budget spent on Hazardous Materials and Waste Management Division,0,0,0,0,continuous,0,0,0,0,0,0,colorado.gov
-budget_water,% of budget spent on Water Quality Control Division,0,1,0,0,continuous,0,1,0,0,0,0,colorado.gov
+budget_administrative,% of budget spent on Administrative and Financial Services Division,0,0,0,0,percentage,0,0,0,0,0,0,colorado.gov
+budget_air,% of budget spent on Air Pollution Control Division,0,0,0,0,percentage,0,0,0,0,0,0,colorado.gov
+budget_disease,% of budget spent on Disease Control and Environmental Epidemiology,0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov
+budget_emergency,% of budget spent on Emergency Preparedness and Response Division,0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov
+budget_environmental,% of budget spent on Environmental Health and Sustainability Division,0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov
+budget_health_equity,% of budget spent on Office of Health Equity,0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov
+budget_health_info,% of budget spent on Center for Health and Environmental Information & Statistics,0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov
+budget_health_svcs,% of budget spent on Health Facilities and Emergency Medical Services Division,0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov
+budget_laboratory_svcs,% of budget spent on Laboratory Services Division,0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov
+budget_planning,% of budget spent on Office of Planning & Partnership,0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov
+budget_prevention,% of budget spent on Prevention Services Division,0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov
+budget_waste,% of budget spent on Hazardous Materials and Waste Management Division,0,0,0,0,percentage,0,0,0,0,0,0,colorado.gov
+budget_water,% of budget spent on Water Quality Control Division,0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov
 % children in poverty (white),Percentage of white people under age 18 in poverty,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % food insecure,% food insecure,0,1,0,0,percentage,0,0,0,1,0,0,RWJF
 % homeowners,% homeowners,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
