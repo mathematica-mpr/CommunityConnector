@@ -23,6 +23,7 @@ pct_deep_poverty,% Persons in Deep Poverty,0,1,0,0,rate,0,1,0,0,0,0,AHRF
 pct_good_air,% good air quality days,1,0,0,0,percentage,0,0,0,0,0,0,AHRF
 pop_dens,Population density per square mile,0,1,0,0,percentage,0,1,0,0,0,0,AHRF
 % long commute - drives alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,0,0,0,percentage,0,0,0,0,0,0,RWJF
+% long commute - drives alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,0,0,RWJF
 chronic kidney disease_pct,Percentage of Medicare beneficiaries (65+) with chronic kidney disease,0,0,1,0,percentage,0,0,0,0,0,0,CMS
 % native hawaiian/other pacific islander,Percentage of population that is Native Hawaiian or other Pacific Islander,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % non-hispanic white,Percentage of population that is non-Hispanic White,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
@@ -64,7 +65,6 @@ comm_hlth_cntrs_pp_rate,Number of short-term hospitals per person,0,1,0,0,contin
 % lbw,Percentage of births with low birth weight (<2500g),0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE
 % limited access,Percentage with limited access to healthy foods,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
-% long commute - drives alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,0,0,RWJF
 % screened,Percentage of female Medicare enrollees having an annual mammogram (age 65-74),0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 fips,fips,0,0,0,0,continuous,0,0,0,0,0,0,All
 food environment index,"Index of factors that contribute to a healthy food environment, 0 (worst) to 10 (best)",0,1,0,0,continuous,0,0,0,1,0,0,RWJF
@@ -115,3 +115,9 @@ segregation index,Index of dissimilarity where higher values indicate greater re
 short_hosp_pp_rate,Community Health Centers per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF
 teen birth rate,"Number of births per 1,000 female population ages 15-19",0,0,0,0,rate,0,0,0,0,0,0,RWJF
 violent crime rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,rate,0,1,0,0,0,0,RWJF
+job_density_2013,Number of jobs per square mile in each county,1,1,0,0,continuous,1,0,0,0,0,0,Opportunity Atlas
+frac_coll_plus2010,Percentage of people aged 25 or older who have at least a Bachelor's degree,1,1,0,0,percentage,0,0,1,0,0,0,Opportunity Atlas
+rent_twobed2015,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent,1,1,0,0,continuous,0,0,0,0,0,0,Opportunity Atlas
+traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,1,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas
+ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,1,0,0,rate,1,0,0,0,0,0,Opportunity Atlas
+%_Staying_in_Same_Tract_as_Adults_rP_gP_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,1,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas
