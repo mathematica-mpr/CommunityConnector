@@ -1,6 +1,7 @@
 # distance function to find my county matches
 
 find_my_matches <- function(my_county, df, n_matches = 20) {
+  # my_county = FIPs of selected county
   df <- df %>% select(FIPS, starts_with("sdoh_score")) %>%
     column_to_rownames(var = "FIPS")
   distances <- data.frame(as.matrix(dist(df)))
@@ -12,6 +13,8 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
     arrange(distance) %>%
     head(n_matches) %>%
     pull(FIPS)
+  
+  my_matches
   
 }
 
