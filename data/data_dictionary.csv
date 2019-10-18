@@ -75,10 +75,10 @@ injury death rate,"Number of deaths due to injury per 100,000 population",0,0,0,
 kidn_hosp_pp_rate,Kidney hospitals per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF,1
 life expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1
 mds_dos_pp_rate,MDs + DOs per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF,1
-Medicare_avg_age,Medicare Average Age,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
-Medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
-Medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
-Medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,0,0,0,0,0,1,CMS,0
+medicare_avg_age,Medicare Average Age,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
+medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
+medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
+medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,0,0,0,0,0,1,CMS,0
 mentally unhealthy days,"Average number of mentally unhealth days reported in the last 30 days, age-adjusted",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0
 dentist rate,"Dentists per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1
 inadequate facilities,Percentage of households with lack of kitchen or plumbing facilities,0,0,0,0,continuous,0,0,0,0,0,0,RWJF,0
@@ -86,7 +86,7 @@ overobese_pct,Percent of Adults who are Overweight,0,0,1,0,percentage,0,0,0,0,0,
 mhp rate,"Mental Health Providers per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1
 overcrowding,Percentage of households with overcrowding,0,0,0,0,continuous,0,0,0,0,0,0,RWJF,0
 pcp rate,"Primary Care Physicians per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1
-Pct_Medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
+pct_medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
 physically unhealthy days,Average number of physically unhealthy days reported in past 30 days (age-adjusted),0,0,0,0,continuous,0,0,0,0,0,0,RWJF,0
 population_x,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,
 preventable hosp. rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,0,0,0,rate,0,0,0,0,0,0,RWJF,0
@@ -97,16 +97,14 @@ sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1
 sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1
 sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1
 sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1
-segregation index,Index of dissimilarity where higher values indicate greater residential segregation residents,0,1,0,0,rate,0,0,0,0,1,0,RWJF,0
 short_hosp_pp_rate,Short-term hospitals per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF,1
 teen birth rate,"Number of births per 1,000 female population ages 15-19",0,0,0,0,rate,0,0,0,0,0,0,RWJF,0
 violent crime rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,rate,0,1,0,0,0,0,RWJF,0
-job_density_2013,Number of jobs per square mile in each county,1,1,0,0,continuous,1,0,0,0,0,0,Opportunity Atlas,
 frac_coll_plus2010,Percentage of people aged 25 or older who have at least a Bachelor's degree,1,1,0,0,percentage,0,0,1,0,0,0,Opportunity Atlas,1
 rent_twobed2015,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent,1,1,0,0,continuous,0,0,0,0,0,0,Opportunity Atlas,
 traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,1,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas,1
 ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,1,0,0,rate,1,0,0,0,0,0,Opportunity Atlas,1
-%_Staying_in_Same_Tract_as_Adults_rP_gP_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,1,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas,
+%_staying_in_same_tract_as_adults_rp_gp_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,1,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas,
 race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_black_or_african_american_alone,% Black or African American,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
