@@ -21,14 +21,13 @@ data.drop(['County'], axis = 1, inplace = True)
 rows = data.shape[0]
 assert(raw_data.shape[0] == rows)
 
-# make all budget amounts per capita
-# TODO: use function from utilities
-pop = pd.read_csv('data/cleaned/01_Demographic/RWJF_cleaned.csv')
-pop = pop[['FIPS','Population_x']]
-data = pd.merge(data, pop, on = "FIPS", how = 'inner')
-data['Sum of Amount'] = data['Sum of Amount']/data['Population_x']
-data.drop(['Population_x'], axis = 1, inplace = True)
-assert(data.shape[0] == rows)
+# make all budget amounts percentage
+totals = data.groupby(['FIPS']).sum().reset_index()
+totals.columns.values[1] = 'Total Budget'
+
+data = pd.merge(data, totals, on = 'FIPS')
+data['Sum of Amount'] = data['Sum of Amount']/data['Total Budget']
+data.drop(['Total Budget'], axis = 1, inplace = True)
 
 # pivot data from long to wide
 print(data['Division Name'].drop_duplicates())
