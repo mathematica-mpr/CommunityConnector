@@ -68,7 +68,6 @@ diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Perso
 % screened,Percentage of female Medicare enrollees having an annual mammogram (age 65-74),0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 fips,fips,0,0,0,0,continuous,0,0,0,0,0,0,All
 food environment index,"Index of factors that contribute to a healthy food environment, 0 (worst) to 10 (best)",0,1,0,0,continuous,0,0,0,1,0,0,RWJF
-gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,0,0,ACS
 graduation rate,Percentage of ninth-grade cohort that graduates in four years,0,1,0,0,percentage,0,0,1,0,0,0,RWJF
 % vaccinated,Percentage of annual Medicare enrollees having an annual flu vaccination,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
 % with access,Percentage of the population with access to places for physical activity,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
@@ -77,8 +76,6 @@ injury death rate,"Number of deaths due to injury per 100,000 population",0,0,0,
 kidn_hosp_pp_rate,Kidney hospitals per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF
 life expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF
 mds_dos_pp_rate,MDs + DOs per person,0,1,0,0,continuous,0,0,0,0,0,1,AHRF
-mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total,Mean Hours Worked in past year,0,1,0,0,continuous,0,0,0,0,1,0,ACS
-median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars),Median Household Income,1,0,0,0,continuous,0,0,0,0,0,0,ACS
 Medicare_avg_age,Medicare Average Age,1,0,0,0,continuous,0,0,0,0,0,0,CMS
 Medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS
 Medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS
@@ -92,19 +89,9 @@ overcrowding,Percentage of households with overcrowding,0,0,0,0,continuous,0,0,0
 pcp rate,"Primary Care Physicians per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF
 Pct_Medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS
 physically unhealthy days,Average number of physically unhealthy days reported in past 30 days (age-adjusted),0,0,0,0,continuous,0,0,0,0,0,0,RWJF
-place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_only_english,% Speak Only English,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_other_languages,% Speak Language other than English,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_other_languages_speak_english_very_well,% Speak Language other than English and Speak English well,1,0,0,0,percentage,0,0,0,0,0,0,ACS
 population_x,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJF
 preventable hosp. rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,0,0,0,rate,0,0,0,0,0,0,RWJF
 % uninsured_y.1,% uninsured_y.1,0,0,0,0,percentage,0,0,0,0,0,0,RWJF
-race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_black_or_african_american_alone,% Black or African American,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,% Native Hawaiian or Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_some_other_race_alone,% Other race,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_two_or_more_races,% Two or More races,1,0,0,0,percentage,0,0,0,0,0,0,ACS
-race_estimate_total_white_alone,% White,1,0,0,0,percentage,0,0,0,0,0,0,ACS
 sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created
 sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created
 sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created
@@ -121,3 +108,18 @@ rent_twobed2015,Median gross rent for renter-occupied housing units with two bed
 traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,1,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas
 ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,1,0,0,rate,1,0,0,0,0,0,Opportunity Atlas
 %_Staying_in_Same_Tract_as_Adults_rP_gP_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,1,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas
+race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_black_or_african_american_alone,% Black or African American,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_native_hawaiian_and_other_pacific_islander_alone,% Native Hawaiian or Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_some_other_race_alone,% Other race,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_two_or_more_races,% Two or More races,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+race_estimate_total_white_alone,% White,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+pct_only_english,% Speak Only English,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+pct_other_languages,% Speak Language other than English,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+pct_other_languages_eng_vwell,% Speak Language other than English and Speak English well,1,0,0,0,percentage,0,0,0,0,0,0,ACS
+median_income,Median Household Income,1,0,0,0,continuous,0,0,0,0,0,0,ACS
+gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,0,0,ACS
+mean_hours,Mean Hours Worked in past year,1,1,0,0,continuous,0,0,0,0,1,0,ACS
+pct_vacant,% Vacant housing units,0,1,0,0,percentage,0,0,0,0,1,0,ACS
+median_value,Median value of owner-occupied housing units,1,0,0,0,continuous,0,0,0,0,0,0,ACS
