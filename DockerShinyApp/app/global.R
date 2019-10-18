@@ -17,6 +17,8 @@ library(DT)
 
 config <- yaml.load_file("./config.yaml")
 
+source("./r/functions.R")
+
 # will have to read this in from s3 bucket
 dat <- read_csv("./data/sample_data.csv", col_types = cols(FIPS = col_character()))
 dd <- read_csv("./data/sample_dictionary.csv") %>%
