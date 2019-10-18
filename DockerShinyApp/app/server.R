@@ -98,16 +98,26 @@ server <- function(input, output) {
       filter(grepl("outcome_", column_name)) %>% 
       select(column_name, description)
     
-    # need to filter geom_vline by selected county and matches to selected county
+    # selected county and matches to selected county dataframe
+    my_matches <- find_my_matches(county_FIPS(), dat) 
+    
     # need to add coloring to the vlines
-    dat %>% select(FIPS, State, County, outcomes) %>%
+    df <- dat %>% select(FIPS, State, County, outcomes) %>%
       pivot_longer(cols = outcomes) %>%
+      # selected county and matches to selected county
+      mutate(type = case_when(
+        FIPS %in% my_matches ~ "matches",
+        FIPS == county_FIPS() ~ "selected",
+        TRUE ~ "other"
+      )) %>%
       # left join data dictionary to get real outcome names
       rename(column_name = name) %>%
-      left_join(dd, by = "column_name") %>%
-      ggplot(aes(x=value)) + geom_density() +
-      geom_vline(aes(xintercept=value)) +
-      facet_wrap(~description, scales = "free", ncol = 1) 
+      left_join(dd, by = "column_name") 
+    
+    ggplot(df, aes(x=value)) + geom_density() +
+      facet_wrap(~description, scales = "free", ncol = 1) +
+      geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) 
+    
   })
   
  # output$test <- renderD3({
