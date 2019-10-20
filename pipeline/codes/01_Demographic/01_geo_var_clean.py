@@ -47,6 +47,8 @@ data.drop(['population','Medicare_beneficiaries'], axis = 1, inplace = True)
 
 # replace negatives with NAs
 data[data < 0] = np.nan
+data.columns = map(str.lower, data.columns)
+data.columns.values[0] = 'FIPS'
 print(data.head())
 
 results = remove_from_dict(data)
@@ -62,13 +64,14 @@ add_rows = pd.DataFrame({'column_name': add_cols,
 'outcome': [0]*5,
 'sdoh_score': [0]*5,
 'data_type': ['continuous','percentage','continuous','continuous','percentage'],
-'used_sdoh_1': [0]*5,
+'used_sdoh_1': [0,0,0,1,0],
 'used_sdoh_2': [0]*5,
 'used_sdoh_3': [0]*5,
 'used_sdoh_4': [0]*5,
 'used_sdoh_5': [0]*5,
 'used_sdoh_6': [0, 0, 0, 1, 0],
-'source': ['CMS']*5
+'source': ['CMS']*5,
+'higher_better': ['','','',0,'']
 })
 data_dict = data_dict.append(add_rows)
 
