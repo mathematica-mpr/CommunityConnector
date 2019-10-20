@@ -15,6 +15,7 @@ data.columns = map(str.lower, data.columns)
 
 # keep variables from data dictionary
 data_dictionary = pd.read_csv('data/data_dictionary.csv')
+data_dictionary.columns = map(str.lower, data_dictionary.columns)
 keep_cols = data_dictionary['column_name']
 keep_cols = [col for col in keep_cols if 'sdoh_score' not in col]
 
@@ -33,28 +34,5 @@ for var in data.columns.values:
         data.drop([var], axis = 1, inplace = True)
         count += 1
 print("# columns dropped due to low coverage: " + str(count))
-
-# # How are all of the demographic variables correlated?
-# print(dem_vars)
-# print(data[dem_vars].corr())
-# # if no problematic correlations, flag all of these as demographic variables, and the rest as 0's
-# # rural and some races have higher correlations, as does mortality and income, but going to keep them all in for now
-
-# # # TODO: more variables could be flagged as sdoh_raw than just the ones that go into the aggregate sdoh scores, if we want
-
-# def data_type(c):
-#     if c in ['FIPS','County','State']:
-#         return 'ID'
-#     elif c in [f'sdoh_score{i}' for i in range(1,7)]:
-#         return 'aggregate'
-#     elif data[c].dtypes in ['float64','int64']:
-#         if all(data[c] <= 1) or (('%' in c and '95%' not in c) or (c.count("%") > 1) or ('pct' in c)):
-#             return 'percentage'
-#         elif ('rate' in c.lower()) or ('ratio' in c.lower()):
-#             return 'rate'
-#         else:
-#             return 'continuous'
-#     else:
-#         return 'unknown'
 
 data.to_csv('data/full_data_relative.csv', index = False)
