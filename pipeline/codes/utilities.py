@@ -55,7 +55,7 @@ import pandas as pd
 # this depends on RWJF data already being cleaned
 def pull_population():
     pop = pd.read_csv('data/cleaned/01_Demographic/RWJF_cleaned.csv')
-    pop = pop[['FIPS','Population_x']]
+    pop = pop[['FIPS','Population']]
     pop.columns.values[1] = 'population'
     return pop
     
