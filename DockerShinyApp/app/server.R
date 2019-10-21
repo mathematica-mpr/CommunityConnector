@@ -45,6 +45,11 @@ server <- function(input, output) {
   county_dat <- reactive({
     dat %>% filter(FIPS == county_FIPS())
   })
+  
+  # selected county and matches to selected county dataframe
+  my_matches <- reactive({
+    find_my_matches(county_FIPS(), dat) 
+  })
 
   output$my_county_name <- renderUI({
     req(county_check())
@@ -98,15 +103,12 @@ server <- function(input, output) {
       filter(grepl("outcome_", column_name)) %>% 
       select(column_name, description)
     
-    # selected county and matches to selected county dataframe
-    my_matches <- find_my_matches(county_FIPS(), dat) 
-    
     # need to add coloring to the vlines
     df <- dat %>% select(FIPS, State, County, outcomes) %>%
       pivot_longer(cols = outcomes) %>%
       # selected county and matches to selected county
       mutate(type = case_when(
-        FIPS %in% my_matches ~ "matches",
+        FIPS %in% my_matches() ~ "matches",
         FIPS == county_FIPS() ~ "selected",
         TRUE ~ "other"
       )) %>%
@@ -119,6 +121,8 @@ server <- function(input, output) {
       geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) 
     
   })
+  
+  
   
  # output$test <- renderD3({
  #   r2d3(
