@@ -131,7 +131,7 @@ server <- function(input, output) {
       filter(FIPS %in% my_matches()) %>%
       group_by(FIPS, County, State) %>%
       nest() %>%
-      mutate(radar_data = purrr::map(data, make_radar_data, dd = test_dd)) %>%
+      mutate(radar_data = purrr::map(data, make_radar_data, dd = dd)) %>%
       mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
                               plty = 0,
                               pfcol = c(paste0(config$colors$grey50, '80'),
