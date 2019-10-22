@@ -18,3 +18,13 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
+make_radar_data <- function(county_df, dd) {
+  df <- rbind(rep(1, 6), rep(0, 6),
+              # 50% circle color
+              rep(.5, 6),
+              # 100 % circle color
+              rep(1, 6),
+              county_df) %>%
+    rename_at(vars(dd$column_name), ~ dd$descrip_new)
+  df
+}
