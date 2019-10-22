@@ -15,6 +15,8 @@ library(yaml)
 library(fmsb)
 library(DT)
 library(usmap)
+library(maps)
+library(viridis)
 
 config <- yaml.load_file("./config.yaml")
 
