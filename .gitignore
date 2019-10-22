@@ -8,5 +8,6 @@ codes/.ipynb_checkpoints/
 *.log
 data/*
 !data/data_dictionary.csv
+!data/full_data_relative.csv
 methodology/codes/.Rhistory
 
