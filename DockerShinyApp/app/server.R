@@ -48,6 +48,7 @@ server <- function(input, output) {
   
   # selected county and matches to selected county dataframe
   my_matches <- reactive({
+    req(county_check())
     find_my_matches(county_FIPS(), dat) 
   })
 
@@ -119,7 +120,6 @@ server <- function(input, output) {
     ggplot(df, aes(x=value)) + geom_density() +
       facet_wrap(~description, scales = "free", ncol = 1) +
       geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) 
-    
   })
   
   
