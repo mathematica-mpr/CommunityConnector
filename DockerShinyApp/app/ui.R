@@ -29,7 +29,7 @@ ui <- fluidPage(#theme = "styles.css",
   
   fluidRow(
     column(width = 4, plotOutput("health_outcomes_density")),
-    column(width = 4),
+    column(width = 4, plotOutput("compare_county_radars")),
     column(width = 4)
   )
   

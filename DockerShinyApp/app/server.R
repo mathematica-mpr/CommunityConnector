@@ -46,7 +46,7 @@ server <- function(input, output) {
     dat %>% filter(FIPS == county_FIPS())
   })
   
-  # selected county and matches to selected county dataframe
+  # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
     find_my_matches(county_FIPS(), dat) 
@@ -62,13 +62,7 @@ server <- function(input, output) {
     req(county_check())
     dd <- dd %>% 
       filter(grepl("sdoh_score", column_name))
-    df <- rbind(rep(1, 6), rep(0, 6),
-                # 50% circle color
-                rep(.5, 6),
-                # 100 % circle color
-                rep(1, 6),
-                county_dat() %>% select(starts_with("sdoh_score"))) %>%
-      rename_at(vars(dd$column_name), ~ dd$descrip_new)
+    df <- make_radar_data(county_dat() %>% select(starts_with("sdoh_score")), dd)
     
     par(bg = config$colors$tan25)
     radarchart(df, 
@@ -122,6 +116,32 @@ server <- function(input, output) {
       geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) 
   })
   
+  output$compare_county_radars <- renderPlot({
+    req(county_check())
+    
+    dd <- dd %>% 
+      filter(grepl("sdoh_score", column_name)) %>% 
+      select(column_name, description, descrip_new)
+    
+    # find number of rows for plot
+    plot_nrows <- ceiling(length(my_matches()) / 5)
+
+    par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
+    df <- dat %>% select(FIPS, State, County, starts_with("sdoh_score")) %>%
+      filter(FIPS %in% my_matches()) %>%
+      group_by(FIPS, County, State) %>%
+      nest() %>%
+      mutate(radar_data = purrr::map(data, make_radar_data, dd = test_dd)) %>%
+      mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
+                              plty = 0,
+                              pfcol = c(paste0(config$colors$grey50, '80'),
+                                        paste0(config$colors$grey25, '33'),
+                                        paste0(config$colors$green100, '33')),
+                              cglcol = config$colors$grey100,
+                              seg = 4, vlcex = 0.8,
+                              title = paste0(County, ", ", State)))
+  })
+
   
   
  # output$test <- renderD3({
