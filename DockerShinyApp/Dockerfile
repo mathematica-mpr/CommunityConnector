@@ -17,7 +17,7 @@ RUN R -e "devtools::install_github('rstudio/r2d3')"
 RUN R -e "install.packages(c('DT'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('plotly'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('shinytest'), repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('maps'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('usmap'), repos='http://cran.rstudio.com/')"
 
 #RUN R -e "shinytest::installDependencies()"
 

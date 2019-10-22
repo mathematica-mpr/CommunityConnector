@@ -49,7 +49,7 @@ server <- function(input, output) {
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
-    find_my_matches(county_FIPS(), dat) 
+    find_my_matches(county_FIPS(), dat)[[2]] 
   })
 
   output$my_county_name <- renderUI({
@@ -113,7 +113,8 @@ server <- function(input, output) {
     
     ggplot(df, aes(x=value)) + geom_density() +
       facet_wrap(~description, scales = "free", ncol = 1) +
-      geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) 
+      geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) + 
+      theme(plot.background = element_rect(fill = config$colors$tan25))
   })
   
   output$compare_county_radars <- renderPlot({
@@ -136,13 +137,28 @@ server <- function(input, output) {
                               plty = 0,
                               pfcol = c(paste0(config$colors$grey50, '80'),
                                         paste0(config$colors$grey25, '33'),
-                                        paste0(config$colors$green100, '33')),
+                                        paste0(config$colors$teal100, '33')),
                               cglcol = config$colors$grey100,
                               seg = 4, vlcex = 0.8,
                               title = paste0(County, ", ", State)))
   })
 
-  
+  output$map <- renderPlot({
+    req(county_check())
+    
+    state <- dat %>% pull(State) %>% unique()
+    st <- state.abb[match(state, state.name)]
+    
+    df <- find_my_matches(county_FIPS(), dat)[[1]] %>%
+      rename(fips = FIPS)
+    
+    par(bg = config$colors$tan25)
+    plot_usmap(data = df, values = "distance", "counties", include = c(st)) +
+      scale_fill_continuous(low = paste0(config$colors$yellow100, 80), 
+                            high = paste0(config$colors$teal100, 80)) + 
+      theme(panel.background = element_rect(fill = config$colors$tan25),
+            plot.background = element_rect(fill = config$colors$tan25))
+  })
   
  # output$test <- renderD3({
  #   r2d3(
