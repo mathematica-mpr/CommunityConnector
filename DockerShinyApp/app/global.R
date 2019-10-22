@@ -14,6 +14,7 @@ library(shinyWidgets)
 library(yaml)
 library(fmsb)
 library(DT)
+library(maps)
 
 config <- yaml.load_file("./config.yaml")
 
