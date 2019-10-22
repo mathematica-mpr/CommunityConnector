@@ -6,17 +6,20 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
     column_to_rownames(var = "FIPS")
   distances <- data.frame(as.matrix(dist(df)))
   
-  my_matches <- distances %>% 
+  my_county_distances <- distances %>% 
     select(distance = paste0("X", my_county)) %>%
-    rownames_to_column("FIPS") %>%
+    rownames_to_column("FIPS")
+  
+  my_matches <-  my_county_distances %>%
     filter(FIPS != my_county) %>%
     arrange(distance) %>%
     head(n_matches) %>%
     pull(FIPS)
   
-  my_matches
+  list(my_county_distances, my_matches)
   
 }
+
 
 make_radar_data <- function(county_df, dd) {
   df <- rbind(rep(1, 6), rep(0, 6),
