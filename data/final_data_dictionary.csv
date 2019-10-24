@@ -87,12 +87,12 @@ population,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJ
 preventable_hosp._rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0.0
 pct_adult_uninsured,Percentage of adults without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
 pct_child_uninsured,Percentag of children without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
-sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 short_hosp_pp_rate,Short-term hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 teen_birth_rate,"Number of births per 1,000 female population ages 15-19",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0
 violent_crime_rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0
