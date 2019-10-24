@@ -7,7 +7,6 @@ data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
 
 ## Select variables to match on, limit data to these variables, and replace NAs
-debug(select_distance_columns)
 use_data <- select_distance_columns(data, data_dictionary, 1, 1)
 
 ## Get distance matrix using methodology specified
