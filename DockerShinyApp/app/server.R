@@ -143,21 +143,40 @@ server <- function(input, output) {
                               title = paste0(County, ", ", State)))
   })
 
-  output$map <- renderPlot({
+  output$map <- renderPlotly({
     req(county_check())
     
     state <- dat %>% pull(State) %>% unique()
     st <- state.abb[match(state, state.name)]
     
     df <- find_my_matches(county_FIPS(), dat)[[1]] %>%
-      rename(fips = FIPS)
+      rename(fips = FIPS) %>%
+      mutate(county = tolower(County))
     
-    par(bg = config$colors$tan25)
-    plot_usmap(data = df, values = "distance", "counties", include = c(st)) +
-      scale_fill_continuous(low = paste0(config$colors$yellow100, 80), 
-                            high = paste0(config$colors$teal100, 80)) + 
-      theme(panel.background = element_rect(fill = config$colors$tan25),
-            plot.background = element_rect(fill = config$colors$tan25))
+    county_map_df <- map_data("county") %>%
+      filter(region == tolower(state))
+    
+    df <- full_join(df, county_map_df, by = c("county" = "subregion"))
+    
+    df %>%
+      group_by(group) %>%
+      plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
+              colors = viridis_pal(option="D")(3),
+              text = ~County, hoverinfo = 'text') %>%
+      add_polygons(line = list(width = 0.4)) %>%
+      add_polygons(
+        fillcolor = 'transparent',
+        line = list(color = 'black', width = 0.5),
+        showlegend = FALSE, hoverinfo = 'none'
+      ) %>%
+      layout(
+        xaxis = list(title = "", showgrid = FALSE,
+                     zeroline = FALSE, showticklabels = FALSE),
+        yaxis = list(title = "", showgrid = FALSE,
+                     zeroline = FALSE, showticklabels = FALSE),
+        showlegend = FALSE
+      )
+                     
   })
   
  # output$test <- renderD3({

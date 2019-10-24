@@ -21,8 +21,8 @@ ui <- fluidPage(#theme = "styles.css",
              column(width = 6, plotOutput("my_county_radar")),
              column(width = 3, 
                     DT::DTOutput("my_county_demo")),
-             column(width = 3)) #,
-         #  fluidRow(d3Output("test"))
+             column(width = 3)),
+          # fluidRow(d3Output("test"))
            ),
     column(width = 5)
   ),
@@ -30,7 +30,7 @@ ui <- fluidPage(#theme = "styles.css",
   fluidRow(
     column(width = 4, plotOutput("health_outcomes_density")),
     column(width = 4, plotOutput("compare_county_radars")),
-    column(width = 4, plotOutput("map"))
+    column(width = 4, plotlyOutput("map"))
   )
   
 
