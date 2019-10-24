@@ -42,6 +42,9 @@ print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
 # not really! woohoo!
 # the most correlated ones are 5/6, 1/3, and 1/5
 # which are: community + health, economic + education, and economic + community. makes sense!
+# especially make sure economics doesn't drive the others - somehow control for economic score??
+
+# TODO: also check variation in outcome by score
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","")
