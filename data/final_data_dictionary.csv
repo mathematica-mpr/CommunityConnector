@@ -2,51 +2,51 @@ column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_s
 pct_lt_18,Percentage of population below 18 years of age,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_65_and_over,Percentage of population ages 65 and older,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_african_american,Percentage of population that is non-Hispanic African American,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_alcohol-impaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
+pct_alcohol-impaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 pct_american_indian_alaskan_native,Percentage of population that is American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_asian,Percentage of population that is Asian,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_children_in_poverty,Percentage of people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 elevation,Elevation Feet,1,0,0,0,continuous,0,0,0,0,0,0,AHRF,
 hosp_pp_rate,Total Number of Hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 pct_diabetic,Percentage of adults aged 20 and above with diagnosed diabetes,0,0,1,0,percentage,0,0,0,0,0,0,RWJF,0.0
-pct_drive_alone,Percentage of the workforce that drives alone to work,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
+pct_drive_alone,Percentage of the workforce that drives alone to work,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 pct_excessive_drinking,Percentage of adults reporting binge or heavy drinking,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_fair_poor,"Percent of Adults reporting Fair or Poor Health, age-adjusted",0,1,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 pct_female,Percentage of population that is female,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-housing_dens,Housing Unit Density per Sq Mile,1,0,0,0,rate,0,0,0,0,0,0,AHRF,
-pct_free_or_reduced_lunch,Percentage of children enrolled in public schools that are eligible for free or reduced price lunch,1,1,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
+housing_dens,Housing Unit Density per Sq Mile,0,1,0,0,rate,0,0,0,0,0,0,AHRF,
+pct_free_or_reduced_lunch,Percentage of children enrolled in public schools that are eligible for free or reduced price lunch,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
 pct_frequent_mental_distress,Percentage of adults reporting 14 or more days of poor mental health per month,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_frequent_physical_distress,Percentage of adults reporting 14 or more days of poor physical health per month,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 pct_hispanic,Percentage of population that is Hispanic,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_deep_poverty,% Persons in Deep Poverty,1,0,0,0,percentage,0,0,0,0,0,0,AHRF,0.0
+pct_deep_poverty,% Persons in Deep Poverty,1,0,0,0,percentage,1,0,0,0,0,0,AHRF,0.0
 pct_insufficient_sleep,Percentage of adults who report fewer than 7 hours of sleep on average,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
-pct_good_air,% good air quality days,1,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0
+pct_good_air,% good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0
 pop_dens,Population density per square mile,1,0,0,0,rate,0,0,0,0,0,0,AHRF,
 pct_long_commute_-_drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
 chronic_kidney_disease_pct,Percentage of Medicare beneficiaries (65+) with chronic kidney disease,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0
 pct_native_hawaiian_other_pacific_islander,Percentage of population that is Native Hawaiian or other Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_non-hispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_not_proficient_in_english,Percentage of population that is not proficient in English,1,1,0,0,percentage,0,0,1,0,1,0,RWJF,0.0
+pct_not_proficient_in_english,Percentage of population that is not proficient in English,1,0,0,0,percentage,0,0,1,0,1,0,RWJF,0.0
 pct_obese,Percentage of the adult population (age 20 and older) that reports a body mass index (BMI) greater than or equal to 30 kg/m2,0,0,1,0,percentage,0,0,0,0,0,0,RWJF,0.0
-pct_physically_inactive,Percentage of adults age 20 and over reporting no leisure-time physical activity.,0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
+pct_physically_inactive,Percentage of adults age 20 and over reporting no leisure-time physical activity.,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_rural,Percentage of population living in a rural area,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 chronic_kidney_disease_std_spend,Medicare per capita standardized spending on chronic kidney disease,0,1,1,0,continuous,1,0,0,0,0,0,CMS,0.0
-pct_severe_housing_cost_burden,Percentage of households that spend 50% or more of their household income on housing,1,1,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
-pct_severe_housing_problems,"Percentage of households with at least 1 of 4 housing problems: overcrowding, high housing costs, lack of kitchen facilities, or lack of plumbing facilities",1,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
-pct_single-parent_households,Percentage of children that live in a household headed by single parent,1,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
+pct_severe_housing_cost_burden,Percentage of households that spend 50% or more of their household income on housing,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
+pct_severe_housing_problems,"Percentage of households with at least 1 of 4 housing problems: overcrowding, high housing costs, lack of kitchen facilities, or lack of plumbing facilities",1,0,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
+pct_single-parent_households,Percentage of children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_smokers,Percentage of adults who are current smokers,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_some_college,Percentage of adults ages 25-44 with some post-secondary education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
-pct_unemployed,Percentage of population ages 16 and older unemployed but seeking work,1,1,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
-pct_uninsured_x,Percentage of adults under age 65 without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
+pct_unemployed,Percentage of population ages 16 and older unemployed but seeking work,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
+pct_uninsured,Percentage of population under age 65 without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
 diabetes_pct,Percentage of Medicare beneficiaries (65+) with diabetes,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0
-diabetes_std_spend,Medicare per capita standardized spending on diabetes,0,1,1,0,continuous,1,0,0,0,0,0,CMS,0.0
-pct_lack_basic_literacy,Percentage lacking Basic prose literacy skills include those who scored Below Basic in prose and those who could not be tested due to language barriers.,1,1,0,0,percentage,0,0,1,0,1,0,NCES,0.0
-adm_pp_rate,Admissions per person,1,1,0,0,continuous,0,0,0,0,0,0,AHRF,0.0
+diabetes_std_spend,Medicare per capita standardized spending on diabetes,0,1,1,0,continuous,0,0,0,0,0,0,CMS,0.0
+pct_lack_basic_literacy,Percentage lacking Basic prose literacy skills include those who scored Below Basic in prose and those who could not be tested due to language barriers.,1,0,0,0,percentage,0,0,1,0,0,0,NCES,0.0
+adm_pp_rate,Admissions per person,1,0,0,0,continuous,0,0,0,0,0,0,AHRF,0.0
 pct_children_in_poverty_hispanic,Percentage of hispanic people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 average_daily_pm2.5,Average Daily PM2.5,0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0
 budget_administrative,% of budget spent on Administrative and Financial Services Division,0,1,0,0,percentage,0,0,0,0,0,0,colorado.gov,1.0
 budget_air,% of budget spent on Air Pollution Control Division,0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0
-budget_disease,% of budget spent on Disease Control and Environmental Epidemiology,0,1,0,0,percentage,0,0,0,0,0,0,colorado.gov,1.0
+budget_disease,% of budget spent on Disease Control and Environmental Epidemiology,0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov,1.0
 budget_emergency,% of budget spent on Emergency Preparedness and Response Division,0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0
 budget_environmental,% of budget spent on Environmental Health and Sustainability Division,0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0
 budget_health_equity,% of budget spent on Office of Health Equity,0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1.0
@@ -60,14 +60,14 @@ budget_water,% of budget spent on Water Quality Control Division,0,1,0,0,percent
 pct_children_in_poverty_white,Percentage of white people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 pct_food_insecure,% food insecure,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0
 pct_homeowners,% homeowners,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,1.0
-comm_hlth_cntrs_pp_rate,Community Health Centers per person,0,1,0,0,rate,0,0,0,0,1,1,AHRF,1.0
-pct_lbw,Percentage of births with low birth weight (<2500g),1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
+comm_hlth_cntrs_pp_rate,Community Health Centers per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
+pct_lbw,Percentage of births with low birth weight (<2500g),0,1,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE,0.0
 pct_limited_access,Percentage with limited access to healthy foods,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0
 pct_screened,Percentage of female Medicare enrollees having an annual mammogram (age 65-74),0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
 fips,fips,0,0,0,0,ID,0,0,0,0,0,0,All,
 food_environment_index,"Index of factors that contribute to a healthy food environment, 0 (worst) to 10 (best)",0,1,0,0,continuous,0,0,0,1,0,0,RWJF,1.0
-graduation_rate,Percentage of ninth-grade cohort that graduates in four years,1,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
+graduation_rate,Percentage of ninth-grade cohort that graduates in four years,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_vaccinated,Percentage of annual Medicare enrollees having an annual flu vaccination,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
 pct_with_access,Percentage of the population with access to places for physical activity,0,1,0,0,percentage,0,1,0,0,1,0,RWJF,1.0
 age-adjusted_mortality,age-adjusted mortality,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
@@ -77,15 +77,16 @@ life_expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1.0
 mds_dos_pp_rate,MDs + DOs per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 mentally_unhealthy_days,"Average number of mentally unhealthy days reported in the last 30 days, age-adjusted",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0
 dentist_rate,"Dentists per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1.0
-inadequate_facilities,Percentage of households with lack of kitchen or plumbing facilities,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
+inadequate_facilities,Percentage of households with lack of kitchen or plumbing facilities,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 overobese_pct,Percent of Adults who are Overweight,0,0,1,0,percentage,0,0,0,0,0,0,CDPHE,0.0
 mhp_rate,"Mental Health Providers per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1.0
-overcrowding,Percentage of households with overcrowding,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
+overcrowding,Percentage of households with overcrowding,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 pcp_rate,"Primary Care Physicians per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1.0
 physically_unhealthy_days,Average number of physically unhealthy days reported in past 30 days (age-adjusted),0,1,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
 population,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,
 preventable_hosp._rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0.0
-pct_uninsured_y.1,% uninsured_y.1,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
+pct_adult_uninsured,Percentage of adults without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
+pct_child_uninsured,Percentag of children without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
 sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
@@ -93,13 +94,13 @@ sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 short_hosp_pp_rate,Short-term hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
-teen_birth_rate,"Number of births per 1,000 female population ages 15-19",1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
+teen_birth_rate,"Number of births per 1,000 female population ages 15-19",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0
 violent_crime_rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0
-frac_coll_plus2010,Percentage of people aged 25 or older who have at least a Bachelor's degree,1,1,0,0,percentage,0,0,1,0,0,0,Opportunity Atlas,1.0
-rent_twobed2015,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent,1,1,0,0,continuous,0,0,0,0,0,0,Opportunity Atlas,
-traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,1,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas,1.0
-ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,1,0,0,rate,1,0,0,0,0,0,Opportunity Atlas,1.0
-pct_staying_in_same_tract_as_adults_rp_gp_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,1,0,0,percentage,0,0,0,0,1,0,Opportunity Atlas,
+frac_coll_plus2010,Percentage of people aged 25 or older who have at least a Bachelor's degree,1,0,0,0,percentage,0,0,1,0,0,0,Opportunity Atlas,1.0
+rent_twobed2015,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent,1,0,0,0,continuous,0,0,0,0,0,0,Opportunity Atlas,
+traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,0,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas,1.0
+ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,0,0,0,rate,1,0,0,0,0,0,Opportunity Atlas,1.0
+pct_staying_in_same_tract_as_adults_rp_gp_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,0,0,0,percentage,0,0,0,0,1,0,Opportunity Atlas,
 race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_black_or_african_american_alone,% Black or African American,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
@@ -110,14 +111,15 @@ race_estimate_total_white_alone,% White,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 pct_only_english,% Speak Only English,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 pct_other_languages,% Speak Language other than English,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 pct_other_languages_eng_vwell,% Speak Language other than English and Speak English well,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
-median_income,Median Household Income,1,0,0,0,continuous,0,0,0,0,0,0,ACS,1.0
-gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,0,0,ACS,
-mean_hours,Mean Hours Worked in past year,1,1,0,0,continuous,0,0,0,0,1,0,ACS,
+median_income,Median Household Income,1,0,0,0,continuous,1,0,0,0,0,0,ACS,1.0
+gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,1,0,ACS,0.0
+mean_hours,Mean Hours Worked in past year,1,0,0,0,continuous,0,0,0,0,1,0,ACS,
 pct_vacant,% Vacant housing units,0,1,0,0,percentage,0,1,0,0,0,0,ACS,0.0
-median_value,Median value of owner-occupied housing units,1,0,0,0,continuous,0,0,0,0,0,0,ACS,1.0
+median_value,Median value of owner-occupied housing units,1,0,0,0,continuous,0,1,0,0,0,0,ACS,1.0
 association_rate,"Number of membership associations per 10,000 people",0,1,0,0,rate,0,0,0,0,1,0,RWJF,1.0
 medicare_avg_age,Medicare Average Age,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
 medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
 medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS,
 medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,1,0,0,0,0,1,CMS,0.0
 pct_medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS,
+med_2br_rent_per_med_inc,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent divided by median household income,1,0,0,0,percentage,0,1,0,0,0,0,ACS & Opportunity Atlas,0.0
