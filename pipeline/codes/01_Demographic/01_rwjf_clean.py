@@ -25,7 +25,7 @@ def replace_column_names(df):
 def concatenate_column_names(df):
     newcols = []
     for col in df.columns.values:
-        if col in [0,'FIPS','State','County']:
+        if col in [0, 'FIPS','State','County']:
             newcols.append(col)
         else:
             if col not in ['95% CI - Low','95% CI - High','Z-Score']:
@@ -38,13 +38,25 @@ def concatenate_column_names(df):
 measure_data = pd.read_csv(os.path.join(n_drive, f'Measure_Data_{read_state}.csv'))
 measure_data = replace_column_names(measure_data)
 measure_data.columns = concatenate_column_names(measure_data)
-measure_data.drop(['Population'], axis = 1, inplace = True)
-print(measure_data.head())
+measure_data.drop(['Population',0], axis = 1, inplace = True)
+measure_data.rename(columns = {"% Uninsured": "pct_uninsured"}, inplace = True)
 
 addtl_data = pd.read_csv(os.path.join(n_drive, f'Additional_Data{read_state}.csv'))
 addtl_data = replace_column_names(addtl_data)
 addtl_data.columns = concatenate_column_names(addtl_data)
-print(addtl_data.head())
+addtl_data.drop([0], axis = 1, inplace = True)
+ind = 0
+first = 0
+for col in addtl_data.columns.values:
+    if col == "% Uninsured":
+        if first == 0:
+            adult_uninsured_ind = ind
+        else:
+            child_uninsured_ind = ind
+        first += 1
+    ind += 1
+addtl_data.columns.values[adult_uninsured_ind] = "pct_adult_uninsured"
+addtl_data.columns.values[child_uninsured_ind] = "pct_child_uninsured"
 
 # combine measure data with additional data
 rwjf_data = pd.merge(measure_data, addtl_data, on = ['FIPS','State','County'])
