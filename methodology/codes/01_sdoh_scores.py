@@ -43,4 +43,8 @@ print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
 # the most correlated ones are 5/6, 1/3, and 1/5
 # which are: community + health, economic + education, and economic + community. makes sense!
 
-data.to_csv('data/data_sdoh_scores.csv', index = False)
+data.columns = [col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","") for col in data.columns.values]
+data_dictionary.column_name = [col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","") for col in data_dictionary.column_name]
+
+data.to_csv('data/final_data.csv', index = False)
+data_dictionary.to_csv('data/final_data_dictionary.csv', index = False)
