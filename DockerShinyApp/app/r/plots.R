@@ -1,24 +1,82 @@
+county_FIPS <- "8001"
 
-dat <- read_csv("N:/Transfer/KSkvoretz/AHRQ/data/sample/sample_data.csv", col_types = cols(FIPS = col_character()))
-dd <- read_csv("N:/Transfer/KSkvoretz/AHRQ/data/sample/sample_dictionary.csv") %>%
-  mutate(
-    beg = case_when(
-      nchar(description) < 10 ~ description,
-      TRUE ~ substr(description, 1, 10)
-    ),
-    mid = case_when(
-      nchar(description) < 10 ~ "",
-      TRUE ~ substr(description, 11, 20)
-    ),
-    mid2 = case_when(
-      nchar(description) < 20 ~ "",
-      TRUE ~ substr(description, 21, 30)
-    ),
-    end = case_when(
-      nchar(description) < 30 ~ "",
-      TRUE ~ substr(description, 31, nchar(description))
-    )) %>%
-  mutate(mid = sub(" ", "/n", mid),
-         mid2 = sub(" ", "/n", mid2),
-         end = sub(" ", "/n", end),
-         descrip_new = paste0(beg, mid, mid2, end)) 
+county_dat <- dat %>% filter(FIPS == county_FIPS)
+
+state <- dat %>% pull(State) %>% unique()
+
+st <- state.abb[match(state, state.name)]
+
+my_matches <- find_my_matches(county_FIPS, dat)[[2]] 
+
+
+# radar chart ----------------------------
+
+radardd <- dd %>% 
+  filter(grepl("sdoh_score", column_name))
+df <- make_radar_data(county_dat %>% select(starts_with("sdoh_score")), radardd)
+
+par(bg = config$colors$tan25)
+radarchart(df, 
+           pcol = c(NA, NA,
+                    paste0(config$colors$red100, '80')), 
+           plty = 0,
+           pfcol = c(paste0(config$colors$grey50, '80'),
+                     paste0(config$colors$grey25, '33'),
+                     paste0(config$colors$yellow100, '33')),
+           cglcol = config$colors$grey100,
+           seg = 4, vlcex = 0.8)
+
+# county map ------------------------------
+
+df <- find_my_matches(county_FIPS, dat)[[1]] %>%
+  rename(fips = FIPS) %>%
+  mutate(county = tolower(County))
+
+county_map_df <- map_data("county") %>%
+  filter(region == tolower(state))
+
+df <- full_join(df, county_map_df, by = c("county" = "subregion"))
+
+df %>%
+  group_by(group) %>%
+  plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
+          colors = viridis_pal(option="D")(3),
+          text = ~County, hoverinfo = 'text') %>%
+  add_polygons(line = list(width = 0.4)) %>%
+  add_polygons(
+    fillcolor = 'transparent',
+    line = list(color = 'black', width = 0.5),
+    showlegend = FALSE, hoverinfo = 'none'
+  ) %>%
+  layout(
+    xaxis = list(title = "", showgrid = FALSE,
+                 zeroline = FALSE, showticklabels = FALSE),
+    yaxis = list(title = "", showgrid = FALSE,
+                 zeroline = FALSE, showticklabels = FALSE),
+    showlegend = FALSE
+  )
+
+# outcome density ------------------------------------------
+outcomes <- grep("outcome_", names(dat), value = T)
+
+outcomesdd <- dd %>% 
+  filter(grepl("outcome_", column_name)) %>% 
+  select(column_name, description)
+
+# need to add coloring to the vlines
+df_outcomes <- dat %>% select(FIPS, State, County, outcomes) %>%
+  pivot_longer(cols = outcomes) %>%
+  # selected county and matches to selected county
+  mutate(type = case_when(
+    FIPS %in% my_matches ~ "matches",
+    FIPS == county_FIPS ~ "selected",
+    TRUE ~ "other"
+  )) %>%
+  # left join data dictionary to get real outcome names
+  rename(column_name = name) %>%
+  left_join(outcomesdd, by = "column_name") 
+
+ggplot(df_outcomes, aes(x=value)) + geom_density() +
+  facet_wrap(~description, scales = "free", ncol = 1) +
+  geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) + 
+  theme(plot.background = element_rect(fill = config$colors$tan25))
