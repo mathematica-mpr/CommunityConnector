@@ -32,3 +32,10 @@ make_radar_data <- function(county_df, dd) {
     rename_at(vars(dd$column_name), ~ dd$descrip_new)
   df
 }
+
+make_density_graph <- function(data) {
+  ggplot(data, aes(x=value)) + geom_density() + 
+    geom_vline(data = filter(data, type != "other"),
+               aes(xintercept = value, color = as.factor(type))) +
+    ggtitle(first(data$description))
+}
