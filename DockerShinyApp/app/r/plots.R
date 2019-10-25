@@ -80,3 +80,11 @@ ggplot(df_outcomes, aes(x=value)) + geom_density() +
   facet_wrap(~description, scales = "free", ncol = 1) +
   geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) + 
   theme(plot.background = element_rect(fill = config$colors$tan25))
+
+# single outcome density ----------------------------------
+df_outcome1 <- df_outcomes %>% 
+  filter(column_name == "outcome_1")
+
+ggplot(df_outcome1, aes(x=value)) + geom_density() + 
+  geom_vline(data = filter(df_outcome1, type != "other"),
+             aes(xintercept = value, color = as.factor(type)))
