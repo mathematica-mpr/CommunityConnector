@@ -30,10 +30,18 @@ ui <- fluidPage(#theme = "styles.css",
   ),
   
   fluidRow(
-    column(width = 4, plotOutput("health_outcomes_density")),
+    column(width = 4,
+           div(id = "density_plot_container",
+               uiOutput(outputId = "density_graphs_ui"))),
     column(width = 4, plotOutput("compare_county_radars")),
     column(width = 4, plotlyOutput("map"))
-  )
+  ),
+  
+ # fluidRow(
+ #   column(width = 4,
+ #          div(id = "density_plot_container",
+ #              uiOutput(outputId = "density_graphs_ui")))
+ # )
   
 
 )

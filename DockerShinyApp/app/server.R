@@ -16,6 +16,7 @@ server <- function(input, output) {
   
   options(DT.options = list(dom = "t", ordering = F))
 
+  # error handling checks ------------------------------------------------------
   county_check <- reactive({
     if (input$county_selection_type == "FIPS") {
       input$county_selection %in% dat$FIPS
@@ -24,6 +25,7 @@ server <- function(input, output) {
     }
   })
   
+  # reactive values and data frames --------------------------------------------
   county_FIPS <- reactive({
     req(county_check)
     if (input$county_selection_type == "FIPS") {
@@ -51,6 +53,33 @@ server <- function(input, output) {
     req(county_check())
     find_my_matches(county_FIPS(), dat, input$compare_counties_range)[[2]] 
   })
+  
+  # outcomes data
+  outcomes_dat <- reactive({
+    req(county_check())
+    
+    outcomes <- grep("outcome_", names(dat), value = T)
+    
+    outcomes_dd <- dd %>% 
+      filter(grepl("outcome_", column_name)) %>% 
+      select(column_name, description)
+    
+    # need to add coloring to the vlines
+    df <- dat %>% select(FIPS, State, County, outcomes) %>%
+      pivot_longer(cols = outcomes) %>%
+      # selected county and matches to selected county
+      mutate(type = case_when(
+        FIPS %in% my_matches() ~ "matches",
+        FIPS == county_FIPS() ~ "selected",
+        TRUE ~ "other"
+      )) %>%
+      # left join data dictionary to get real outcome names
+      rename(column_name = name) %>%
+      left_join(outcomes_dd, by = "column_name") 
+    df
+  })
+  
+  # output ---------------------------------------------------------------------
 
   output$my_county_name <- renderUI({
     req(county_check())
@@ -87,34 +116,6 @@ server <- function(input, output) {
     DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt",
                       background = config$colors$tan25)
-  })
-  
-  output$health_outcomes_density <- renderPlot({
-    req(county_check())
-    
-    outcomes <- grep("outcome_", names(dat), value = T)
-    
-    dd <- dd %>% 
-      filter(grepl("outcome_", column_name)) %>% 
-      select(column_name, description)
-    
-    # need to add coloring to the vlines
-    df <- dat %>% select(FIPS, State, County, outcomes) %>%
-      pivot_longer(cols = outcomes) %>%
-      # selected county and matches to selected county
-      mutate(type = case_when(
-        FIPS %in% my_matches() ~ "matches",
-        FIPS == county_FIPS() ~ "selected",
-        TRUE ~ "other"
-      )) %>%
-      # left join data dictionary to get real outcome names
-      rename(column_name = name) %>%
-      left_join(dd, by = "column_name") 
-    
-    ggplot(df, aes(x=value)) + geom_density() +
-      facet_wrap(~description, scales = "free", ncol = 1) +
-      geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) + 
-      theme(plot.background = element_rect(fill = config$colors$tan25))
   })
   
   output$compare_county_radars <- renderPlot({
@@ -178,6 +179,42 @@ server <- function(input, output) {
       )
                      
   })
+  
+  # dynamic number of density graphs -------------------------------------------
+  density_graphs <- eventReactive(input$county_selection, {
+    req(outcomes_dat())
+    
+    outcomes_dat() %>%
+      group_by(column_name) %>%
+      nest() %>%
+      mutate(graphs = purrr::map(data, make_density_graph)) %>%
+      arrange(column_name) %>%
+      pull(graphs)
+  })
+  
+  observeEvent(input$county_selection, {
+    req(density_graphs())
+    
+    purrr::iwalk(density_graphs(), ~{
+      output_name <- paste0("density_graph", .y)
+      output[[output_name]] <- renderPlot(.x)
+    })
+  })
+  
+  output$density_graphs_ui <- renderUI({
+    req(density_graphs())
+    
+    density_plots_list <- purrr::imap(density_graphs(), ~{
+      tagList(
+        plotOutput(
+          outputId = paste0("density_graph", .y)
+        ),
+        br()
+      )
+    })
+    tagList(density_plots_list)
+  })
+  # r2d3
   
  # output$test <- renderD3({
  #   r2d3(
