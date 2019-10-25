@@ -10,6 +10,10 @@ selenium = "*"
 regex = "*"
 pandas = "*"
 sklearn = "*"
+sodapy = "*"
+xlrd = "*"
+censusgeocode = "*"
+pyarrow = "*"
 
 [requires]
 python_version = "3.7"
