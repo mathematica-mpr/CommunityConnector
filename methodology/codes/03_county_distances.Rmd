@@ -1,0 +1,54 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r}
+rm(list = ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+source('utilities.R')
+```
+
+```{r}
+# TODO: also parse down the demographic variables?
+data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
+data <- read.csv('../../data/final_data.csv')
+```
+
+```{r}
+# select outcome
+outcomes <- data_dictionary %>% 
+  filter(outcome == 1) %>% 
+  dplyr::select(column_name) %>% 
+  mutate(column_name = as.character(column_name)) %>% 
+  pull()
+```
+
+```{r}
+# loop through outcomes and counties
+# TODO: select which counties to look at: Boulder, smaller one, etc.
+for(use_outcome in outcomes){
+  print(use_outcome)
+  
+  for(county_num in c(1:5)){
+    print(county_num)
+    
+    # TODO: loop through using different distance variables
+    ## Select variables to match on, limit data to these variables, and replace NAs
+    use_data <- select_distance_columns(data, data_dictionary, 1, 0, 0)
+    print(names(use_data))
+    
+    ## Get distance matrix using methodology specified
+    distancem <- county_distance(use_data, 'euclidean', outcome)
+    
+    ## Select a county as an example
+    data <- select_county(data, distancem, county_num)
+    
+    ## Evaluate the methodology:
+    # Look at the radar charts in order of county similarity
+    # How similar are health outcomes of the top 5 most similar or similar within a certain distance? 
+    # They should have a median close to the county in question
+    evaluate_methodology(data, use_outcome)
+  }
+}
+```
