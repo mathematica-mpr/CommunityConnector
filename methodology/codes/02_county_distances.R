@@ -1,81 +1,26 @@
 rm(list = ls())
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+source('utilities.R')
 
-library(tidyverse)
-# devtools::install_github("UrbanInstitute/urbnmapr")
-library(urbnmapr)
-library(plotly)
-library(ggplot2)
-# install.packages("maps")
-# install.packages("mapdata")
-library(maps)
-library(mapdata)
-library(stringr)
+# TODO: also parse down the demographic variables?
+data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
+data <- read.csv('../../data/final_data.csv')
 
-data_dictionary <- read.csv('../../data/data_dictionary.csv')
-data <- read.csv('../../data/data_sdoh_scores.csv')
+## Select variables to match on, limit data to these variables, and replace NAs
+debug(select_distance_columns)
+use_data <- select_distance_columns(data, data_dictionary, 1, 1)
 
-# TODO:
-# test methodologies:
-# only use demographic variables
-# OR dem + all SDoH scores
-# OR dem + some SDoH scores
-# OR dem + some SDoH raw metrics
-# + weighting?
+## Get distance matrix using methodology specified
+distancem <- county_distance(use_data, 'euclidean')
 
-#####################################################
-###########   Demographic variables       ###########
-#####################################################
+## Select a county as an example
+distancec <- select_county(1)
 
-# should we exclude one of the race columns since they should add up to one? not sure if they actually do
-dem_cols <- data_dictionary %>% 
-  filter(demographic == 1) %>% 
-  dplyr::select(column_name) %>% 
-  unlist() %>% 
-  as.vector()
-
-# need to change some of the names because of column name differences in R and Python
-dem_cols[grepl("MEDIAN_HOUSEHOLD", dem_cols)] <- "MEDIAN_HOUSEHOLD_INCOME"
-dem_cols[grepl("Life", dem_cols)] <- "Life.Expectancy"
-dem_cols[grepl("Female", dem_cols)] <- "X..Female"
-dem_cols[grepl("Rural", dem_cols)] <- "X..Rural"
-names(data)[grepl("MEDIAN_HOUSEHOLD",names(data))] <- "MEDIAN_HOUSEHOLD_INCOME"
-
-#####################################################
-###########  Limit to distance columns    ###########
-#####################################################
-
-dist_cols <- dem_cols
-dist_cols
-
-use_data <- data %>% 
-  dplyr::select(one_of(dist_cols))
-# replace NAs with the mean since euclidean distance doesn't work
-use_data <- data.frame(lapply(use_data, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x)))
-
-# TODO: euclidean distance or cosine similarity?
-head(use_data)
-distancem <- as.matrix(dist(use_data, method = 'euclidean'))
-
-#####################################################
-###########  Select a county as example  ############
-#####################################################
-
-calculate_distance <- function(county_num){
-  data$distance <- distancem[,county_num]
-  data$flag_county <- ifelse(data$FIPS == head(data$FIPS, county_num), 1, 0)
-  return(data)
-}
-
-data <- calculate_distance(1)
-
-###################################################
-###### Look at how the methodology works out ######
-###################################################
+## Evaluate the methodology
 
 # look at different metrics by distance to the county in question
-dem_cols
+# Things to check: How close are the top 5 most similar distance scores? They should have a median close to the county in question
+# How similar are health outcomes of the top 5 most similar or similar within a certain distance?
 
 for(x in c(1:length(dem_cols))){
   for(y in c(1:length(dem_cols))){
@@ -167,6 +112,3 @@ for(i in c(1:nrow(data))){
     ggtitle(this_county)
   print(plt) 
 }
-
-# Things to check: How close are the top 5 most similar distance scores?
-# How similar are health outcomes of the top 5 most similar or similar within a certain distance?

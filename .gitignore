@@ -7,6 +7,8 @@ codes/.ipynb_checkpoints/
 .env
 *.log
 data/*
+!data/final_data_dictionary.csv
+!data/final_data.csv
 methodology/codes/.Rhistory
 
 .Rproj.user
