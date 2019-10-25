@@ -56,7 +56,7 @@ df %>%
     showlegend = FALSE
   )
 
-# outcome density ------------------------------------------
+# single outcome density ----------------------------------
 outcomes <- grep("outcome_", names(dat), value = T)
 
 outcomesdd <- dd %>% 
@@ -76,12 +76,6 @@ df_outcomes <- dat %>% select(FIPS, State, County, outcomes) %>%
   rename(column_name = name) %>%
   left_join(outcomesdd, by = "column_name") 
 
-ggplot(df_outcomes, aes(x=value)) + geom_density() +
-  facet_wrap(~description, scales = "free", ncol = 1) +
-  geom_vline(data = filter(df, type != "other"), aes(xintercept=value, color = as.factor(type))) + 
-  theme(plot.background = element_rect(fill = config$colors$tan25))
-
-# single outcome density ----------------------------------
 df_outcome1 <- df_outcomes %>% 
   filter(column_name == "outcome_1")
 
