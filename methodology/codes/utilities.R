@@ -8,17 +8,25 @@ library(ggplot2)
 library(maps)
 library(mapdata)
 library(stringr)
+library(fmsb)
 
 # TODO: also add an option to only include relevant SDoH scores or raw inputs
 # option to only include non-modifiable SDoH raw metrics
 # option to use all SDoH - find the modifiable, impactful ones and then remove them to get a prediction
-select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw){
-  # always use demographics
-  cols <- data_dictionary %>% 
-    filter(demographic == 1) %>% 
-    dplyr::select(column_name) %>% 
-    unlist() %>% 
-    as.vector()
+#### --> re-determine similiarity score based off differences in prediction
+#### --> look at different in SDoH radar and health outcomes
+select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = 1){
+  
+  cols <- c()
+  
+  if(dem == 1){
+    add_cols <- data_dictionary %>% 
+      filter(demographic == 1) %>% 
+      dplyr::select(column_name) %>% 
+      unlist() %>% 
+      as.vector()
+    cols <- c(cols, add_cols)
+  }
   
   if(sdoh_scores == 1){
     add_cols <- data_dictionary %>% 
@@ -38,45 +46,146 @@ select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw
     cols <- c(cols, add_cols)
   }
   
-  cols <- unique(cols)
+  cols <- c(outcome, unique(cols))
   
   use_data <- data %>% 
     dplyr::select(one_of(cols))
   
-  use_data <- replace_nas(use_data)
-  
   return(use_data)
 }
 
-replace_nas <- function(use_data){
+replace_nas_mean <- function(use_data){
   # replace NAs with the mean since euclidean distance doesn't work without it
   use_data <- data.frame(lapply(use_data, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x)))
+  return(use_data)
   # TODO: other imputation that isn't supervised?
-  # or use random forest if okay with supervised
 }
 
-county_distance <- function(use_data, method){
-  if(method == "euclidean"){
-    distancem <- as.matrix(dist(use_data, method = 'euclidean'))
-  } 
+replace_nas_rf <- function(use_data, outcome){
+  use_data <- use_data %>% 
+    filter(!is.na(!!rlang::sym(outcome)))
+  use_data <- rfImpute(!!rlang::sym(outcome) ~., use_data)
+  return(use_data)
+}
+
+get.elbow.points.indices <- function(x, y, threshold) {
+  d1 <- diff(y) / diff(x) # first derivative
+  d2 <- diff(d1) / diff(x[-1]) # second derivative
+  indices <- which(abs(d2) > threshold)  
+  return(indices)
+}
+
+# TODO: add outcome as a parameter
+pick_mtry <- function(outcome, data){
+  oob.err = double(13)
+  test.err = double(13)
+  # to get decorrelated trees, test number of variables to pull from
+  for(mtry in 1:80){
+    rf <- randomForest(as.formula(paste(outcome,"~.")),
+                       data = data,
+                       method = 'rf',
+                       metric = 'RMSE',
+                       trControl = trControl, 
+                       keep.forest = TRUE,
+                       importance = TRUE,
+                       mtry = mtry)
+    oob.err[mtry] = rf$mse[350]
+    pred = predict(rf)
+    test.err[mtry] = mean((data[,outcome]-data$pred)^2 ))
+  }
+  matplot(1:mtry, cbind(test.err, oob.err), pch = 23, col = c("red", "blue"), type = "b", ylab="Mean Squared Error")
+  legend("topright", legend = c("OOB", "Test"), pch = 23, col = c("red", "blue"))
+  lines(predict(loess(test.err ~ c(1:mtry))), col = 'green')
   
+  get.elbow.points.indices(1:mtry, test.err, 0.6)
+}
+
+county_distance <- function(use_data, method, outcome){
+  if(method == "euclidean"){
+    use_data <- replace_nas_mean(use_data)
+    distancem <- as.matrix(dist(use_data %>% 
+                                  select(-!!rlang::sym(outcome)),
+                                method = 'euclidean'))
+  } 
   # TODO:
   # else if(method == "cosine similarity"){
   #   
-  # } else if(method == "rf distance"){
-  #   
-  # } else if(method == "gbm prediction"){
+  } else if(method == "rf distance"){
+    use_data <- replace_nas_rf(use_data, outcome)
+    set.seed(1234)
+    # TODO: optimize any parameters here?
+    trControl <- trainControl(method = 'cv',
+                                            number = 10,
+                                            search = 'grid')
+    pick_mtry(data)
+    rf <- randomForest(as.formula(paste(outcome,"~.")),
+                       data = data,
+                       method = 'rf',
+                       metric = 'RMSE',
+                       trControl = trControl, 
+                       keep.forest = TRUE,
+                       importance = TRUE,
+                       proximity = TRUE,
+                       mtry = 29)
+    # importance(rf)
+    # varImp(rf, scale = FALSE)
+    varImpPlot(rf, n.var=20, sort = TRUE)
+    plot(rf)
+    distancem <- rf$proximity
+    
+  }
+  # else if(method == "gbm prediction"){
+    # # https://www.datacamp.com/community/tutorials/decision-trees-R
+    # # boosting? useful when you have a lot of data and expect the decision trees to be very complex
+    # library(gbm)
+    # gbmod <- gbm(pct_obese~., data = data, distribution = 'gaussian',
+    #              shrinkage = 0.01, interaction.depth = 4)
+    # gbmod.summ <- summary(gbmod, cBars = 25)
+    # View(gbmod.summ)
   #   
   # } else if(method = "rf prediction"){
-  # 
+  # pred <- predict(rf)
   # }
   # TODO: weighted euclidean distance?
   
   return(distancem)
 }
 
-select_county <- function(distancem, county_num){
+select_county <- function(data, distancem, county_num){
   data$distance <- distancem[,county_num]
-  data$flag_county <- ifelse(data$FIPS == head(data$FIPS, county_num), 1, 0)
+  data$flag_county <- ifelse(data$fips == head(data$fips, county_num), 1, 0)
   return(data)
+}
+
+evaluate_methodology <- function(data, use_outcome){
+  par(mfrow=c(3,2), 
+      mar = c(0, 0,0,0))
+  ordered <- data %>% 
+    arrange(distance) %>% 
+    mutate(rank = row_number(),
+           top5 = ifelse(rank == 1, 'county', ifelse(rank <= 6, 1, 0))) %>% 
+    filter(!is.na(!!rlang::sym(use_outcome)))
+  
+  for(i in c(1:6)){
+    radar_data <- data[i,]
+    county <- radar_data$fips
+    radar_data <- radar_data %>% 
+      dplyr::select(starts_with("sdoh_score"))
+    colnames(radar_data) <- c("econ","env","edu","food","comm","health")
+    # I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
+    radar_data <- rbind(rep(1,6), rep(0,6), radar_data)
+    radarchart(radar_data,
+               pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4)
+  }
+  
+  county_outcome <- ordered[1,use_outcome]
+  
+  this_county <- ordered %>% filter(rank == 1) %>% select(fips) %>% pull()
+  plt <- ggplot(ordered, aes(x = !!rlang::sym(use_outcome))) +
+    geom_density() +
+    geom_rug(size = 2, aes(color = top5)) +
+    scale_color_manual(values = c("black","red","blue")) +
+    geom_vline(xintercept = county_outcome, color = "blue") +
+    ggtitle(this_county)
+  print(plt) 
 }
