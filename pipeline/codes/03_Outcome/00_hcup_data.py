@@ -1,3 +1,4 @@
+# TODO: clean this up since we now are using utilities.py
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -19,6 +20,10 @@ from os import listdir
 import regex as re
 from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
+
+import sys
+sys.path.insert(1, 'pipeline/codes')
+from utilities import click_button
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
 n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
@@ -70,31 +75,6 @@ def connect(website, timeout):
     driver.delete_all_cookies()
     driver.get(website)
     driver.quit()
-
-
-def click_button(driver, element_type, element_name, time_to_wait = 10):
-    """
-    Wait for element to be clickable, then find and click on the element
-
-    Args: 
-        driver
-        element_type (string)
-        element_name (string)
-        time_to_wait (integer)
-
-    """
-
-    if element_type == "class":
-        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.CLASS_NAME, element_name)))
-        button = driver.find_element_by_class_name(element_name)
-    elif element_type == "ID":
-        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.ID, element_name)))
-        button = driver.find_element_by_id(element_name)
-    elif element_type == "text":
-        placeholder = WebDriverWait(driver, time_to_wait).until(EC.element_to_be_clickable((By.LINK_TEXT, element_name)))
-        button = driver.find_element_by_link_text(element_name)
-    button.click()
-
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 
@@ -164,6 +144,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     csv = driver.find_element_by_class_name(csv_class)
     csv.click()
     
+    # TODO: use the function in utilties
     # This file ends up in Downloads. Export the most recent Download to our data folder
     files = listdir(dirpath)
     files = [x for x in files if re.search("export", x)] 
