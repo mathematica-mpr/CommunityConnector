@@ -106,7 +106,7 @@ pick_mtry <- function(outcome, data){
   elbows <- c(1:100)
   last_length <- length(elbows)
   num_same <- 0
-  while(((last_length > 10) | (last_length == 0)) & (num_same <= 5) & (cutoff > 0.05)){
+  while(((last_length > 8) | (last_length == 0)) & (num_same <= 5) & (cutoff > 0.05)){
     elbows <- get.elbow.points.indices(1:mtry, test.err, cutoff/10)
     if(length(elbows) == 0){
       cutoff <- cutoff - 0.1
@@ -150,8 +150,7 @@ county_distance <- function(use_data, method, outcome, mtry = NULL){
                        trControl = trControl, 
                        keep.forest = TRUE,
                        importance = TRUE,
-                       proximity = TRUE,
-                       mtry = mtry)
+                       proximity = TRUE)
     # importance(rf)
     # varImp(rf, scale = FALSE)
     varImpPlot(rf, n.var=min(20,ncol(use_data)-1), sort = TRUE)
