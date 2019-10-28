@@ -31,44 +31,10 @@ opts$meth_num <- row_number(opts$use_dems)
 # TODO: eventually will add a remove modifiable, relevant option
 # TODO: loop through prediction algorithms & just euclidean distance
 
-# TODO: not sure if this is going to work in thed ataset or not - it is more efficient
-# to build the same model only once
-opts <- merge(opts, data.frame("outcome" = outcomes), all = TRUE)
-
 # both the aggregate score and the inputs should not be true at the same time
 print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
 print(opts)
 ```
-
-```{r First select optimal mtry for each methodology}
-meth_pick_mtry <- function(row, outcomes, data, data_dictionary){
-  methodology <- "rf proximity"
-  use_sdoh_scores <- as.numeric(row[1])
-  use_sdoh_raw <- as.numeric(row[2])
-  use_dems <- as.numeric(row[3])
-  use_outcome <- row[5]
-  
-  orig_data <- data %>% 
-    filter(!is.na(!!rlang::sym(use_outcome)))
-
-  use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dictionary,
-                                    sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
-                                    outcome = use_outcome, dem = use_dems)
-  
-  # default mtry = # predictors/3
-  indices <- pick_mtry(use_outcome, use_data)
-  print(indices)
-  return(indices)
-}
-
-# TODO: don't need to test mtry for multiple counties
-lol <- apply(opts, 1, meth_pick_mtry, outcomes, data, data_dictionary)
-print(lol)
-# mtrys:
-# row 1: 
-
-```
-
 
 ```{r}
 # TODO: select which counties to look at: Boulder, smaller one, etc. rather than just first 5
@@ -80,24 +46,23 @@ implement_methodology <- function(row, outcomes, data, data_dictionary){
   use_sdoh_raw <- as.numeric(row[2])
   use_dems <- as.numeric(row[3])
   
-  
+  # TODO: could loop through a subset of the opts dataframe
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
     orig_data <- data %>% 
       filter(!is.na(!!rlang::sym(use_outcome)))
     
-    # TODO: loop through using different distance variables
     ## Select variables to match on, limit data to these variables, and replace NAs
     use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dictionary,
                                         sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
                                         outcome = use_outcome, dem = use_dems)
     
     ## Get distance matrix using methodology specified
-    # distancem <- county_distance(use_data, 'euclidean', use_outcome)
     distancem <- county_distance(use_data, methodology, use_outcome)
       
     for(county_num in c(1:5)){
+    # for(county_num in c(1:5)){
       print(paste("County Number:", county_num))
     
       data <- select_county(orig_data, distancem, county_num)
