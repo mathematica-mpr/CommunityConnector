@@ -9,6 +9,7 @@ rm(list = ls())
 
 ```{r}
 source('utilities.R')
+
 # TODO: also parse down the demographic variables?
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
@@ -34,7 +35,8 @@ opts <- merge(opts, data.frame("methodology" = c("rf proximity","euclidean")),
 
 opts$meth_num <- row_number(opts$use_dems)
 # TODO: eventually will add a remove modifiable, relevant option
-# TODO: loop through prediction algorithms & just euclidean distance
+# TODO: other prediction algorithms: rf prediction, gbm prediction
+# TODO: what other metrics to use to evaluate?
 
 # both the aggregate score and the inputs should not be true at the same time
 print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
@@ -42,17 +44,13 @@ print(opts)
 ```
 
 ```{r}
-# TODO: select which counties to look at: Boulder, smaller one, etc. rather than just first 5
-
 implement_methodology <- function(row, outcomes, data, data_dictionary){
-  # TODO: loop through methodologies
   use_sdoh_scores <- as.numeric(row[1])
   use_sdoh_raw <- as.numeric(row[2])
   use_dems <- as.numeric(row[3])
   methodology <- row[4]
   meth_num <- as.numeric(row[5])
   
-  # TODO: could loop through a subset of the opts dataframe
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
@@ -66,10 +64,10 @@ implement_methodology <- function(row, outcomes, data, data_dictionary){
     
     ## Get distance matrix using methodology specified
     distancem <- county_distance(use_data, methodology, use_outcome)
-      
+    
+    # for(county_num in c(1:dim(distancem)[1])){
     # for(county_num in c(1:5)){
-    for(county_num in c(1:5)){
-      print(paste("County Number:", county_num))
+    for(county_num in c(1:1)){
     
       data <- select_county(orig_data, distancem, county_num)
       
@@ -129,12 +127,12 @@ best_results
 best_results %>% 
   group_by(best_meth_pct_diff) %>% 
   dplyr::summarise(n = n())
-# 1 or 5
+# 4, 5, 6 or 1
 best_results %>% 
   group_by(best_meth_pct_sd) %>% 
   dplyr::summarise(n = n())
-# 3 or 5
+# 5 or 6 or 4
 
-opts
+# Euclidean distance is the best so far
 
 ```
