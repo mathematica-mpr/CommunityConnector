@@ -82,3 +82,5 @@ df_outcome1 <- df_outcomes %>%
 ggplot(df_outcome1, aes(x=value)) + geom_density() + 
   geom_vline(data = filter(df_outcome1, type != "other"),
              aes(xintercept = value, color = as.factor(type)))
+
+#new changes
