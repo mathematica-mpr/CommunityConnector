@@ -11,7 +11,7 @@ ui <- fluidPage(#theme = "styles.css",
   fluidRow(
     column(width = 2,
            selectInput('county_selection_type', label = 'Select your county by',
-                       choices = c('FIPS Code' = 'FIPS', 'County Name' = 'name'), selected = 'FIPS'),
+                       choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
            searchInput('county_selection', label = '', placeholder = 'Search your county',
                        btnSearch = icon('search'), value = '8001'),
            textOutput('county_selection_message'),
