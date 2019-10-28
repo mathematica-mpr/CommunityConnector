@@ -2,8 +2,8 @@ server <- function(input, output) {
   
 #  county_selection_check <- reactive({
 #    validate({
-#      if (input$county_selection_type == "FIPS") {
-#        need(nchar(input$county_selection) == 4, 'Please enter a four digit FIPS Code for your county.')
+#      if (input$county_selection_type == "fips") {
+#        need(nchar(input$county_selection) == 4, 'Please enter a four digit fips Code for your county.')
 #      } else if (input$county_selection_type == "name") {
 #        need(input$county_selection %in% dat$County, 'Please enter a valid county name.')
 #      }
@@ -18,20 +18,20 @@ server <- function(input, output) {
 
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
-    if (input$county_selection_type == "FIPS") {
-      input$county_selection %in% dat$FIPS
+    if (input$county_selection_type == "fips") {
+      input$county_selection %in% dat$fips
     } else if (input$county_selection_type == "name") {
       input$county_selection %in% dat$County
     }
   })
   
   # reactive values and data frames --------------------------------------------
-  county_FIPS <- reactive({
+  county_fips <- reactive({
     req(county_check)
-    if (input$county_selection_type == "FIPS") {
+    if (input$county_selection_type == "fips") {
       input$county_selection
     } else if (input$county_selection_type == "name") {
-      dat %>% filter(County == input$county_selection) %>% pull(FIPS)
+      dat %>% filter(County == input$county_selection) %>% pull(fips)
     }
   })
   
@@ -39,19 +39,19 @@ server <- function(input, output) {
     req(county_check)
     if (input$county_selection_type == "name") {
       input$county_selection
-    } else if (input$county_selection_type == "FIPS") {
-      dat %>% filter(FIPS == input$county_selection) %>% pull(County)
+    } else if (input$county_selection_type == "fips") {
+      dat %>% filter(fips == input$county_selection) %>% pull(County)
     }
   })
   
   county_dat <- reactive({
-    dat %>% filter(FIPS == county_FIPS())
+    dat %>% filter(fips == county_fips())
   })
   
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
-    find_my_matches(county_FIPS(), dat, input$compare_counties_range)[[2]] 
+    find_my_matches(county_fips(), dat, input$compare_counties_range)[[2]] 
   })
   
   # outcomes data
@@ -65,12 +65,12 @@ server <- function(input, output) {
       select(column_name, description)
     
     # need to add coloring to the vlines
-    df <- dat %>% select(FIPS, State, County, outcomes) %>%
+    df <- dat %>% select(fips, State, County, outcomes) %>%
       pivot_longer(cols = outcomes) %>%
       # selected county and matches to selected county
       mutate(type = case_when(
-        FIPS %in% my_matches() ~ "matches",
-        FIPS == county_FIPS() ~ "selected",
+        fips %in% my_matches() ~ "matches",
+        fips == county_fips() ~ "selected",
         TRUE ~ "other"
       )) %>%
       # left join data dictionary to get real outcome names
@@ -129,9 +129,9 @@ server <- function(input, output) {
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
     par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
-    df <- dat %>% select(FIPS, State, County, starts_with("sdoh_score")) %>%
-      filter(FIPS %in% my_matches()) %>%
-      group_by(FIPS, County, State) %>%
+    df <- dat %>% select(fips, State, County, starts_with("sdoh_score")) %>%
+      filter(fips %in% my_matches()) %>%
+      group_by(fips, County, State) %>%
       nest() %>%
       mutate(radar_data = purrr::map(data, make_radar_data, dd = dd)) %>%
       mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
@@ -150,8 +150,8 @@ server <- function(input, output) {
     state <- dat %>% pull(State) %>% unique()
     st <- state.abb[match(state, state.name)]
     
-    df <- find_my_matches(county_FIPS(), dat, input$compare_counties_range)[[1]] %>%
-      rename(fips = FIPS) %>%
+    df <- find_my_matches(county_fips(), dat, input$compare_counties_range)[[1]] %>%
+      rename(fips = fips) %>%
       mutate(county = tolower(County))
     
     county_map_df <- map_data("county") %>%
