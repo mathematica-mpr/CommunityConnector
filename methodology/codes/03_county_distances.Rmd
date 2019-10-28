@@ -5,11 +5,10 @@ output:
 ---
 ```{r}
 rm(list = ls())
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-source('utilities.R')
 ```
 
 ```{r}
+source('utilities.R')
 # TODO: also parse down the demographic variables?
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
@@ -24,31 +23,118 @@ outcomes <- data_dictionary %>%
   pull()
 ```
 
-```{r}
-# loop through outcomes and counties
-# TODO: select which counties to look at: Boulder, smaller one, etc.
-for(use_outcome in outcomes){
-  print(use_outcome)
+```{r Methodology options}
+opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
+                      "use_sdoh_raw" = c(0, 1, 0),
+                      "use_dems" = c(1, 1, 1))
+opts$meth_num <- row_number(opts$use_dems)
+# TODO: eventually will add a remove modifiable, relevant option
+# TODO: loop through prediction algorithms & just euclidean distance
+
+# TODO: not sure if this is going to work in thed ataset or not - it is more efficient
+# to build the same model only once
+opts <- merge(opts, data.frame("outcome" = outcomes), all = TRUE)
+
+# both the aggregate score and the inputs should not be true at the same time
+print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
+print(opts)
+```
+
+```{r First select optimal mtry for each methodology}
+meth_pick_mtry <- function(row, outcomes, data, data_dictionary){
+  methodology <- "rf proximity"
+  use_sdoh_scores <- as.numeric(row[1])
+  use_sdoh_raw <- as.numeric(row[2])
+  use_dems <- as.numeric(row[3])
+  use_outcome <- row[5]
   
-  for(county_num in c(1:5)){
-    print(county_num)
+  orig_data <- data %>% 
+    filter(!is.na(!!rlang::sym(use_outcome)))
+
+  use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dictionary,
+                                    sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
+                                    outcome = use_outcome, dem = use_dems)
+  
+  # default mtry = # predictors/3
+  indices <- pick_mtry(use_outcome, use_data)
+  print(indices)
+  return(indices)
+}
+
+# TODO: don't need to test mtry for multiple counties
+lol <- apply(opts, 1, meth_pick_mtry, outcomes, data, data_dictionary)
+print(lol)
+# mtrys:
+# row 1: 
+
+```
+
+
+```{r}
+# TODO: select which counties to look at: Boulder, smaller one, etc. rather than just first 5
+
+implement_methodology <- function(row, outcomes, data, data_dictionary){
+  # TODO: loop through methodologies
+  methodology <- "rf proximity"
+  use_sdoh_scores <- as.numeric(row[1])
+  use_sdoh_raw <- as.numeric(row[2])
+  use_dems <- as.numeric(row[3])
+  
+  
+  for(use_outcome in outcomes){
+    print(paste("Outcome:", use_outcome))
+    
+    orig_data <- data %>% 
+      filter(!is.na(!!rlang::sym(use_outcome)))
     
     # TODO: loop through using different distance variables
     ## Select variables to match on, limit data to these variables, and replace NAs
-    use_data <- select_distance_columns(data, data_dictionary, 1, 0, 0)
-    print(names(use_data))
+    use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dictionary,
+                                        sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
+                                        outcome = use_outcome, dem = use_dems)
     
     ## Get distance matrix using methodology specified
-    distancem <- county_distance(use_data, 'euclidean', outcome)
+    # distancem <- county_distance(use_data, 'euclidean', use_outcome)
+    distancem <- county_distance(use_data, methodology, use_outcome)
+      
+    for(county_num in c(1:5)){
+      print(paste("County Number:", county_num))
     
-    ## Select a county as an example
-    data <- select_county(data, distancem, county_num)
-    
-    ## Evaluate the methodology:
-    # Look at the radar charts in order of county similarity
-    # How similar are health outcomes of the top 5 most similar or similar within a certain distance? 
-    # They should have a median close to the county in question
-    evaluate_methodology(data, use_outcome)
+      data <- select_county(orig_data, distancem, county_num)
+      
+      ## Evaluate the methodology:
+      # Look at the radar charts in order of county similarity
+      # How similar are health outcomes of the top 5 most similar or similar within a certain distance? 
+      # They should have a median close to the county in question
+      results <- evaluate_methodology(data, use_outcome)
+      results <- c(county_num, use_outcome, methodology, results)
+      results_df = as.data.frame(matrix(unlist(results), nrow = 1))
+      colnames(results_df) <- c('county','outcome','methodology','pct_diff_from_county_med','pct_reduced_sd')
+        
+      if(use_outcome == outcomes[1]){
+        full_results <- results_df
+      } else {
+        full_results <- full_results %>% 
+          rbind(results_df)
+      }
+      
+    }
   }
+  full_results[,!names(full_results) %in% "outcome"] <- as.numeric(as.character(unlist(full_results[,!names(full_results) %in% "outcome"])))
+  return(full_results)
 }
+
+full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+
+```
+
+```{r}
+print(full_results)
+summary(full_results)
+
+# average metrics across county by outcome to evaluate results of different methodologies
+full_results %>% 
+  group_by(outcome) %>% 
+  dplyr::summarise_all(funs(min))
+
 ```
