@@ -55,13 +55,12 @@ replace_nas_mean <- function(use_data){
   # replace NAs with the mean since euclidean distance doesn't work without it
   use_data <- data.frame(lapply(use_data, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x)))
   return(use_data)
-  # TODO: other imputation that isn't supervised?
+  # TODO: other type of imputation that isn't supervised?
 }
 
 replace_nas_rf <- function(use_data, outcome){
   if(nrow(use_data[rowSums(is.na(use_data))>0,]) > 0){
     use_data <- rfImpute(as.formula(paste(outcome,"~.")), use_data) 
-    # print("NA imputation complete")
   }
   return(use_data)
 }
@@ -73,7 +72,6 @@ get.elbow.points.indices <- function(x, y, threshold) {
   return(indices)
 }
 
-# TODO: add outcome as a parameter
 pick_mtry <- function(outcome, data){
   oob.err = double(ncol(data)-1)
   test.err = double(ncol(data)-1)
@@ -100,7 +98,7 @@ pick_mtry <- function(outcome, data){
   legend("topright", legend = c("OOB", "Test"), pch = 23, col = c("red", "blue"))
   lines(predict(loess(test.err ~ c(1:mtry))), col = 'green')
   
-  # try cutoffs to get less than 5 elbowpoints
+  # try cutoffs to get less than n elbowpoints
   cutoff <- 1
   # placeholder for elbows
   elbows <- c(1:100)
@@ -126,7 +124,7 @@ pick_mtry <- function(outcome, data){
   return(elbows)
 }
 
-# TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance in predictions
+# TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
 county_distance <- function(use_data, method, outcome, mtry = NULL){
   if(method == "euclidean"){
     use_data <- replace_nas_mean(use_data)
@@ -139,7 +137,7 @@ county_distance <- function(use_data, method, outcome, mtry = NULL){
   } else if(grepl("rf",method)){
     use_data <- replace_nas_rf(use_data, outcome)
     set.seed(1234)
-    # TODO: optimize any parameters here?
+    # TODO: optimize any parameters here? - tried optimizing mtry
     trControl <- trainControl(method = 'cv',
                                             number = 10,
                                             search = 'grid')
