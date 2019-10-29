@@ -19,11 +19,10 @@ ui <- fluidPage(#theme = "styles.css",
            fluidRow(htmlOutput("my_county_name")),
            fluidRow(
              column(width = 6, plotOutput("my_county_radar")),
-             column(width = 3, 
-                    DT::DTOutput("my_county_demo")),
-             column(width = 3)),
+             column(width = 6, 
+                    DT::DTOutput("my_county_demo"))
           # fluidRow(d3Output("test"))
-           ),
+           )),
     column(width = 5)
   ),
   
