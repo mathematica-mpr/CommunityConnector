@@ -87,9 +87,12 @@ server <- function(input, output) {
   
   output$my_county_radar <- renderPlot({
     req(county_check())
-    dd <- dd %>% 
-      filter(grepl("sdoh_score", column_name))
-    df <- make_radar_data(county_dat() %>% select(starts_with("sdoh_score")), dd)
+    
+    sdoh_dd <- get_dd(dd, "sdoh_score")
+    
+    sdohs <- sdoh_dd %>% pull(column_name)
+    
+    df <- make_radar_data(county_dat() %>% select(sdohs), sdoh_dd)
     
     par(bg = config$colors$tan25)
     radarchart(df, 
@@ -105,6 +108,7 @@ server <- function(input, output) {
   
   output$my_county_demo <- DT::renderDT({
     req(county_check())
+    
     dd <- dd %>%
       filter(grepl("demographics_", column_name))
     df <- county_dat() %>% select(starts_with("demographics_")) %>%
