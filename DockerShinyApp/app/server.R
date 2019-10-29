@@ -51,7 +51,7 @@ server <- function(input, output) {
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
-    find_my_matches(county_fips(), dat, input$compare_counties_range)[[2]] 
+    find_my_matches(county_fips(), dat, 20)[[2]] 
   })
   
   # outcomes data
@@ -148,7 +148,7 @@ server <- function(input, output) {
     state <- dat %>% pull(state) %>% unique()
     st <- state.abb[match(state, state.name)]
     
-    df <- find_my_matches(county_fips(), dat, input$compare_counties_range)[[1]] %>%
+    df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
       rename(fips = fips) %>%
       mutate(county = tolower(county))
     
