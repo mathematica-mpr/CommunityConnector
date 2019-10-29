@@ -2,7 +2,7 @@ column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_s
 pct_lt_18,Percentage of population below 18 years of age,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_65_and_over,Percentage of population ages 65 and older,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_african_american,Percentage of population that is non-Hispanic African American,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_alcohol_impaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
+pct_alcoholimpaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 pct_american_indian_alaskan_native,Percentage of population that is American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_asian,Percentage of population that is Asian,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_children_in_poverty,Percentage of people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
@@ -22,10 +22,10 @@ pct_deep_poverty,% Persons in Deep Poverty,1,0,0,0,percentage,1,0,0,0,0,0,AHRF,0
 pct_insufficient_sleep,Percentage of adults who report fewer than 7 hours of sleep on average,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_good_air,% good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0
 pop_dens,Population density per square mile,1,0,0,0,rate,0,0,0,0,0,0,AHRF,
-pct_long_commute___drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
+pct_long_commute_drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
 chronic_kidney_disease_pct,Percentage of Medicare beneficiaries (65+) with chronic kidney disease,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0
 pct_native_hawaiian_other_pacific_islander,Percentage of population that is Native Hawaiian or other Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_non_hispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
+pct_nonhispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_not_proficient_in_english,Percentage of population that is not proficient in English,1,0,0,0,percentage,0,0,1,0,1,0,RWJF,0.0
 pct_obese,Percentage of the adult population (age 20 and older) that reports a body mass index (BMI) greater than or equal to 30 kg/m2,0,0,1,0,percentage,0,0,0,0,0,0,RWJF,0.0
 pct_physically_inactive,Percentage of adults age 20 and over reporting no leisure-time physical activity.,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
@@ -33,7 +33,7 @@ pct_rural,Percentage of population living in a rural area,1,0,0,0,percentage,0,0
 chronic_kidney_disease_std_spend,Medicare per capita standardized spending on chronic kidney disease,0,1,1,0,continuous,1,0,0,0,0,0,CMS,0.0
 pct_severe_housing_cost_burden,Percentage of households that spend 50% or more of their household income on housing,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
 pct_severe_housing_problems,"Percentage of households with at least 1 of 4 housing problems: overcrowding, high housing costs, lack of kitchen facilities, or lack of plumbing facilities",1,0,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
-pct_single_parent_households,Percentage of children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
+pct_singleparent_households,Percentage of children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_smokers,Percentage of adults who are current smokers,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_some_college,Percentage of adults ages 25-44 with some post-secondary education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_unemployed,Percentage of population ages 16 and older unemployed but seeking work,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
@@ -72,7 +72,7 @@ food_environment_index,"Index of factors that contribute to a healthy food envir
 graduation_rate,Percentage of ninth-grade cohort that graduates in four years,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_vaccinated,Percentage of annual Medicare enrollees having an annual flu vaccination,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
 pct_with_access,Percentage of the population with access to places for physical activity,0,1,0,0,percentage,0,1,0,0,1,0,RWJF,1.0
-age_adjusted_mortality,age-adjusted mortality,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
+ageadjusted_mortality,age-adjusted mortality,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
 injury_death_rate,"Number of deaths due to injury per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0
 kidn_hosp_pp_rate,Kidney hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 life_expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1.0
