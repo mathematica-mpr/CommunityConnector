@@ -49,3 +49,4 @@ dd <- read_csv("./data/final_data_dictionary.csv") %>%
          end = sub(" ", "\n", end),
          descrip_new = paste0(beg, mid, mid2, end)) 
 
+default_county <- sample(unique(dat$fips), 1)
