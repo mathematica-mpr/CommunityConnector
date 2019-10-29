@@ -114,7 +114,7 @@ server <- function(input, output) {
     demos <- demo_dd %>% pull(column_name)
     
     df <- county_dat() %>% select(demos) %>%
-      rename_at(vars(demo_dd$column_name), ~ demo_dd$descrip_new) 
+      rename_at(vars(demo_dd$column_name), ~ demo_dd$description) 
     df[2,] <- df[1,]
     df[1,] <- colnames(df)
     df <- t(df)
