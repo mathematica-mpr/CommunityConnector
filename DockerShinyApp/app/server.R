@@ -123,19 +123,19 @@ server <- function(input, output) {
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
-    dd <- dd %>% 
-      filter(grepl("sdoh_score", column_name)) %>% 
-      select(column_name, description, descrip_new)
+    sdoh_dd <- get_dd(dd, "sdoh_score")
+    
+    sdohs <- sdoh_dd %>% pull(column_name)
     
     # find number of rows for plot
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
     par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
-    df <- dat %>% select(fips, state, county, starts_with("sdoh_score")) %>%
+    df <- dat %>% select(fips, state, county, sdohs) %>%
       filter(fips %in% my_matches()) %>%
       group_by(fips, county, state) %>%
       nest() %>%
-      mutate(radar_data = purrr::map(data, make_radar_data, dd = dd)) %>%
+      mutate(radar_data = purrr::map(data, make_radar_data, dd = sdoh_dd)) %>%
       mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
                               plty = 0,
                               pfcol = c(paste0(config$colors$grey50, '80'),
