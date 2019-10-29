@@ -116,7 +116,7 @@ server <- function(input, output) {
     # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
     df <- county_dat() %>% select(demos) %>%
       rename_at(vars(demo_dd$column_name), ~ demo_dd$description) %>%
-      pivot_longer(cols = names(df))
+      pivot_longer(cols = demo_dd$description)
       
     DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt",
@@ -152,12 +152,12 @@ server <- function(input, output) {
   output$map <- renderPlotly({
     req(county_check())
     
-    state <- dat %>% pull(state) %>% unique()
-    st <- state.abb[match(state, state.name)]
+    st <- dat %>% pull(state) %>% unique()
+    state <- state.name[match(st, state.abb)]
     
     df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
       rename(fips = fips) %>%
-      mutate(county = tolower(county))
+      mutate(county = gsub(" county", "", tolower(county)))
     
     county_map_df <- map_data("county") %>%
       filter(region == tolower(state))
