@@ -65,7 +65,9 @@ pct_lbw,Percentage of births with low birth weight (<2500g),0,1,0,0,percentage,0
 diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE,0.0
 pct_limited_access,Percentage with limited access to healthy foods,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0
 pct_screened,Percentage of female Medicare enrollees having an annual mammogram (age 65-74),0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
-fips,fips,0,0,0,0,ID,0,0,0,0,0,0,All,
+fips,FIPS code,0,0,0,0,ID,0,0,0,0,0,0,All,
+county,County Name,0,0,0,0,ID,0,0,0,0,0,0,All,
+state,State Name,0,0,0,0,ID,0,0,0,0,0,0,All,
 food_environment_index,"Index of factors that contribute to a healthy food environment, 0 (worst) to 10 (best)",0,1,0,0,continuous,0,0,0,1,0,0,RWJF,1.0
 graduation_rate,Percentage of ninth-grade cohort that graduates in four years,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_vaccinated,Percentage of annual Medicare enrollees having an annual flu vaccination,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0

@@ -38,7 +38,11 @@ for t in data_types:
             count += 1
 
 data['FIPS'] = [str(fips).zfill(3) for fips in data['FIPS']]
-
+# drop counties that have FIPS = 999 or 0
+full_data = full_data[full_data['FIPS'] != 999]
+full_data = full_data[full_data['FIPS'] != 0]
+full_data['County'] = [col + " County" for col in full_data['County']
+]
 print(full_data.shape)
 
 # add sdoh_score1-6 to columns
