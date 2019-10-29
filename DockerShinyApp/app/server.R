@@ -5,7 +5,7 @@ server <- function(input, output) {
 #      if (input$county_selection_type == "fips") {
 #        need(nchar(input$county_selection) == 4, 'Please enter a four digit fips Code for your county.')
 #      } else if (input$county_selection_type == "name") {
-#        need(input$county_selection %in% dat$County, 'Please enter a valid county name.')
+#        need(input$county_selection %in% dat$county, 'Please enter a valid county name.')
 #      }
 #    })
 #  })
@@ -21,7 +21,7 @@ server <- function(input, output) {
     if (input$county_selection_type == "fips") {
       input$county_selection %in% dat$fips
     } else if (input$county_selection_type == "name") {
-      input$county_selection %in% dat$County
+      input$county_selection %in% dat$county
     }
   })
   
@@ -31,7 +31,7 @@ server <- function(input, output) {
     if (input$county_selection_type == "fips") {
       input$county_selection
     } else if (input$county_selection_type == "name") {
-      dat %>% filter(County == input$county_selection) %>% pull(fips)
+      dat %>% filter(county == input$county_selection) %>% pull(fips)
     }
   })
   
@@ -40,7 +40,7 @@ server <- function(input, output) {
     if (input$county_selection_type == "name") {
       input$county_selection
     } else if (input$county_selection_type == "fips") {
-      dat %>% filter(fips == input$county_selection) %>% pull(County)
+      dat %>% filter(fips == input$county_selection) %>% pull(county)
     }
   })
   
@@ -58,14 +58,12 @@ server <- function(input, output) {
   outcomes_dat <- reactive({
     req(county_check())
     
-    outcomes <- grep("outcome_", names(dat), value = T)
+    outcomes_dd <- get_dd(dd, "outcome")
     
-    outcomes_dd <- dd %>% 
-      filter(grepl("outcome_", column_name)) %>% 
-      select(column_name, description)
+    outcomes <- outcomes_dd %>% pull(column_name)
     
     # need to add coloring to the vlines
-    df <- dat %>% select(fips, State, County, outcomes) %>%
+    df <- dat %>% select(fips, state, county, outcomes) %>%
       pivot_longer(cols = outcomes) %>%
       # selected county and matches to selected county
       mutate(type = case_when(
@@ -83,7 +81,7 @@ server <- function(input, output) {
 
   output$my_county_name <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$State, "</h4>"))
+    HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$state, "</h4>"))
   })
   
   
@@ -129,9 +127,9 @@ server <- function(input, output) {
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
     par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
-    df <- dat %>% select(fips, State, County, starts_with("sdoh_score")) %>%
+    df <- dat %>% select(fips, state, county, starts_with("sdoh_score")) %>%
       filter(fips %in% my_matches()) %>%
-      group_by(fips, County, State) %>%
+      group_by(fips, county, state) %>%
       nest() %>%
       mutate(radar_data = purrr::map(data, make_radar_data, dd = dd)) %>%
       mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
@@ -141,18 +139,18 @@ server <- function(input, output) {
                                         paste0(config$colors$teal100, '33')),
                               cglcol = config$colors$grey100,
                               seg = 4, vlcex = 0.8,
-                              title = paste0(County, ", ", State)))
+                              title = paste0(county, ", ", state)))
   })
 
   output$map <- renderPlotly({
     req(county_check())
     
-    state <- dat %>% pull(State) %>% unique()
+    state <- dat %>% pull(state) %>% unique()
     st <- state.abb[match(state, state.name)]
     
     df <- find_my_matches(county_fips(), dat, input$compare_counties_range)[[1]] %>%
       rename(fips = fips) %>%
-      mutate(county = tolower(County))
+      mutate(county = tolower(county))
     
     county_map_df <- map_data("county") %>%
       filter(region == tolower(state))
@@ -163,7 +161,7 @@ server <- function(input, output) {
       group_by(group) %>%
       plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
               colors = viridis_pal(option="D")(3),
-              text = ~County, hoverinfo = 'text') %>%
+              text = ~county, hoverinfo = 'text') %>%
       add_polygons(line = list(width = 0.4)) %>%
       add_polygons(
         fillcolor = 'transparent',

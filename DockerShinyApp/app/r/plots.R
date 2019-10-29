@@ -1,8 +1,8 @@
-county_FIPS <- "8001"
+county_FIPS <- "1"
 
-county_dat <- dat %>% filter(FIPS == county_FIPS)
+county_dat <- dat %>% filter(fips == county_FIPS)
 
-state <- dat %>% pull(State) %>% unique()
+state <- dat %>% pull(state) %>% unique()
 
 st <- state.abb[match(state, state.name)]
 
