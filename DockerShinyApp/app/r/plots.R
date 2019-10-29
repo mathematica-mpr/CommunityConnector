@@ -1,18 +1,16 @@
-county_FIPS <- "1"
+county_fips <- "1"
 
-county_dat <- dat %>% filter(fips == county_FIPS)
+county_dat <- dat %>% filter(fips == county_fips)
 
-state <- dat %>% pull(state) %>% unique()
+st <- dat %>% pull(state) %>% unique()
+state <- state.name[match(st, state.abb)]
 
-st <- state.abb[match(state, state.name)]
-
-my_matches <- find_my_matches(county_FIPS, dat)[[2]] 
+my_matches <- find_my_matches(county_fips, dat)[[2]] 
 
 
 # radar chart ----------------------------
 
-radardd <- dd %>% 
-  filter(grepl("sdoh_score", column_name))
+radardd <- get_dd(dd,"sdoh_score")
 df <- make_radar_data(county_dat %>% select(starts_with("sdoh_score")), radardd)
 
 par(bg = config$colors$tan25)
@@ -28,9 +26,9 @@ radarchart(df,
 
 # county map ------------------------------
 
-df <- find_my_matches(county_FIPS, dat)[[1]] %>%
-  rename(fips = FIPS) %>%
-  mutate(county = tolower(County))
+df <- find_my_matches(county_fips, dat)[[1]] %>%
+  rename(fips = fips) %>%
+  mutate(county = gsub(" county", "", tolower(county)))
 
 county_map_df <- map_data("county") %>%
   filter(region == tolower(state))
@@ -41,7 +39,7 @@ df %>%
   group_by(group) %>%
   plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
           colors = viridis_pal(option="D")(3),
-          text = ~County, hoverinfo = 'text') %>%
+          text = ~county, hoverinfo = 'text') %>%
   add_polygons(line = list(width = 0.4)) %>%
   add_polygons(
     fillcolor = 'transparent',
@@ -57,27 +55,25 @@ df %>%
   )
 
 # single outcome density ----------------------------------
-outcomes <- grep("outcome_", names(dat), value = T)
+outcomes_dd <- get_dd(dd, "outcome")
 
-outcomesdd <- dd %>% 
-  filter(grepl("outcome_", column_name)) %>% 
-  select(column_name, description)
+outcomes <- outcomes_dd %>% pull(column_name)
 
 # need to add coloring to the vlines
-df_outcomes <- dat %>% select(FIPS, State, County, outcomes) %>%
+df_outcomes <- dat %>% select(fips, state, county, outcomes) %>%
   pivot_longer(cols = outcomes) %>%
   # selected county and matches to selected county
   mutate(type = case_when(
-    FIPS %in% my_matches ~ "matches",
-    FIPS == county_FIPS ~ "selected",
+    fips %in% my_matches ~ "matches",
+    fips == county_fips ~ "selected",
     TRUE ~ "other"
   )) %>%
   # left join data dictionary to get real outcome names
   rename(column_name = name) %>%
-  left_join(outcomesdd, by = "column_name") 
+  left_join(outcomes_dd, by = "column_name") 
 
 df_outcome1 <- df_outcomes %>% 
-  filter(column_name == "outcome_1")
+  filter(column_name == outcomes[1])
 
 ggplot(df_outcome1, aes(x=value)) + geom_density() + 
   geom_vline(data = filter(df_outcome1, type != "other"),
