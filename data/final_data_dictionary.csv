@@ -2,7 +2,7 @@ column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_s
 pct_lt_18,Percentage of population below 18 years of age,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_65_and_over,Percentage of population ages 65 and older,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_african_american,Percentage of population that is non-Hispanic African American,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_alcohol-impaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
+pct_alcoholimpaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 pct_american_indian_alaskan_native,Percentage of population that is American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_asian,Percentage of population that is Asian,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_children_in_poverty,Percentage of people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
@@ -22,10 +22,10 @@ pct_deep_poverty,% Persons in Deep Poverty,1,0,0,0,percentage,1,0,0,0,0,0,AHRF,0
 pct_insufficient_sleep,Percentage of adults who report fewer than 7 hours of sleep on average,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_good_air,% good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0
 pop_dens,Population density per square mile,1,0,0,0,rate,0,0,0,0,0,0,AHRF,
-pct_long_commute_-_drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
+pct_long_commute_drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,1,0,RWJF,0.0
 chronic_kidney_disease_pct,Percentage of Medicare beneficiaries (65+) with chronic kidney disease,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0
 pct_native_hawaiian_other_pacific_islander,Percentage of population that is Native Hawaiian or other Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_non-hispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
+pct_nonhispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_not_proficient_in_english,Percentage of population that is not proficient in English,1,0,0,0,percentage,0,0,1,0,1,0,RWJF,0.0
 pct_obese,Percentage of the adult population (age 20 and older) that reports a body mass index (BMI) greater than or equal to 30 kg/m2,0,0,1,0,percentage,0,0,0,0,0,0,RWJF,0.0
 pct_physically_inactive,Percentage of adults age 20 and over reporting no leisure-time physical activity.,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
@@ -33,7 +33,7 @@ pct_rural,Percentage of population living in a rural area,1,0,0,0,percentage,0,0
 chronic_kidney_disease_std_spend,Medicare per capita standardized spending on chronic kidney disease,0,1,1,0,continuous,1,0,0,0,0,0,CMS,0.0
 pct_severe_housing_cost_burden,Percentage of households that spend 50% or more of their household income on housing,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
 pct_severe_housing_problems,"Percentage of households with at least 1 of 4 housing problems: overcrowding, high housing costs, lack of kitchen facilities, or lack of plumbing facilities",1,0,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
-pct_single-parent_households,Percentage of children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
+pct_singleparent_households,Percentage of children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_smokers,Percentage of adults who are current smokers,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0.0
 pct_some_college,Percentage of adults ages 25-44 with some post-secondary education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_unemployed,Percentage of population ages 16 and older unemployed but seeking work,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0
@@ -65,12 +65,14 @@ pct_lbw,Percentage of births with low birth weight (<2500g),0,1,0,0,percentage,0
 diab_hosp_rate_adj,"Age-Adjusted Diabetes Hospitalization Rate Per 100,000 Persons",0,0,1,0,rate,0,0,0,0,0,0,CDPHE,0.0
 pct_limited_access,Percentage with limited access to healthy foods,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0
 pct_screened,Percentage of female Medicare enrollees having an annual mammogram (age 65-74),0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
-fips,fips,0,0,0,0,ID,0,0,0,0,0,0,All,
+fips,FIPS code,0,0,0,0,ID,0,0,0,0,0,0,All,
+county,County Name,0,0,0,0,ID,0,0,0,0,0,0,All,
+state,State Name,0,0,0,0,ID,0,0,0,0,0,0,All,
 food_environment_index,"Index of factors that contribute to a healthy food environment, 0 (worst) to 10 (best)",0,1,0,0,continuous,0,0,0,1,0,0,RWJF,1.0
 graduation_rate,Percentage of ninth-grade cohort that graduates in four years,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0
 pct_vaccinated,Percentage of annual Medicare enrollees having an annual flu vaccination,0,1,0,0,percentage,0,0,0,0,0,0,RWJF,1.0
 pct_with_access,Percentage of the population with access to places for physical activity,0,1,0,0,percentage,0,1,0,0,1,0,RWJF,1.0
-age-adjusted_mortality,age-adjusted mortality,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
+ageadjusted_mortality,age-adjusted mortality,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,0.0
 injury_death_rate,"Number of deaths due to injury per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0
 kidn_hosp_pp_rate,Kidney hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 life_expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1.0
@@ -87,12 +89,12 @@ population,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJ
 preventable_hosp._rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0.0
 pct_adult_uninsured,Percentage of adults without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
 pct_child_uninsured,Percentag of children without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0
-sdoh_score1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
-sdoh_score6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
+sdoh_score_6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0
 short_hosp_pp_rate,Short-term hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
 teen_birth_rate,"Number of births per 1,000 female population ages 15-19",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0
 violent_crime_rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0

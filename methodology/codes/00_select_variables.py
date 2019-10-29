@@ -9,7 +9,7 @@ from utilities import available_vars
 
 datafile = "data/full_data.csv"
 data = pd.read_csv(datafile)
-print(data.shape)
+print("Original shape of data: " + str(data.shape))
 nrows = data.shape[0]
 data.columns = map(str.lower, data.columns)
 
@@ -19,11 +19,11 @@ data_dictionary.columns = map(str.lower, data_dictionary.columns)
 keep_cols = data_dictionary['column_name']
 keep_cols = [col for col in keep_cols if 'sdoh_score' not in col]
 data['med_2br_rent_per_med_inc'] = data['rent_twobed2015']/(data['median_income']/12)
+data['state'] = "CO"
 
-print(keep_cols)
-print(len(keep_cols))
+print("Number of columns from data dictionary: " + str(len(keep_cols)))
 data = data[keep_cols]
-print(data.shape)
+assert(data.shape[1] == len(keep_cols))
 
 # are there any variables that don't have a ton of data? drop them if low coverage
 count = 0
