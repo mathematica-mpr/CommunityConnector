@@ -47,7 +47,7 @@ print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
 # TODO: also check variation in outcome by score
 
 def custom_replace(col):
-    return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","")
+    return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
 data.columns = [custom_replace(col) for col in data.columns.values]
 data_dictionary.column_name = [custom_replace(col) for col in data_dictionary.column_name]
