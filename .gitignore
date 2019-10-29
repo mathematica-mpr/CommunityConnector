@@ -11,3 +11,4 @@ data/*
 !data/final_data.csv
 methodology/codes/.Rhistory
 
+.Rproj.user
