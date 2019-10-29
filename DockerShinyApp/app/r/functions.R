@@ -16,7 +16,7 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   my_county_distances <- distances %>% 
     select(distance = paste0("X", my_county)) %>%
     rownames_to_column("fips") %>%
-    left_join(df %>% select(fips, County), by = "fips")
+    left_join(df %>% select(fips, county), by = "fips")
   
   my_matches <-  my_county_distances %>%
     filter(fips != my_county) %>%
