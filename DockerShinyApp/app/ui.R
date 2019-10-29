@@ -11,21 +11,18 @@ ui <- fluidPage(#theme = "styles.css",
   fluidRow(
     column(width = 2,
            selectInput('county_selection_type', label = 'Select your county by',
-                       choices = c('FIPS Code' = 'FIPS', 'County Name' = 'name'), selected = 'FIPS'),
+                       choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
            searchInput('county_selection', label = '', placeholder = 'Search your county',
-                       btnSearch = icon('search'), value = '8001'),
-           textOutput('county_selection_message'),
-           sliderInput('compare_counties_range', label = 'Show me counties that are this percent similar',
-                       min = 0, max = 100, value = 20)),
+                       btnSearch = icon('search'), value = default_county),
+           textOutput('county_selection_message')),
     column(width = 5,
            fluidRow(htmlOutput("my_county_name")),
            fluidRow(
              column(width = 6, plotOutput("my_county_radar")),
-             column(width = 3, 
-                    DT::DTOutput("my_county_demo")),
-             column(width = 3)),
+             column(width = 6, 
+                    DT::DTOutput("my_county_demo"))
           # fluidRow(d3Output("test"))
-           ),
+           )),
     column(width = 5)
   ),
   
