@@ -45,5 +45,5 @@ make_density_graph <- function(data) {
   ggplot(data, aes(x=value)) + geom_density() + 
     geom_vline(data = filter(data, type != "other"),
                aes(xintercept = value, color = as.factor(type))) +
-    ggtitle(first(data$description))
+    ggtitle(first(str_wrap(data$description, 80)))
 }
