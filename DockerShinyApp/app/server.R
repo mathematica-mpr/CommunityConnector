@@ -109,12 +109,16 @@ server <- function(input, output) {
   output$my_county_demo <- DT::renderDT({
     req(county_check())
     
-    dd <- dd %>%
-      filter(grepl("demographics_", column_name))
-    df <- county_dat() %>% select(starts_with("demographics_")) %>%
-      rename_at(vars(dd$column_name), ~ dd$descrip_new) %>%
-      t() %>% data.frame() %>%
-      rownames_to_column()
+    demo_dd <- get_dd(dd, "demographic")
+    
+    demos <- demo_dd %>% pull(column_name)
+    
+    df <- county_dat() %>% select(demos) %>%
+      rename_at(vars(demo_dd$column_name), ~ demo_dd$descrip_new) 
+    df[2,] <- df[1,]
+    df[1,] <- colnames(df)
+    df <- t(df)
+      
     DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt",
                       background = config$colors$tan25)
