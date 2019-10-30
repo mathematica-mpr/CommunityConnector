@@ -102,7 +102,7 @@ frac_coll_plus2010,Percentage of people aged 25 or older who have at least a Bac
 rent_twobed2015,Median gross rent for renter-occupied housing units with two bedrooms that pay cash rent,1,0,0,0,continuous,0,0,0,0,0,0,Opportunity Atlas,
 traveltime15_2010,Share of workers 16 years and over who do not work at home whose commute is shorter than 15 minutes,1,0,0,0,percentage,0,1,0,0,0,0,Opportunity Atlas,1.0
 ann_avg_job_growth_2004_2013,Average annualized job growth rate over the time period 2004 to 2013,1,0,0,0,rate,1,0,0,0,0,0,Opportunity Atlas,1.0
-pct_staying_in_same_tract_as_adults_rp_gp_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,0,0,0,percentage,0,0,0,0,1,0,Opportunity Atlas,
+pct_staying_in_same_tract_as_adults_rp_gp_pall,Fraction of children who grew up in this area who in 2015 still live in the same census tract,1,0,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas,
 race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 race_estimate_total_black_or_african_american_alone,% Black or African American,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
