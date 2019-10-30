@@ -55,4 +55,4 @@ print(data.columns.values[:5])
 print(data_dictionary.column_name[:5])
 
 data.to_csv('data/final_data.csv', index = False)
-data_dictionary.to_csv('data/final_data_dictionary.csv', index = False)
+data_dictionary.to_csv('data/intermediate_data_dictionary.csv', index = False)
