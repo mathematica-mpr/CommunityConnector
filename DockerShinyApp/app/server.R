@@ -156,6 +156,22 @@ server <- function(input, output) {
                seg = 4, vlcex = 0.8)
   })
   
+  output$comp_county_demo <- DT::renderDT({
+    req(comp_county_dat())
+    
+    demo_dd <- get_dd(dd, "demographic")
+    
+    demos <- demo_dd %>% pull(column_name)
+    
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- comp_county_dat() %>% select(demos) %>%
+      rename_at(vars(demo_dd$column_name), ~ demo_dd$description) %>%
+      pivot_longer(cols = demo_dd$description)
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
   ## comparison counties info --------------------------------------------------
   output$compare_county_radars <- renderPlot({
     req(county_check())
