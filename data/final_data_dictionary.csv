@@ -1,10 +1,7 @@
 column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6,source,higher_better
 pct_lt_18,Percentage of population below 18 years of age,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_65_and_over,Percentage of population ages 65 and older,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_african_american,Percentage of population that is non-Hispanic African American,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_alcoholimpaired,Percentage of driving deaths with alcohol involvement,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
-pct_american_indian_alaskan_native,Percentage of population that is American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
-pct_asian,Percentage of population that is Asian,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_children_in_poverty,Percentage of people under age 18 in poverty,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,0.0
 elevation,Elevation Feet,1,0,0,0,continuous,0,0,0,0,0,0,AHRF,
 hosp_pp_rate,Total Number of Hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0
@@ -24,7 +21,6 @@ pct_good_air,% good air quality days,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0
 pop_dens,Population density per square mile,1,0,0,0,rate,0,0,0,0,0,0,AHRF,
 pct_long_commute_drives_alone,"Among workers who commute in their car alone, the percentage that commute more than 30 minutes",0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0
 chronic_kidney_disease_pct,Percentage of Medicare beneficiaries (65+) with chronic kidney disease,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0
-pct_native_hawaiian_other_pacific_islander,Percentage of population that is Native Hawaiian or other Pacific Islander,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_nonhispanic_white,Percentage of population that is non-Hispanic White,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,
 pct_not_proficient_in_english,Percentage of population that is not proficient in English,1,0,0,0,percentage,0,0,1,0,1,0,RWJF,0.0
 pct_obese,Percentage of the adult population (age 20 and older) that reports a body mass index (BMI) greater than or equal to 30 kg/m2,0,0,1,0,percentage,0,0,0,0,0,0,RWJF,0.0
@@ -112,7 +108,6 @@ race_estimate_total_two_or_more_races,% Two or More races,1,0,0,0,percentage,0,0
 race_estimate_total_white_alone,% White,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 pct_only_english,% Speak Only English,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 pct_other_languages,% Speak Language other than English,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
-pct_other_languages_eng_vwell,% Speak Language other than English and Speak English well,1,0,0,0,percentage,0,0,0,0,0,0,ACS,
 median_income,Median Household Income,1,0,0,0,continuous,1,0,0,0,0,0,ACS,1.0
 gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,1,0,ACS,0.0
 mean_hours,Mean Hours Worked in past year,1,0,0,0,continuous,0,0,0,0,0,0,ACS,
