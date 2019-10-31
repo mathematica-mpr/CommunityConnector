@@ -21,7 +21,19 @@ ui <- fluidPage(#theme = "styles.css",
              column(width = 6, 
                     DT::DTOutput("my_county_demo"))
           # fluidRow(d3Output("test"))
-           )),
+           ),
+          fluidRow(
+            column(width = 6, DT::DTOutput('my_county_econ_stab')),
+            column(width = 6, DT::DTOutput('my_county_neigh'))
+          ),
+          fluidRow(
+            column(width = 6, DT::DTOutput('my_county_edu')),
+            column(width = 6, DT::DTOutput('my_county_food'))
+          ),
+          fluidRow(
+            column(width = 6, DT::DTOutput('my_county_community')),
+            column(width = 6, DT::DTOutput('my_county_health'))
+          )),
     column(width = 5,
            fluidRow(uiOutput('select_comparison_county')),
            fluidRow(
