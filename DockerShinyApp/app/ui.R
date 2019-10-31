@@ -39,7 +39,19 @@ ui <- fluidPage(#theme = "styles.css",
            fluidRow(
              column(width = 6, plotOutput('comp_county_radar')),
              column(width = 6, DT::DTOutput('comp_county_demo'))
-             ))
+           ),
+           fluidRow(
+             column(width = 6, DT::DTOutput('comp_county_econ_stab')),
+             column(width = 6, DT::DTOutput('comp_county_neigh'))
+           ),
+           fluidRow(
+             column(width = 6, DT::DTOutput('comp_county_edu')),
+             column(width = 6, DT::DTOutput('comp_county_food'))
+           ),
+           fluidRow(
+             column(width = 6, DT::DTOutput('comp_county_community')),
+             column(width = 6, DT::DTOutput('comp_county_health'))
+           ))
   ),
   
   fluidRow(
