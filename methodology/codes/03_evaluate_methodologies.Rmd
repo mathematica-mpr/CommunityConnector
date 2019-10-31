@@ -29,57 +29,69 @@ opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
                       "use_sdoh_raw" = c(0, 1, 0),
                       "use_dems" = c(1, 1, 1))
 
-# TODO: not sure if this cross join is going to work out
-opts <- merge(opts, data.frame("methodology" = c("rf proximity","euclidean")),
-              all = TRUE)
+# TODO: not sure if this cross join is going to work out with the functions later because we want to run the RF model only once for each row and get the prediction and proximity out of it
+methods = c("rf proximity","euclidean","rf prediction","lasso","gbm prediction")
+opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
 
 opts$meth_num <- row_number(opts$use_dems)
 # TODO: eventually will add a remove modifiable, relevant option
 # TODO: other prediction algorithms: rf prediction, gbm prediction
 # TODO: what other metrics to use to evaluate?
 
-# both the aggregate score and the inputs should not be true at the same time
+# both the aggregate score and the inputs should not be used at the same time
 print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
 print(opts)
 ```
 
 ```{r}
 implement_methodology <- function(row, outcomes, data, data_dictionary){
+  
+  # Define variables from opts dataframe
   use_sdoh_scores <- as.numeric(row[1])
   use_sdoh_raw <- as.numeric(row[2])
   use_dems <- as.numeric(row[3])
   methodology <- row[4]
   meth_num <- as.numeric(row[5])
   
+  print(methodology)
+  
+  # Loop through all outcomes
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
     orig_data <- data %>% 
       filter(!is.na(!!rlang::sym(use_outcome)))
     
-    ## Select variables to match on, limit data to these variables, and replace NAs
+    # Select variables to match on, limit data to these variables, and replace NAs
     use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dictionary,
                                         sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
                                         outcome = use_outcome, dem = use_dems)
     
-    ## Get distance matrix using methodology specified
-    distancem <- county_distance(use_data, methodology, use_outcome)
+    # Get distance matrix using methodology specified
+    dist_results <- county_distance(use_data, methodology, use_outcome)
+    distancem <- dist_results[1][[1]]
+    mse <- dist_results[2][[1]]
     
+    # Loop through counties
     # for(county_num in c(1:dim(distancem)[1])){
-    # for(county_num in c(1:5)){
-    for(county_num in c(1:1)){
+    for(county_num in c(1:5)){
+    # for(county_num in c(1:1)){
     
       data <- select_county(orig_data, distancem, county_num)
       
       ## Evaluate the methodology:
       # Look at the radar charts in order of county similarity
-      # How similar are health outcomes of the top 5 most similar or similar within a certain distance? 
+      # How similar are health outcomes of the top 5 most similar or similar within a certain distance?
       # They should have a median close to the county in question
       results <- evaluate_methodology(data, use_outcome)
       results <- c(county_num, use_outcome, methodology, meth_num, results)
       results_df = as.data.frame(matrix(unlist(results), nrow = 1))
       colnames(results_df) <- c('county','outcome','methodology','meth_num','pct_diff_from_county_med','pct_reduced_sd')
-        
+      num_vars <- c('county','meth_num','pct_diff_from_county_med','pct_reduced_sd')
+      results_df[,num_vars] <- as.numeric(as.character(unlist(results_df[,num_vars])))
+      results_df$mse <- mse
+      
+      # append results of all counties
       if(use_outcome == outcomes[1]){
         full_results <- results_df
       } else {
@@ -89,50 +101,68 @@ implement_methodology <- function(row, outcomes, data, data_dictionary){
       
     }
   }
-  full_results[,!names(full_results) %in% c("methodology","outcome")] <- as.numeric(as.character(unlist(full_results[,!names(full_results) %in% c("methodology","outcome")])))
+  
+  print(full_results)
   return(full_results)
 }
 
+debug(county_distance)
 full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
 
 ```
 
 ```{r}
 results <- bind_rows(full_results, .id = "column_label")
-print(results)
 
 # average metrics across county by outcome to evaluate results of different methodologies
 summ_results <- results %>% 
   group_by(outcome, methodology, meth_num, column_label) %>% 
   dplyr::summarise_all(funs(median)) %>% 
   arrange(outcome) %>% 
-  select(outcome, methodology, meth_num, pct_diff_from_county_med, pct_reduced_sd)
+  dplyr::select(outcome, methodology, meth_num, pct_diff_from_county_med, pct_reduced_sd, mse)
+summ_results
+```
 
+```{r}
 best_results <- summ_results %>% 
   group_by(outcome) %>% 
   dplyr::summarise(best_pct_diff = min(pct_diff_from_county_med),
-                   best_pct_sd = max(pct_reduced_sd))
+                   best_pct_sd = max(pct_reduced_sd),
+                   best_mse = min(mse, na.rm = TRUE))
+best_results
+```
 
-best_results <- best_results %>% 
+```{r}
+best_overall <- best_results %>% 
   merge(summ_results, by.x = c("outcome","best_pct_diff"),
         by.y = c("outcome","pct_diff_from_county_med")) %>% 
-  select(outcome, meth_num, best_pct_sd) %>% 
+  dplyr::select(outcome, meth_num, best_pct_sd, best_mse) %>% 
   rename(best_meth_pct_diff = meth_num) %>% 
   merge(summ_results, by.x = c("outcome","best_pct_sd"),
         by.y = c("outcome","pct_reduced_sd")) %>% 
-  select(outcome, best_meth_pct_diff, meth_num) %>% 
-  rename(best_meth_pct_sd = meth_num)
-best_results
+  dplyr::select(outcome, best_meth_pct_diff, meth_num, best_mse) %>% 
+  rename(best_meth_pct_sd = meth_num) %>% 
+  merge(summ_results, by.x = c("outcome","best_mse"),
+        by.y = c("outcome","mse")) %>% 
+  dplyr::select(outcome, best_meth_pct_diff, best_meth_pct_sd, meth_num) %>% 
+  rename(best_mse = meth_num)
+best_overall
 
-best_results %>% 
+best_overall %>% 
   group_by(best_meth_pct_diff) %>% 
   dplyr::summarise(n = n())
-# 4, 5, 6 or 1
-best_results %>% 
+best_overall %>% 
   group_by(best_meth_pct_sd) %>% 
   dplyr::summarise(n = n())
-# 5 or 6 or 4
+best_overall %>% 
+  group_by(best_mse) %>% 
+  dplyr::summarise(n = n())
 
-# Euclidean distance is the best so far
-
+# Euclidean distance is the best so far between that & rf proximity
+# between euclidean, rf proximity, and rf prediction, best is 8 (RF pred) - raw data
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1): 8 (RF pred) or 11 (Lasso)
+# Seems like using all of the raw data is always best
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1) vs. GBM: 8 (RF pred) or 11(Lasso)
+# another time, definitely 11 Lasso
+opts
 ```
