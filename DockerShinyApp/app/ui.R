@@ -1,6 +1,5 @@
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(#theme = "styles.css",
-  setBackgroundColor(config$colors$tan25),
   
   fluidRow(
     column(width = 4, h2("Community Connector")),
