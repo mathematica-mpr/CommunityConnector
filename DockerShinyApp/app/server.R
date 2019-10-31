@@ -94,7 +94,6 @@ server <- function(input, output) {
     
     df <- make_radar_data(county_dat() %>% select(sdohs), sdoh_dd)
     
-    par(bg = config$colors$tan25)
     radarchart(df, 
                pcol = c(NA, NA,
                         paste0(config$colors$red100, '80')), 
@@ -119,8 +118,7 @@ server <- function(input, output) {
       pivot_longer(cols = demo_dd$description)
       
     DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt",
-                      background = config$colors$tan25)
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$compare_county_radars <- renderPlot({
@@ -133,7 +131,7 @@ server <- function(input, output) {
     # find number of rows for plot
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
-    par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
+    par(mfrow = c(plot_nrows, 5))
     df <- dat %>% select(fips, state, county, sdohs) %>%
       filter(fips %in% my_matches()) %>%
       group_by(fips, county, state) %>%
