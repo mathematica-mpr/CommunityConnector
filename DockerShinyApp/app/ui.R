@@ -26,7 +26,7 @@ ui <- fluidPage(#theme = "styles.css",
            fluidRow(uiOutput('select_comparison_county')),
            fluidRow(
              column(width = 6, plotOutput('comp_county_radar')),
-             column(width = 6)
+             column(width = 6, DT::DTOutput('comp_county_demo'))
              ))
   ),
   
