@@ -121,6 +121,61 @@ server <- function(input, output) {
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
+  output$my_county_econ_stab <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_1") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Economic Stability", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  output$my_county_neigh <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_2") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Neighborhood & Physical Environment", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  output$my_county_edu <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_3") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Education", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  output$my_county_food <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_4") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Food", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  output$my_county_community <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_5") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Community", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  output$my_county_health <- DT::renderDT({
+    req(county_check())
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- get_table_data(county_dat(), dd, "used_sdoh_6") 
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Health Coverage", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  
   ## selected comparison county info -------------------------------------------
   output$select_comparison_county <- renderUI({
     req(my_matches())
