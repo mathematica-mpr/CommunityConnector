@@ -7,6 +7,7 @@ use_data <- select_distance_columns(data = orig_data, data_dictionary = data_dic
                                     outcome = use_outcome, dem = 1)
 use_data <- replace_nas_rf(use_data, use_outcome)
 formula <- as.formula(paste(use_outcome,"~."))
+
 metric <- "RMSE"
 seed <- 1234
 
@@ -92,3 +93,28 @@ custom <- train(formula, data=use_data, method=customRF, metric=metric, tuneGrid
 summary(custom)
 plot(custom)
 # there isn't much interactivity between ntree and mtry and it takes a really long time, so don't worry about tuninng ntree
+
+###################################
+# lasso
+library(glmnetUtils)
+library(data.table)
+
+cva = cva.glmnet(formula, data = use_data)
+plot(cva)
+
+cv.glmnet.dt <- data.table()
+for (i in c(1:length(cva$alpha))){
+  glmnet.model <- cva$modlist[[i]]
+  min.mse <-  min(glmnet.model$cvm)
+  min.lambda <- glmnet.model$lambda.min
+  alpha.value <- cva$alpha[i]
+  new.cv.glmnet.dt <- data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
+  cv.glmnet.dt <- rbind(cv.glmnet.dt,new.cv.glmnet.dt)
+}
+
+best.params <- cv.glmnet.dt[which.min(cv.glmnet.dt$min_mse)]
+best.params$alpha
+log(best.params$min_lambda)
+
+plot(cva$modlist[[11]])
+minlossplot(cva)
