@@ -22,7 +22,8 @@ ui <- fluidPage(#theme = "styles.css",
                     DT::DTOutput("my_county_demo"))
           # fluidRow(d3Output("test"))
            )),
-    column(width = 5)
+    column(width = 5,
+           fluidRow(uiOutput('select_comparison_county')))
   ),
   
   fluidRow(

@@ -54,6 +54,8 @@ server <- function(input, output) {
     find_my_matches(county_fips(), dat, 20)[[2]] 
   })
   
+
+  
   # outcomes data
   outcomes_dat <- reactive({
     req(county_check())
@@ -78,7 +80,7 @@ server <- function(input, output) {
   })
   
   # output ---------------------------------------------------------------------
-
+  ## selected county information -----------------------------------------------
   output$my_county_name <- renderUI({
     req(county_check())
     HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$state, "</h4>"))
@@ -121,6 +123,17 @@ server <- function(input, output) {
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
+  ## selected comparison county info -------------------------------------------
+  output$select_comparison_county <- renderUI({
+    req(my_matches())
+    comp_counties <- dat %>% filter(fips %in% my_matches()) %>% pull(county)
+    selectInput('comparison_county_selection', label = 'Select a county to compare:',
+                choices = comp_counties)
+  })
+  
+
+  
+  ## comparison counties info --------------------------------------------------
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
