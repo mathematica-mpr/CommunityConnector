@@ -31,7 +31,7 @@ opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
 
 # TODO: not sure if this cross join is going to work out with the functions later because we want to run the RF model only once for each row and get the prediction and proximity out of it
 # methods = c("rf proximity","euclidean","rf prediction","lasso","gbm prediction")
-methods = c("rf proximity","rf prediction")
+methods = c("rf proximity","euclidean","rf prediction","lasso")
 opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
 
 opts$meth_num <- row_number(opts$use_dems)

@@ -12,6 +12,8 @@ library(fmsb)
 library(randomForest)
 library(caret)
 library(glmnet)
+library(glmnetUtils)
+library(data.table)
 library(gbm)
 library(MLmetrics)
 
@@ -117,28 +119,50 @@ county_distance <- function(use_data, method, outcome, show_deets = FALSE){
   } else if(method == "lasso"){
     # TODO: other way to replace missing?
     use_data <- replace_nas_rf(use_data, outcome)
+    
+    # cross validation for alpha and lambda
+    cva <- cva.glmnet(formula, data = use_data)
+    
+    cv.glmnet.dt <- data.table()
+    for (i in c(1:length(cva$alpha))){
+      glmnet.model <- cva$modlist[[i]]
+      min.mse <-  min(glmnet.model$cvm)
+      min.lambda <- glmnet.model$lambda.min
+      alpha.value <- cva$alpha[i]
+      new.cv.glmnet.dt <- data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
+      cv.glmnet.dt <- rbind(cv.glmnet.dt,new.cv.glmnet.dt)
+    }
+    
+    best.params <- cv.glmnet.dt[which.min(cv.glmnet.dt$min_mse)]
+    print(best.params)
+    
     lasso <- glmnet::glmnet(as.matrix(use_data[,!names(use_data) %in% outcome]),
                             as.matrix(use_data[,names(use_data) %in% outcome]),
-                            alpha = 1)
+                            alpha = best.params$alpha,
+                            lambda = best.params$min_lambda)
     # TODO: important coefficients
     # print(predict(lasso, type = 'coefficients'))[c(1:6)]
     # TODO: cross validation of s or lambda
     pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]),
                     s = 0.01, type = "response"))
     distancem <- abs(outer(pred, pred, '-'))
-  } else if(method == "gbm prediction"){
-    # https://www.datacamp.com/community/tutorials/decision-trees-R
-    # boosting? useful when you have a lot of data and expect the decision trees to be very complex
-    gbmod <- gbm(formula,
-                 data = use_data, distribution = 'gaussian',
-                 # TODO: cross validation to choose
-                 shrinkage = 0.01, interaction.depth = 4)
-    gbmod.summ <- summary(gbmod, cBars = 25)
-    # print(gbmod.summ)
-    # TODO: CV for n.trees?
-    pred <- predict(gbmod, newdata = use_data, n.trees = 100)
-    distancem <- abs(outer(pred, pred, '-'))
-  }
+  } 
+  # else if(method == "gbm prediction"){
+  #   # https://www.datacamp.com/community/tutorials/decision-trees-R
+  #   # boosting? useful when you have a lot of data and expect the decision trees to be very complex
+  #   # more likely to overfit - builds trees additively
+  #   # we could spend more time on this algorithm if we had more data (i.e. entire U.S)
+  #   
+  #   gbmod <- gbm(formula,
+  #                data = use_data, distribution = 'gaussian',
+  #                # TODO: cross validation to choose
+  #                shrinkage = 0.01, interaction.depth = 4)
+  #   gbmod.summ <- summary(gbmod, cBars = 25)
+  #   # print(gbmod.summ)
+  #   # TODO: CV for n.trees?
+  #   pred <- predict(gbmod, newdata = use_data, n.trees = 100)
+  #   distancem <- abs(outer(pred, pred, '-'))
+  # }
   
   if(method != "euclidean"){
     mse <- MSE(pred, use_data[,names(use_data) %in% outcome])
