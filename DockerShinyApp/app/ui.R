@@ -23,7 +23,11 @@ ui <- fluidPage(#theme = "styles.css",
           # fluidRow(d3Output("test"))
            )),
     column(width = 5,
-           fluidRow(uiOutput('select_comparison_county')))
+           fluidRow(uiOutput('select_comparison_county')),
+           fluidRow(
+             column(width = 6, plotOutput('comp_county_radar')),
+             column(width = 6)
+             ))
   ),
   
   fluidRow(
