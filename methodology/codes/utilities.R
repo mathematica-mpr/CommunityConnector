@@ -142,9 +142,10 @@ county_distance <- function(use_data, method, outcome, show_deets = FALSE){
                             lambda = best.params$min_lambda)
     # TODO: important coefficients
     # print(predict(lasso, type = 'coefficients'))[c(1:6)]
-    # TODO: cross validation of s or lambda
-    pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]),
-                    s = 0.01, type = "response"))
+    coefs <- coef(lasso)
+    print(data.frame(name = coefs@Dimnames[[1]][coefs@i + 1], coefficient = coefs@x))
+    
+    pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]), type = "response"))
     distancem <- abs(outer(pred, pred, '-'))
   } 
   # else if(method == "gbm prediction"){
@@ -219,7 +220,7 @@ evaluate_methodology <- function(data, use_outcome){
   return(list(pct_diff_from_county_med, pct_reduced_sd))
 }
 
-implement_methodology <- function(row, outcomes, data, data_dictionary, num_counties = 1){
+implement_methodology <- function(row, outcomes, data, data_dictionary, num_counties = NA){
   
   # Define variables from opts dataframe
   use_sdoh_scores <- as.numeric(row[1])
@@ -247,11 +248,14 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, num_coun
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
     
-    # num_counties <- dim(distancem)[1]
+    if(is.na(num_counties)){
+      n_counties <- dim(distancem)[1]
+    } else {
+      n_counties <- num_counties
+    }
     
     # Loop through counties
-    for(county_num in c(1:num_counties)){
-      
+    for(county_num in c(1:n_counties)){
       data <- select_county(orig_data, distancem, county_num)
       
       ## Evaluate the methodology:
