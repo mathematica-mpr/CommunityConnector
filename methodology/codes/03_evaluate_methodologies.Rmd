@@ -1,0 +1,112 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r}
+rm(list = ls())
+```
+
+```{r}
+source('utilities.R')
+
+# TODO: also parse down the demographic variables?
+data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
+data <- read.csv('../../data/final_data.csv')
+```
+
+```{r}
+# select outcome
+outcomes <- data_dictionary %>% 
+  filter(outcome == 1) %>% 
+  dplyr::select(column_name) %>% 
+  mutate(column_name = as.character(column_name)) %>% 
+  pull()
+```
+
+```{r Methodology options}
+opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
+                      "use_sdoh_raw" = c(0, 1, 0),
+                      "use_dems" = c(1, 1, 1))
+# opts <- data.frame("use_sdoh_scores" = c(0),
+#                       "use_sdoh_raw" = c(1),
+#                       "use_dems" = c(1))
+
+# TODO: not sure if this cross join is going to work out with the functions later because we want to run the RF model only once for each row and get the prediction and proximity out of it
+# methods = c("rf proximity","euclidean","rf prediction","lasso","gbm prediction")
+# methods = c("rf proximity","euclidean","rf prediction","lasso")
+methods = c("lasso")
+opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
+
+opts$meth_num <- row_number(opts$use_dems)
+# TODO: eventually will add a remove modifiable, relevant option
+# TODO: other prediction algorithms: rf prediction, gbm prediction
+# TODO: what other metrics to use to evaluate?
+
+# both the aggregate score and the inputs should not be used at the same time
+print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
+print(opts)
+```
+
+```{r}
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
+```
+
+```{r}
+results <- bind_rows(full_results, .id = "column_label")
+
+# average metrics across county by outcome to evaluate results of different methodologies
+summ_results <- results %>% 
+  group_by(outcome, methodology, meth_num, column_label) %>% 
+  dplyr::summarise_all(funs(median)) %>% 
+  arrange(outcome) %>% 
+  dplyr::select(outcome, methodology, meth_num, pct_diff_from_county_med, pct_reduced_sd, mse)
+summ_results
+```
+
+```{r}
+best_results <- summ_results %>% 
+  group_by(outcome) %>% 
+  dplyr::summarise(best_pct_diff = min(pct_diff_from_county_med),
+                   best_pct_sd = max(pct_reduced_sd),
+                   best_mse = min(mse, na.rm = TRUE))
+best_results
+```
+
+```{r}
+best_overall <- best_results %>% 
+  merge(summ_results, by.x = c("outcome","best_pct_diff"),
+        by.y = c("outcome","pct_diff_from_county_med")) %>% 
+  dplyr::select(outcome, meth_num, best_pct_sd, best_mse) %>% 
+  rename(best_meth_pct_diff = meth_num) %>% 
+  merge(summ_results, by.x = c("outcome","best_pct_sd"),
+        by.y = c("outcome","pct_reduced_sd")) %>% 
+  dplyr::select(outcome, best_meth_pct_diff, meth_num, best_mse) %>% 
+  rename(best_meth_pct_sd = meth_num) %>% 
+  merge(summ_results, by.x = c("outcome","best_mse"),
+        by.y = c("outcome","mse")) %>% 
+  dplyr::select(outcome, best_meth_pct_diff, best_meth_pct_sd, meth_num) %>% 
+  rename(best_mse = meth_num)
+best_overall
+
+best_overall %>% 
+  group_by(best_meth_pct_diff) %>% 
+  dplyr::summarise(n = n())
+best_overall %>% 
+  group_by(best_meth_pct_sd) %>% 
+  dplyr::summarise(n = n())
+best_overall %>% 
+  group_by(best_mse) %>% 
+  dplyr::summarise(n = n())
+
+# Euclidean distance is the best so far between that & rf proximity
+# between euclidean, rf proximity, and rf prediction, best is 8 (RF pred) - raw data
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1): 8 (RF pred) or 11 (Lasso)
+# Seems like using all of the raw data is always best
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1) vs. GBM: 8 (RF pred) or 11(Lasso)
+# another time, definitely 11 Lasso
+# using CV to predict results, 11 (Lasso) is the best by far - raw data. 2nd best is 10
+# However, we don't necessarily want the BEST prediction model, but maybe we can try removing the modifiable variables and re-running?
+opts
+```
