@@ -28,10 +28,14 @@ outcomes <- data_dictionary %>%
 opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
                       "use_sdoh_raw" = c(0, 1, 0),
                       "use_dems" = c(1, 1, 1))
+# opts <- data.frame("use_sdoh_scores" = c(0),
+#                       "use_sdoh_raw" = c(1),
+#                       "use_dems" = c(1))
 
 # TODO: not sure if this cross join is going to work out with the functions later because we want to run the RF model only once for each row and get the prediction and proximity out of it
 # methods = c("rf proximity","euclidean","rf prediction","lasso","gbm prediction")
-methods = c("rf proximity","euclidean","rf prediction","lasso")
+# methods = c("rf proximity","euclidean","rf prediction","lasso")
+methods = c("lasso")
 opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
 
 opts$meth_num <- row_number(opts$use_dems)
@@ -45,7 +49,8 @@ print(opts)
 ```
 
 ```{r}
-full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
 ```
 
 ```{r}
@@ -101,5 +106,7 @@ best_overall %>%
 # Seems like using all of the raw data is always best
 # Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1) vs. GBM: 8 (RF pred) or 11(Lasso)
 # another time, definitely 11 Lasso
+# using CV to predict results, 11 (Lasso) is the best by far - raw data. 2nd best is 10
+# However, we don't necessarily want the BEST prediction model, but maybe we can try removing the modifiable variables and re-running?
 opts
 ```
