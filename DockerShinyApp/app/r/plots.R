@@ -59,6 +59,7 @@ outcomes_dd <- get_dd(dd, "outcome")
 
 outcomes <- outcomes_dd %>% pull(column_name)
 
+
 # need to add coloring to the vlines
 df_outcomes <- dat %>% select(fips, state, county, outcomes) %>%
   pivot_longer(cols = outcomes) %>%
@@ -82,3 +83,30 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 #new changes
 
 #Radar Chart with Plotly
+
+#package
+library(plotly)
+library(devtools)
+devtools::install_github("ropensci/plotly") #no scatter polar
+install_version('plotly', version = "4.7.1") #no scatter polar
+install_version('plotly', version = "4.8.0") #no scatter polar
+packageVersion('plotly')
+
+library(plotly)
+
+p <- plot_ly(
+  type = 'scatterpolar',
+  r = c(39, 28, 8, 7, 28, 39),
+  theta = c('A','B','C', 'D', 'E', 'A'),
+  fill = 'toself'
+) %>%
+  layout(
+    polar = list(
+      radialaxis = list(
+        visible = T,
+        range = c(0,50)
+      )
+    ),
+    showlegend = F
+  )
+p
