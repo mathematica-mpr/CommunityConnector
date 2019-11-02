@@ -104,13 +104,13 @@ for i in range(1,7):
 
 # TODO: flag final variables used in final data dictionary
 
-# # def custom_replace(col):
-# #     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
+def custom_replace(col):
+    return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
-# # data.columns = [custom_replace(col) for col in data.columns.values]
-# # data_dictionary.column_name = [custom_replace(col) for col in data_dictionary.column_name]
-# # print(data.columns.values[:5])
-# # print(data_dictionary.column_name[:5])
+data.columns = [custom_replace(col) for col in data.columns.values]
+data_dictionary.column_name = [custom_replace(col) for col in data_dictionary.column_name]
+print(data.columns.values[:5])
+print(data_dictionary.column_name[:5])
 
-# # data.to_csv('data/final_data.csv', index = False)
-# # data_dictionary.to_csv('data/final_data_dictionary.csv', index = False)
+data.to_csv('data/final_data.csv', index = False)
+data_dictionary.to_csv('data/final_data_dictionary.csv', index = False)
