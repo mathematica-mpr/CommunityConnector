@@ -94,7 +94,7 @@ for i in range(1,7):
     data['quartile'] = np.ceil(data[f"sdoh_score_{i}"]/0.25)
     cols.append('quartile')
     print(data[cols].groupby(['quartile']).mean())
-
+data.drop(['quartile'], axis = 1, inplace = True)
 # highly correlated (>0.4): 1 & pct diabetic, diab hosp rate adj, overobese, diabetes pct
 # 2 & pct diabetic, chronic kidney, pct obese,  diab hosp rate, overobese
 # 3 & pct diabetic, pct obese, diabetes pct, diab hosp rate adj, overobese
