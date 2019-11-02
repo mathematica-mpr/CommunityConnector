@@ -20,6 +20,7 @@ library(ClustOfVar)
 
 #data sets
 sdohallorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
+# TODO: change this to using the preliminary data_dictionary.csv & set relative wd
 dictionaryorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
 dictionaryorig[73, 12] <- 0
 dictionaryorig[30, 12] <- 0
