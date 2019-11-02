@@ -44,6 +44,11 @@ full_data = full_data[full_data['FIPS'] != 0]
 full_data['County'] = [col + " County" for col in full_data['County']
 ]
 print(full_data.shape)
+# Custom check for Colorado
+assert(full_data.shape[0] == 64)
+
+# now that we've merged on FIPS, add the 08 at the beginning for Colorado state code
+data['FIPS'] = ["08"+str(fips) for fips in data['FIPS']]
 
 # add sdoh_score1-6 to columns
 sdoh_score_names = [f'sdoh_score{i}' for i in range(1,7)]
