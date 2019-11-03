@@ -31,15 +31,19 @@ outcomes <- data_dictionary %>%
 opts <- data.frame("use_sdoh_scores" = c(1, 0, 0),
                       "use_sdoh_raw" = c(0, 1, 0),
                       "use_dems" = c(1, 1, 1))
-# opts <- data.frame("use_sdoh_scores" = c(0),
-#                       "use_sdoh_raw" = c(1),
-#                       "use_dems" = c(1))
 
 # TODO: not sure if this cross join is going to work out with the functions later because we want to run the RF model only once for each row and get the prediction and proximity out of it
 # methods = c("rf proximity","euclidean","rf prediction","lasso","gbm prediction")
-# methods = c("rf proximity","euclidean","rf prediction","lasso")
-methods = c("lasso")
+methods = c("rf proximity","euclidean","rf prediction","lasso")
+# methods = c("lasso")
 opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
+
+# It doesn't make sense to do the prediction methodology with only demographics or sdoh_scores - we should use all the raw data
+# for Euclidean distance, may want to use demographics and/or sdoh_scores
+# eliminate what doesn't make sense here
+opts <- opts %>% 
+  dplyr::filter((methodology == "euclidean") | (use_sdoh_scores == 0 & use_sdoh_raw == 1))
+opts
 
 opts$meth_num <- row_number(opts$use_dems)
 # TODO: eventually will add a remove modifiable, relevant option
