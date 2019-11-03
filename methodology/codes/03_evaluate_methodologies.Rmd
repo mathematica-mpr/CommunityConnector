@@ -13,6 +13,9 @@ source('utilities.R')
 # TODO: also parse down the demographic variables?
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
+data_dictionary %>% 
+  filter(modifiable == 1) %>% 
+  dplyr::select(column_name, higher_better)
 ```
 
 ```{r}
@@ -58,47 +61,42 @@ results <- bind_rows(full_results, .id = "column_label")
 
 # average metrics across county by outcome to evaluate results of different methodologies
 summ_results <- results %>% 
-  group_by(outcome, methodology, meth_num, column_label) %>% 
+  group_by(use_outcome, methodology, meth_num, column_label) %>% 
   dplyr::summarise_all(funs(median)) %>% 
-  arrange(outcome) %>% 
-  dplyr::select(outcome, methodology, meth_num, pct_diff_from_county_med, pct_reduced_sd, mse)
+  arrange(use_outcome) %>% 
+  dplyr::select(-column_label, -county_num)
 summ_results
 ```
 
 ```{r}
-best_results <- summ_results %>% 
-  group_by(outcome) %>% 
-  dplyr::summarise(best_pct_diff = min(pct_diff_from_county_med),
-                   best_pct_sd = max(pct_reduced_sd),
-                   best_mse = min(mse, na.rm = TRUE))
-best_results
-```
+# find best methodology across a number of metrics and outcomes 
+for(col in names(summ_results)){
+  if(!col %in% c("methodology","meth_num","use_outcome")){
+    if(col != "pct_reduced_sd"){
+      best <- summ_results %>% 
+        group_by(use_outcome) %>% 
+        slice(which.min(!!rlang::sym(col))) %>% 
+        dplyr::select(meth_num)  
+    } else {
+      best <- summ_results %>% 
+        group_by(use_outcome) %>% 
+        slice(which.max(!!rlang::sym(col))) %>% 
+        dplyr::select(meth_num)
+    }
+    
+    print(best)
+    
+    # which one is the most common?
+    best_num <- best %>% 
+      group_by(meth_num) %>% 
+      dplyr::summarise(n = n()) %>% 
+      arrange(desc(n)) %>% 
+      slice(1) %>% 
+      dplyr::select(meth_num)
+    print(paste0("Best methodology for ", col, ": ", best_num))
+  }
+}
 
-```{r}
-best_overall <- best_results %>% 
-  merge(summ_results, by.x = c("outcome","best_pct_diff"),
-        by.y = c("outcome","pct_diff_from_county_med")) %>% 
-  dplyr::select(outcome, meth_num, best_pct_sd, best_mse) %>% 
-  rename(best_meth_pct_diff = meth_num) %>% 
-  merge(summ_results, by.x = c("outcome","best_pct_sd"),
-        by.y = c("outcome","pct_reduced_sd")) %>% 
-  dplyr::select(outcome, best_meth_pct_diff, meth_num, best_mse) %>% 
-  rename(best_meth_pct_sd = meth_num) %>% 
-  merge(summ_results, by.x = c("outcome","best_mse"),
-        by.y = c("outcome","mse")) %>% 
-  dplyr::select(outcome, best_meth_pct_diff, best_meth_pct_sd, meth_num) %>% 
-  rename(best_mse = meth_num)
-best_overall
-
-best_overall %>% 
-  group_by(best_meth_pct_diff) %>% 
-  dplyr::summarise(n = n())
-best_overall %>% 
-  group_by(best_meth_pct_sd) %>% 
-  dplyr::summarise(n = n())
-best_overall %>% 
-  group_by(best_mse) %>% 
-  dplyr::summarise(n = n())
 
 # Euclidean distance is the best so far between that & rf proximity
 # between euclidean, rf proximity, and rf prediction, best is 8 (RF pred) - raw data
@@ -109,4 +107,5 @@ best_overall %>%
 # using CV to predict results, 11 (Lasso) is the best by far - raw data. 2nd best is 10
 # However, we don't necessarily want the BEST prediction model, but maybe we can try removing the modifiable variables and re-running?
 opts
+
 ```
