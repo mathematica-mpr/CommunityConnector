@@ -212,12 +212,24 @@ evaluate_methodology <- function(data, use_outcome){
   #   ggtitle(this_county)
   # print(plt) 
   
+  top5 <- ordered[ordered$rank <= 6, ]
+  
   sd <- sd(ordered[,use_outcome])
-  sd_top5 <- sd(ordered[ordered$rank <= 6, use_outcome])
-  med_top5 <- median(ordered[ordered$rank <= 6, use_outcome])
-  pct_diff_from_county_med <- 100*abs(med_top5-this_county)/this_county
+  sd_top5 <- sd(top5[, use_outcome])
   pct_reduced_sd <- 100*abs(sd-sd_top5)/sd
-  return(list(pct_diff_from_county_med, pct_reduced_sd))
+  
+  med_top5 <- median(top5[, use_outcome])
+  pct_diff_from_county_med <- 100*abs(med_top5-this_county)/this_county
+  
+  sds <- sapply(top5[,c("median_income","frac_coll_plus2010",
+                 "pct_physically_inactive","budget_health_svcs",
+                 "pct_food_insecure","pct_limited_access",
+                 "pct_with_access")], sd, na.rm = TRUE) 
+  names(sds) <- paste0("sd_",names(sds))
+  sds <- c(sds, "pct_diff_from_county_med" = pct_diff_from_county_med,
+           "pct_reduced_sd" = pct_reduced_sd)
+  
+  return(as.data.frame(sds))
 }
 
 implement_methodology <- function(row, outcomes, data, data_dictionary, num_counties = NA){
@@ -263,12 +275,14 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, num_coun
       # How similar are health outcomes of the top 5 most similar or similar within a certain distance?
       # They should have a median close to the county in question
       results <- evaluate_methodology(data, use_outcome)
-      results <- c(county_num, use_outcome, methodology, meth_num, results)
-      results_df = as.data.frame(matrix(unlist(results), nrow = 1))
-      colnames(results_df) <- c('county','outcome','methodology','meth_num','pct_diff_from_county_med','pct_reduced_sd')
-      num_vars <- c('county','meth_num','pct_diff_from_county_med','pct_reduced_sd')
-      results_df[,num_vars] <- as.numeric(as.character(unlist(results_df[,num_vars])))
-      results_df$mse <- mse
+      results$metric <- rownames(results)
+      results_df <- results %>% 
+        spread(metric, sds) %>% 
+        mutate("mse" = mse,
+               "county_num" = county_num,
+               "use_outcome" = use_outcome,
+               "methodology" = methodology,
+               "meth_num" = meth_num)
       
       # append results of all counties
       if(use_outcome == outcomes[1]){
