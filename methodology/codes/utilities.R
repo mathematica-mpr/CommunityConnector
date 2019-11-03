@@ -16,6 +16,8 @@ library(glmnetUtils)
 library(data.table)
 library(gbm)
 library(MLmetrics)
+# install.packages("distances")
+library(distances)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
@@ -79,7 +81,7 @@ get.elbow.points.indices <- function(x, y, threshold) {
 
 # TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
 # TODO: ideally if we had more data, we would split the data into train and test sets to build the models
-county_distance <- function(use_data, method, outcome, show_deets = FALSE){
+county_distance <- function(use_data, data_dictionary, method, outcome, remove_modifiable, show_deets = FALSE){
   mse <- NA
   formula <- as.formula(paste(outcome,"~."))
   metric <- "RMSE"
@@ -116,7 +118,7 @@ county_distance <- function(use_data, method, outcome, show_deets = FALSE){
       distancem <- abs(outer(pred, pred, '-'))
     }
     
-  } else if(method == "lasso"){
+  } else if(grepl("lasso",method)){
     # TODO: other way to replace missing?
     use_data <- replace_nas_rf(use_data, outcome)
     
@@ -140,13 +142,62 @@ county_distance <- function(use_data, method, outcome, show_deets = FALSE){
                             as.matrix(use_data[,names(use_data) %in% outcome]),
                             alpha = best.params$alpha,
                             lambda = best.params$min_lambda)
-    # TODO: important coefficients
-    # print(predict(lasso, type = 'coefficients'))[c(1:6)]
     coefs <- coef(lasso)
-    print(data.frame(name = coefs@Dimnames[[1]][coefs@i + 1], coefficient = coefs@x))
+    coefs_df <- data.frame(name = coefs@Dimnames[[1]][coefs@i + 1], coefficient = coefs@x)
+    print(coefs_df)
     
-    pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]), type = "response"))
-    distancem <- abs(outer(pred, pred, '-'))
+    if(remove_modifiable){
+      # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
+      replace_cols <- coefs_df %>% 
+        merge(data_dictionary, by.x = "name", by.y = "column_name", all.x = TRUE) %>% 
+        filter(modifiable == 1) %>% 
+        dplyr::select(name, coefficient, modifiable, higher_better)
+      replace_cols_max <- replace_cols %>% filter(higher_better == 0) %>% dplyr::select(name) %>% pull() %>% as.character()
+      replace_cols_min <- replace_cols %>% filter(higher_better == 1) %>% dplyr::select(name) %>% pull() %>% as.character()
+      
+      set_max <- function(x, na.rm = TRUE){
+        max <- max(x, na.rm)
+        return(max)
+      }
+      set_min <- function(x, na.rm = TRUE){
+        min <- min(x, na.rm)
+        return(min)
+      }
+      
+      # TODO: could actually use all data here, including those that have an NA outcome
+      # replace modifiable variables in data
+      use_data <- use_data %>% 
+        mutate_at(replace_cols_max, set_max) %>% 
+        mutate_at(replace_cols_min, set_min)
+      
+    }
+    
+    if(method == "lasso"){
+      pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]), type = "response"))
+      distancem <- abs(outer(pred, pred, '-'))  
+    } else {
+      weights <- coefs_df %>% 
+        merge(data_dictionary, by.x = "name", by.y = "column_name") %>% 
+        dplyr::select(name, coefficient, demographic, sdoh_raw, modifiable) %>% 
+        filter(is.na(modifiable)) %>% 
+        mutate(abs_coefficient = abs(coefficient))
+      
+      if(method == "lasso euclidean dem"){
+        weights <- weights %>% 
+          dplyr::filter(demographic == 1)
+      }
+      
+      var_names <- weights %>% 
+        dplyr::select(name) %>% 
+        pull() %>% 
+        as.character()
+      weights <- weights %>% 
+        dplyr::select(abs_coefficient) %>% 
+        pull() %>% 
+        as.numeric()
+      distancem <- as.matrix(distances(use_data[,var_names], weights = weights))
+    }
+    
   } 
   # else if(method == "gbm prediction"){
   #   # https://www.datacamp.com/community/tutorials/decision-trees-R
@@ -165,7 +216,7 @@ county_distance <- function(use_data, method, outcome, show_deets = FALSE){
   #   distancem <- abs(outer(pred, pred, '-'))
   # }
   
-  if(method != "euclidean"){
+  if(!grepl("euclidean",method)){
     mse <- MSE(pred, use_data[,names(use_data) %in% outcome])
   }
   
@@ -238,8 +289,9 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, num_coun
   use_sdoh_scores <- as.numeric(row[1])
   use_sdoh_raw <- as.numeric(row[2])
   use_dems <- as.numeric(row[3])
-  methodology <- row[4]
-  meth_num <- as.numeric(row[5])
+  remove_modifiable <- as.numeric(row[4])
+  methodology <- row[5]
+  meth_num <- as.numeric(row[6])
   
   print(methodology)
   
@@ -256,7 +308,7 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, num_coun
                                         outcome = use_outcome, dem = use_dems)
     
     # Get distance matrix using methodology specified
-    dist_results <- county_distance(use_data, methodology, use_outcome)
+    dist_results <- county_distance(use_data, data_dictionary, methodology, use_outcome, remove_modifiable)
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
     
