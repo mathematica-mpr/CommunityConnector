@@ -79,6 +79,32 @@ get.elbow.points.indices <- function(x, y, threshold) {
   return(indices)
 }
 
+replace_modifiable <- function(coefs_df, data_dictionary, use_data){
+  # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
+  replace_cols <- coefs_df %>% 
+    merge(data_dictionary, by.x = "name", by.y = "column_name", all.x = TRUE) %>% 
+    filter(modifiable == 1) %>% 
+    dplyr::select(name, modifiable, higher_better)
+  replace_cols_max <- replace_cols %>% filter(higher_better == 0) %>% dplyr::select(name) %>% pull() %>% as.character()
+  replace_cols_min <- replace_cols %>% filter(higher_better == 1) %>% dplyr::select(name) %>% pull() %>% as.character()
+  
+  set_max <- function(x, na.rm = TRUE){
+    max <- max(x, na.rm)
+    return(max)
+  }
+  set_min <- function(x, na.rm = TRUE){
+    min <- min(x, na.rm)
+    return(min)
+  }
+  
+  # TODO: could actually use all data here, including those that have an NA outcome
+  # replace modifiable variables in data
+  use_data <- use_data %>% 
+    mutate_at(replace_cols_max, set_max) %>% 
+    mutate_at(replace_cols_min, set_min) 
+  return(use_data)
+}
+
 # TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
 # TODO: ideally if we had more data, we would split the data into train and test sets to build the models
 county_distance <- function(use_data, data_dictionary, method, outcome, remove_modifiable, show_deets = FALSE){
@@ -110,7 +136,15 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
       varImp(rf, scale = FALSE)
       varImpPlot(rf, n.var=min(20,ncol(use_data)-1), sort = TRUE)
     }
-    pred <- predict(rf)
+    
+    if(remove_modifiable){
+      # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
+      coefs_df <- as.data.frame(colnames(use_data))
+      colnames(coefs_df)[1] <- "name"
+      use_data <- replace_modifiable(coefs_df, data_dictionary, use_data)
+    }
+    
+    pred <- predict(rf, new_data = use_data)
     
     if(method == "rf proximity"){
       distancem <- rf$proximity
@@ -148,27 +182,7 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
     
     if(remove_modifiable){
       # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
-      replace_cols <- coefs_df %>% 
-        merge(data_dictionary, by.x = "name", by.y = "column_name", all.x = TRUE) %>% 
-        filter(modifiable == 1) %>% 
-        dplyr::select(name, coefficient, modifiable, higher_better)
-      replace_cols_max <- replace_cols %>% filter(higher_better == 0) %>% dplyr::select(name) %>% pull() %>% as.character()
-      replace_cols_min <- replace_cols %>% filter(higher_better == 1) %>% dplyr::select(name) %>% pull() %>% as.character()
-      
-      set_max <- function(x, na.rm = TRUE){
-        max <- max(x, na.rm)
-        return(max)
-      }
-      set_min <- function(x, na.rm = TRUE){
-        min <- min(x, na.rm)
-        return(min)
-      }
-      
-      # TODO: could actually use all data here, including those that have an NA outcome
-      # replace modifiable variables in data
-      use_data <- use_data %>% 
-        mutate_at(replace_cols_max, set_max) %>% 
-        mutate_at(replace_cols_min, set_min)
+      use_data <- replace_modifiable(coefs_df, data_dictionary, use_data)
       
     }
     
@@ -286,12 +300,12 @@ evaluate_methodology <- function(data, use_outcome){
 implement_methodology <- function(row, outcomes, data, data_dictionary, num_counties = NA){
   
   # Define variables from opts dataframe
-  use_sdoh_scores <- as.numeric(row[1])
-  use_sdoh_raw <- as.numeric(row[2])
-  use_dems <- as.numeric(row[3])
-  remove_modifiable <- as.numeric(row[4])
-  methodology <- row[5]
-  meth_num <- as.numeric(row[6])
+  use_sdoh_scores <- as.numeric(row$use_sdoh_scores)
+  use_sdoh_raw <- as.numeric(row$use_sdoh_raw)
+  use_dems <- as.numeric(row$use_dems)
+  remove_modifiable <- as.numeric(row$remove_modifiable)
+  methodology <- row$methoology
+  meth_num <- as.numeric(row$meth_num)
   
   print(methodology)
   
