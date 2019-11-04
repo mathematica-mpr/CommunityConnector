@@ -103,7 +103,7 @@ plot_ly(df2) %>%
     theta = rownames(df2),
     #aesthetics
     fill = 'toself',
-    fillcolor = "#f7f4ec",
+    fillcolor = "#189394",
     opacity = .8,
     marker = list(size = 7,
                   color ="#eb9795",
@@ -126,9 +126,12 @@ plot_ly(df2) %>%
       ),
       #category labels
       angularaxis = list(
-        tickfont = list(size =  11)
+        tickfont = list(size =  12)
       )
+    ),
+    hoverlabel = list(
+      bordercolor = "black",
+      namelength = 1
     )
   )
-
 
