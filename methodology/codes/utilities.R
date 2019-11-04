@@ -301,17 +301,19 @@ evaluate_methodology <- function(data, use_outcome){
   return(as.data.frame(sds))
 }
 
-implement_methodology <- function(row, outcomes, data, data_dictionary, num_counties = NA){
+implement_methodology <- function(row, outcomes, data, data_dictionary, all_outcome_params = NA, num_counties = NA){
   
   # Define variables from opts dataframe
   use_sdoh_scores <- as.numeric(row$use_sdoh_scores)
   use_sdoh_raw <- as.numeric(row$use_sdoh_raw)
   use_dems <- as.numeric(row$use_dems)
   remove_modifiable <- as.numeric(row$remove_modifiable)
-  methodology <- row$methoology
+  methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
   
+  start_time <- Sys.time()
   print(methodology)
+  print(start_time)
   
   # Loop through all outcomes
   for(use_outcome in outcomes){
