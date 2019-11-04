@@ -92,13 +92,13 @@ packageVersion('plotly')
 library(plotly)
 
 #transposing dataframe
-
 #example dataframe
 df2 <- as.data.frame(t(df[5,]))
 names(df2) <- "Cook"
 
 #radar chart
-plot_ly() %>% 
+plot_ly(
+) %>% 
   add_trace(
     type = 'scatterpolar',
     mode = 'markers',
@@ -107,35 +107,49 @@ plot_ly() %>%
               'Food', 'Community', 'Health\nCoverage'),
     #aesthetics
     fill = 'toself',
-    fillcolor = "#189394",
+    fillcolor = "#f8d98b",
     opacity = .8,
     marker = list(size = 7,
-                  color ="#eb9795",
+                  color ="#d83632",
                   opacity = 1),
-    name = "SDOH Score",
+    #hover info
+    name = paste(names(df2), "County"),
     hovertemplate = ~paste('<b>Category</b>: %{theta}',
                           '<br><b>Score</b>: %{r:.2f}',
                           '<extra></extra>')
   ) %>% 
   layout(
-    title = paste("SDOH Scores \nfor", names(df2), "County"),
+    #title = list(
+    # text = paste("SDOH Scores \nfor", names(df2), "County")
+    #),
     polar = list(
       #tick labels
       radialaxis = list(
+        range = c(0,1),
         angle = 90,
         tickangle = 90,
-        dtick = .2, 
+        dtick = .5, 
         tickwidth = 2,
-        tickfont = list(size = 10),
-        hoverformat = ".2f"
+        tickfont = list(size = 10)
       ),
       #category labels
       angularaxis = list(
         tickfont = list(size =  12)
-      )
+      ),
+      bgcolor = "seashell"
     ),
     hoverlabel = list(
-      bordercolor = "black"
+      bordercolor = "black",
+      bgcolor = "#eb9795"
+    ),
+    margin = list(t=70)
+  ) %>% 
+  add_annotations(
+    y=1.15, 
+    x=0.5, 
+    text=paste("SDOH Scores \nfor", names(df2), "County"), 
+    showarrow=F,
+    font=list(size=18)
     )
-  )
+
 
