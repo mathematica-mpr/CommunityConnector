@@ -20,6 +20,7 @@ library(MLmetrics)
 library(distances)
 # install.packages("psycho")
 library(psycho)
+library(OpenRepGrid)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
@@ -109,7 +110,7 @@ replace_modifiable <- function(coefs_df, data_dictionary, use_data){
 
 # TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
 # TODO: ideally if we had more data, we would split the data into train and test sets to build the models
-county_distance <- function(use_data, data_dictionary, method, outcome, remove_modifiable, model_params = NA, show_deets = FALSE){
+county_distance <- function(use_data, fips, data_dictionary, method, outcome, remove_modifiable, model_params = NA, show_deets = FALSE){
   mse <- NA
   mtry <- NA
   alpha <- NA
@@ -233,7 +234,9 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
         psycho::standardize()
       
       if(length(var_names) > 1){
-        distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
+        # distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
+        distancem <- distances(use_data[,var_names], id_variable = fips, weights = weights)
+        # distancem <- OpenRepGrid::distanceSlater(use_data[,var_names])
       } else {
         distancem <- abs(outer(use_data[,var_names], use_data[,var_names], '-')) 
       }
@@ -245,7 +248,7 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
     mse <- MSE(pred, use_data[,names(use_data) %in% outcome])
   }
   
-  return(list(distancem, mse, mtry, alpha, min_lambda))
+  return(list(distancem, mse, mtry, alpha, min_lambda, coefs_df))
 }
 
 select_county <- function(data, distancem, county_num){
@@ -343,7 +346,7 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
     }
     
     # Get distance matrix using methodology specified
-    dist_results <- county_distance(use_data, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
+    dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
     mtry <- dist_results[3][[1]]
