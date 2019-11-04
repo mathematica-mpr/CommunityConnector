@@ -94,6 +94,33 @@ packageVersion('plotly')
 
 library(plotly)
 
+df2 <- as.data.frame(t(df))
+
+plot_ly(df2) %>% 
+  add_trace(
+    type = 'scatterpolar',
+    mode = 'markers',
+    r = ~V5,
+    theta = rownames(df2),
+    fill = 'toself',
+    fillcolor = "#189394",
+    opacity = .6,
+    name = "SDOH Score",
+    hovertemplate = paste('<br><b>Category</b>: %{theta}<br>',
+                          '<br><b>Score</b>: %{r}<br>'),
+    marker = list(size = 7,
+                  color ="#eb9795")
+  ) %>% 
+  layout(
+    title = "County Score",
+    polar = list(
+      radialaxis = list(
+        angle = 90
+      )
+    )
+  )
+
+
 p <- plot_ly(
   type = 'scatterpolar',
   r = c(39, 28, 8, 7, 28, 39),
