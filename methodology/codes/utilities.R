@@ -18,6 +18,8 @@ library(gbm)
 library(MLmetrics)
 # install.packages("distances")
 library(distances)
+# install.packages("psycho")
+library(psycho)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
@@ -225,6 +227,11 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
         dplyr::select(abs_coefficient) %>% 
         pull() %>% 
         as.numeric()
+      
+      # standardize all variables
+      use_data[,var_names] <- use_data[,var_names] %>% 
+        psycho::standardize()
+      
       if(length(var_names) > 1){
         distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
       } else {
