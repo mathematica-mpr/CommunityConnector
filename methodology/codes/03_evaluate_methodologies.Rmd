@@ -10,12 +10,8 @@ rm(list = ls())
 ```{r}
 source('utilities.R')
 
-# TODO: also parse down the demographic variables?
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
-data_dictionary %>% 
-  filter(modifiable == 1) %>% 
-  dplyr::select(column_name, higher_better)
 ```
 
 ```{r}
@@ -33,9 +29,10 @@ opts <- data.frame("use_sdoh_scores" = c(1, 0, 0, 0),
                           "use_dems" = c(1, 1, 1, 1),
                  "remove_modifiable" = c(0, 0, 0, 1))
 
-# methods = c("rf proximity","euclidean","rf prediction","lasso")
+methods = c("rf proximity","euclidean","rf prediction","lasso","lasso euclidean all","lasso euclidean dem")
 # TODO: ideally don't want to have to re-run the lasso model for each of these
-methods = c("lasso euclidean all","lasso euclidean dem", "lasso")
+# also don't want to re-run rf model
+
 opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
 
 # It doesn't make sense to do the prediction methodology with only demographics or sdoh_scores - we should use all the raw data
@@ -53,8 +50,8 @@ print(opts)
 ```
 
 ```{r}
-# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
-full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
+full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
 ```
 
 ```{r}
