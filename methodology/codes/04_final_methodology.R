@@ -60,12 +60,13 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
     }
     
     # Get distance matrix using methodology specified
-    dist_results <- county_distance(use_data, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
+    dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
     mtry <- dist_results[3][[1]]
     alpha <- dist_results[4][[1]]
     min_lambda <- dist_results[5][[1]]
+    coefs_df <- dist_results[6][[1]]
     
     if(is.na(num_counties)){
       n_counties <- dim(distancem)[1]
@@ -104,6 +105,13 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
       
     }
     
+    if(n == 1){
+      coefs_all <- coefs_df
+    } else {
+      coefs_all <- coefs_all %>% 
+        merge(coefs_df, by = "name", all.x = TRUE, all.y = TRUE)
+    }
+    names(coefs_all)[n+1] <- use_outcome
     distance_list[[n]] <- distancem
     n <- n+1
     
@@ -113,7 +121,7 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   print(paste0("Time elapsed: ", end_time - start_time))
   start_time <- end_time
   
-  return(list(full_results,distance_list))
+  return(list(full_results,distance_list, coefs_all))
 }
 
 # need to return the distance matrix
@@ -122,6 +130,55 @@ results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
 # aggregate distance matrices for all outcomes
 results[2]
 # need to standardize all first because they are on different scales
-results[2][[1]][[1]]
+
+# library(ape)
+# for(i in c(1:8)){
+#   # print(max(results[2][[1]][[i]]))
+#   # print(dim(results[2][[1]][[i]]))
+#   for(j in c(1:8)){
+#     # test for similarity of two matrices
+#     if(i != j){
+#       print(paste0(outcomes[i]," vs. ", outcomes[j]))
+#       print(mantel.test(as.matrix(results[2][[1]][[i]]), as.matrix(results[2][[1]][[j]]),
+#                   graph = TRUE)$p)
+#     }
+#   }
+# }
+
+# null hypothesis - no relationship between the matrices
+# Rejected - there is a relationship between the matrices
+# some combos there is a relationship and some there isn't
+
+# maybe just used pct kidney disease if this model looks good?
+# or pct diabetic or pct obese?
+# look at the coefficients
+coefs_df <- results[3][[1]]
+colnames(coefs_df)[2:9] <- outcomes
+View(coefs_df)
+colSums(!is.na(coefs_df))
+# which matrices would be most general/incorporate the most data
+# looking at the variables used, overobese_pct definitely uses the most
+# followed by pct obese & the std spend vars, which we won't want to use
+# let's just use the distance matrix for overobese_pct for now
+# this also is a lower level outcome than the others (i.e. impacts them down the road, so makes sense to use)
+
+final_distance <- as.data.frame(as.matrix(results[2][[1]][[8]]))
+# TODO: county-level FIPS identifier for rows and columns
+colnames(final_distance)
+rownames(final_distance)
+head(final_distance)
+min_not_0 <- function(x){
+  x <- x[x!=0]
+  min(x)
+}
+apply(final_distance, 1, min_not_0)
+# 8031 is denver - which is it most similar to?
+final_distance %>% 
+  dplyr::select('8031')
+#8005 - part of denver county area
+
+# the variables used in at least 4/8 models
+coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"]
 
 # output distance matrix with FIPS code as identifier
+write.csv(final_distance, '../../data/final_distance.csv')
