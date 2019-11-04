@@ -29,7 +29,8 @@ opts <- data.frame("use_sdoh_scores" = c(1, 0, 0, 0),
                           "use_dems" = c(1, 1, 1, 1),
                  "remove_modifiable" = c(0, 0, 0, 1))
 
-methods = c("rf proximity","euclidean","rf prediction","lasso","lasso euclidean all","lasso euclidean dem")
+# always run lasso methods in this order and rf methods in this order
+methods = c("euclidean","lasso","lasso euclidean all","lasso euclidean dem","rf proximity","rf prediction")
 # TODO: ideally don't want to have to re-run the lasso model for each of these
 # also don't want to re-run rf model
 
@@ -40,9 +41,9 @@ opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
 # eliminate what doesn't make sense here
 opts <- opts %>% 
   dplyr::filter((methodology == "euclidean") | (use_sdoh_scores == 0 & use_sdoh_raw == 1)) %>% 
-  dplyr::filter((!methodology %in% c("lasso euclidean dem", "lasso euclidean all")) | (remove_modifiable == 0))
-
-opts$meth_num <- row_number(opts$use_dems)
+  dplyr::filter((!methodology %in% c("lasso euclidean dem", "lasso euclidean all")) | (remove_modifiable == 0)) %>% 
+  mutate(methodology = as.character(methodology),
+         meth_num = row_number(use_dems))
 
 # both the aggregate score and the inputs should not be used at the same time
 print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
@@ -50,8 +51,44 @@ print(opts)
 ```
 
 ```{r}
-full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
 # full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
+
+for(row in c(1:nrow(opts))){
+  model_params <- NA
+  
+  if(row > 1){
+    full_opts <- full_results %>% 
+      merge(opts, by = "meth_num")
+    
+    past_results <- full_opts %>% 
+      filter(use_sdoh_scores == opts[row, "use_sdoh_scores"]) %>% 
+      filter(use_sdoh_raw == opts[row, "use_sdoh_raw"]) %>% 
+      filter(use_dems == opts[row, "use_dems"]) 
+    if(nrow(past_results) > 0 & opts[row, "methodology"] != "euclidean"){
+      if(grepl("lasso", opts[row,"methodology"])){
+        past_results <- past_results %>% 
+          filter(methodology == "lasso")
+      } else if(grepl("rf",  opts[row,"methodology"])){
+        past_results <- past_results %>% 
+          filter(methodology == "rf proximity")
+      }
+      model_params <- past_results %>% 
+        dplyr::select(methodology, use_outcome, mtry, alpha, min_lambda) %>% 
+        unique()
+    }
+  }
+  
+  print(nrow(model_params))
+  results <- implement_methodology(opts[row,], outcomes, data, data_dictionary, model_params)
+  
+  if(row == 1){
+    full_results <- results
+  } else{
+    full_results <- rbind(full_results, results)
+  }
+  
+}
 ```
 
 ```{r}
