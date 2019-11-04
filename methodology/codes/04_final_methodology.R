@@ -104,9 +104,7 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
       
     }
     
-    distance_list[n] <- as.data.frame(distancem)
-    print(distance_list)
-    print(distancem)
+    distance_list[[n]] <- distancem
     n <- n+1
     
   }
@@ -115,14 +113,15 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   print(paste0("Time elapsed: ", end_time - start_time))
   start_time <- end_time
   
-  return(list(full_results,distance_list, distancem))
+  return(list(full_results,distance_list))
 }
 
 # need to return the distance matrix
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
 
 # aggregate distance matrices for all outcomes
-results[2] # the data frame only gives the first row
-results[3]
+results[2]
+# need to standardize all first because they are on different scales
+results[2][[1]][[1]]
 
 # output distance matrix with FIPS code as identifier
