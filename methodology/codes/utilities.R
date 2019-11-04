@@ -225,37 +225,25 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
         dplyr::select(abs_coefficient) %>% 
         pull() %>% 
         as.numeric()
-      distancem <- as.matrix(distances(use_data[,var_names], weights = weights))
+      if(length(var_names) > 1){
+        distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
+      } else {
+        distancem <- abs(outer(use_data[,var_names], use_data[,var_names], '-')) 
+      }
     }
     
   } 
-  # else if(method == "gbm prediction"){
-  #   # https://www.datacamp.com/community/tutorials/decision-trees-R
-  #   # boosting? useful when you have a lot of data and expect the decision trees to be very complex
-  #   # more likely to overfit - builds trees additively
-  #   # we could spend more time on this algorithm if we had more data (i.e. entire U.S)
-  #   
-  #   gbmod <- gbm(formula,
-  #                data = use_data, distribution = 'gaussian',
-  #                # TODO: cross validation to choose
-  #                shrinkage = 0.01, interaction.depth = 4)
-  #   gbmod.summ <- summary(gbmod, cBars = 25)
-  #   # print(gbmod.summ)
-  #   # TODO: CV for n.trees?
-  #   pred <- predict(gbmod, newdata = use_data, n.trees = 100)
-  #   distancem <- abs(outer(pred, pred, '-'))
-  # }
   
   if(!grepl("euclidean",method)){
     mse <- MSE(pred, use_data[,names(use_data) %in% outcome])
   }
   
-  return(list(distancem, mse))
+  return(list(distancem, mse, mtry, alpha, min_lambda))
 }
 
 select_county <- function(data, distancem, county_num){
   data$distance <- distancem[,county_num]
-  data$flag_county <- ifelse(data$fips == head(data$fips, county_num), 1, 0)
+  data$flag_county <- ifelse(data$fips == tail(head(data$fips, county_num),1), 1, 0)
   return(data)
 }
 
