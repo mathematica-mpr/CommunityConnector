@@ -87,9 +87,6 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 #package
 library(plotly)
 library(devtools)
-devtools::install_github("ropensci/plotly") #no scatter polar
-install_version('plotly', version = "4.7.1") #no scatter polar
-install_version('plotly', version = "4.8.0") #no scatter polar
 packageVersion('plotly')
 
 library(plotly)
@@ -106,10 +103,10 @@ plot_ly(df2) %>%
     theta = rownames(df2),
     #aesthetics
     fill = 'toself',
-    fillcolor = "#189394",
-    opacity = .6,
+    fillcolor = "#f7f4ec",
+    opacity = .8,
     marker = list(size = 7,
-                  color ="#046B5C",
+                  color ="#eb9795",
                   opacity = 1),
     #hover info
     name = "SDOH Score",
