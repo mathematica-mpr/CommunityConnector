@@ -30,4 +30,3 @@ dd <- read_csv("./data/final_data_dictionary.csv") %>%
   mutate(descrip_new = str_wrap(description, 10))
   
 
-default_county <- sample(unique(dat$fips), 1)
