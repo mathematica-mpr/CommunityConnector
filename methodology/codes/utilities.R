@@ -107,10 +107,14 @@ replace_modifiable <- function(coefs_df, data_dictionary, use_data){
 
 # TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
 # TODO: ideally if we had more data, we would split the data into train and test sets to build the models
-county_distance <- function(use_data, data_dictionary, method, outcome, remove_modifiable, show_deets = FALSE){
+county_distance <- function(use_data, data_dictionary, method, outcome, remove_modifiable, model_params = NA, show_deets = FALSE){
   mse <- NA
+  mtry <- NA
+  alpha <- NA
+  min_lambda <- NA
   formula <- as.formula(paste(outcome,"~."))
   metric <- "RMSE"
+  n_rows <- nrow(model_params)
   
   if(method == "euclidean"){
     use_data <- replace_nas_mean(use_data)
@@ -122,13 +126,19 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
     use_data <- replace_nas_rf(use_data, outcome)
     set.seed(1234)
     
-    # cross-validation on mtry
-    trControl <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
-    tunegrid <- expand.grid(.mtry=c(sqrt(ncol(use_data)):ncol(use_data)))
-    rf <- train(formula, data=use_data, method=meth, metric=metric, tuneGrid=tunegrid, trControl=trControl)
-    best_mtry <- rf$bestTune$mtry
+    if(length(n_rows) == 0){
+      # cross-validation on mtry
+      # TODO: could change back to repeatedcv later but changing for sake of time
+      # trControl <- trainControl(method="repeatedcv", number=10, repeats=3, search="grid")
+      trControl <- trainControl(method="cv", number=10, search="grid")
+      tunegrid <- expand.grid(.mtry=c(ceiling(sqrt(ncol(use_data))):ncol(use_data)-1))
+      rf <- train(formula, data=use_data, method=meth, metric=metric, tuneGrid=tunegrid, trControl=trControl)
+      mtry <- rf$bestTune$mtry  
+    } else {
+      mtry <- model_params$mtry
+    }
 
-    rf <- randomForest(formula, data=use_data, method=meth, metric=metric, mtry = best_mtry,
+    rf <- randomForest(formula, data=use_data, method=meth, metric=metric, mtry = mtry,
                        keep.forest = TRUE, importance = TRUE, proximity = TRUE)
     
     if(show_deets){
@@ -157,25 +167,31 @@ county_distance <- function(use_data, data_dictionary, method, outcome, remove_m
     use_data <- replace_nas_rf(use_data, outcome)
     
     # cross validation for alpha and lambda
-    cva <- cva.glmnet(formula, data = use_data)
-    
-    cv.glmnet.dt <- data.table()
-    for (i in c(1:length(cva$alpha))){
-      glmnet.model <- cva$modlist[[i]]
-      min.mse <-  min(glmnet.model$cvm)
-      min.lambda <- glmnet.model$lambda.min
-      alpha.value <- cva$alpha[i]
-      new.cv.glmnet.dt <- data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
-      cv.glmnet.dt <- rbind(cv.glmnet.dt,new.cv.glmnet.dt)
+    if(length(n_rows) == 0){
+      cva <- cva.glmnet(formula, data = use_data)
+      
+      cv.glmnet.dt <- data.table()
+      for (i in c(1:length(cva$alpha))){
+        glmnet.model <- cva$modlist[[i]]
+        min.mse <-  min(glmnet.model$cvm)
+        min.lambda <- glmnet.model$lambda.min
+        alpha.value <- cva$alpha[i]
+        new.cv.glmnet.dt <- data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
+        cv.glmnet.dt <- rbind(cv.glmnet.dt,new.cv.glmnet.dt)
+      }
+      
+      best.params <- cv.glmnet.dt[which.min(cv.glmnet.dt$min_mse)]
+    } else {
+      best.params <- model_params
     }
     
-    best.params <- cv.glmnet.dt[which.min(cv.glmnet.dt$min_mse)]
-    print(best.params)
+    alpha <- best.params$alpha
+    min_lambda <- best.params$min_lambda
     
     lasso <- glmnet::glmnet(as.matrix(use_data[,!names(use_data) %in% outcome]),
                             as.matrix(use_data[,names(use_data) %in% outcome]),
-                            alpha = best.params$alpha,
-                            lambda = best.params$min_lambda)
+                            alpha = alpha,
+                            lambda = min_lambda)
     coefs <- coef(lasso)
     coefs_df <- data.frame(name = coefs@Dimnames[[1]][coefs@i + 1], coefficient = coefs@x)
     print(coefs_df)
