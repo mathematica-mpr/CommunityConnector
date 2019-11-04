@@ -381,6 +381,9 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
     }
   }
   
-  print(full_results)
+  end_time <- Sys.time()
+  print(paste0("Time elapsed: ", end_time - start_time))
+  start_time <- end_time
+  
   return(full_results)
 }
