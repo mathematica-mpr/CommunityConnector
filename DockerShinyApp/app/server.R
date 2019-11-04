@@ -48,11 +48,18 @@ server <- function(input, output) {
     dat %>% filter(fips == county_fips())
   })
   
+  comp_county_dat <- reactive({
+    req(input$comparison_county_selection)
+    dat %>% filter(county == input$comparison_county_selection)
+  })
+  
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
     find_my_matches(county_fips(), dat, 20)[[2]] 
   })
+  
+
   
   # outcomes data
   outcomes_dat <- reactive({
@@ -78,7 +85,7 @@ server <- function(input, output) {
   })
   
   # output ---------------------------------------------------------------------
-
+  ## selected county information -----------------------------------------------
   output$my_county_name <- renderUI({
     req(county_check())
     HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$state, "</h4>"))
@@ -94,7 +101,6 @@ server <- function(input, output) {
     
     df <- make_radar_data(county_dat() %>% select(sdohs), sdoh_dd)
     
-    par(bg = config$colors$tan25)
     radarchart(df, 
                pcol = c(NA, NA,
                         paste0(config$colors$red100, '80')), 
@@ -119,10 +125,54 @@ server <- function(input, output) {
       pivot_longer(cols = demo_dd$description)
       
     DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt",
-                      background = config$colors$tan25)
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
+  ## selected comparison county info -------------------------------------------
+  output$select_comparison_county <- renderUI({
+    req(my_matches())
+    comp_counties <- dat %>% filter(fips %in% my_matches()) %>% pull(county)
+    selectInput('comparison_county_selection', label = "Select a county to compare:",
+                choices = comp_counties)
+  })
+  
+  output$comp_county_radar <- renderPlot({
+    req(comp_county_dat())
+    
+    sdoh_dd <- get_dd(dd, "sdoh_score")
+    
+    sdohs <- sdoh_dd %>% pull(column_name)
+    
+    df <- make_radar_data(comp_county_dat() %>% select(sdohs), sdoh_dd)
+    
+    radarchart(df, 
+               pcol = c(NA, NA,
+                        paste0(config$colors$red100, '80')), 
+               plty = 0,
+               pfcol = c(paste0(config$colors$grey50, '80'),
+                         paste0(config$colors$grey25, '33'),
+                         paste0(config$colors$yellow100, '33')),
+               cglcol = config$colors$grey100,
+               seg = 4, vlcex = 0.8)
+  })
+  
+  output$comp_county_demo <- DT::renderDT({
+    req(comp_county_dat())
+    
+    demo_dd <- get_dd(dd, "demographic")
+    
+    demos <- demo_dd %>% pull(column_name)
+    
+    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
+    df <- comp_county_dat() %>% select(demos) %>%
+      rename_at(vars(demo_dd$column_name), ~ demo_dd$description) %>%
+      pivot_longer(cols = demo_dd$description)
+    
+    DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+  
+  ## comparison counties info --------------------------------------------------
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
@@ -133,7 +183,7 @@ server <- function(input, output) {
     # find number of rows for plot
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
-    par(mfrow = c(plot_nrows, 5), bg = config$colors$tan25)
+    par(mfrow = c(plot_nrows, 5))
     df <- dat %>% select(fips, state, county, sdohs) %>%
       filter(fips %in% my_matches()) %>%
       group_by(fips, county, state) %>%
