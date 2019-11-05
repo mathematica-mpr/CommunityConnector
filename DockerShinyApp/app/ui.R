@@ -6,7 +6,8 @@ ui <- fluidPage(#theme = "styles.css",
     column(width = 6,
            HTML("Discover communities that are similar to yours.<br>
                    Understand how you compare in health outcomes and utilzation.<br>
-                   See what your peers do differently."))),
+                   See what your peers do differently.")),
+    column(width = 2, uiOutput("logo"))),
   fluidRow(
     column(width = 2,
            selectInput('county_selection_type', label = 'Select your county by',
