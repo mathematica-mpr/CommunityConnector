@@ -174,6 +174,13 @@ server <- function(input, output) {
   })
   
   ## comparison counties info --------------------------------------------------
+  output$my_matches_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>My Matches<br/></h3><h4>", length(my_matches()), " communities</h4>"))
+    )
+  })
+  
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
