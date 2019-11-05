@@ -28,5 +28,7 @@ source("./r/functions.R")
 dat <- read_csv("./data/final_data.csv", col_types = cols(fips = col_character()))
 dd <- read_csv("./data/final_data_dictionary.csv") %>%
   mutate(descrip_new = str_wrap(description, 10))
+dist_mat <- read_csv("./data/final_distance.csv") %>%
+  column_to_rownames(var = "X1")
   
 
