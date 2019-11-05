@@ -33,7 +33,8 @@ ui <- fluidPage(#theme = "styles.css",
   
   fluidRow(
     column(width = 4,
-           plotlyOutput("map")),
+           fluidRow(uiOutput('map_header')),
+           fluidRow(plotlyOutput("map"))),
     column(width = 4, 
            fluidRow(uiOutput('my_matches_header')),
            fluidRow(plotOutput("compare_county_radars"))),
