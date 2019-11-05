@@ -6,9 +6,11 @@ ui <- fluidPage(#theme = "styles.css",
     column(width = 6,
            HTML("Discover communities that are similar to yours.<br>
                    Understand how you compare in health outcomes and utilzation.<br>
-                   See what your peers do differently."))),
+                   See what your peers do differently.")),
+    column(width = 2, uiOutput("logo"))),
   fluidRow(
     column(width = 2,
+           h3("Get Started"),
            selectInput('county_selection_type', label = 'Select your county by',
                        choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
            searchInput('county_selection', label = '', placeholder = 'Search your county',
@@ -32,8 +34,11 @@ ui <- fluidPage(#theme = "styles.css",
   
   fluidRow(
     column(width = 4,
-           plotlyOutput("map")),
-    column(width = 4, plotOutput("compare_county_radars")),
+           fluidRow(uiOutput('map_header')),
+           fluidRow(plotlyOutput("map"))),
+    column(width = 4, 
+           fluidRow(uiOutput('my_matches_header')),
+           fluidRow(plotOutput("compare_county_radars"))),
     column(width = 4, 
            fluidRow(uiOutput('health_outcomes_header')),
            fluidRow(
