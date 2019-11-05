@@ -27,7 +27,7 @@ server <- function(input, output) {
   
   # reactive values and data frames --------------------------------------------
   county_fips <- reactive({
-    req(county_check)
+    req(county_check())
     if (input$county_selection_type == "fips") {
       input$county_selection
     } else if (input$county_selection_type == "name") {
@@ -36,7 +36,7 @@ server <- function(input, output) {
   })
   
   county_name <- reactive({
-    req(county_check)
+    req(county_check())
     if (input$county_selection_type == "name") {
       input$county_selection
     } else if (input$county_selection_type == "fips") {
@@ -49,6 +49,7 @@ server <- function(input, output) {
   })
   
   comp_county_dat <- reactive({
+    req(county_check())
     req(input$comparison_county_selection)
     dat %>% filter(county == input$comparison_county_selection)
   })
@@ -257,6 +258,7 @@ server <- function(input, output) {
   })
   
   output$density_graphs_ui <- renderUI({
+    req(county_check())
     req(density_graphs())
     
     density_plots_list <- purrr::imap(density_graphs(), ~{
