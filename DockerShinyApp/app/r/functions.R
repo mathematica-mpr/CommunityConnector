@@ -2,7 +2,7 @@
 get_dd <- function(dd, column_type) {
   # column type can be: demographic, outcome, or sdoh_score
   dd %>% filter(eval(parse(text = column_type)) == 1) %>% 
-    select(column_name, description, descrip_new)
+    select(column_name, description, descrip_new, higher_better)
 }
 
 # distance function to find my county matches ----------------------------------
@@ -25,6 +25,7 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
+# function to 
 
 make_radar_data <- function(county_df, dd) {
   df <- rbind(rep(1, 6), rep(0, 6),
