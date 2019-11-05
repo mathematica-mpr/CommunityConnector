@@ -207,7 +207,6 @@ server <- function(input, output) {
     state <- state.name[match(st, state.abb)]
     
     df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
-      rename(fips = fips) %>%
       mutate(county = gsub(" county", "", tolower(county)))
     
     county_map_df <- map_data("county") %>%
