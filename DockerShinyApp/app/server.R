@@ -1,5 +1,10 @@
 server <- function(input, output) {
   
+  # mathematica logo
+  output$logo <- renderUI({
+    img(src='logo.png', aligh = 'right', height = '100px')
+  })
+  
 #  county_selection_check <- reactive({
 #    validate({
 #      if (input$county_selection_type == "fips") {
@@ -174,6 +179,13 @@ server <- function(input, output) {
   })
   
   ## comparison counties info --------------------------------------------------
+  output$my_matches_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>My Matches<br/></h3><h4>", length(my_matches()), " communities</h4>"))
+    )
+  })
+  
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
@@ -199,7 +211,14 @@ server <- function(input, output) {
                               seg = 4, vlcex = 0.8,
                               title = paste0(county, ", ", state)))
   })
-
+  
+  output$map_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>County Map<br/></h3>"))
+    )
+  })
+  
   output$map <- renderPlotly({
     req(county_check())
     
