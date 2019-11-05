@@ -5,10 +5,10 @@ get_dd <- function(dd, column_type) {
     select(column_name, description, descrip_new)
 }
 
-# distance function to find my county matches
-
+# distance function to find my county matches ----------------------------------
 find_my_matches <- function(my_county, df, n_matches = 20) {
   # my_county = fips of selected county
+  # df = dataframe with all covariates
 
   my_county_distances <- dist_mat %>% 
     select(distance =  my_county) %>%
