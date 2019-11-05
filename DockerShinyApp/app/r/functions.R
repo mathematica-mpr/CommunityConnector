@@ -25,7 +25,30 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
-# function to 
+# function to create ranking of outcomes based on my county and my county matches
+rank_outcome <- function(data, higher_better) {
+  # data = data for specific outcome
+  # higher_better flag (0 = lower is better, 1 = higher is better)
+  
+  my_county_value <- data %>% 
+    filter(type == "selected") %>%
+    pull(value)
+  
+  outcome_vals <- data %>% 
+    filter(type != "other") %>%
+    pull(value)
+  
+  median_val <- median(outcome_vals)
+  
+  std_val <- sd(outcome_vals)
+  
+  if (higher_better) {
+    rank <- (median_val - my_county_value) / std_val
+  } else {
+    rank <- (my_county_value - median_val) / std_val
+  }
+  rank
+}
 
 make_radar_data <- function(county_df, dd) {
   df <- rbind(rep(1, 6), rep(0, 6),
