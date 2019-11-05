@@ -84,24 +84,20 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 
 #Radar Chart with Plotly
 
-#package
-library(plotly)
-library(devtools)
-packageVersion('plotly')
-
 #example dataframe
 testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh"))) %>% 
   as.data.frame()
 
+#Radar Chart Function
 radar_chart <- function(df, dictionary) {
   #function to output interactive polar plot of SDOH Scores
   
   #data manipulation
   radar_names <- get_dd(dictionary, "sdoh_score") %>% 
-    dplyr::pull(3) %>% 
-    append(radar_names[1])
-  radar_points <- select(df, starts_with("sdoh")) %>% 
-    append(radar_points[1]) %>% 
+    dplyr::pull(3)
+  radar_names <- append(radar_names, radar_names[1])
+  radar_points <- select(df, starts_with("sdoh"))
+  radar_points <- append(radar_points, radar_points[1]) %>% 
     unlist()
   #plotting radar chart
   p <- plot_ly(
@@ -163,3 +159,4 @@ radar_chart <- function(df, dictionary) {
   return(p)
 }
 
+radar_chart(testdf, dd)
