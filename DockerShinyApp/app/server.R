@@ -242,22 +242,25 @@ server <- function(input, output) {
       HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
       selectInput('outcome_sort', label = 'Sort outcomes by', 
                   choices = c('most exceptional' = 'exceptional', 
-                              'best' = 'best', 'worst' = 'worst'))
+                              'best' = 'best', 'worst' = 'worst'),
+                  selected = 'exceptional')
     )
   })
   
-  density_graphs <- eventReactive(input$county_selection, {
+  density_graphs <- eventReactive(input$outcome_sort, {
     req(outcomes_dat())
     
     outcomes_dat() %>%
-      group_by(column_name) %>%
+      group_by(column_name, higher_better) %>%
       nest() %>%
+      mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+      # arrange by rank
+      arrange_rank(input$outcome_sort) %>%
       mutate(graphs = purrr::map(data, make_density_graph)) %>%
-      arrange(column_name) %>%
       pull(graphs)
   })
   
-  observeEvent(input$county_selection, {
+  observeEvent(input$outcome_sort, {
     req(density_graphs())
     
     purrr::iwalk(density_graphs(), ~{
