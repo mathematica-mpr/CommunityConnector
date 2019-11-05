@@ -236,6 +236,16 @@ server <- function(input, output) {
   })
   
   # dynamic number of density graphs -------------------------------------------
+  output$health_outcomes_header <- renderUI({
+    req(county_check())
+    tagList(
+      HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
+      selectInput('outcome_sort', label = 'Sort outcomes by', 
+                  choices = c('most exceptional' = 'exceptional', 
+                              'best' = 'best', 'worst' = 'worst'))
+    )
+  })
+  
   density_graphs <- eventReactive(input$county_selection, {
     req(outcomes_dat())
     
