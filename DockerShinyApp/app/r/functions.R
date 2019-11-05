@@ -50,6 +50,17 @@ rank_outcome <- function(data, higher_better) {
   rank
 }
 
+arrange_rank <- function(data, outcome_sort) {
+  if (outcome_sort == 'exceptional') {
+    data %>% dplyr::arrange(desc(abs(rank)))
+  } else if (outcome_sort == 'best') {
+    data %>% dplyr::arrange(rank)
+  } else if (outcome_sort == 'worst') {
+    data %>% dplyr::arrange(desc(rank))
+  }
+  
+} 
+
 make_radar_data <- function(county_df, dd) {
   df <- rbind(rep(1, 6), rep(0, 6),
               # 50% circle color
