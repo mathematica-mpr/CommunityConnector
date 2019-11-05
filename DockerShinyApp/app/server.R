@@ -1,5 +1,10 @@
 server <- function(input, output) {
   
+  # mathematica logo
+  output$logo <- renderUI({
+    img(src='logo.png', aligh = 'right', height = '100px')
+  })
+  
 #  county_selection_check <- reactive({
 #    validate({
 #      if (input$county_selection_type == "fips") {
