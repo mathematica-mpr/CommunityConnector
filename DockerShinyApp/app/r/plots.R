@@ -89,14 +89,10 @@ library(plotly)
 library(devtools)
 packageVersion('plotly')
 
-library(plotly)
-
 #transposing dataframe
-#example dataframe
 df2 <- as.data.frame(t(df[5,]))
 names(df2) <- "Cook"
 df2[7,1] <- df2[1,1]
-df2
 
 #radar chart
 
@@ -111,8 +107,8 @@ plot_ly(
               'Food', 'Community', 'Health\nCoverage', "Economic\nStability"),
     #aesthetics
     fill = 'toself',
-    line = list(dash = "longdash", 
-                color = "red", 
+    line = list(dash = "solid", 
+                color = "#d83632", 
                 width = .8, 
                 shape = 'spline', 
                 smoothing = .9),
@@ -140,7 +136,8 @@ plot_ly(
       ),
       #category labels
       angularaxis = list(
-        tickfont = list(size =  12)
+        tickfont = list(size =  12),
+        rotation = 0
       ),
       bgcolor = "seashell"
     ),
@@ -153,7 +150,7 @@ plot_ly(
   add_annotations(
     y=1.18, 
     x=0.5, 
-    text=paste("SDOH Scores \nfor", names(df2), "County"), 
+    text=paste(names(df2), "County"), 
     showarrow=F,
     font=list(size=18)
     )
@@ -213,7 +210,8 @@ plot_ly(
   add_annotations(
     y=1.18, 
     x=0.5, 
-    text=paste("SDOH Scores \nfor", names(df2), "County"), 
+    text=paste(names(df2), "County"), 
     showarrow=F,
     font=list(size=18)
   )
+
