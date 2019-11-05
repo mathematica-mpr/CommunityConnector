@@ -211,7 +211,14 @@ server <- function(input, output) {
                               seg = 4, vlcex = 0.8,
                               title = paste0(county, ", ", state)))
   })
-
+  
+  output$map_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>County Map<br/></h3>"))
+    )
+  })
+  
   output$map <- renderPlotly({
     req(county_check())
     
