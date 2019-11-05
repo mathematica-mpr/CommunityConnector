@@ -95,6 +95,8 @@ library(plotly)
 #example dataframe
 df2 <- as.data.frame(t(df[5,]))
 names(df2) <- "Cook"
+df2[7,1] <- df2[1,1]
+df2
 
 #radar chart
 
@@ -106,10 +108,14 @@ plot_ly(
     mode = 'markers+lines',
     r = df2[,],
     theta = c("Economic\nStability", 'Neighborhood\n& Physical\nEnvironment', 'Education', 
-              'Food', 'Community', 'Health\nCoverage'),
+              'Food', 'Community', 'Health\nCoverage', "Economic\nStability"),
     #aesthetics
     fill = 'toself',
-    line = list(dash = "dash", color = "red", width = .2, shape = 'spline', smoothing = 1, fill = 'tonext'),
+    line = list(dash = "longdash", 
+                color = "red", 
+                width = .8, 
+                shape = 'spline', 
+                smoothing = .9),
     fillcolor = "#f8d98b",
     opacity = .8,
     marker = list(size = 7,
@@ -159,10 +165,10 @@ plot_ly(
 ) %>% 
   add_trace(
     type = 'scatterpolar',
-    mode = 'markers',
+    mode = 'markers+lines',
     r = df2[,],
     theta = c("Economic\nStability", 'Neighborhood\n& Physical\nEnvironment', 'Education', 
-              'Food', 'Community', 'Health\nCoverage'),
+              'Food', 'Community', 'Health\nCoverage', "Economic\nStability"),
     #aesthetics
     fill = 'toself',
     fillcolor = "#009999",          
@@ -170,6 +176,11 @@ plot_ly(
     marker = list(size = 7,
                   color ="#d83632",
                   opacity = 1),
+    line = list(dash = "solid", 
+                color = "#d83632", 
+                width = .8, 
+                shape = 'spline', 
+                smoothing = .9),
     #hover info
     name = paste(names(df2), "County"),
     hovertemplate = ~paste('<b>Category</b>: %{theta}',
