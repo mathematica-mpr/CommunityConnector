@@ -97,16 +97,19 @@ df2 <- as.data.frame(t(df[5,]))
 names(df2) <- "Cook"
 
 #radar chart
+
+#Color Choice 1
 plot_ly(
 ) %>% 
   add_trace(
     type = 'scatterpolar',
-    mode = 'markers',
+    mode = 'markers+lines',
     r = df2[,],
     theta = c("Economic\nStability", 'Neighborhood\n& Physical\nEnvironment', 'Education', 
               'Food', 'Community', 'Health\nCoverage'),
     #aesthetics
     fill = 'toself',
+    line = list(dash = "dash", color = "red", width = .2, shape = 'spline', smoothing = 1, fill = 'tonext'),
     fillcolor = "#f8d98b",
     opacity = .8,
     marker = list(size = 7,
@@ -119,9 +122,6 @@ plot_ly(
                           '<extra></extra>')
   ) %>% 
   layout(
-    #title = list(
-    # text = paste("SDOH Scores \nfor", names(df2), "County")
-    #),
     polar = list(
       #tick labels
       radialaxis = list(
@@ -145,7 +145,7 @@ plot_ly(
     margin = list(t=70)
   ) %>% 
   add_annotations(
-    y=1.15, 
+    y=1.18, 
     x=0.5, 
     text=paste("SDOH Scores \nfor", names(df2), "County"), 
     showarrow=F,
@@ -153,3 +153,56 @@ plot_ly(
     )
 
 
+##Color Choice 2:
+
+plot_ly(
+) %>% 
+  add_trace(
+    type = 'scatterpolar',
+    mode = 'markers',
+    r = df2[,],
+    theta = c("Economic\nStability", 'Neighborhood\n& Physical\nEnvironment', 'Education', 
+              'Food', 'Community', 'Health\nCoverage'),
+    #aesthetics
+    fill = 'toself',
+    fillcolor = "#009999",          
+    opacity = .8,
+    marker = list(size = 7,
+                  color ="#d83632",
+                  opacity = 1),
+    #hover info
+    name = paste(names(df2), "County"),
+    hovertemplate = ~paste('<b>Category</b>: %{theta}',
+                           '<br><b>Score</b>: %{r:.2f}',
+                           '<extra></extra>')
+  ) %>% 
+  layout(
+    polar = list(
+      #tick labels
+      radialaxis = list(
+        range = c(0,1),
+        angle = 90,
+        tickangle = 90,
+        dtick = .5, 
+        tickwidth = 2,
+        tickfont = list(size = 10)
+      ),
+      #category labels
+      angularaxis = list(
+        tickfont = list(size =  12)
+      ),
+      bgcolor = "#ECECEC"
+    ),
+    hoverlabel = list(
+      bordercolor = "black",
+      bgcolor = "#eb9795"
+    ),
+    margin = list(t=70)
+  ) %>% 
+  add_annotations(
+    y=1.18, 
+    x=0.5, 
+    text=paste("SDOH Scores \nfor", names(df2), "County"), 
+    showarrow=F,
+    font=list(size=18)
+  )
