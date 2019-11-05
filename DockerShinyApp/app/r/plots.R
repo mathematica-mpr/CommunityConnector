@@ -89,73 +89,77 @@ library(plotly)
 library(devtools)
 packageVersion('plotly')
 
-#transposing dataframe
-df2 <- as.data.frame(t(df[5,]))
-names(df2) <- "Cook"
-df2[7,1] <- df2[1,1]
+#example dataframe
+testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh"))) %>% 
+  as.data.frame()
 
-#radar chart
-
-#Color Choice 1
-plot_ly(
-) %>% 
-  add_trace(
-    type = 'scatterpolar',
-    mode = 'markers+lines',
-    r = df2[,],
-    theta = c("Economic\nStability", 'Neighborhood\n& Physical\nEnvironment', 'Education', 
-              'Food', 'Community', 'Health\nCoverage', "Economic\nStability"),
-    #aesthetics
-    fill = 'toself',
-    fillcolor = paste0(config$colors$yellow50),
-    line = list(dash = "solid", 
-                color = paste0(config$colors$red100), 
-                width = .8, 
-                shape = 'spline', 
-                smoothing = .9),
-    opacity = .9,
-    marker = list(size = 7,
-                  color = paste0(config$colors$red100),
-                  opacity = 1),
-    #hover info
-    name = paste(names(df2), "County"),
-    hovertemplate = ~paste('<b>Category</b>: %{theta}',
-                          '<br><b>Score</b>: %{r:.2f}',
-                          '<extra></extra>')
+radar_chart <- function(df, dictionary) {
+  #function to output interactive polar plot of SDOH Scores
+  
+  #data manipulation
+  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
+    dplyr::pull(3) %>% 
+    append(radar_names[1])
+  radar_points <- select(df, starts_with("sdoh")) %>% 
+    append(radar_points[1]) %>% 
+    unlist()
+  #plotting radar chart
+  p <- plot_ly(
   ) %>% 
-  layout(
-    polar = list(
-      #tick labels
-      radialaxis = list(
-        range = c(0,1),
-        angle = 90,
-        tickangle = 90,
-        dtick = .5, 
-        tickwidth = 2,
-        tickfont = list(size = 10)
+    add_trace(
+      type = 'scatterpolar',
+      mode = 'markers+lines',
+      r = radar_points,
+      theta = radar_names,
+      #aesthetics
+      fill = 'toself',
+      fillcolor = paste0(config$colors$yellow50),
+      line = list(dash = "solid", 
+                  color = paste0(config$colors$red100), 
+                  width = .8, 
+                  shape = 'spline', 
+                  smoothing = .9),
+      opacity = .9,
+      marker = list(size = 7,
+                    color = paste0(config$colors$red100),
+                    opacity = 1),
+      #hover info
+      name = paste(df[1,1], "County"),
+      hovertemplate = ~paste('<b>Category</b>: %{theta}',
+                             '<br><b>Score</b>: %{r:.2f}',
+                             '<extra></extra>')
+    ) %>% 
+    layout(
+      polar = list(
+        #tick labels
+        radialaxis = list(
+          range = c(0,1),
+          angle = 90,
+          tickangle = 90,
+          dtick = .5, 
+          tickwidth = 2,
+          tickfont = list(size = 10)
+        ),
+        #category labels
+        angularaxis = list(
+          tickfont = list(size =  12),
+          rotation = 0
+        ),
+        bgcolor = paste0(config$colors$tan25, '50')
       ),
-      #category labels
-      angularaxis = list(
-        tickfont = list(size =  12),
-        rotation = 0
+      hoverlabel = list(
+        bordercolor = paste0(config$colors$black, '100'),
+        bgcolor = paste0(config$colors$red50)
       ),
-      bgcolor = paste0(config$colors$grey25, '30')
-    ),
-    hoverlabel = list(
-      bordercolor = paste0(config$colors$black, '100'),
-      bgcolor = paste0(config$colors$red50)
-    ),
-    margin = list(t=70)
-  ) %>% 
-  add_annotations(
-    y=1.18, 
-    x=0.5, 
-    text=paste(names(df2), "County"), 
-    showarrow=F,
-    font=list(size=18)
+      margin = list(t=70)
+    ) %>% 
+    add_annotations(
+      y=1.18, 
+      x=0.5, 
+      text=paste(df[1,1], "County,", df[1,2]), 
+      showarrow=F,
+      font=list(size=18)
     )
-
-
-
-
+  return(p)
+}
 
