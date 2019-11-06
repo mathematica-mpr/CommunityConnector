@@ -129,7 +129,7 @@ radar_chart <- function(df, dictionary) {
     ) %>% 
     layout(
       title = list(
-        text = "Cook County, Colorado",
+        text = paste(df[1,1], "County,", df[1,2]),
         font = list(
           size = 18
         ),
@@ -163,3 +163,6 @@ radar_chart <- function(df, dictionary) {
 }
 
 radar_chart(testdf, dd)
+
+
+
