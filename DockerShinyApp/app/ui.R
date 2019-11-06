@@ -14,7 +14,7 @@ ui <- fluidPage(#theme = "styles.css",
            searchInput('county_selection', label = '', placeholder = 'Search your county',
                        btnSearch = icon('search'), value = "1"),
            textOutput('county_selection_message')),
-    column(width = 5,
+    column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(htmlOutput("my_county_name")),
            fluidRow(
              column(width = 6, plotOutput("my_county_radar")),
@@ -34,7 +34,7 @@ ui <- fluidPage(#theme = "styles.css",
             column(width = 6, DT::DTOutput('my_county_community')),
             column(width = 6, DT::DTOutput('my_county_health'))
           )),
-    column(width = 5,
+    column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('select_comparison_county')),
            fluidRow(
              column(width = 6, plotOutput('comp_county_radar')),
@@ -55,10 +55,11 @@ ui <- fluidPage(#theme = "styles.css",
   ),
   
   fluidRow(
-    column(width = 4,
+    column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            plotlyOutput("map")),
-    column(width = 4, plotOutput("compare_county_radars")),
-    column(width = 4, 
+    column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
+           plotOutput("compare_county_radars")),
+    column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            div(id = "density_plot_container",
                uiOutput(outputId = "density_graphs_ui")))
   ),
