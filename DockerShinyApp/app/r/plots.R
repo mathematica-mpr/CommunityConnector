@@ -85,20 +85,22 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 #Radar Chart with Plotly
 
 #example dataframe
-testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh"))) %>% 
+testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh_score"))) %>% 
   as.data.frame()
 
 #Radar Chart Function
 radar_chart <- function(df, dictionary) {
-  #function to output interactive polar plot of SDOH Scores
+  #function to output interactive polar plot of SDOH Scores for one county
   
-  #data manipulation
+  #vector of score names
   radar_names <- get_dd(dictionary, "sdoh_score") %>% 
     dplyr::pull(3)
   radar_names <- append(radar_names, radar_names[1])
+  #vector of score values
   radar_points <- select(df, starts_with("sdoh"))
   radar_points <- append(radar_points, radar_points[1]) %>% 
     unlist()
+  
   #plotting radar chart
   p <- plot_ly(
   ) %>% 
@@ -115,17 +117,24 @@ radar_chart <- function(df, dictionary) {
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
-      opacity = .9,
       marker = list(size = 7,
                     color = paste0(config$colors$red100),
                     opacity = 1),
-      #hover info
+      opacity = .9,
+      #hover label
       name = paste(df[1,1], "County"),
       hovertemplate = ~paste('<b>Category</b>: %{theta}',
                              '<br><b>Score</b>: %{r:.2f}',
                              '<extra></extra>')
     ) %>% 
     layout(
+      title = list(
+        text = "Cook County, Colorado",
+        font = list(
+          size = 18
+        ),
+        xref = 'paper'
+      ),
       polar = list(
         #tick labels
         radialaxis = list(
@@ -143,18 +152,12 @@ radar_chart <- function(df, dictionary) {
         ),
         bgcolor = paste0(config$colors$tan25, '50')
       ),
+      #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
       margin = list(t=70)
-    ) %>% 
-    add_annotations(
-      y=1.18, 
-      x=0.5, 
-      text=paste(df[1,1], "County,", df[1,2]), 
-      showarrow=F,
-      font=list(size=18)
     )
   return(p)
 }
