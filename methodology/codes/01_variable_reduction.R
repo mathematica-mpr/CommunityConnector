@@ -18,10 +18,14 @@ library(purrr)
 library(sparsepca)
 library(ClustOfVar)
 
-#data sets
+#data-----
+
+#inputting data
 sdohallorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
 # TODO: change this to using the preliminary data_dictionary.csv & set relative wd
 dictionaryorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
+
+#quick fixes for data dictionary
 dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), 12] <- 0
 dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), 9] <- 0
 dictionaryorig[which(dictionaryorig$column_name=="pct_physically_inactive"), 12] <- 0
@@ -33,13 +37,11 @@ toremove <- c("sdoh_score_1", "sdoh_score_2", "sdoh_score_3", "sdoh_score_4", "s
 dictionary <- dictionaryorig[!dictionaryorig$column_name %in% toremove,]  
 sdohall <- sdohallorig[,!names(sdohallorig) %in% toremove]
 
-
 #imputing missing data
 set.seed(1234)
 sdoh_numeric <- missForest(sdohall)
 sdoh_numeric <- sdoh_numeric$ximp
 
-#multiple data sets for each SDOH Score
 #list of 6 datasets for each score
 datlist <- list()
 for (i in 1:6) {
@@ -51,17 +53,14 @@ for (i in seq(datlist)) {
   assign(paste0("Score", i), datlist[[i]])
 }
 
-########################
-###VARIABLE REDUCTION###
-########################
-
-###PCA
+#SPCA-----
 
 varreduc_spca <- function(data, alpha) {
   #function to output non-zero variables and loadings
   spca <- robspca(data, center = T, scale = T, verbose = F, alpha = alpha)
   cum <- summary(spca)[4,]
   exp <- summary(spca)[3,]
+  
   #skree plot
   plot <- ggplot(mapping = aes(x = seq_along(cum), y = cum)) +
     geom_point() +
@@ -73,6 +72,7 @@ varreduc_spca <- function(data, alpha) {
     theme_bw()
   print(plot)
   allcomps <- list()
+  
   #creating data frame with variable name, category, PC#, var explained, and loading
   for (i in 1:dim(data)[2]) {
     comps <- spca$loadings[,i]
@@ -100,7 +100,7 @@ varreduc_uni <- function(list, num.comp) {
   return(unique)
 }
 
-#Testing Tuning Parameter
+#Testing Tuning Parameter-----
 alpmin20 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-20)
 cum_var_exp <- summary(test2)[4,]
 plot(cum_var_exp, pch = 20, ylim = c(0,1), main = "Testing Parameters for Score 6")
@@ -129,6 +129,8 @@ alp1 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .1)
 cum_var_exp <- summary(test6)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "orange")
 
+#Results-----
+
 #running SPCA on all Scores
 S1PC <- varreduc_spca(Score1, .01) #5
 S2PC <- varreduc_spca(Score2, .01) #13
@@ -137,6 +139,7 @@ S4PC <- varreduc_spca(Score4, .01) #2
 S5PC <- varreduc_spca(Score5, .01) #8
 S6PC <- varreduc_spca(Score6, .01) #8
 
+#number of principal components used. 
 num1 <- 5
 num2 <- 13
 num3 <- 3
@@ -144,7 +147,7 @@ num4 <- 2
 num5 <- 8
 num6 <- 8
 
-#all variables selected
+#selected variables
 varreduc_uni(S1PC, num1)
 varreduc_uni(S2PC, num2)
 varreduc_uni(S3PC, num3)
@@ -152,14 +155,15 @@ varreduc_uni(S4PC, num4)
 varreduc_uni(S5PC, num5)
 varreduc_uni(S6PC, num6)
 
-#flagging dictionary
+#flagging dictionary-----
+
 #creating new dataframe with all variables
 Dictionary_PostSPCA <- as.data.frame(dictionaryorig$column_name)
 names(Dictionary_PostSPCA) <- "Variable_Name"
 
-#combining all lists of PCs into df
-all <- c(S1PC[1:num1],S2PC[1:num2],S3PC[1:num3],S4PC[1:num4],S5PC[1:num5],S6PC[1:num6])
-all <- ldply(all)
+#combining lists of PCs into one df
+all <- c(S1PC[1:num1],S2PC[1:num2],S3PC[1:num3],S4PC[1:num4],S5PC[1:num5],S6PC[1:num6]) %>% 
+  ldply()
 
 #populating dataframe with SPCA information
 for (i in 1:length(all$Variable_Name)) {
@@ -172,13 +176,14 @@ for (i in 1:length(all$Variable_Name)) {
 names(Dictionary_PostSPCA)[2:5] <- c("sdoh_Category", "PC_Number", "Variance_Explained", "Loading")
 
 #Post SPCA Removals and Additions
-remove <- c("food_environment_index", "pct_frequent_mental_distress", "short_hosp_pp_rate", "pct.adult.uninsured", "medicare_std_adj_cost_pp")
+remove <- c("food_environment_index", "pct_frequent_mental_distress", "short_hosp_pp_rate", 
+            "pct.adult.uninsured", "medicare_std_adj_cost_pp")
 remove_index <- which(Dictionary_PostSPCA$Variable_Name %in% remove)
 Dictionary_PostSPCA[remove_index, 2:5] <- NA
 
 add <- c("budget_water")
 add_index <- which(Dictionary_PostSPCA$Variable_Name %in% add)
-Dictionary_PostSPCA[58, 2] <- 2
+Dictionary_PostSPCA[add_index, 2] <- 2
 
 #outputting new dictionary
 write.csv(Dictionary_PostSPCA, "C:/Users/ECody/Desktop/DictionaryPostSPCA.csv", na = "", row.names = F)
