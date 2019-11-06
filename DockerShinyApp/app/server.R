@@ -1,5 +1,10 @@
 server <- function(input, output) {
   
+  # mathematica logo
+  output$logo <- renderUI({
+    img(src='logo.png', aligh = 'right', height = '100px')
+  })
+  
 #  county_selection_check <- reactive({
 #    validate({
 #      if (input$county_selection_type == "fips") {
@@ -27,7 +32,7 @@ server <- function(input, output) {
   
   # reactive values and data frames --------------------------------------------
   county_fips <- reactive({
-    req(county_check)
+    req(county_check())
     if (input$county_selection_type == "fips") {
       input$county_selection
     } else if (input$county_selection_type == "name") {
@@ -36,7 +41,7 @@ server <- function(input, output) {
   })
   
   county_name <- reactive({
-    req(county_check)
+    req(county_check())
     if (input$county_selection_type == "name") {
       input$county_selection
     } else if (input$county_selection_type == "fips") {
@@ -49,6 +54,7 @@ server <- function(input, output) {
   })
   
   comp_county_dat <- reactive({
+    req(county_check())
     req(input$comparison_county_selection)
     dat %>% filter(county == input$comparison_county_selection)
   })
@@ -268,6 +274,13 @@ server <- function(input, output) {
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   ## comparison counties info --------------------------------------------------
+  output$my_matches_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>My Matches<br/></h3><h4>", length(my_matches()), " communities</h4>"))
+    )
+  })
+  
   output$compare_county_radars <- renderPlot({
     req(county_check())
     
@@ -293,7 +306,14 @@ server <- function(input, output) {
                               seg = 4, vlcex = 0.8,
                               title = paste0(county, ", ", state)))
   })
-
+  
+  output$map_header <- renderUI({
+    req(my_matches())
+    tagList(
+      HTML(paste0("<h3>County Map<br/></h3>"))
+    )
+  })
+  
   output$map <- renderPlotly({
     req(county_check())
     
@@ -301,7 +321,6 @@ server <- function(input, output) {
     state <- state.name[match(st, state.abb)]
     
     df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
-      rename(fips = fips) %>%
       mutate(county = gsub(" county", "", tolower(county)))
     
     county_map_df <- map_data("county") %>%
@@ -331,18 +350,31 @@ server <- function(input, output) {
   })
   
   # dynamic number of density graphs -------------------------------------------
-  density_graphs <- eventReactive(input$county_selection, {
+  output$health_outcomes_header <- renderUI({
+    req(county_check())
+    tagList(
+      HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
+      selectInput('outcome_sort', label = 'Sort outcomes by', 
+                  choices = c('most exceptional' = 'exceptional', 
+                              'best' = 'best', 'worst' = 'worst'),
+                  selected = 'exceptional')
+    )
+  })
+  
+  density_graphs <- eventReactive(input$outcome_sort, {
     req(outcomes_dat())
     
     outcomes_dat() %>%
-      group_by(column_name) %>%
+      group_by(column_name, higher_better) %>%
       nest() %>%
+      mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+      # arrange by rank
+      arrange_rank(input$outcome_sort) %>%
       mutate(graphs = purrr::map(data, make_density_graph)) %>%
-      arrange(column_name) %>%
       pull(graphs)
   })
   
-  observeEvent(input$county_selection, {
+  observeEvent(input$outcome_sort, {
     req(density_graphs())
     
     purrr::iwalk(density_graphs(), ~{
@@ -352,6 +384,7 @@ server <- function(input, output) {
   })
   
   output$density_graphs_ui <- renderUI({
+    req(county_check())
     req(density_graphs())
     
     density_plots_list <- purrr::imap(density_graphs(), ~{
