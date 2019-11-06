@@ -5,7 +5,19 @@ get_dd <- function(dd, column_type) {
     select(column_name, description, descrip_new, higher_better)
 }
 
+get_table_data <- function(data, dd, column_type) {
+  sub_dd <- get_dd(dd, column_type)
+  
+  dd_cols <- sub_dd %>% pull(column_name)
+  
+  df <- data %>% select(dd_cols) %>%
+    rename_at(vars(sub_dd$column_name), ~ sub_dd$description) %>%
+    pivot_longer(cols = sub_dd$description)
+}
+
+
 # distance function to find my county matches ----------------------------------
+
 find_my_matches <- function(my_county, df, n_matches = 20) {
   # my_county = fips of selected county
   # df = dataframe with all covariates
