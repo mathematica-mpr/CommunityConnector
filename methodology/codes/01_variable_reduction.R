@@ -22,12 +22,17 @@ library(ClustOfVar)
 sdohallorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
 # TODO: change this to using the preliminary data_dictionary.csv & set relative wd
 dictionaryorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
-dictionaryorig[73, 12] <- 0
-dictionaryorig[30, 12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), 12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), 9] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_physically_inactive"), 12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_with_access"), 12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_excessive_drinking"),12] <- 0
+
 #removing score and county/state data
 toremove <- c("sdoh_score_1", "sdoh_score_2", "sdoh_score_3", "sdoh_score_4", "sdoh_score_5", "sdoh_score_6", "state", "county")
 dictionary <- dictionaryorig[!dictionaryorig$column_name %in% toremove,]  
 sdohall <- sdohallorig[,!names(sdohallorig) %in% toremove]
+
 
 #imputing missing data
 set.seed(1234)
@@ -129,16 +134,23 @@ S1PC <- varreduc_spca(Score1, .01) #5
 S2PC <- varreduc_spca(Score2, .01) #13
 S3PC <- varreduc_spca(Score3, .01) #3
 S4PC <- varreduc_spca(Score4, .01) #2
-S5PC <- varreduc_spca(Score5, .01) #10
+S5PC <- varreduc_spca(Score5, .01) #8
 S6PC <- varreduc_spca(Score6, .01) #8
 
+num1 <- 5
+num2 <- 13
+num3 <- 3
+num4 <- 2
+num5 <- 8
+num6 <- 8
+
 #all variables selected
-varreduc_uni(S1PC, 5)
-varreduc_uni(S2PC, 13)
-varreduc_uni(S3PC, 3)
-varreduc_uni(S4PC, 2)
-varreduc_uni(S5PC, 10)
-varreduc_uni(S6PC, 8)
+varreduc_uni(S1PC, num1)
+varreduc_uni(S2PC, num2)
+varreduc_uni(S3PC, num3)
+varreduc_uni(S4PC, num4)
+varreduc_uni(S5PC, num5)
+varreduc_uni(S6PC, num6)
 
 #flagging dictionary
 #creating new dataframe with all variables
@@ -146,7 +158,7 @@ Dictionary_PostSPCA <- as.data.frame(dictionaryorig$column_name)
 names(Dictionary_PostSPCA) <- "Variable_Name"
 
 #combining all lists of PCs into df
-all <- c(S1PC[1:5],S2PC[1:13],S3PC[1:3],S4PC[1:2],S5PC[1:10],S6PC[1:8])
+all <- c(S1PC[1:num1],S2PC[1:num2],S3PC[1:num3],S4PC[1:num4],S5PC[1:num5],S6PC[1:num6])
 all <- ldply(all)
 
 #populating dataframe with SPCA information
@@ -170,45 +182,3 @@ Dictionary_PostSPCA[58, 2] <- 2
 
 #outputting new dictionary
 write.csv(Dictionary_PostSPCA, "C:/Users/ECody/Desktop/DictionaryPostSPCA.csv", na = "", row.names = F)
-
-
-################
-###CLUSTERING###
-################
-
-tree1 <- hclustvar(Score1)
-tree2 <- hclustvar(Score2)
-tree3 <- hclustvar(Score3)
-tree4 <- hclustvar(Score4)
-tree5 <- hclustvar(Score5)
-tree6 <- hclustvar(Score6)
-
-test <- stability(tree1, B = 100)
-test2 <- clValid(Score1, 2:4)
-plot(test2)
-
-p1 <- ggdendrogram(tree1) +
-  ggtitle("Clustering for Score 1") +
-  coord_flip()
-p2 <- ggdendrogram(tree2) +
-  ggtitle("Clustering for Score 2") +
-  coord_flip()
-p3 <- ggdendrogram(tree3) +
-  ggtitle("Clustering for Score 3") +
-  coord_flip()
-p4 <- ggdendrogram(tree4) +
-  ggtitle("Clustering for Score 4") +
-  coord_flip()
-p5 <- ggdendrogram(tree5) +
-  ggtitle("Clustering for Score 5") +
-  coord_flip()
-p6 <- ggdendrogram(tree6) +
-  ggtitle("Clustering for Score 6") +
-  coord_flip()
-gridExtra::grid.arrange(p1, p2, p3, top = "Clustering", ncol = 2)
-gridExtra::grid.arrange(p4, p5, p6, top = "Clustering", ncol = 2)
-
-cutree(tree1, 2)
-g <- cutree(tree2, 4)
-which(g==3)
-
