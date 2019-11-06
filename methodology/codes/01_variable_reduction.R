@@ -126,18 +126,18 @@ points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "orange")
 
 #running SPCA on all Scores
 S1PC <- varreduc_spca(Score1, .01) #5
-S2PC <- varreduc_spca(Score2, .01) #12
+S2PC <- varreduc_spca(Score2, .01) #13
 S3PC <- varreduc_spca(Score3, .01) #3
 S4PC <- varreduc_spca(Score4, .01) #2
-S5PC <- varreduc_spca(Score5, .01) #9
+S5PC <- varreduc_spca(Score5, .01) #10
 S6PC <- varreduc_spca(Score6, .01) #8
 
 #all variables selected
 varreduc_uni(S1PC, 5)
-varreduc_uni(S2PC, 12)
+varreduc_uni(S2PC, 13)
 varreduc_uni(S3PC, 3)
 varreduc_uni(S4PC, 2)
-varreduc_uni(S5PC, 9)
+varreduc_uni(S5PC, 10)
 varreduc_uni(S6PC, 8)
 
 #flagging dictionary
@@ -146,7 +146,7 @@ Dictionary_PostSPCA <- as.data.frame(dictionaryorig$column_name)
 names(Dictionary_PostSPCA) <- "Variable_Name"
 
 #combining all lists of PCs into df
-all <- c(S1PC[1:5],S2PC[1:12],S3PC[1:3],S4PC[1:2],S5PC[1:9],S6PC[1:8])
+all <- c(S1PC[1:5],S2PC[1:13],S3PC[1:3],S4PC[1:2],S5PC[1:10],S6PC[1:8])
 all <- ldply(all)
 
 #populating dataframe with SPCA information
