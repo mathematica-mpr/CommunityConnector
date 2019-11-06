@@ -16,8 +16,8 @@
 "pct_frequent_physical_distress",,,,
 "pct_hispanic",,,,
 "pct_deep_poverty",,,,
-"pct_insufficient_sleep",,,,
-"pct_good_air",,,,
+"pct_insufficient_sleep",5,10,0.024,0.938743120556285
+"pct_good_air",2,13,0.022,-0.958397073072221
 "pop_dens",,,,
 "pct_long_commute_drives_alone",2,3,0.111,0.960048458714169
 "chronic_kidney_disease_pct",,,,
