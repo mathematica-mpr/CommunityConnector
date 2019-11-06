@@ -156,6 +156,7 @@ coefs_df <- results[3][[1]]
 colnames(coefs_df)[2:9] <- outcomes
 View(coefs_df)
 colSums(!is.na(coefs_df))
+write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
 # which matrices would be most general/incorporate the most data
 # looking at the variables used, overobese_pct definitely uses the most
 # followed by pct obese & the std spend vars, which we won't want to use
