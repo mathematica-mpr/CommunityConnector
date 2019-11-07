@@ -23,7 +23,7 @@ data['state'] = "CO"
 
 print("Number of columns from data dictionary: " + str(len(keep_cols)))
 
-# doing this because I messed up the data dictionary
+# doing this because I messed up the data dictionary - not sure if this is needed anymore
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 data.columns = [custom_replace(col) for col in data.columns.values]
