@@ -8,8 +8,12 @@ install.packages("ggcorrplot")
 install.packages("GGally")                  
 install.packages("corrr")                   
 install.packages("Amelia")                  
-install.packages("missForest")
+install.packages("missForest")              
+<<<<<<< HEAD
 install.packages("randomForest")            
+=======
+install.packages("RandomForest")            
+>>>>>>> feature/plots
 install.packages("grid")                    
 install.packages("gridExtra")               
 install.packages("glmnet")                  
@@ -46,12 +50,20 @@ library(ClustOfVar)
 ##########
 
 #data sets
-
+<<<<<<< HEAD
 sdohall <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
 dictionary <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
 #removing score
 dictionary <- dictionary[-(89:94),] 
 sdohall <- sdohall[-65,-(119:124)]  
+=======
+sdohall <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data-insights/final_data.csv")
+dictionary <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data-insights/final_data_dictionary.csv")
+#removing score
+dictionary <- dictionary[-(88:93),]
+sdohall <- sdohall[-65,-(117:122)]
+#dictionary <- read.csv("C:/Users/ECody/Desktop/data_dictionary_KC.csv")
+>>>>>>> feature/plots
 
 #cleaning data
 cleandata <- function(data) {
@@ -70,6 +82,7 @@ sdoh_numeric <- missForest(sdohall)
 sdoh_numeric <- sdoh_numeric$ximp
 
 #removed index and doubles of demographics
+<<<<<<< HEAD
 sdoh_numeric <- sdoh_numeric[,-c(3, 5, 6, 26, 27)]  
 dictionary <- dictionary[-c(3, 5, 6, 26, 27),]
 names(sdoh_numeric)[103] <- "Gini.Index.Income.Inequal"
@@ -78,6 +91,16 @@ names(sdoh_numeric)[93] <- "Asian.Alone"
 names(sdoh_numeric)[94] <- "Black.or.African.America.Alone"
 names(sdoh_numeric)[95] <- "Native.Hawiian.Other.Pacific.Islander.Alone"
 names(sdoh_numeric)[96] <- "Some.Other.Race.Alone"
+=======
+sdoh_numeric <- sdoh_numeric[,-c(5, 6, 19, 26, 28)]  
+dictionary <- dictionary[-c(5, 6, 19, 26, 28),]
+names(sdoh_numeric)[102] <- "Gini.Index.Income.Inequal"
+names(sdoh_numeric)[91] <- "American.Indian.Alaskan.Native.Alone"
+names(sdoh_numeric)[92] <- "Asian.Alone"
+names(sdoh_numeric)[93] <- "Black.or.African.America.Alone"
+names(sdoh_numeric)[94] <- "Native.Hawiian.Other.Pacific.Islander.Alone"
+names(sdoh_numeric)[95] <- "Some.Other.Race.Alone"
+>>>>>>> feature/plots
 
 #multiple data sets for each SDOH Score
 #list of 6 datasets for each score
@@ -287,6 +310,7 @@ GraphScatter(sdoh_numeric, quo(graduation.rate), "% Graduation Rate Scatter Plot
 #  gridExtra::grid.arrange(a, b, c, d)
 #}
 
+<<<<<<< HEAD
 ###################################
 ###POST VARIABLE SELECTION PLOTS###
 ###################################
@@ -386,7 +410,7 @@ ggcorr(demographics, geom = "blank", label = TRUE, hjust = 1, label_size = 3) +
 
 
 
-
+=======
 ########################
 ###VARIABLE REDUCTION###
 ########################
