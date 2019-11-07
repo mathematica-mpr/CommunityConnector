@@ -81,7 +81,7 @@ mhp_rate,"Mental Health Providers per 100,000 population",0,1,0,0,rate,0,0,0,0,0
 overcrowding,Percentage of households with overcrowding,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,,,
 pcp_rate,"Primary Care Physicians per 100,000 population",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1,1,,
 physically_unhealthy_days,Average number of physically unhealthy days reported in past 30 days (age-adjusted),0,1,0,0,continuous,0,0,0,0,0,0,RWJF,0,,,
-population,Population density per square mile,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,,,,
+population,Population,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,,,,
 preventable_hosp._rate,"Discharges for Ambulatory Care Sensitive Conditions per 100,000 Medicare Enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0,1,,
 pct_adult_uninsured,Percentage of adults without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0,1,,
 pct_child_uninsured,Percentag of children without health insurance,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0,1,,
