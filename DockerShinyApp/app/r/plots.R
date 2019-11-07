@@ -173,7 +173,7 @@ testdf2 <- c("Worcester", "MA", county_dat %>% select(starts_with("sdoh_score"))
   as.data.frame()
 testdf2[1, 3:8] <- c(.9, .8, .3, .9, .5, .6)
 
-radar_chart <- function(df1, df2, dictionary) {
+radar_chart_overlay <- function(df1, df2, dictionary) {
   #function to output interactive polar plot of SDOH Scores for one county
   
   #vector of score names
@@ -267,4 +267,4 @@ radar_chart <- function(df1, df2, dictionary) {
   return(p)
 }
 
-radar_chart(testdf, testdf2, dd)
+radar_chart_overlay(testdf, testdf2, dd)
