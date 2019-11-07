@@ -18,3 +18,10 @@ cor(meth1)
 
 # 2. Use correlation with Econ Score as a weight
 # 3. Correlation squared?
+
+# Standardize scores?? Standardize raw metrics score - mean/sd
+
+# Measuring adjustments:
+# scores should differentiate performance
+# how well do the scores predict performance?
+# relationship between one another
