@@ -183,26 +183,7 @@ server <- function(input, output) {
     selectInput('comparison_county_selection', label = "Select a county to compare:",
                 choices = c("None", comp_counties), selected = "None")
   })
-  
-  output$comp_county_radar <- renderPlot({
-    req(comp_county_dat())
-    
-    sdoh_dd <- get_dd(dd, "sdoh_score")
-    
-    sdohs <- sdoh_dd %>% pull(column_name)
-    
-    df <- make_radar_data(comp_county_dat() %>% select(sdohs), sdoh_dd)
-    
-    radarchart(df, 
-               pcol = c(NA, NA,
-                        paste0(config$colors$red100, '80')), 
-               plty = 0,
-               pfcol = c(paste0(config$colors$grey50, '80'),
-                         paste0(config$colors$grey25, '33'),
-                         paste0(config$colors$yellow100, '33')),
-               cglcol = config$colors$grey100,
-               seg = 4, vlcex = 0.8)
-  })
+
   
   output$comp_county_demo <- DT::renderDT({
     req(comp_county_dat())
