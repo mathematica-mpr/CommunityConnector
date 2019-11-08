@@ -19,7 +19,7 @@ ui <- fluidPage(#theme = "styles.css",
     column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(htmlOutput("my_county_name")),
            fluidRow(
-             column(width = 6, plotOutput("my_county_radar")),
+             column(width = 6, plotlyOutput("my_county_radar")),
              column(width = 6, 
                     DT::DTOutput("my_county_demo"))
           # fluidRow(d3Output("test"))
