@@ -115,9 +115,6 @@ server <- function(input, output) {
       
       radar_chart_overlay(my_county_df, comp_county_df, dd)
     }
-    
-    
-
   })
   
   output$my_county_demo <- DT::renderDT({
@@ -139,49 +136,103 @@ server <- function(input, output) {
   
   output$my_county_econ_stab <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_1") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Economic Stability", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_1")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Economic Stability` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$my_county_neigh <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_2") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Neighborhood & Physical Environment", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_2")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Neighborhood & Physical Environment` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$my_county_edu <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_3") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Education", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_3")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Education` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$my_county_food <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_4") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Food", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_4")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Food` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$my_county_community <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_5") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Community", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_5")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Community` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
   output$my_county_health <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "used_sdoh_6") 
     
-    DT::datatable(df, rownames = FALSE, colnames = c("Health Coverage", ""), class = "stripe") %>%
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_6")
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    df <- df %>%
+      rename(`Health Coverage` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
