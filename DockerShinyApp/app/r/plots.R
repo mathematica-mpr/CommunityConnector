@@ -270,62 +270,107 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 radar_chart_overlay(testdf, testdf2, dd)
 
 
-#Outcomes density plot -----
-testdf_dens <- df_outcome1
-
-dens <- density(testdf_dens$value)
-
-line_matches <- filter(testdf_dens, type == 'matches') %>% 
-  pull(value)
-line_other <- filter(testdf_dens, type == 'other') %>% 
-  pull(value)
-
-#horizontal lines for each outcome value
-#horizontal lines for each outcome value
-#matches
-line <- list(
-  type = "line",
-  xref = "x",
-  yref = "y",
-  opacity = .4
-)
-hlines_matches <- list()
-for (i in line_matches) {
-  line[["y0"]] <- 0
-  line[["line"]] = list(color = paste0(config$colors$teal100))
-  line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
-  line[c("x0", "x1")] <- i
-  hlines_matches <- c(hlines_matches, list(line))
-}
-hlines_other <- list()
-for (i in line_other) {
-  line[["y0"]] <- 0
-  line[["line"]] = list(color = 'purple')
-  line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
-  line[c("x0", "x1")] <- i
-  hlines_other <- c(hlines_other, list(line))
-}
-all <- c(hlines_matches, hlines_other)
-
-#plotly density plot
-p <- plot_ly(
-  type = 'scatter',
-  mode = 'lines',
-  x = ~dens$x,
-  y = ~dens$y,
-  fill = 'tozeroy',
-  fillcolor = paste0(config$colors$grey50),
-  line = list(
-    color = paste0(config$colors$grey50)
+#Density Plot Function-----
+density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
+  #function to output density plot for one outcome
+  
+  #dataframe of all outcomes with matches for selected county
+  my_matches <- find_my_matches(c_fips, data)[[2]]
+  outcomes_dd <- get_dd(dictionary, "outcome")
+  outcomes_list <- outcomes_dd %>% pull(column_name)
+  df_outcomes <- dat %>% select(fips, state, county, outcomes_list) %>%
+    pivot_longer(cols = outcomes_list) %>%
+    # selected county and matches to selected county
+    mutate(type = case_when(
+      fips %in% my_matches ~ "matches",
+      fips == c_fips ~ "selected",
+      TRUE ~ "other"
+    )) %>%
+    # left join data dictionary to get real outcome names
+    rename(column_name = name) %>%
+    left_join(outcomes_dd, by = "column_name") 
+  
+  #outcome of interest datframe
+  outcome_df <- df_outcomes %>% 
+    filter(column_name == outcomes_list[outcome_of_interest])
+  dens <- density(outcome_df$value)
+  
+  #filtering by match
+  line_matches <- filter(outcome_df, type == 'matches') %>% 
+    pull(value)
+  line_other <- filter(outcome_df, type == 'other') %>% 
+    pull(value)
+  line_mycounty <- filter(outcome_df, type == 'selected') %>% 
+    pull(value)
+  #horizontal lines for each outcome value
+  line <- list(
+    type = "line",
+    xref = "x",
+    yref = "y"
   )
-) %>% 
-  layout(
-    shapes = all,
-    xaxis = list(
-      title = "Outcome"
+  vlines_matches <- list()
+  for (i in line_matches) {
+    line[["y0"]] <- 0
+    line[["line"]] = list(color = paste0(config$colors$teal100))
+    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
+    line[c("x0", "x1")] <- i
+    line[['opacity']] <- .4
+    vlines_matches <- c(vlines_matches, list(line))
+  }
+  vlines_other <- list()
+  for (i in line_other) {
+    line[["y0"]] <- 0
+    line[["line"]] = list(color = 'purple')
+    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
+    line[c("x0", "x1")] <- i
+    line[['opacity']] <- .4
+    vlines_other <- c(vlines_other, list(line))
+  }
+  vlines_mycounty <- list()
+  for (i in line_mycounty) {
+    line[["y0"]] <- 0
+    line[["line"]] = list(color = paste0(config$colors$yellow100), width = 5)
+    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
+    line[c("x0", "x1")] <- i
+    line[['opacity']] <- 1
+    vlines_mycounty <- c(vlines_mycounty, list(line))
+  }
+  all <- c(vlines_matches, vlines_other, vlines_mycounty)
+  
+  #plotly density plot
+  p <- plot_ly(
+    type = 'scatter',
+    mode = 'lines',
+    x = ~dens$x,
+    y = ~dens$y,
+    fill = 'tozeroy',
+    fillcolor = paste0(config$colors$grey50),
+    line = list(
+      color = paste0(config$colors$grey50)
     ),
-    yaxis = list(
-      title = "Density"
+    hoverinfo = 'none'
+  ) %>% 
+    layout(
+      title = list(
+        text = paste(outcome_df$description[1]),
+        font = list(
+         size = 18,
+         color = 'purple'
+        ),
+        xref = 'paper',
+        x = '0'
+      ),
+      shapes = all,
+      xaxis = list(
+        title = ""
+      ),
+      yaxis = list(
+        title = "Density"
+      )
     )
-  )
-p
+  return(p)
+}
+
+density_plot(dat, dd, county_fips, 1)
+
+
