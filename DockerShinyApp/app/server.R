@@ -105,7 +105,17 @@ server <- function(input, output) {
     
     sdohs <- sdoh_dd %>% pull(column_name)
     
-    radar_chart(county_dat() %>% select(county, state, sdohs), dd)
+    my_county_df <- county_dat() %>% select(county, state, sdohs)
+    
+    if (input$comparison_county_selection == "None") {
+      radar_chart(my_county_df, dd)
+    } else {
+      comp_county_df <- comp_county_dat() %>% select(county, state, sdohs)
+      
+      radar_chart_overlay(my_county_df, comp_county_df, dd)
+    }
+    
+    
 
   })
   
