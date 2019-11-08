@@ -271,41 +271,53 @@ radar_chart_overlay(testdf, testdf2, dd)
 
 
 #Outcomes density plot -----
-
-ggplot(df_outcome1, aes(x = value)) + 
-  geom_density(fill = paste0(config$colors$red100, '50')) +
-  theme_bw()
-
 dens <- density(df_outcome1$value)
 
+line_matches <- filter(df_outcome1, type == 'matches') %>% 
+  pull(value)
+line_other <- filter(df_outcome1, type == 'other') %>% 
+  pull(value)
+
+#horizontal lines for each outcome value
+#horizontal lines for each outcome value
+#matches
 line <- list(
   type = "line",
-  line = list(color = "purple"),
   xref = "x",
   yref = "y",
-  opacity = .2
+  opacity = .4
 )
-
-lines <- list()
-for (i in df_outcome1$value) {
+hlines_matches <- list()
+for (i in line_matches) {
   line[["y0"]] <- 0
-  line[["y1"]] <- .3
+  line[["line"]] = list(color = paste0(config$colors$teal100))
+  line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
   line[c("x0", "x1")] <- i
-  lines <- c(lines, list(line))
+  hlines_matches <- c(hlines_matches, list(line))
 }
+hlines_other <- list()
+for (i in line_other) {
+  line[["y0"]] <- 0
+  line[["line"]] = list(color = 'purple')
+  line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
+  line[c("x0", "x1")] <- i
+  hlines_other <- c(hlines_other, list(line))
+}
+all <- c(hlines_matches, hlines_other)
 
+#plotly density plot
 p <- plot_ly(
   type = 'scatter',
   mode = 'lines',
   x = ~dens$x,
   y = ~dens$y,
   fill = 'tozeroy',
-  fillcolor = paste0(config$colors$grey100, '80'),
+  fillcolor = paste0(config$colors$grey50),
   line = list(
-    color = paste0(config$colors$grey100, '80')
+    color = paste0(config$colors$grey50)
   )
 ) %>% 
   layout(
-    shapes = lines
+    shapes = all
   )
 p
