@@ -39,7 +39,6 @@ ui <- fluidPage(#theme = "styles.css",
     column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('select_comparison_county')),
            fluidRow(
-             column(width = 6, plotOutput('comp_county_radar')),
              column(width = 6, DT::DTOutput('comp_county_demo'))
            ),
            fluidRow(
