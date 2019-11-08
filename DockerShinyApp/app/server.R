@@ -265,7 +265,7 @@ server <- function(input, output) {
     )
   })
   
-  output$compare_county_radars <- renderPlot({
+  output$compare_county_radars <- renderPlotly({
     req(county_check())
     
     sdoh_dd <- get_dd(dd, "sdoh_score")
@@ -275,20 +275,13 @@ server <- function(input, output) {
     # find number of rows for plot
     plot_nrows <- ceiling(length(my_matches()) / 5)
 
-    par(mfrow = c(plot_nrows, 5))
     df <- dat %>% select(fips, state, county, sdohs) %>%
       filter(fips %in% my_matches()) %>%
-      group_by(fips, county, state) %>%
+      group_by(fips) %>%
       nest() %>%
-      mutate(radar_data = purrr::map(data, make_radar_data, dd = sdoh_dd)) %>%
-      mutate(radar_char = purrr::map(radar_data, radarchart, pcol = c(NA, NA, paste0(config$colors$red100, '80')), 
-                              plty = 0,
-                              pfcol = c(paste0(config$colors$grey50, '80'),
-                                        paste0(config$colors$grey25, '33'),
-                                        paste0(config$colors$teal100, '33')),
-                              cglcol = config$colors$grey100,
-                              seg = 4, vlcex = 0.8,
-                              title = paste0(county, ", ", state)))
+      mutate(radar_char = purrr::map(data, radar_chart, dd))
+    
+    subplot(nrows = 4, df$radar_char)
   })
   
   output$map_header <- renderUI({
@@ -380,6 +373,46 @@ server <- function(input, output) {
       )
     })
     tagList(density_plots_list)
+  })
+  
+  
+  # dynamic number of radar charts ---------------------------------------------
+  radar_graphs <- eventReactive(input$county_selection, {
+    req(county_check())
+    
+    sdoh_dd <- get_dd(dd, "sdoh_score")
+    
+    sdohs <- sdoh_dd %>% pull(column_name)
+    
+    # make sure to arrange graphs by distance
+    dat %>% select(fips, state, county, sdohs) %>%
+      filter(fips %in% my_matches()) %>%
+      group_by(fips) %>%
+      nest() %>%
+      mutate(graphs = purrr::map(data, radar_chart, dd)) %>%
+      pull(graphs)
+  })
+  
+  observeEvent(input$county_selection, {
+    req(radar_graphs())
+    
+    purrr::iwalk(radar_graphs(), ~{
+      output_name <- paste0("radar_graph", .y)
+      output[[output_name]] <- renderPlotly(.x)
+    })
+  })
+  
+  output$radar_graphs_ui <- renderUI({
+    req(radar_graphs())
+    
+    radar_plots_list <- purrr::imap(radar_graphs(), ~{
+      tagList(
+        plotlyOutput(
+          outputId = paste0("radar_graph", .y)
+        )
+      )
+    })
+    tagList(radar_plots_list)
   })
   # r2d3
   
