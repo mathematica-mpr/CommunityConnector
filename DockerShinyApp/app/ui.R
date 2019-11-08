@@ -62,7 +62,7 @@ ui <- fluidPage(#theme = "styles.css",
            fluidRow(plotlyOutput("map"))),
     column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('my_matches_header')),
-           fluidRow(plotOutput("compare_county_radars"))),
+           fluidRow(plotlyOutput("compare_county_radars"))),
     column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('health_outcomes_header')),
            fluidRow(
@@ -70,11 +70,11 @@ ui <- fluidPage(#theme = "styles.css",
                  uiOutput(outputId = "density_graphs_ui"))))
   ),
   
- # fluidRow(
- #   column(width = 4,
- #          div(id = "density_plot_container",
- #              uiOutput(outputId = "density_graphs_ui")))
- # )
+  fluidRow(
+    column(width = 4,
+           div(id = "radar_plot_container",
+               uiOutput(outputId = "radar_graphs_ui")))
+  )
   
 
 )
