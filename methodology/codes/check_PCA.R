@@ -4,6 +4,8 @@ library(dplyr)
 dict <- read.csv('../../data/data_dictionary.csv')
 spca <- read.csv('../../data/DictionaryPostSPCA.csv')
 
+# review potential inputs vs. ones actually selected
+# make sure aligns with .html
 for(i in c(1:6)){
   merged <- dict %>% 
     filter(!!rlang::sym(paste0("used_sdoh_",i)) == 1) %>% 
@@ -16,6 +18,7 @@ for(i in c(1:6)){
   print(merged)
 }
 
+# Notes from meetings that should be incorporated:
 # Get rid of Food Environment Index, pct mental distress, excessive drinking,
 # short hospital rates, medicare adjusted pp cost and Add physically inactive
 # no kidney-related vars in scores
@@ -24,22 +27,13 @@ for(i in c(1:6)){
 # no mean hours or % same tract
 # physically inactive added
 
-# from 1:
-# removed medicare_std_adj_cost_pp
+# from 1: removed medicare_std_adj_cost_pp
+# from 2: added budget_water
+# 3: 
+# 4: removed food_environment_index
+# 5: remove pct_frequent_mental_distress
+# 6: removed short_hosp_pp_rate
 
-# from 2:
-# removed median_value (WHY??), pct_with_access, pct_good_air
-# added: comm_hlth_cntrs_pp_rate
-# TODO: change pct_phs_inactive to using walkability instead
-# added: walk_score - why? maybe not up to date with the html?
-# need to add: budget_water
-
-# 3: removed pct
-# 4:
-# 5:
-# 6:
-# 7:
-
-# TODO: still need the PC variation and the loading for the variables we add
-
-
+# make sure we have all of the PC variation and loadings for variables that are selected
+spca %>% 
+  filter(!is.na(sdoh_Category))
