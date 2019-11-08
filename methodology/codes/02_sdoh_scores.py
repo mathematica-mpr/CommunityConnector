@@ -73,10 +73,22 @@ for i in range(1,7):
 # are any SDoH scores too correlated
 cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
 print(cor)
+econ_cor = cor['sdoh_score_1']
+print(econ_cor)
+
+def econ_adjust(i):
+    correlation = econ_cor[i-1]
+    new_score = (correlation * data[f'sdoh_score_{i}']/data['sdoh_score_1']) + (1 - correlation) * data[f'sdoh_score_{i}']
+    # TODO: function this
+    new_score = (new_score - new_score.min())/(new_score.max() - new_score.min())
+    return new_score
 
 # adjust for economic score
-
-
+for i in range(2,7):
+    data[f'sdoh_score_{i}'] = econ_adjust(i)
+# check new correlations
+cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
+print(cor)
 
 # TODO: flag final variables used in final data dictionary
 # not sure if this is necessary unless we are going to display them differently than the other raw SDoH
