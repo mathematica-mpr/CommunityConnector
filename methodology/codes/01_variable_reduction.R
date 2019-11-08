@@ -18,12 +18,19 @@ library(purrr)
 library(sparsepca)
 library(ClustOfVar)
 
-#data sets
+#data-----
+
+#inputting data
 sdohallorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
 # TODO: change this to using the preliminary data_dictionary.csv & set relative wd
 dictionaryorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
-dictionaryorig[73, 12] <- 0
-dictionaryorig[30, 12] <- 0
+
+#quick fixes for data dictionary
+dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), c(10,12)] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_excessive_drinking"),12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_with_access"), 12] <- 0
+dictionaryorig[which(dictionaryorig$column_name=="pct_physically_inactive"), 12] <- 0
+
 #removing score and county/state data
 toremove <- c("sdoh_score_1", "sdoh_score_2", "sdoh_score_3", "sdoh_score_4", "sdoh_score_5", "sdoh_score_6", "state", "county")
 dictionary <- dictionaryorig[!dictionaryorig$column_name %in% toremove,]  
@@ -34,7 +41,6 @@ set.seed(1234)
 sdoh_numeric <- missForest(sdohall)
 sdoh_numeric <- sdoh_numeric$ximp
 
-#multiple data sets for each SDOH Score
 #list of 6 datasets for each score
 datlist <- list()
 for (i in 1:6) {
@@ -46,17 +52,14 @@ for (i in seq(datlist)) {
   assign(paste0("Score", i), datlist[[i]])
 }
 
-########################
-###VARIABLE REDUCTION###
-########################
-
-###PCA
+#SPCA-----
 
 varreduc_spca <- function(data, alpha) {
   #function to output non-zero variables and loadings
   spca <- robspca(data, center = T, scale = T, verbose = F, alpha = alpha)
   cum <- summary(spca)[4,]
   exp <- summary(spca)[3,]
+  
   #skree plot
   plot <- ggplot(mapping = aes(x = seq_along(cum), y = cum)) +
     geom_point() +
@@ -68,6 +71,7 @@ varreduc_spca <- function(data, alpha) {
     theme_bw()
   print(plot)
   allcomps <- list()
+  
   #creating data frame with variable name, category, PC#, var explained, and loading
   for (i in 1:dim(data)[2]) {
     comps <- spca$loadings[,i]
@@ -95,7 +99,7 @@ varreduc_uni <- function(list, num.comp) {
   return(unique)
 }
 
-#Testing Tuning Parameter
+#Testing Tuning Parameter-----
 alpmin20 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-20)
 cum_var_exp <- summary(test2)[4,]
 plot(cum_var_exp, pch = 20, ylim = c(0,1), main = "Testing Parameters for Score 6")
@@ -124,91 +128,74 @@ alp1 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .1)
 cum_var_exp <- summary(test6)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "orange")
 
+#Results-----
+
 #running SPCA on all Scores
 S1PC <- varreduc_spca(Score1, .01) #5
-S2PC <- varreduc_spca(Score2, .01) #12
+S2PC <- varreduc_spca(Score2, .01) #13
 S3PC <- varreduc_spca(Score3, .01) #3
 S4PC <- varreduc_spca(Score4, .01) #2
-S5PC <- varreduc_spca(Score5, .01) #9
+S5PC <- varreduc_spca(Score5, .01) #8
 S6PC <- varreduc_spca(Score6, .01) #8
 
-#all variables selected
-varreduc_uni(S1PC, 5)
-varreduc_uni(S2PC, 12)
-varreduc_uni(S3PC, 3)
-varreduc_uni(S4PC, 2)
-varreduc_uni(S5PC, 9)
-varreduc_uni(S6PC, 8)
+#number of principal components used. 
+num1 <- 5
+num2 <- 13
+num3 <- 3
+num4 <- 2
+num5 <- 8
+num6 <- 8
 
-#flagging dictionary
+#selected variables
+varreduc_uni(S1PC, num1)
+varreduc_uni(S2PC, num2)
+varreduc_uni(S3PC, num3)
+varreduc_uni(S4PC, num4)
+varreduc_uni(S5PC, num5)
+varreduc_uni(S6PC, num6)
+
+#flagging dictionary-----
+
 #creating new dataframe with all variables
 Dictionary_PostSPCA <- as.data.frame(dictionaryorig$column_name)
 names(Dictionary_PostSPCA) <- "Variable_Name"
 
-#combining all lists of PCs into df
-all <- c(S1PC[1:5],S2PC[1:12],S3PC[1:3],S4PC[1:2],S5PC[1:9],S6PC[1:8])
-all <- ldply(all)
+#combining lists of PC into one df
+all <- c(S1PC, S2PC, S3PC, S4PC, S5PC, S6PC) %>% 
+  ldply()
+
+#Post SPCA manually selected variables
+varadd <- c("budget_water", "pct_physically_inactive")
+test <- function(varname, df) {
+  index <- which(df$Variable_Name==varname)
+  PCinfo <- df[index,]
+  return(PCinfo)
+}
+pc_add <- lapply(varadd, test, df = all)
+
+#combining spca and manually selected variables
+all_selected <- c(S1PC[1:num1],S2PC[1:num2],S3PC[1:num3],S4PC[1:num4],S5PC[1:num5],S6PC[1:num6]) %>% 
+  c(pc_add) %>% 
+  ldply() %>% 
+  unique()
 
 #populating dataframe with SPCA information
-for (i in 1:length(all$Variable_Name)) {
-  index <- which(Dictionary_PostSPCA$Variable_Name==all$Variable_Name[i])
-  Dictionary_PostSPCA[index, 2] <- all$sdoh_Category[i]
-  Dictionary_PostSPCA[index, 3] <- all$PC_Number[i]
-  Dictionary_PostSPCA[index, 4] <- all$Variance_Explained[i]
-  Dictionary_PostSPCA[index, 5] <- all$Loading[i]
+for (i in 1:length(all_selected$Variable_Name)) {
+  index <- which(Dictionary_PostSPCA$Variable_Name==all_selected$Variable_Name[i])
+  Dictionary_PostSPCA[index, 2] <- all_selected$sdoh_Category[i]
+  Dictionary_PostSPCA[index, 3] <- all_selected$PC_Number[i]
+  Dictionary_PostSPCA[index, 4] <- all_selected$Variance_Explained[i]
+  Dictionary_PostSPCA[index, 5] <- all_selected$Loading[i]
 }
 names(Dictionary_PostSPCA)[2:5] <- c("sdoh_Category", "PC_Number", "Variance_Explained", "Loading")
 
-#Post SPCA Removals and Additions
-remove <- c("food_environment_index", "pct_frequent_mental_distress", "short_hosp_pp_rate", "pct.adult.uninsured", "medicare_std_adj_cost_pp")
+#Post SPCA Removals
+remove <- c("food_environment_index", "pct_frequent_mental_distress", "short_hosp_pp_rate", 
+            "pct.adult.uninsured", "medicare_std_adj_cost_pp")
 remove_index <- which(Dictionary_PostSPCA$Variable_Name %in% remove)
 Dictionary_PostSPCA[remove_index, 2:5] <- NA
-
-add <- c("budget_water")
-add_index <- which(Dictionary_PostSPCA$Variable_Name %in% add)
-Dictionary_PostSPCA[58, 2] <- 2
 
 #outputting new dictionary
 write.csv(Dictionary_PostSPCA, "C:/Users/ECody/Desktop/DictionaryPostSPCA.csv", na = "", row.names = F)
 
-
-################
-###CLUSTERING###
-################
-
-tree1 <- hclustvar(Score1)
-tree2 <- hclustvar(Score2)
-tree3 <- hclustvar(Score3)
-tree4 <- hclustvar(Score4)
-tree5 <- hclustvar(Score5)
-tree6 <- hclustvar(Score6)
-
-test <- stability(tree1, B = 100)
-test2 <- clValid(Score1, 2:4)
-plot(test2)
-
-p1 <- ggdendrogram(tree1) +
-  ggtitle("Clustering for Score 1") +
-  coord_flip()
-p2 <- ggdendrogram(tree2) +
-  ggtitle("Clustering for Score 2") +
-  coord_flip()
-p3 <- ggdendrogram(tree3) +
-  ggtitle("Clustering for Score 3") +
-  coord_flip()
-p4 <- ggdendrogram(tree4) +
-  ggtitle("Clustering for Score 4") +
-  coord_flip()
-p5 <- ggdendrogram(tree5) +
-  ggtitle("Clustering for Score 5") +
-  coord_flip()
-p6 <- ggdendrogram(tree6) +
-  ggtitle("Clustering for Score 6") +
-  coord_flip()
-gridExtra::grid.arrange(p1, p2, p3, top = "Clustering", ncol = 2)
-gridExtra::grid.arrange(p4, p5, p6, top = "Clustering", ncol = 2)
-
-cutree(tree1, 2)
-g <- cutree(tree2, 4)
-which(g==3)
-
+S2PC
