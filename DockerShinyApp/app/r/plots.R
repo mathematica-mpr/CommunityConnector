@@ -1,4 +1,4 @@
-county_fips <- "1"
+county_fips <- "8023"
 
 county_dat <- dat %>% filter(fips == county_fips)
 
@@ -271,11 +271,13 @@ radar_chart_overlay(testdf, testdf2, dd)
 
 
 #Outcomes density plot -----
-dens <- density(df_outcome1$value)
+testdf_dens <- df_outcome1
 
-line_matches <- filter(df_outcome1, type == 'matches') %>% 
+dens <- density(testdf_dens$value)
+
+line_matches <- filter(testdf_dens, type == 'matches') %>% 
   pull(value)
-line_other <- filter(df_outcome1, type == 'other') %>% 
+line_other <- filter(testdf_dens, type == 'other') %>% 
   pull(value)
 
 #horizontal lines for each outcome value
@@ -318,6 +320,12 @@ p <- plot_ly(
   )
 ) %>% 
   layout(
-    shapes = all
+    shapes = all,
+    xaxis = list(
+      title = "Outcome"
+    ),
+    yaxis = list(
+      title = "Density"
+    )
   )
 p
