@@ -20,6 +20,7 @@ RUN R -e "install.packages(c('maps'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('usmap'), repos='http://cran.rstudio.com/')"
 RUN R -e "devtools::install_version('plotly', version = '4.5.6', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('viridis'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('plotly'), repos='http://cran.rstudio.com/')"
 #RUN R -e "shinytest::installDependencies()"
 
 
