@@ -268,3 +268,44 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 }
 
 radar_chart_overlay(testdf, testdf2, dd)
+
+
+#Outcomes density plot -----
+
+ggplot(df_outcome1, aes(x = value)) + 
+  geom_density(fill = paste0(config$colors$red100, '50')) +
+  theme_bw()
+
+dens <- density(df_outcome1$value)
+
+line <- list(
+  type = "line",
+  line = list(color = "purple"),
+  xref = "x",
+  yref = "y",
+  opacity = .2
+)
+
+lines <- list()
+for (i in df_outcome1$value) {
+  line[["y0"]] <- 0
+  line[["y1"]] <- .3
+  line[c("x0", "x1")] <- i
+  lines <- c(lines, list(line))
+}
+
+p <- plot_ly(
+  type = 'scatter',
+  mode = 'lines',
+  x = ~dens$x,
+  y = ~dens$y,
+  fill = 'tozeroy',
+  fillcolor = paste0(config$colors$grey100, '80'),
+  line = list(
+    color = paste0(config$colors$grey100, '80')
+  )
+) %>% 
+  layout(
+    shapes = lines
+  )
+p
