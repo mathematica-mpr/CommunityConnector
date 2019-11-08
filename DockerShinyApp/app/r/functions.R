@@ -114,6 +114,13 @@ radar_chart <- function(df, dictionary) {
                              '<extra></extra>')
     ) %>% 
     layout(
+      title = list(
+        text = paste(df$county, df$state),
+        font = list(
+          size = 18
+        ),
+        xref = 'paper'
+      ),
       polar = list(
         #tick labels
         radialaxis = list(
