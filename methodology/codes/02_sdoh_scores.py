@@ -2,12 +2,13 @@ import pandas as pd
 import numpy as np
 import copy
 
+# read in data, dictionary, and PCA output
 data = pd.read_csv('data/full_data_relative.csv')
 data_dictionary = pd.read_csv('data/data_dictionary.csv')
 spca_dict = pd.read_csv('data/DictionaryPostSPCA.csv')
 spca_dict = spca_dict[pd.notnull(spca_dict.sdoh_Category)]
 
-# number of columns in data should equal number of variables in data dictionary
+# number of columns in data should equal to number of variables in data dictionary
 assert(data.shape[1] == data_dictionary[~data_dictionary['column_name'].str.contains('sdoh_score')].shape[0])
 
 # Create the weightings
@@ -33,7 +34,7 @@ data = data.fillna(data.mean())
 
 def use_sdoh_normalize(sdoh_score_num):
     # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
-    # normalize variables to get all values between - and 1
+    # normalize variables to get all values between 0 and 1
     # TODO: consider standardizing instead, to get values centered around 0?
     # the outliers still remain visible
     # then take weighted average using pct variance explained from PCA
@@ -47,11 +48,10 @@ def use_sdoh_normalize(sdoh_score_num):
     # make sure all columns are found in dictionary and data
     assert(len(cols) == len(list(set(data_dictionary['column_name']).intersection(cols))) == len(list(set(data.columns.values).intersection(cols))))
 
-    # standardize the variables
+    # standardize/normalize the variables
     # x = (data[cols] - data[cols].mean())/data[cols].std()
     x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
     
-    # TODO: update this
     # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
     flip_cols = list(data_dictionary[data_dictionary['higher_better'] == 0]['column_name'])
     flip_cols = list(set(flip_cols).intersection(cols))
@@ -63,7 +63,6 @@ def use_sdoh_normalize(sdoh_score_num):
     
     # weight them
     avgs = np.dot(x, weights)
-    # avgs = x.mean(axis = 1)
 
     return avgs
 
@@ -72,37 +71,27 @@ for i in range(1,7):
     data[f'sdoh_score_{i}'] = use_sdoh_normalize(i)
 
 # are any SDoH scores too correlated
-print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
-# especially check for economic score (1)
-# highly correlated (>.4): 1/3, 1/5, 1/6 = econ & education, econ & community, econ & health care system
-# 2/3: neighborhood & education
-# 3/4: education & food
-# 4/5: food & community
+cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
+print(cor)
+econ_cor = cor['sdoh_score_1']
+print(econ_cor)
 
-# with just an average, the most correlated ones are 5/6, 1/3, and 1/5
-# which are: community + health, economic + education, and economic + community. makes sense!
+def econ_adjust(i):
+    correlation = econ_cor[i-1]
+    new_score = (correlation * data[f'sdoh_score_{i}']/data['sdoh_score_1']) + (1 - correlation) * data[f'sdoh_score_{i}']
+    # TODO: function this
+    new_score = (new_score - new_score.min())/(new_score.max() - new_score.min())
+    return new_score
 
-# TODO: also check variation in outcome by score
-outcome_cols = list(data_dictionary[data_dictionary['outcome'] == 1]['column_name'])
-print(outcome_cols)
-for i in range(1,7):
-    cols = copy.deepcopy(outcome_cols)
-    cols.append(f"sdoh_score_{i}")
-    print("")
-    print(f"sdoh_score_{i}")
-    print(data[cols].corr()[f"sdoh_score_{i}"])
-    data['quartile'] = np.ceil(data[f"sdoh_score_{i}"]/0.25)
-    cols.append('quartile')
-    print(data[cols].groupby(['quartile']).mean())
-data.drop(['quartile'], axis = 1, inplace = True)
-# highly correlated (>0.4): 1 & pct diabetic, diab hosp rate adj, overobese, diabetes pct
-# 2 & pct diabetic, chronic kidney, pct obese,  diab hosp rate, overobese
-# 3 & pct diabetic, pct obese, diabetes pct, diab hosp rate adj, overobese
-# 4 & none
-# 5 & diabetes pct, diab hosp rate
-# 6 & none
+# adjust for economic score
+for i in range(2,7):
+    data[f'sdoh_score_{i}'] = econ_adjust(i)
+# check new correlations
+cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
+print(cor)
 
 # TODO: flag final variables used in final data dictionary
+# not sure if this is necessary unless we are going to display them differently than the other raw SDoH
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
