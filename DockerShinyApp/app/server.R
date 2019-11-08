@@ -171,7 +171,7 @@ server <- function(input, output) {
     req(my_matches())
     comp_counties <- dat %>% filter(fips %in% my_matches()) %>% pull(county)
     selectInput('comparison_county_selection', label = "Select a county to compare:",
-                choices = comp_counties)
+                choices = c("None", comp_counties), selected = "None")
   })
   
   output$comp_county_radar <- renderPlot({
