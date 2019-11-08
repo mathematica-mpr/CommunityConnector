@@ -125,7 +125,7 @@ server <- function(input, output) {
     
     if (input$comparison_county_selection != "None") {
       comp_df <- get_table_data(comp_county_dat(), dd, "demographic")
-      df <- left_join(df, comp_df)
+      df <- left_join(df, comp_df, by = "name")
     }
     
     df <- df %>%
