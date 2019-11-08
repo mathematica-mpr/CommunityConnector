@@ -100,6 +100,7 @@ server <- function(input, output) {
   
   output$my_county_radar <- renderPlotly({
     req(county_check())
+    req(input$comparison_county_selection)
     
     sdoh_dd <- get_dd(dd, "sdoh_score")
     
@@ -121,6 +122,7 @@ server <- function(input, output) {
   
   output$my_county_demo <- DT::renderDT({
     req(county_check())
+    req(input$comparison_county_selection)
     df <- get_table_data(county_dat(), dd, "demographic") 
     
     if (input$comparison_county_selection != "None") {
