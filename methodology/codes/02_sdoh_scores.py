@@ -71,17 +71,15 @@ for i in range(1,7):
     data[f'sdoh_score_{i}'] = use_sdoh_normalize(i)
 
 # are any SDoH scores too correlated
-print(data[[f'sdoh_score_{i}' for i in range(1,7)]].corr())
-# especially check for economic score (1)
-# highly correlated (>.4): 1/3, 1/5, 1/6 = econ & education, econ & community, econ & health care system
-# 2/3: neighborhood & education
-# 3/4: education & food
-# 4/5: food & community
+cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
+print(cor)
 
-# with just an average, the most correlated ones are 5/6, 1/3, and 1/5
-# which are: community + health, economic + education, and economic + community. makes sense!
+# adjust for economic score
+
+
 
 # TODO: flag final variables used in final data dictionary
+# not sure if this is necessary unless we are going to display them differently than the other raw SDoH
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
