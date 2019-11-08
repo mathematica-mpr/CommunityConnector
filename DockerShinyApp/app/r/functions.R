@@ -5,14 +5,17 @@ get_dd <- function(dd, column_type) {
     select(column_name, description, descrip_new, higher_better)
 }
 
-get_table_data <- function(data, dd, column_type) {
+get_table_data <- function(data, dd, column_type, county) {
   sub_dd <- get_dd(dd, column_type)
   
   dd_cols <- sub_dd %>% pull(column_name)
   
+  county <- data$county
+  
   df <- data %>% select(dd_cols) %>%
     rename_at(vars(sub_dd$column_name), ~ sub_dd$description) %>%
-    pivot_longer(cols = sub_dd$description)
+    pivot_longer(cols = sub_dd$description) %>%
+    rename(!!(county) := value )
 }
 
 
