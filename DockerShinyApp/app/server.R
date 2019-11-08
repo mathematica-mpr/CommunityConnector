@@ -122,8 +122,16 @@ server <- function(input, output) {
   output$my_county_demo <- DT::renderDT({
     req(county_check())
     df <- get_table_data(county_dat(), dd, "demographic") 
-      
-    DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
+    
+    if (input$comparison_county_selection != "None") {
+      comp_df <- get_table_data(comp_county_dat(), dd, "demographic")
+      df <- left_join(df, comp_df)
+    }
+    
+    df <- df %>%
+      rename(`Essential facts` = name)
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   
