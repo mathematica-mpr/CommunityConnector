@@ -16,8 +16,13 @@ ui <- fluidPage(#theme = "styles.css",
            searchInput('county_selection', label = '', placeholder = 'Search your county',
                        btnSearch = icon('search'), value = "8001"),
            textOutput('county_selection_message')),
-    column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
-           fluidRow(htmlOutput("my_county_name")),
+    column(width = 10, style = "max-height: 50vh; overflow-y: auto;",
+           fluidRow(
+             column(width = 3,
+                    htmlOutput("my_county_name")),
+             column(width = 3, 
+                    uiOutput('select_comparison_county')),
+             column(width = 6)),
            fluidRow(
              column(width = 6, plotlyOutput("my_county_radar")),
              column(width = 6, 
@@ -35,24 +40,7 @@ ui <- fluidPage(#theme = "styles.css",
           fluidRow(
             column(width = 6, DT::DTOutput('my_county_community')),
             column(width = 6, DT::DTOutput('my_county_health'))
-          )),
-    column(width = 5, style = "max-height: 50vh; overflow-y: auto;",
-           fluidRow(uiOutput('select_comparison_county')),
-           fluidRow(
-             column(width = 6, DT::DTOutput('comp_county_demo'))
-           ),
-           fluidRow(
-             column(width = 6, DT::DTOutput('comp_county_econ_stab')),
-             column(width = 6, DT::DTOutput('comp_county_neigh'))
-           ),
-           fluidRow(
-             column(width = 6, DT::DTOutput('comp_county_edu')),
-             column(width = 6, DT::DTOutput('comp_county_food'))
-           ),
-           fluidRow(
-             column(width = 6, DT::DTOutput('comp_county_community')),
-             column(width = 6, DT::DTOutput('comp_county_health'))
-           ))
+          ))
   ),
   
   fluidRow(
