@@ -28,6 +28,8 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   remove_modifiable <- as.numeric(row$remove_modifiable)
   methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
+  
+  # empty list that will be filled in with distance matrices
   distance_list <- list()
   
   start_time <- Sys.time()
@@ -39,10 +41,6 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
-    # if((methodology == "lasso euclidean dem" | methodology == "lasso euclidean all") & (use_outcome == "chronic_kidney_disease_pct")){
-    #   debug(county_distance)
-    # }
-    
     orig_data <- data %>% 
       filter(!is.na(!!rlang::sym(use_outcome)))
     
@@ -51,6 +49,8 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
                                         sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
                                         outcome = use_outcome, dem = use_dems)
     
+    # this chunk makes the code more efficient so we don't have to tune the same model multiple times for the same outcome/variables
+    # instead, we can input tuning parameters from a past best model
     n_rows <- nrow(all_outcome_params)
     model_params <- NA
     if(length(n_rows) != 0){
@@ -61,8 +61,10 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
     
     # Get distance matrix using methodology specified
     dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
+    # all outputs from distance methodology
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
+    # best tuning parameters to save in case we need to re-run
     mtry <- dist_results[3][[1]]
     alpha <- dist_results[4][[1]]
     min_lambda <- dist_results[5][[1]]
