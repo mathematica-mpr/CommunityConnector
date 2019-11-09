@@ -135,16 +135,57 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
 }
 ```
 
+```{r Decide if we want to remove variables manually}
+# The justification behind this:
+# For example, elevation shows up in some of the models
+# Elevation is not causal, but there must be a correlation
+# I worry that elevation is correlated to other variables, perhaps a modifiable (walkability) and another nonmodifiable, or something
+# Elevation is sucking up the impact of these variables, which is fine for prediction
+# But we want to use the coefficients of the modifiable and nonmodifiable variables separately
+# If this is the case, keeping elevation would remove our ability to parse out these two impacts
+results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
+
+remove_vars <- c("elevation")
+data <- data[,!names(data) %in% remove_vars]
+data_dictionary <- data_dictionary[!data_dictionary$column_name %in% remove_vars, ]
+results_rm <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
+
+
+```
+
 ```{r}
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
+
+# look at alpha and lambdas selected
+# lambda = 0 = OLS
+# with increase in lambda, bias increases & variance decreases
+# alpha = 0 = ridge, = 1 = LASSO
+# ridge keeps all variables. could keep all for larger values of alpha too if they are all important
+# lambda penalizes the sum of the coefficients
+
+results[1][[1]] %>% 
+  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
+  unique()
+```
+```{r Which variables did it keep instead of elevation?}
+# Looks like alpha and lambda are the same or similar
+coefs_df
+
+
 ```
 
 ```{r Look at coefficients from all models}
 coefs_df <- results[3][[1]]
 colnames(coefs_df)[2:9] <- outcomes
+
 View(coefs_df)
+# probably want to remove completely:
+# although if we kept them in with more data, they would probably not be selected
+# Elevation, budget_emergency, pct_vacant
+
 colSums(!is.na(coefs_df))
 write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
+
 # which matrices would be most general/incorporate the most data
 # looking at the variables used, overobese_pct definitely uses the most
 # followed by pct obese & the std spend vars, which we won't want to use
@@ -153,23 +194,30 @@ write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
 ```
 
 ```{r Output final distance matrix}
-
+# use the 8th because this is the overobese_pct outcome model results
 final_distance <- as.data.frame(as.matrix(results[2][[1]][[8]]))
-colnames(final_distance)
-rownames(final_distance)
+final_distance$sim_county <- rownames(final_distance)
 head(final_distance)
+
+# find the minimum distance for each county that is not 0
 min_not_0 <- function(x){
+  x <- as.numeric(x)
   x <- x[x!=0]
   min(x)
 }
 apply(final_distance, 1, min_not_0)
+
 # 8031 is denver - which is it most similar to?
 final_distance %>% 
-  dplyr::select('8031')
+  mutate(distance = !!rlang::sym('8031')) %>% 
+  dplyr::select(distance, sim_county) %>%
+  filter(distance < 1 & distance != 0)
 #8005 - part of denver county area - makes sense!
 
 # the variables used in at least 4/8 models
-coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"]
+common_coefs <- as.character(coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"])
+View(coefs_df %>% 
+  filter(name %in% common_coefs))
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../../data/final_distance.csv')
