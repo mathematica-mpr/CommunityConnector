@@ -119,6 +119,8 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   metric <- "RMSE"
   n_rows <- nrow(model_params)
   
+  set.seed(1234)
+  
   if(method == "euclidean"){
     use_data <- replace_nas_mean(use_data)
     distancem <- as.matrix(dist(use_data %>% 
@@ -127,7 +129,6 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   } else if(grepl("rf",method)){
     meth <- "rf"
     use_data <- replace_nas_rf(use_data, outcome)
-    set.seed(1234)
     
     if(length(n_rows) == 0){
       # cross-validation on mtry
