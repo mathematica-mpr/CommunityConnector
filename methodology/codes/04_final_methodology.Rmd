@@ -1,7 +1,10 @@
+```{r Set up}
 rm(list = ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source('utilities.R')
+```
 
+```{r Read data}
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
 
@@ -10,15 +13,18 @@ outcomes <- data_dictionary %>%
   dplyr::select(column_name) %>% 
   mutate(column_name = as.character(column_name)) %>% 
   pull()
+```
 
-# methods = c("rf proximity","euclidean","rf prediction","lasso","lasso euclidean all","lasso euclidean dem")
+```{r One-row data frame with all parameters}
 opts <- data.frame("use_sdoh_scores" = 0,
                    "use_sdoh_raw" = 1,
                    "use_dems" =  1,
                    "remove_modifiable" = 0,
                    "methodology" = "lasso euclidean all",
                    "meth_num" = 1)
+```
 
+```{r Implement methodology for final choice}
 upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_outcome_params = NA, num_counties = NA){
   
   # Define variables from opts dataframe
@@ -70,13 +76,14 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
     min_lambda <- dist_results[5][[1]]
     coefs_df <- dist_results[6][[1]]
     
+    # use total number of counties if we didn't specify how many to use
     if(is.na(num_counties)){
       n_counties <- dim(distancem)[1]
     } else {
       n_counties <- num_counties
     }
     
-    # Loop through counties
+    # Loop through counties to get spread metrics for each county's top 5 most similar
     for(county_num in c(1:n_counties)){
       data <- select_county(orig_data, distancem, county_num)
       
@@ -107,6 +114,7 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
       
     }
     
+    # append coefficients of all models
     if(n == 1){
       coefs_all <- coefs_df
     } else {
@@ -125,35 +133,13 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   
   return(list(full_results,distance_list, coefs_all))
 }
+```
 
-# need to return the distance matrix
+```{r}
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
+```
 
-# aggregate distance matrices for all outcomes
-results[2]
-# need to standardize all first because they are on different scales
-
-# library(ape)
-# for(i in c(1:8)){
-#   # print(max(results[2][[1]][[i]]))
-#   # print(dim(results[2][[1]][[i]]))
-#   for(j in c(1:8)){
-#     # test for similarity of two matrices
-#     if(i != j){
-#       print(paste0(outcomes[i]," vs. ", outcomes[j]))
-#       print(mantel.test(as.matrix(results[2][[1]][[i]]), as.matrix(results[2][[1]][[j]]),
-#                   graph = TRUE)$p)
-#     }
-#   }
-# }
-
-# null hypothesis - no relationship between the matrices
-# Rejected - there is a relationship between the matrices
-# some combos there is a relationship and some there isn't
-
-# maybe just used pct kidney disease if this model looks good?
-# or pct diabetic or pct obese?
-# look at the coefficients
+```{r Look at coefficients from all models}
 coefs_df <- results[3][[1]]
 colnames(coefs_df)[2:9] <- outcomes
 View(coefs_df)
@@ -164,9 +150,11 @@ write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
 # followed by pct obese & the std spend vars, which we won't want to use
 # let's just use the distance matrix for overobese_pct for now
 # this also is a lower level outcome than the others (i.e. impacts them down the road, so makes sense to use)
+```
+
+```{r Output final distance matrix}
 
 final_distance <- as.data.frame(as.matrix(results[2][[1]][[8]]))
-# TODO: county-level FIPS identifier for rows and columns
 colnames(final_distance)
 rownames(final_distance)
 head(final_distance)
@@ -178,10 +166,11 @@ apply(final_distance, 1, min_not_0)
 # 8031 is denver - which is it most similar to?
 final_distance %>% 
   dplyr::select('8031')
-#8005 - part of denver county area
+#8005 - part of denver county area - makes sense!
 
 # the variables used in at least 4/8 models
 coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"]
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../../data/final_distance.csv')
+```
