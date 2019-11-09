@@ -1,7 +1,10 @@
+```{r Set up}
 rm(list = ls())
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source('utilities.R')
+```
 
+```{r Read data}
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
 
@@ -10,15 +13,18 @@ outcomes <- data_dictionary %>%
   dplyr::select(column_name) %>% 
   mutate(column_name = as.character(column_name)) %>% 
   pull()
+```
 
-# methods = c("rf proximity","euclidean","rf prediction","lasso","lasso euclidean all","lasso euclidean dem")
+```{r One-row data frame with all parameters}
 opts <- data.frame("use_sdoh_scores" = 0,
                    "use_sdoh_raw" = 1,
                    "use_dems" =  1,
                    "remove_modifiable" = 0,
                    "methodology" = "lasso euclidean all",
                    "meth_num" = 1)
+```
 
+```{r Implement methodology for final choice}
 upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_outcome_params = NA, num_counties = NA){
   
   # Define variables from opts dataframe
@@ -28,6 +34,8 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   remove_modifiable <- as.numeric(row$remove_modifiable)
   methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
+  
+  # empty list that will be filled in with distance matrices
   distance_list <- list()
   
   start_time <- Sys.time()
@@ -39,10 +47,6 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
-    # if((methodology == "lasso euclidean dem" | methodology == "lasso euclidean all") & (use_outcome == "chronic_kidney_disease_pct")){
-    #   debug(county_distance)
-    # }
-    
     orig_data <- data %>% 
       filter(!is.na(!!rlang::sym(use_outcome)))
     
@@ -51,6 +55,8 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
                                         sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
                                         outcome = use_outcome, dem = use_dems)
     
+    # this chunk makes the code more efficient so we don't have to tune the same model multiple times for the same outcome/variables
+    # instead, we can input tuning parameters from a past best model
     n_rows <- nrow(all_outcome_params)
     model_params <- NA
     if(length(n_rows) != 0){
@@ -61,20 +67,23 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
     
     # Get distance matrix using methodology specified
     dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
+    # all outputs from distance methodology
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
+    # best tuning parameters to save in case we need to re-run
     mtry <- dist_results[3][[1]]
     alpha <- dist_results[4][[1]]
     min_lambda <- dist_results[5][[1]]
     coefs_df <- dist_results[6][[1]]
     
+    # use total number of counties if we didn't specify how many to use
     if(is.na(num_counties)){
       n_counties <- dim(distancem)[1]
     } else {
       n_counties <- num_counties
     }
     
-    # Loop through counties
+    # Loop through counties to get spread metrics for each county's top 5 most similar
     for(county_num in c(1:n_counties)){
       data <- select_county(orig_data, distancem, county_num)
       
@@ -105,6 +114,7 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
       
     }
     
+    # append coefficients of all models
     if(n == 1){
       coefs_all <- coefs_df
     } else {
@@ -123,63 +133,80 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   
   return(list(full_results,distance_list, coefs_all))
 }
+```
 
-# need to return the distance matrix
+Do we want to remove variables manually?
+# The justification behind this:
+# For example, elevation shows up in some of the models
+# Elevation is not causal, but there must be a correlation
+# I worry that elevation is correlated to other variables, perhaps a modifiable (walkability) and another nonmodifiable, or something
+# Elevation is sucking up the impact of these variables, which is fine for prediction
+# But we want to use the coefficients of the modifiable and nonmodifiable variables separately
+# If this is the case, keeping elevation would remove our ability to parse out these two impacts
+
+# Decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome
+# If we decide to use another outcome, may want to test again
+
+```{r}
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
 
-# aggregate distance matrices for all outcomes
-results[2]
-# need to standardize all first because they are on different scales
+# look at alpha and lambdas selected
+# lambda = 0 = OLS
+# with increase in lambda, bias increases & variance decreases
+# alpha = 0 = ridge, = 1 = LASSO
+# ridge keeps all variables. could keep all for larger values of alpha too if they are all important
+# lambda penalizes the sum of the coefficients
 
-# library(ape)
-# for(i in c(1:8)){
-#   # print(max(results[2][[1]][[i]]))
-#   # print(dim(results[2][[1]][[i]]))
-#   for(j in c(1:8)){
-#     # test for similarity of two matrices
-#     if(i != j){
-#       print(paste0(outcomes[i]," vs. ", outcomes[j]))
-#       print(mantel.test(as.matrix(results[2][[1]][[i]]), as.matrix(results[2][[1]][[j]]),
-#                   graph = TRUE)$p)
-#     }
-#   }
-# }
+results[1][[1]] %>% 
+  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
+  unique()
+```
 
-# null hypothesis - no relationship between the matrices
-# Rejected - there is a relationship between the matrices
-# some combos there is a relationship and some there isn't
-
-# maybe just used pct kidney disease if this model looks good?
-# or pct diabetic or pct obese?
-# look at the coefficients
+```{r Look at coefficients from all models}
 coefs_df <- results[3][[1]]
 colnames(coefs_df)[2:9] <- outcomes
+
 View(coefs_df)
+# probably want to remove completely:
+# although if we kept them in with more data, they would probably not be selected
+# Elevation, budget_emergency, pct_vacant
+
 colSums(!is.na(coefs_df))
 write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
+
 # which matrices would be most general/incorporate the most data
 # looking at the variables used, overobese_pct definitely uses the most
 # followed by pct obese & the std spend vars, which we won't want to use
 # let's just use the distance matrix for overobese_pct for now
 # this also is a lower level outcome than the others (i.e. impacts them down the road, so makes sense to use)
+```
 
+```{r Output final distance matrix}
+# use the 8th because this is the overobese_pct outcome model results
 final_distance <- as.data.frame(as.matrix(results[2][[1]][[8]]))
-# TODO: county-level FIPS identifier for rows and columns
-colnames(final_distance)
-rownames(final_distance)
+final_distance$sim_county <- rownames(final_distance)
 head(final_distance)
+
+# find the minimum distance for each county that is not 0
 min_not_0 <- function(x){
+  x <- as.numeric(x)
   x <- x[x!=0]
   min(x)
 }
 apply(final_distance, 1, min_not_0)
+
 # 8031 is denver - which is it most similar to?
 final_distance %>% 
-  dplyr::select('8031')
-#8005 - part of denver county area
+  mutate(distance = !!rlang::sym('8031')) %>% 
+  dplyr::select(distance, sim_county) %>%
+  filter(distance < 1 & distance != 0)
+#8005 - part of denver county area - makes sense!
 
 # the variables used in at least 4/8 models
-coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"]
+common_coefs <- as.character(coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"])
+View(coefs_df %>% 
+  filter(name %in% common_coefs))
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../../data/final_distance.csv')
+```
