@@ -135,7 +135,7 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
 }
 ```
 
-```{r Decide if we want to remove variables manually}
+Do we want to remove variables manually?
 # The justification behind this:
 # For example, elevation shows up in some of the models
 # Elevation is not causal, but there must be a correlation
@@ -143,43 +143,9 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
 # Elevation is sucking up the impact of these variables, which is fine for prediction
 # But we want to use the coefficients of the modifiable and nonmodifiable variables separately
 # If this is the case, keeping elevation would remove our ability to parse out these two impacts
-results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
 
-remove_vars <- c("elevation")
-newdata <- data[,!names(data) %in% remove_vars]
-newdata_dictionary <- data_dictionary[!data_dictionary$column_name %in% remove_vars, ]
-results_rm <- upd_implement_methodology(opts, outcomes, newdata, newdata_dictionary)
-
-# which variables did we keep instead of elevation?
-coefs_df <- results[3][[1]] %>% 
-  dplyr::select(name, overobese_pct)
-coefs_df_rm <- results_rm[3][[1]] %>% 
-  dplyr::select(name, overobese_pct)
-coefs_df %>% 
-  merge(coefs_df_rm, by = "name", all = TRUE) %>% 
-  filter(!is.na(overobese_pct.x) | !is.na(overobese_pct.y))
-
-# Full model: includes elevation, community health centers pp
-# maybe alpha and lambda changed?
-results[1][[1]] %>% 
-  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
-  unique()
-results_rm[1][[1]] %>% 
-  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
-  unique()
-# has a slightly higher lambda now, which penalizes coefficients more so it had to remove another variable
-
-# which variables did it not select at all?
-# are there any modifiable variables we are concerned that it didn't include - perhaps it would include them if there are other variables that we don't think are causal that we could remove
-data_dictionary %>% 
-  filter(!column_name %in% coefs_df$name) %>% 
-  filter(outcome != 1) %>% 
-  filter(sdoh_score != 1) %>% 
-  filter(data_type != "ID") %>% 
-  dplyr::select(column_name)
-# some buget variables, but doesn't seem these would impact obesity
-# kidney hospitals per person wouldn't impact obesity - does this var show up in other models? Same for mds_dos_pp_rate
-results[3][[1]] # these variables don't show up, but probably not a big deal
+# Decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome
+# If we decide to use another outcome, may want to test again
 ```
 
 ```{r}
