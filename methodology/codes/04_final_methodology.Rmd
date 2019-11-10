@@ -147,35 +147,7 @@ Do we want to remove variables manually?
 # Decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome
 # If we decide to use another outcome, may want to test again
 
-```{r Do we want to normalize variables prior to the model?}
-# Look at how results change
-results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
-
-numeric_cols <- unlist(lapply(data, is.numeric)) 
-newdata <- data
-newdata[,numeric_cols] <- scale(newdata[,numeric_cols])
-results_scale <- upd_implement_methodology(opts, outcomes, newdata, data_dictionary)
-
-results[1][[1]] %>% 
-  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
-  unique()
-results_scale[1][[1]] %>% 
-  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
-  unique()
-# chose much larger lambda - makes sense because with normalizing the variables, there are some especially that are getting much smaller
-
-coefs_df <- results[3][[1]]
-coefs_scale <- results_scale[3][[1]]
-
-coefs_df %>% 
-  filter(!is.na(overobese_pct)) %>% 
-  dplyr::select(name, overobese_pct) %>% 
-  merge(coefs_scale %>% 
-          filter(!is.na(overobese_pct)) %>% 
-          dplyr::select(name, overobese_pct), by = "name", all = TRUE)
-# things that changed that make sense: intercept got smaller, job growth coefficient got smaller, etc...
-
-```
+r Do we want to normalize variables prior to the model? Yes - the changes seemed to make sense
 
 ```{r}
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
