@@ -8,20 +8,30 @@ source('utilities.R')
 data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
 data <- read.csv('../../data/final_data.csv')
 
-outcomes <- data_dictionary %>% 
-  filter(outcome == 1) %>% 
-  dplyr::select(column_name) %>% 
-  mutate(column_name = as.character(column_name)) %>% 
-  pull()
+# outcomes <- data_dictionary %>% 
+#   filter(outcome == 1) %>% 
+#   dplyr::select(column_name) %>% 
+#   mutate(column_name = as.character(column_name)) %>% 
+#   pull()
+outcomes <- c("overobese_pct")
 ```
 
 ```{r One-row data frame with all parameters}
+method <- "lasso euclidean all"
 opts <- data.frame("use_sdoh_scores" = 0,
                    "use_sdoh_raw" = 1,
                    "use_dems" =  1,
                    "remove_modifiable" = 0,
-                   "methodology" = "lasso euclidean all",
+                   "methodology" = method,
                    "meth_num" = 1)
+if(method %in% c("lasso euclidean all","lasso euclidean dem")){
+  num_cols <- unlist(lapply(data, is.numeric))
+  data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols])
+}
+
+# check to make sure fips wasn't normalized
+head(data$fips)
+
 ```
 
 ```{r Implement methodology for final choice}
@@ -34,6 +44,11 @@ upd_implement_methodology <- function(row, outcomes, data, data_dictionary, all_
   remove_modifiable <- as.numeric(row$remove_modifiable)
   methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
+  
+  # check for normal variables
+  if(method %in% c("lasso euclidean all","lasso euclidean dem")){
+    message("All variables must be normalized")
+  }
   
   # empty list that will be filled in with distance matrices
   distance_list <- list()
@@ -147,6 +162,8 @@ Do we want to remove variables manually?
 # Decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome
 # If we decide to use another outcome, may want to test again
 
+Do we want to normalize variables prior to the model? Yes - the changes seemed to make sense
+
 ```{r}
 results <- upd_implement_methodology(opts, outcomes, data, data_dictionary)
 
@@ -164,14 +181,7 @@ results[1][[1]] %>%
 
 ```{r Look at coefficients from all models}
 coefs_df <- results[3][[1]]
-colnames(coefs_df)[2:9] <- outcomes
 
-View(coefs_df)
-# probably want to remove completely:
-# although if we kept them in with more data, they would probably not be selected
-# Elevation, budget_emergency, pct_vacant
-
-colSums(!is.na(coefs_df))
 write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
 
 # which matrices would be most general/incorporate the most data
@@ -182,8 +192,7 @@ write.csv(coefs_df, '../../data/lasso_coefficients.csv',row.names = FALSE)
 ```
 
 ```{r Output final distance matrix}
-# use the 8th because this is the overobese_pct outcome model results
-final_distance <- as.data.frame(as.matrix(results[2][[1]][[8]]))
+final_distance <- as.data.frame(as.matrix(results[2][[1]][[1]]))
 final_distance$sim_county <- rownames(final_distance)
 head(final_distance)
 
@@ -199,13 +208,9 @@ apply(final_distance, 1, min_not_0)
 final_distance %>% 
   mutate(distance = !!rlang::sym('8031')) %>% 
   dplyr::select(distance, sim_county) %>%
-  filter(distance < 1 & distance != 0)
+  filter(distance < 5 & distance != 0)
 #8005 - part of denver county area - makes sense!
-
-# the variables used in at least 4/8 models
-common_coefs <- as.character(coefs_df[which(rowSums(!is.na(coefs_df))>=5),"name"])
-View(coefs_df %>% 
-  filter(name %in% common_coefs))
+#after standardizing, got 8059 Jefferson county which is also near Denver
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../../data/final_distance.csv')
