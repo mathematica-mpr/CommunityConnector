@@ -441,7 +441,7 @@ density_plot(df_outcome1)
 
 #Other Styles
 #Density Plots with Rug--------
-p <- ggplot(df_outcome1, aes(x = value)) +
+ggplot(df_outcome1, aes(x = value)) +
   geom_density(fill = paste0(config$colors$grey50), color = paste0(config$colors$grey50), alpha = .7) +
   geom_rug(aes(color = type)) + 
   geom_vline(xintercept = filter(df_outcome1, type=='selected')$value, color = paste0(config$colors$yellow100), size = .7) +
@@ -451,8 +451,7 @@ p <- ggplot(df_outcome1, aes(x = value)) +
   ggtitle(paste(df_outcome1$description[1])) +
   ylab("Density") +
   xlab("Value")
-ggplotly(p)
-p <- ggplot(df_outcome1, aes(x = value)) +
+ggplot(df_outcome1, aes(x = value)) +
   geom_density(fill = paste0(config$colors$grey50), color = paste0(config$colors$grey50), alpha = .7) +
   geom_point(aes(x = value, y = 0, color = type), alpha = .7, shape = 18, size = 3) +
   geom_segment(aes(x = filter(df_outcome1, type=='selected')$value, xend = filter(df_outcome1, type=='selected')$value,
@@ -464,9 +463,9 @@ p <- ggplot(df_outcome1, aes(x = value)) +
   ggtitle(paste(df_outcome1$description[1])) +
   ylab("Density") +
   xlab("Value") 
-p
+
 #density plot for matches and non matches------
-p <- ggplot(df_outcome1, aes(x = value)) +
+ggplot(df_outcome1, aes(x = value)) +
   geom_density(aes(fill = type, color = type, alpha = .7)) +
   geom_point(aes(x = value, y = 0, color = type), alpha = .7, shape = 18, size = 3) +
   geom_segment(aes(x = filter(df_outcome1, type=='selected')$value, xend = filter(df_outcome1, type=='selected')$value,
@@ -478,10 +477,8 @@ p <- ggplot(df_outcome1, aes(x = value)) +
   ggtitle(paste(df_outcome1$description[1])) +
   ylab("Density") +
   xlab("Value")
-p
 
 #violin plot for matches and non matches------
-
 test <- filter(df_outcome1, type != 'selected')
 ggplot(test, aes(x = type, y = value)) +
   geom_violin(aes(fill = type, 
@@ -504,4 +501,5 @@ ggplot(test, aes(x = type, y = value)) +
   ylab("Density") +
   xlab("Value") +
   coord_flip()
+
 
