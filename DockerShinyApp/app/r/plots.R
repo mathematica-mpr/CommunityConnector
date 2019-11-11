@@ -1,4 +1,4 @@
-county_fips <- "8023"
+county_fips <- "8065"
 
 county_dat <- dat %>% filter(fips == county_fips)
 
@@ -439,13 +439,8 @@ density_plot <- function(outcome_df){
 }
 density_plot(df_outcome1)
 
-
-
-
-
-
-
-#Density Plot with Rug--------
+#Other Styles
+#Density Plots with Rug--------
 p <- ggplot(df_outcome1, aes(x = value)) +
   geom_density(fill = paste0(config$colors$grey50), color = paste0(config$colors$grey50), alpha = .7) +
   geom_rug(aes(color = type)) + 
@@ -457,28 +452,52 @@ p <- ggplot(df_outcome1, aes(x = value)) +
   ylab("Density") +
   xlab("Value")
 ggplotly(p)
-
-#density plot for matches and non matches
+p <- ggplot(df_outcome1, aes(x = value)) +
+  geom_density(fill = paste0(config$colors$grey50), color = paste0(config$colors$grey50), alpha = .7) +
+  geom_point(aes(x = value, y = 0, color = type), alpha = .7, shape = 18, size = 3) +
+  geom_segment(aes(x = filter(df_outcome1, type=='selected')$value, xend = filter(df_outcome1, type=='selected')$value,
+                   y = 0, yend = .3, color = paste0(config$colors$yellow100)), lineend = 18) +
+  scale_color_manual(values = c(paste0(config$colors$yellow100), paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  ylim(0,.3) +
+  theme_bw() +
+  theme(legend.position = 'none') +
+  ggtitle(paste(df_outcome1$description[1])) +
+  ylab("Density") +
+  xlab("Value") 
+p
+#density plot for matches and non matches------
 p <- ggplot(df_outcome1, aes(x = value)) +
   geom_density(aes(fill = type, color = type, alpha = .7)) +
-  geom_rug(aes(color = type)) + 
-  geom_vline(xintercept = filter(df_outcome1, type=='selected')$value, color = paste0(config$colors$yellow100), size = .7) +
-  scale_color_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  geom_point(aes(x = value, y = 0, color = type), alpha = .7, shape = 18, size = 3) +
+  geom_segment(aes(x = filter(df_outcome1, type=='selected')$value, xend = filter(df_outcome1, type=='selected')$value,
+                   y = 0, yend = .4, color = paste0(config$colors$yellow100)), lineend = 18) +
+  scale_color_manual(values = c(paste0(config$colors$yellow100), paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
   scale_fill_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
   theme_bw() +
   theme(legend.position = "none") + 
   ggtitle(paste(df_outcome1$description[1])) +
   ylab("Density") +
   xlab("Value")
-ggplotly(p)
+p
 
-#violin plot for matches and non matches
+#violin plot for matches and non matches------
+
 test <- filter(df_outcome1, type != 'selected')
-p <- ggplot(test, aes(x = type, y = value)) +
-  geom_violin(aes(fill = type, color = type, alpha = .7), trim = FALSE, adjust = .7) + 
-  geom_vline(xintercept = 5) +
-  scale_fill_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
-  scale_color_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+ggplot(test, aes(x = type, y = value)) +
+  geom_violin(aes(fill = type, 
+                  color = type, alpha = .7), 
+              trim = FALSE) + 
+  geom_dotplot(aes(color = type, fill = type, alpha = .9), 
+               binaxis = 'y', 
+               stackdir = 'center', 
+               position = position_dodge(1)) +
+  #geom_hline(yintercept = filter(df_outcome1, type=='selected')$value) +
+  scale_fill_manual(values = c(paste0(config$colors$teal100), 
+                               'purple', 
+                               paste0(config$colors$yellow100))) +
+  scale_color_manual(values = c(paste0(config$colors$teal100), 
+                                'purple',
+                                paste0(config$colors$yellow100))) +
   theme_bw() +
   theme(legend.position = "none") + 
   ggtitle(paste(df_outcome1$description[1])) +
