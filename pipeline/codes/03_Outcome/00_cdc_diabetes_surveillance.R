@@ -1,4 +1,5 @@
-setwd("~/AHRQ SDOH")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd('../../../data/raw/')
 
 library(readxl)
 
@@ -65,7 +66,8 @@ colorado$diabetes_prevalence_5_year_diff<-colorado$diabetes_prevalence_2016-colo
 colorado$obesity_prevalence_5_year_diff<-colorado$obesity_prevalence_2016-colorado$obesity_prevalence_2011
 
 ## keep only 2016 and 5 year difference
-colorado<-colorado[,c(1,2,4,6,8:11)]
+colorado<-colorado[,c(2,4,6,8:11)]
 
-write.csv(colorado, "CDC_Diabetes_Outcome_Data.csv", row.names=F)
+head(colorado)
 
+write.csv(colorado, "../cleaned/03_Outcome/CDC_Diabetes_Outcome_Data.csv", row.names=F)
