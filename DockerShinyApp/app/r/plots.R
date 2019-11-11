@@ -306,36 +306,29 @@ density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
   line <- list(
     type = "line",
     xref = "x",
-    yref = "y"
+    yref = "y",
+    y0 = 0,
+    y1 = max(dens$y)*.1 + max(dens$y)
   )
   vlines_matches <- list()
   for (i in line_matches) {
-    line[["y0"]] <- 0
     line[["line"]] = list(color = paste0(config$colors$teal100))
-    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
     line[c("x0", "x1")] <- i
     line[['opacity']] <- .4
     vlines_matches <- c(vlines_matches, list(line))
   }
   vlines_other <- list()
   for (i in line_other) {
-    line[["y0"]] <- 0
-    line[["line"]] = list(color = 'purple')
-    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
+    line[["line"]] = list(color = "#360B7F")
     line[c("x0", "x1")] <- i
     line[['opacity']] <- .4
     vlines_other <- c(vlines_other, list(line))
   }
-  vlines_mycounty <- list()
-  for (i in line_mycounty) {
-    line[["y0"]] <- 0
-    line[["line"]] = list(color = paste0(config$colors$yellow100), width = 5)
-    line[["y1"]] <- max(dens$y)*.1 + max(dens$y)
-    line[c("x0", "x1")] <- i
-    line[['opacity']] <- 1
-    vlines_mycounty <- c(vlines_mycounty, list(line))
-  }
-  all <- c(vlines_matches, vlines_other, vlines_mycounty)
+  #line[["line"]] = list(color = paste0(config$colors$yellow100), width = 5)
+  line[["line"]] = list(color = "#FFFF00", width = 5)
+  line[c("x0", "x1")] <- line_mycounty
+  line[['opacity']] <- 1
+  all <- c(vlines_matches, vlines_other, list(line))
   
   #plotly density plot
   p <- plot_ly(
@@ -355,7 +348,81 @@ density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
         text = paste(outcome_df$description[1]),
         font = list(
          size = 18,
-         color = 'purple'
+         color = "#360B7F"
+        ),
+        xref = 'paper',
+        x = '0'
+      ),
+      shapes = all,
+      xaxis = list(
+        title = ""
+      ),
+      yaxis = list(
+        title = "Density"
+      )
+    )
+  return(p)
+}
+density_plot(dat, dd, county_fips, 1)
+
+#Density Plot Function 2----
+density_plot <- function(outcome_df){
+  #function to output density plot for one outcome
+  dens <- density(outcome_df$value)
+  #filtering by match
+  line_matches <- filter(outcome_df, type == 'matches') %>% 
+    pull(value)
+  line_other <- filter(outcome_df, type == 'other') %>% 
+    pull(value)
+  line_mycounty <- filter(outcome_df, type == 'selected') %>% 
+    pull(value)
+  #horizontal lines for each outcome value
+  line <- list(
+    type = "line",
+    xref = "x",
+    yref = "y",
+    y0 = 0,
+    y1 = max(dens$y)*.1 + max(dens$y)
+  )
+  vlines_matches <- list()
+  for (i in line_matches) {
+    line[["line"]] = list(color = paste0(config$colors$teal100))
+    line[c("x0", "x1")] <- i
+    line[['opacity']] <- .4
+    vlines_matches <- c(vlines_matches, list(line))
+  }
+  vlines_other <- list()
+  for (i in line_other) {
+    line[["line"]] = list(color = "#360B7F")
+    line[c("x0", "x1")] <- i
+    line[['opacity']] <- .4
+    vlines_other <- c(vlines_other, list(line))
+  }
+  #line[["line"]] = list(color = paste0(config$colors$yellow100), width = 5)
+  line[["line"]] = list(color = "#FFFF00", width = 5)
+  line[c("x0", "x1")] <- line_mycounty
+  line[['opacity']] <- 1
+  all <- c(vlines_matches, vlines_other, list(line))
+  
+  #plotly density plot
+  p <- plot_ly(
+    type = 'scatter',
+    mode = 'lines',
+    x = ~dens$x,
+    y = ~dens$y,
+    fill = 'tozeroy',
+    fillcolor = paste0(config$colors$grey50),
+    line = list(
+      color = paste0(config$colors$grey50)
+    ),
+    hoverinfo = 'none'
+  ) %>% 
+    layout(
+      title = list(
+        text = paste(outcome_df$description[1]),
+        font = list(
+          size = 18,
+          color = "#360B7F"
         ),
         xref = 'paper',
         x = '0'
@@ -371,6 +438,7 @@ density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
   return(p)
 }
 
-density_plot(dat, dd, county_fips, 1)
+density_plot(df_outcome1)
+
 
 
