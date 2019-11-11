@@ -437,8 +437,52 @@ density_plot <- function(outcome_df){
     )
   return(p)
 }
-
 density_plot(df_outcome1)
 
 
+
+
+
+
+
+#Density Plot with Rug--------
+p <- ggplot(df_outcome1, aes(x = value)) +
+  geom_density(fill = paste0(config$colors$grey50), color = paste0(config$colors$grey50), alpha = .7) +
+  geom_rug(aes(color = type)) + 
+  geom_vline(xintercept = filter(df_outcome1, type=='selected')$value, color = paste0(config$colors$yellow100), size = .7) +
+  scale_color_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  theme_bw() +
+  theme(legend.position = "none") + 
+  ggtitle(paste(df_outcome1$description[1])) +
+  ylab("Density") +
+  xlab("Value")
+ggplotly(p)
+
+#density plot for matches and non matches
+p <- ggplot(df_outcome1, aes(x = value)) +
+  geom_density(aes(fill = type, color = type, alpha = .7)) +
+  geom_rug(aes(color = type)) + 
+  geom_vline(xintercept = filter(df_outcome1, type=='selected')$value, color = paste0(config$colors$yellow100), size = .7) +
+  scale_color_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  scale_fill_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  theme_bw() +
+  theme(legend.position = "none") + 
+  ggtitle(paste(df_outcome1$description[1])) +
+  ylab("Density") +
+  xlab("Value")
+ggplotly(p)
+
+#violin plot for matches and non matches
+test <- filter(df_outcome1, type != 'selected')
+p <- ggplot(test, aes(x = type, y = value)) +
+  geom_violin(aes(fill = type, color = type, alpha = .7), trim = FALSE, adjust = .7) + 
+  geom_vline(xintercept = 5) +
+  scale_fill_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  scale_color_manual(values = c(paste0(config$colors$teal100), 'purple', paste0(config$colors$yellow100))) +
+  theme_bw() +
+  theme(legend.position = "none") + 
+  ggtitle(paste(df_outcome1$description[1])) +
+  ylab("Density") +
+  xlab("Value") +
+  coord_flip()
 
