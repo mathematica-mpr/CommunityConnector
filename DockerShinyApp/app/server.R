@@ -324,16 +324,10 @@ server <- function(input, output) {
     
     sdohs <- sdoh_dd %>% pull(column_name)
     
-    # find number of rows for plot
-    plot_nrows <- ceiling(length(my_matches()) / 5)
-
     df <- dat %>% select(fips, state, county, sdohs) %>%
-      filter(fips %in% my_matches()) %>%
-      group_by(fips) %>%
-      nest() %>%
-      mutate(radar_char = purrr::map(data, radar_chart, dd))
+      filter(fips %in% my_matches())
     
-    subplot(nrows = 4, df$radar_char)
+    grid_radar(df, dd)
   })
   
   output$map_header <- renderUI({
