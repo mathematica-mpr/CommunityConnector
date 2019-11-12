@@ -17,51 +17,43 @@ ui <- fluidPage(#theme = "styles.css",
                              btnSearch = icon('search'), value = "8001"),
                  textOutput('county_selection_message')),
     mainPanel(width = 10, 
-              tabsetPanel(type = 'tabs',
-                          tabPanel("Radar Charts",
-                                   fluidRow(
-                                     column(width = 12, 
-                                            style = "max-height: 60vh; overflow-y: auto;",
-                                            fluidRow(
-                                              column(width = 3, htmlOutput("my_county_name")),
-                                              column(width = 3, 
-                                                     uiOutput('select_comparison_county'))),
-                                            fluidRow(
-                                              column(width = 6, plotlyOutput("my_county_radar")),
-                                              column(width = 6, 
-                                                     DT::DTOutput("my_county_demo"))
-                                            ),
-                                            fluidRow(
-                                              column(width = 6, DT::DTOutput('my_county_econ_stab')),
-                                              column(width = 6, DT::DTOutput('my_county_neigh'))
-                                            ),
-                                            fluidRow(
-                                              column(width = 6, DT::DTOutput('my_county_edu')),
-                                              column(width = 6, DT::DTOutput('my_county_food'))
-                                            ),
-                                            fluidRow(
-                                              column(width = 6, DT::DTOutput('my_county_community')),
-                                              column(width = 6, DT::DTOutput('my_county_health'))
-                                            ))),
-                                   fluidRow(
-                                     column(width = 12, 
-                                            fluidRow(uiOutput('my_matches_header')),
-                                            fluidRow(plotlyOutput("compare_county_radars",
-                                                                  height = "1000px"))),
-                                   )),
-                          tabPanel("Health Outcomes",
-                                   column(width = 6,
+              column(width = 6, 
+                     # style = "max-height: 60vh; overflow-y: auto;",
+                     fluidRow(
+                       column(width = 6, htmlOutput("my_county_name")),
+                       column(width = 6, 
+                              uiOutput('select_comparison_county'))),
+                     fluidRow(
+                       column(width = 12, plotlyOutput("my_county_radar",
+                                                      height = "700px")))),
+              column(width = 6,
+                     tabsetPanel(type = 'tabs',
+                                 tabPanel("My Matches",
+                                          plotlyOutput("compare_county_radars",
+                                                       height = "700px")),
+                                 tabPanel("Demographics",
+                                          fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
+                                          fluidRow(
+                                            column(width = 6, DT::DTOutput('my_county_econ_stab')),
+                                            column(width = 6, DT::DTOutput('my_county_neigh'))
+                                          ),
+                                          fluidRow(
+                                            column(width = 6, DT::DTOutput('my_county_edu')),
+                                            column(width = 6, DT::DTOutput('my_county_food'))
+                                          ),
+                                          fluidRow(
+                                            column(width = 6, DT::DTOutput('my_county_community')),
+                                            column(width = 6, DT::DTOutput('my_county_health'))
+                                          )),
+                                 tabPanel("Health Outcomes",
                                           fluidRow(uiOutput('health_outcomes_header')),
                                           fluidRow(
                                             div(id = "density_plot_container",
                                                 uiOutput(outputId = "density_graphs_ui")))),
-                                   
-                                   fluidRow(
-                                     column(width = 6, 
-                                            fluidRow(uiOutput('map_header')),
-                                            fluidRow(plotlyOutput("map")))))
+                                 tabPanel("County Map",
+                                          fluidRow(plotlyOutput("map")))
+                     )
               )
     )
   )
-  
 )
