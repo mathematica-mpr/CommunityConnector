@@ -111,14 +111,14 @@ radar_chart <- function(df, dictionary) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      name = paste(df$county, df$state),
+      name = paste0(df$county, ", ", df$state),
       hovertemplate = ~paste('<b>Category</b>: %{theta}',
                              '<br><b>Score</b>: %{r:.2f}',
                              '<extra></extra>')
     ) %>% 
     layout(
       title = list(
-        text = paste(df$county, df$state),
+        text = paste0(df$county, ", ", df$state),
         font = list(
           size = 18
         ),
@@ -146,7 +146,8 @@ radar_chart <- function(df, dictionary) {
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
-      margin = list(t=70)
+      margin = list(t=70),
+      showlegend = T
     )
   return(p)
 }
@@ -189,7 +190,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
                     opacity = 1),
       opacity = .6,
       hoverinfo = 'none',
-      name = paste(df2[1,1], "County")
+      name = paste0(df2$county, ", ", df2$state)
     ) %>% 
     add_trace(
       type = 'scatterpolar',
@@ -210,11 +211,11 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       opacity = .9,
       #hover label
       hoverinfo = 'none',
-      name = paste(df1[1,1], "County")
+      name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(
       title = list(
-        text = paste(df2[1,1], "County,", df2[1,2]),
+        text = paste0(df1$county, ", ", df1$state),
         font = list(
           size = 18
         ),
