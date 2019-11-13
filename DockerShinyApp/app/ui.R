@@ -30,7 +30,10 @@ ui <- fluidPage(#theme = "styles.css",
                      tabsetPanel(type = 'tabs',
                                  tabPanel("My Matches",
                                           plotlyOutput("compare_county_radars",
-                                                       height = "700px")),
+                                                       height = "700px"),
+                                          br(),
+                                          HTML("<center>ES: Economic Stability, NEP: Neighborhood & Physical Environment, <br>
+                                               E = Education, F = Food, C = Community, HC = Health Coverage </center>")),
                                  tabPanel("Demographics",
                                           fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
                                           fluidRow(
