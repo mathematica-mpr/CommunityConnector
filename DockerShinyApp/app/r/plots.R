@@ -272,20 +272,19 @@ radar_chart_overlay(testdf, testdf2, dd)
 
 
 #Density plot: GGplot, Dot Rug-----
-p <- ggplot(df_outcome1, aes(x = value)) +
+ggplot(df_outcome1, aes(x = value)) +
   geom_density(fill = paste0(config$colors$grey50), 
                color = paste0(config$colors$grey50), alpha = .7) +
-  geom_point(data = filter(df_outcome1, type == 'matches'), aes(x = value, y = 0),
-             color = config$colors$teal100,
+  geom_point(data = filter(df_outcome1, type != 'other'), aes(x = value, y = 0, color = type),
              shape = 18,
              size = 3.5, 
              alpha = .7) +
   geom_vline(xintercept = filter(df_outcome1, type == 'selected')$value,
              color = paste0(config$colors$yellow125),
              size = 1,
-             linetype = 4) +
-  scale_color_manual(values = c('purple', 
-                                paste0(config$colors$teal100), 
+             linetype = 5) +
+  scale_color_manual(values = c(paste0(config$colors$teal100), 
+                                paste0(config$colors$yellow125), 
                                 paste0(config$colors$yellow125))) +
   scale_y_continuous(expand = c(0,0)) +
   scale_x_continuous(expand = c(0,0)) +
@@ -324,9 +323,12 @@ plot_ly(
       opacity = .8,
       size = 9
     ),
+    line = list(
+      width = 0
+    ),
     text = filter(df_outcome1, type == 'matches')$county,
-    textposition = "top",
     hoverinfo = 'text',
+    textposition = "top left",
     cliponaxis = F
   ) %>% 
   add_trace(
@@ -369,16 +371,127 @@ plot_ly(
       )
     ),
     xaxis = list(
-      title = ""
+      title = "",
+      showgrid = F,
+      zeroline = T
     ),
     yaxis = list(
-      title = "Density"
+      title = "Density",
+      showgrid = F,
+      showline = T
     ),
     showlegend = F
   )
 
 
 
+#Density plot: All + Matches, Plotly, dot rug------
+dens <- density(df_outcome1$value)
+dens_matches <- filter(df_outcome1, type == 'matches') %>% 
+  pull(value) %>% 
+  density()
+
+plot_ly(
+  type = 'scatter',
+  mode = 'lines',
+  x = ~dens$x,
+  y = ~dens$y,
+  fill = 'tozeroy',
+  fillcolor = paste0(config$colors$grey100, '70'),
+  line = list(
+    color = paste0(config$colors$grey100)
+  ),
+  name = "All Counties",
+  hoverinfo = 'name'
+) %>% 
+  add_trace(
+    type = 'scatter',
+    mode = 'lines',
+    x = ~dens_matches$x,
+    y = ~dens_matches$y,
+    fill = 'tozeroy',
+    fillcolor = paste0(config$colors$purple100, '65'),
+    line = list(
+      color = paste0(config$colors$purple100)
+    ),
+    name = 'Matching Counties',
+    hoverinfo = 'name'
+  ) %>% 
+  add_trace(
+    type = 'scatter',
+    mode = 'markers',
+    x = filter(df_outcome1, type == 'matches')$value,
+    y = 0, 
+    marker = list(
+      symbol = 'diamond',
+      color = paste0(config$colors$teal100),
+      opacity = .8,
+      size = 9
+    ),
+    line = list(
+      width = 0
+    ),
+    text = filter(df_outcome1, type == 'matches')$county,
+    hoverinfo = 'text',
+    textposition = "top left",
+    cliponaxis = F
+  ) %>% 
+  add_trace(
+    type = 'scatter',
+    mode = 'markers',
+    x = filter(df_outcome1, type == 'selected')$value,
+    y = 0,
+    marker = list(
+      symbol = 'diamond',
+      color = paste0(config$colors$yellow125),
+      opacity = 1,
+      size = 9
+    ),
+    text = 'My County',
+    hoverinfo = 'text',
+    cliponaxis = F
+  ) %>% 
+  layout(
+    title = list(
+      text = paste(df_outcome1$description[1]),
+      font = list(
+        size = 18,
+        color = paste0(config$colors$purple100)
+      ),
+      xref = 'paper',
+      x = '0'
+    ),
+    hoverlabel = list(
+      namelength = 18
+    ),
+    shapes = list(
+      type = 'line',
+      xref = 'x',
+      yref = 'y',
+      x0 = filter(df_outcome1, type == 'selected')$value,
+      x1 = filter(df_outcome1, type == 'selected')$value,
+      y0 = 0,
+      y1 = max(dens$y)*.05 + max(dens$y),
+      line = list(
+        color = paste0(config$colors$yellow125),
+        width = 3,
+        dash = 'dash'
+      )
+    ),
+    xaxis = list(
+      title = "",
+      showgrid = F,
+      zeroline = T
+    ),
+    yaxis = list(
+      title = "Density",
+      showgrid = F,
+      showline = T
+    ),
+    showlegend = F
+  )
+
+#
 #density plot: all counties and only matches------
 data_match <- filter(df_outcome1, type != 'other')
 ggplot(df_outcome1, aes(x = value)) +
@@ -410,6 +523,10 @@ ggplot(df_outcome1, aes(x = value)) +
   xlab("Value") 
 
 #other Denstiy Plots
+
+
+
+
 #Density Plot Function-----
 density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
   #function to output density plot for one outcome
