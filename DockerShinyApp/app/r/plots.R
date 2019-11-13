@@ -422,9 +422,9 @@ density_plot <- function(data) {
       line = list(
         width = 0
       ),
-      hovertext = filter(data, type == 'matches')$county,
+      text = filter(data, type == 'matches')$county,
       hoverinfo = 'text',
-      textposition = "topright",
+      textposition = "top right",
       cliponaxis = F
     ) %>% 
     #Markers for my County
