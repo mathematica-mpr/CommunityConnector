@@ -1,5 +1,5 @@
 county_fips <- "8001"
-
+county_fips <- "8071"
 county_dat <- dat %>% filter(fips == county_fips)
 
 st <- dat %>% pull(state) %>% unique()
@@ -271,50 +271,25 @@ radar_chart_overlay(testdf, testdf2, dd)
 
 
 
-#Density plot: GGplot, Dot Rug-----
-ggplot(df_outcome1, aes(x = value)) +
-  geom_density(fill = paste0(config$colors$grey50), 
-               color = paste0(config$colors$grey50), alpha = .7) +
-  geom_point(data = filter(df_outcome1, type != 'other'), aes(x = value, y = 0, color = type),
-             shape = 18,
-             size = 3.5, 
-             alpha = .7) +
-  geom_vline(xintercept = filter(df_outcome1, type == 'selected')$value,
-             color = paste0(config$colors$yellow125),
-             size = 1,
-             linetype = 5) +
-  scale_color_manual(values = c(paste0(config$colors$teal100), 
-                                paste0(config$colors$yellow125), 
-                                paste0(config$colors$yellow125))) +
-  scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(expand = c(0,0)) +
-  theme_bw() +
-  theme(legend.position = "none", 
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank()) +
-  coord_cartesian(clip = 'off') +
-  ggtitle(paste(df_outcome1$description[1])) +
-  ylab("Density") +
-  xlab("Value") 
 
 #Density plot: Plotly, Dot Rug-----
 dens <- density(df_outcome1$value)
-plot_ly(
-  type = 'scatter',
-  mode = 'lines',
-  x = ~dens$x,
-  y = ~dens$y,
-  fill = 'tozeroy',
-  fillcolor = paste0(config$colors$purple100, '70'),
-  line = list(
-    color = paste0(config$colors$purple100)
-  ),
-  hoverinfo = 'none'
-) %>% 
+plot_ly() %>% 
   add_trace(
     type = 'scatter',
-    mode = 'markers',
+    mode = 'lines',
+    x = ~dens$x,
+    y = ~dens$y,
+    fill = 'tozeroy',
+    fillcolor = paste0(config$colors$purple100, '55'),
+    line = list(
+      color = paste0(config$colors$purple100)
+    ),
+    hoverinfo = 'none'
+  ) %>% 
+  add_trace(
+    type = 'scatter',
+    mode = 'markers+lines',
     x = filter(df_outcome1, type == 'matches')$value,
     y = 0, 
     marker = list(
@@ -391,35 +366,38 @@ dens_matches <- filter(df_outcome1, type == 'matches') %>%
   pull(value) %>% 
   density()
 
-plot_ly(
-  type = 'scatter',
-  mode = 'lines',
-  x = ~dens$x,
-  y = ~dens$y,
-  fill = 'tozeroy',
-  fillcolor = paste0(config$colors$grey100, '70'),
-  line = list(
-    color = paste0(config$colors$grey100)
-  ),
-  name = "All Counties",
-  hoverinfo = 'name'
-) %>% 
+plot_ly() %>%
+  add_trace(
+    type = 'scatter',
+    mode = 'lines',
+    x = ~dens$x,
+    y = ~dens$y,
+    line = list(
+      color = paste0(config$colors$grey100),
+      width = 2
+    ),
+    fill = 'tozeroy',
+    fillcolor = paste0(config$colors$grey100, '70'),
+    name = "All Counties",
+    hoverinfo = 'name'
+  ) %>% 
   add_trace(
     type = 'scatter',
     mode = 'lines',
     x = ~dens_matches$x,
     y = ~dens_matches$y,
     fill = 'tozeroy',
-    fillcolor = paste0(config$colors$purple100, '65'),
+    fillcolor = paste0(config$colors$teal100, '60'),
     line = list(
-      color = paste0(config$colors$purple100)
+      color = paste0(config$colors$teal100), 
+      width = 2
     ),
     name = 'Matching Counties',
     hoverinfo = 'name'
   ) %>% 
   add_trace(
     type = 'scatter',
-    mode = 'markers',
+    mode = 'markers+lines',
     x = filter(df_outcome1, type == 'matches')$value,
     y = 0, 
     marker = list(
@@ -438,7 +416,7 @@ plot_ly(
   ) %>% 
   add_trace(
     type = 'scatter',
-    mode = 'markers',
+    mode = 'markers+lines',
     x = filter(df_outcome1, type == 'selected')$value,
     y = 0,
     marker = list(
@@ -471,11 +449,11 @@ plot_ly(
       x0 = filter(df_outcome1, type == 'selected')$value,
       x1 = filter(df_outcome1, type == 'selected')$value,
       y0 = 0,
-      y1 = max(dens$y)*.05 + max(dens$y),
+      y1 = max(dens$y, dens_matches$y)*.05 + max(dens$y, dens_matches$y),
       line = list(
         color = paste0(config$colors$yellow125),
         width = 3,
-        dash = 'dash'
+        dash = 'longdash'
       )
     ),
     xaxis = list(
@@ -491,41 +469,35 @@ plot_ly(
     showlegend = F
   )
 
-#
-#density plot: all counties and only matches------
-data_match <- filter(df_outcome1, type != 'other')
+
+
+#other Denstiy Plots
+#Density plot: GGplot, Dot Rug-----
 ggplot(df_outcome1, aes(x = value)) +
   geom_density(fill = paste0(config$colors$grey50), 
-               color = paste0(config$colors$grey50), 
-               alpha = .7) +
-  geom_density(data = data_match, 
-               color = paste0(config$colors$teal100), 
-               fill = paste0(config$colors$teal100), alpha = .4) +
-  geom_point(data = data_match, 
-             aes(x = value, y = 0, color = type, text = county), 
-             alpha = .7, 
-             shape = 18, 
-             size = 3) +
+               color = paste0(config$colors$grey50), alpha = .7) +
+  geom_point(data = filter(df_outcome1, type != 'other'), aes(x = value, y = 0, color = type),
+             shape = 18,
+             size = 3.5, 
+             alpha = .7) +
   geom_vline(xintercept = filter(df_outcome1, type == 'selected')$value,
-             color = 'yellow',
-             size = 1, 
-             linetype = 3) +
-  geom_segment(x = 12, xend = 12, y = 0, yend = Inf) +
+             color = paste0(config$colors$yellow125),
+             size = 1,
+             linetype = 5) +
   scale_color_manual(values = c(paste0(config$colors$teal100), 
-                                'yellow')) +
+                                paste0(config$colors$yellow125), 
+                                paste0(config$colors$yellow125))) +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0)) +
   theme_bw() +
   theme(legend.position = "none", 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank()) +
+  coord_cartesian(clip = 'off') +
   ggtitle(paste(df_outcome1$description[1])) +
   ylab("Density") +
   xlab("Value") 
-
-#other Denstiy Plots
-
-
-
 
 #Density Plot Function-----
 density_plot <- function(data, dictionary, c_fips, outcome_of_interest){
@@ -718,7 +690,7 @@ ggplot(df_outcome1, aes(x = value)) +
   xlab("Value")
 
 
-#Violin plot: matches and other----------
+#Violin Plot: matches and other----------
 test <- filter(df_outcome1, type != 'selected')
 ggplot(test, aes(x = type, y = value)) +
   geom_violin(aes(fill = type, 
@@ -743,7 +715,7 @@ ggplot(test, aes(x = type, y = value)) +
   xlab("Value") +
   coord_flip()
 
-#Density plot: matches and non matches-----
+#Density Plot: matches and non matches-----
 ggplot(df_outcome1, aes(x = value)) +
   geom_density(aes(fill = type, 
                    color = type, 
