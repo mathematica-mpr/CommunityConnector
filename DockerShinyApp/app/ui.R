@@ -59,7 +59,7 @@ ui <- fluidPage(#theme = "styles.css",
   fluidRow(
     column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('map_header')),
-           fluidRow(plotlyOutput("map"))),
+           fluidRow(leafletOutput("map"))),
     column(width = 4, style = "max-height: 50vh; overflow-y: auto;",
            fluidRow(uiOutput('my_matches_header')),
            fluidRow(plotOutput("compare_county_radars"))),
