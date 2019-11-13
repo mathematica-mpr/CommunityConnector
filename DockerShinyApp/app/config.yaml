@@ -15,3 +15,5 @@ colors:
   green100: "#046B5C"
   teal100 : "#189394"
   purple100: "#360B7F"
+  black100: "000000"
+  white100: "#FFFFFF"
