@@ -6,13 +6,20 @@ codes/geckodriver.log
 codes/.ipynb_checkpoints/
 .env
 *.log
+
 data/*
 !data/data_dictionary.csv
+!data/DictionaryPostSPCA.csv
+!data/inter_data_dictionary.csv
 !data/final_data_dictionary.csv
+
 !data/full_data_relative.csv
 !data/final_data.csv
-!data/DictionaryPostSPCA.csv
+
 !data/final_distance.csv
+
+!data/locations*.csv
+
 methodology/codes/.Rhistory
 
 .Rproj.user
