@@ -1,20 +1,29 @@
-#Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Introduction 
+This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Data Visualization Competition](https://www.ahrq.gov/sdoh-challenge/index.html).
 
-#Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+# Contents
+* pipeline/
+- for scraping and cleaning demographic, social determinant of health (SDoH), and outcome data
+* data/
+- for storing intermediate and final datasets and dictionaries
+* data-insights/
+- for examining preliminary insights
+* methodology/
+- for calculating county-level SDoH scores and similarities
+* DockerShinyApp
+- for building the Docker container and launching the app
 
-#Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+# Authors
+* **Kelsey Skvoretz** - *back-end lead*
+* **Margaret Luo** - *front-end lead*
+* **Evelyn Cody** - *methodology & front-end support*
+* **Addison Larson** - *front-end support*
+* **Emma Pendl-Robinson** - *pipeline & front-end support*
 
-#Contribute
+# Advisors
+* **Keri Calkins** - *research lead, methodology support, & back-end support*
+* **Elena Saavedra Jiminez** - *UX lead*
+* Additional thanks to Aaron White, Stephanie Tuerk, Alex Bohl, and Ravi Goyal
+
+## Contribute
 TODO: Explain how other users and developers can contribute to make your code better. 
-
-If you want to learn more about creating good readme files then refer the following [guidelines](https://www.visualstudio.com/en-us/docs/git/create-a-readme). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
