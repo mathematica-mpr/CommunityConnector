@@ -90,7 +90,7 @@ sdoh_score_2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,C
 sdoh_score_3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,
 sdoh_score_4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,
 sdoh_score_5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,
-sdoh_score_6,Health Coverage,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,
+sdoh_score_6,Health Care System,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,
 short_hosp_pp_rate,Short-term hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0,1.0,,,,,,,
 teen_birth_rate,"Number of births per 1,000 female population ages 15-19",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0,1.0,,,5.0,8.0,0.035,0.9506862445838229,0.03919372900335947
 violent_crime_rate,"Number of reported violent crime offenses per 100,000 population",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0,1.0,,,2.0,11.0,0.024,0.9601917555501289,0.02718006795016987
