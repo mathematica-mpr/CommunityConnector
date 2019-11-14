@@ -359,7 +359,7 @@ plot_ly() %>%
 
 
 
-#Density plot: All + Matches, Plotly, dot rug------
+#Density plot: All + Matches, Plotly------
 
 testdf <- df_outcome1
 
@@ -424,7 +424,6 @@ density_plot <- function(data) {
       ),
       text = filter(data, type == 'matches')$county,
       hoverinfo = 'text',
-      textposition = "top right",
       cliponaxis = F
     ) %>% 
     #Markers for my County
@@ -481,7 +480,7 @@ density_plot <- function(data) {
         zeroline = T
       ),
       yaxis = list(
-        title = "Density",
+        title = "Proportion of Counties",
         showgrid = F,
         showline = T, 
         range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
