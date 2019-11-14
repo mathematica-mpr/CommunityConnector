@@ -20,7 +20,8 @@ ui <- fluidPage(#theme = "styles.css",
               column(width = 6, 
                      # style = "max-height: 60vh; overflow-y: auto;",
                      fluidRow(
-                       column(width = 6, htmlOutput("my_county_name")),
+                       column(width = 6, htmlOutput("my_county_name"))),
+                     fluidRow(
                        column(width = 6, 
                               uiOutput('select_comparison_county'))),
                      fluidRow(
