@@ -66,7 +66,7 @@ rank_outcome <- function(data, higher_better) {
 }
 
 arrange_rank <- function(data, outcome_sort) {
-  if (outcome_sort == 'exceptional') {
+  if (outcome_sort == 'unique') {
     data %>% dplyr::arrange(desc(abs(rank)))
   } else if (outcome_sort == 'best') {
     data %>% dplyr::arrange(rank)
