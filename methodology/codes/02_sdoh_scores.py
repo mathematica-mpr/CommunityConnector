@@ -90,9 +90,6 @@ for i in range(2,7):
 cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
 print(cor)
 
-# TODO: flag final variables used in final data dictionary
-# not sure if this is necessary unless we are going to display them differently than the other raw SDoH
-
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
@@ -102,4 +99,10 @@ print(data.columns.values[:5])
 print(data_dictionary.column_name[:5])
 
 data.to_csv('data/final_data.csv', index = False)
-data_dictionary.to_csv('data/final_data_dictionary.csv', index = False)
+
+# merge and output data dictionary
+inter_dict = pd.merge(data_dictionary, spca_dict, left_on = 'column_name', right_on = 'Variable_Name', how = 'left')
+inter_dict.drop(['Variable_Name','total_loading','pct_loading','total_variance_explained','pct_var','Loading_abs'], axis = 1, inplace = True)
+print(inter_dict.columns.values)
+
+inter_dict.to_csv('data/inter_data_dictionary.csv', index = False)
