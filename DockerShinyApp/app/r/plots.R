@@ -74,7 +74,7 @@ df_outcomes <- dat %>% select(fips, state, county, outcomes) %>%
   left_join(outcomes_dd, by = "column_name") 
 
 df_outcome1 <- df_outcomes %>% 
-  filter(column_name == outcomes[2])
+  filter(column_name == outcomes[1])
 
 ggplot(df_outcome1, aes(x=value)) + geom_density() + 
   geom_vline(data = filter(df_outcome1, type != "other"),
@@ -269,6 +269,8 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 radar_chart_overlay(testdf, testdf2, dd)
 
+
+#
 #Density plot: All + Matches, Plotly------
 
 testdf <- df_outcome1
@@ -323,7 +325,7 @@ density_plot <- function(data) {
         symbol = 'diamond',
         color = paste0(config$colors$teal100),
         opacity = .8,
-        size = 15,
+        size = 17,
         line = list(
           width = 1,
           color = paste0(config$colors$white100)
@@ -346,7 +348,7 @@ density_plot <- function(data) {
         symbol = 'diamond',
         color = paste0(config$colors$yellow125),
         opacity = 1,
-        size = 15,
+        size = 17,
         line = list(
           width = 1, 
           color = paste0(config$colors$yellow125)
@@ -390,7 +392,7 @@ density_plot <- function(data) {
         zeroline = T
       ),
       yaxis = list(
-        title = "Proportion of Counties",
+        title = "Relative Frequency",
         showgrid = F,
         showline = T, 
         range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
