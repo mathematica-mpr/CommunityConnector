@@ -119,6 +119,8 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   metric <- "RMSE"
   n_rows <- nrow(model_params)
   
+  set.seed(1234)
+  
   if(method == "euclidean"){
     use_data <- replace_nas_mean(use_data)
     distancem <- as.matrix(dist(use_data %>% 
@@ -127,7 +129,6 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   } else if(grepl("rf",method)){
     meth <- "rf"
     use_data <- replace_nas_rf(use_data, outcome)
-    set.seed(1234)
     
     if(length(n_rows) == 0){
       # cross-validation on mtry
@@ -209,6 +210,7 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
       pred <- as.numeric(predict(lasso, newx = as.matrix(use_data[,!names(use_data) %in% outcome]), type = "response"))
       distancem <- abs(outer(pred, pred, '-'))  
     } else {
+      
       weights <- coefs_df %>% 
         merge(data_dictionary, by.x = "name", by.y = "column_name") %>% 
         dplyr::select(name, coefficient, demographic, sdoh_raw, modifiable) %>% 
@@ -224,14 +226,11 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
         dplyr::select(name) %>% 
         pull() %>% 
         as.character()
+      
       weights <- weights %>% 
         dplyr::select(abs_coefficient) %>% 
         pull() %>% 
         as.numeric()
-      
-      # standardize all variables
-      use_data[,var_names] <- use_data[,var_names] %>% 
-        psycho::standardize()
       
       if(length(var_names) > 1){
         # distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
@@ -396,4 +395,15 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
   start_time <- end_time
   
   return(full_results)
+}
+
+check_normal <- function(use_data){
+  # check if variables were normalized prior to entering
+  message("Checking to make sure all variables are normalized")
+  for(var in names(use_data)){
+    shapiro <- shapiro.test(use_data[,var])
+    if(shapiro$p.value > 0.1){
+      print(paste0("Variable ", var, " may not be normalized. P-value: ", shapiro$p.value))
+    }
+  }
 }
