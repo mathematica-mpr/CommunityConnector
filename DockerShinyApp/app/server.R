@@ -378,9 +378,9 @@ server <- function(input, output) {
     tagList(
       HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
       selectInput('outcome_sort', label = 'Sort outcomes by', 
-                  choices = c('most exceptional' = 'exceptional', 
-                              'best' = 'best', 'worst' = 'worst'),
-                  selected = 'exceptional')
+                  choices = c('most unique' = 'unique', 
+                              'best outcome' = 'best', 'worst outcome' = 'worst'),
+                  selected = 'unique')
     )
   })
   
