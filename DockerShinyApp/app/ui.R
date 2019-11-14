@@ -18,7 +18,6 @@ ui <- fluidPage(#theme = "styles.css",
                  textOutput('county_selection_message')),
     mainPanel(width = 10, 
               column(width = 6, 
-                     # style = "max-height: 60vh; overflow-y: auto;",
                      fluidRow(
                        column(width = 6, htmlOutput("my_county_name"))),
                      fluidRow(
@@ -26,12 +25,15 @@ ui <- fluidPage(#theme = "styles.css",
                               uiOutput('select_comparison_county'))),
                      fluidRow(
                        column(width = 12, plotlyOutput("my_county_radar",
-                                                      height = "700px")))),
+                                                      height = "80%"
+                                                      )))),
               column(width = 6,
+                     #style = "max-height: 80vh; overflow-y: auto;",
                      tabsetPanel(type = 'tabs',
                                  tabPanel("My Matches",
                                           plotlyOutput("compare_county_radars",
-                                                       height = "700px"),
+                                                       height = "600px"
+                                                       ),
                                           br(),
                                           HTML("<center>ES: Economic Stability, NEP: Neighborhood & Physical Environment, <br>
                                                E = Education, F = Food, C = Community, HC = Health Coverage </center>")),
