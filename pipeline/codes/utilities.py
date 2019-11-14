@@ -83,3 +83,24 @@ def remove_from_dict(data):
     data_dict = pd.merge(data_dict, rest_cols, on = "column_name")
     print(f"Dropped {pre_rows - data_dict.shape[0]} existing rows")
     return [data_dict, add_cols]
+
+def custom_replace(col):
+    return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
+
+def fix_percentages(data_dictionary, data):
+
+    pct_vars = data_dictionary[data_dictionary['data_type'] == 'percentage']['column_name']
+    for col in pct_vars:
+        if max(data[col]) < 1:
+            print(col + " is being adjusted")
+            print(max(data[col]))
+            print(min(data[col]))
+            data[col] = data[col] * 100
+    return data
+
+def check_negatives(data_dictionary, data):
+    print("Any negative values in data?")
+    for col in data_dictionary[data_dictionary['data_type'] != 'ID']['column_name']:
+        if 'sdoh_score' not in col:
+            if min(data[col]) < 0:
+                print(col)
