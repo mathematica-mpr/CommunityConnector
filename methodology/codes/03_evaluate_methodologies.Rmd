@@ -1,0 +1,146 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+```{r}
+rm(list = ls())
+```
+
+```{r}
+source('utilities.R')
+
+data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
+data <- read.csv('../../data/final_data.csv')
+```
+
+```{r}
+# select outcome
+outcomes <- data_dictionary %>% 
+  filter(outcome == 1) %>% 
+  dplyr::select(column_name) %>% 
+  mutate(column_name = as.character(column_name)) %>% 
+  pull()
+```
+
+```{r Methodology options}
+opts <- data.frame("use_sdoh_scores" = c(1, 0, 0, 0),
+                      "use_sdoh_raw" = c(0, 0, 1, 1),
+                          "use_dems" = c(1, 1, 1, 1),
+                 "remove_modifiable" = c(0, 0, 0, 1))
+
+# always run lasso methods in this order and rf methods in this order
+methods = c("euclidean","lasso","lasso euclidean all","lasso euclidean dem","rf proximity","rf prediction")
+# TODO: ideally don't want to have to re-run the lasso model for each of these
+# also don't want to re-run rf model
+
+opts <- merge(opts, data.frame("methodology" = methods), all = TRUE)
+
+# It doesn't make sense to do the prediction methodology with only demographics or sdoh_scores - we should use all the raw data
+# for Euclidean distance, may want to use demographics and/or sdoh_scores
+# eliminate what doesn't make sense here
+opts <- opts %>% 
+  dplyr::filter((methodology == "euclidean") | (use_sdoh_scores == 0 & use_sdoh_raw == 1)) %>% 
+  dplyr::filter((!methodology %in% c("lasso euclidean dem", "lasso euclidean all")) | (remove_modifiable == 0)) %>% 
+  mutate(methodology = as.character(methodology),
+         meth_num = row_number(use_dems))
+
+# both the aggregate score and the inputs should not be used at the same time
+print(opts[opts$use_sdoh_scores & opts$use_sdoh_raw,])
+print(opts)
+```
+
+```{r}
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary)
+# full_results <- apply(opts, 1, implement_methodology, outcomes, data, data_dictionary, num_counties = 1)
+
+for(row in c(1:nrow(opts))){
+  model_params <- NA
+  
+  if(row > 1){
+    full_opts <- full_results %>% 
+      merge(opts, by = "meth_num")
+    
+    past_results <- full_opts %>% 
+      filter(use_sdoh_scores == opts[row, "use_sdoh_scores"]) %>% 
+      filter(use_sdoh_raw == opts[row, "use_sdoh_raw"]) %>% 
+      filter(use_dems == opts[row, "use_dems"]) 
+    if(nrow(past_results) > 0 & opts[row, "methodology"] != "euclidean"){
+      if(grepl("lasso", opts[row,"methodology"])){
+        past_results <- past_results %>% 
+          filter(methodology == "lasso")
+      } else if(grepl("rf",  opts[row,"methodology"])){
+        past_results <- past_results %>% 
+          filter(methodology == "rf proximity")
+      }
+      model_params <- past_results %>% 
+        dplyr::select(methodology, use_outcome, mtry, alpha, min_lambda) %>% 
+        unique()
+    }
+  }
+  
+  print(nrow(model_params))
+  results <- implement_methodology(opts[row,], outcomes, data, data_dictionary, model_params)
+  
+  if(row == 1){
+    full_results <- results
+  } else{
+    full_results <- rbind(full_results, results)
+  }
+  
+}
+```
+
+```{r}
+results <- bind_rows(full_results, .id = "column_label")
+
+# average metrics across county by outcome to evaluate results of different methodologies
+summ_results <- results %>% 
+  group_by(use_outcome, methodology, meth_num, column_label) %>% 
+  dplyr::summarise_all(funs(median)) %>% 
+  arrange(use_outcome) %>% 
+  dplyr::select(-column_label, -county_num)
+summ_results
+```
+
+```{r}
+# find best methodology across a number of metrics and outcomes 
+for(col in names(summ_results)){
+  if(!col %in% c("methodology","meth_num","use_outcome")){
+    if(col != "pct_reduced_sd"){
+      best <- summ_results %>% 
+        group_by(use_outcome) %>% 
+        slice(which.min(!!rlang::sym(col))) %>% 
+        dplyr::select(meth_num)  
+    } else {
+      best <- summ_results %>% 
+        group_by(use_outcome) %>% 
+        slice(which.max(!!rlang::sym(col))) %>% 
+        dplyr::select(meth_num)
+    }
+    
+    print(best)
+    
+    # which one is the most common?
+    best_num <- best %>% 
+      group_by(meth_num) %>% 
+      dplyr::summarise(n = n()) %>% 
+      arrange(desc(n)) %>% 
+      slice(1) %>% 
+      dplyr::select(meth_num)
+    print(paste0("Best methodology for ", col, ": ", best_num))
+  }
+}
+
+
+# Euclidean distance is the best so far between that & rf proximity
+# between euclidean, rf proximity, and rf prediction, best is 8 (RF pred) - raw data
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1): 8 (RF pred) or 11 (Lasso)
+# Seems like using all of the raw data is always best
+# Euc vs. rf proximity vs. rf prediction vs. un-CV lasso (0.1) vs. GBM: 8 (RF pred) or 11(Lasso)
+# another time, definitely 11 Lasso
+# using CV to predict results, 11 (Lasso) is the best by far - raw data. 2nd best is 10
+# However, we don't necessarily want the BEST prediction model, but maybe we can try removing the modifiable variables and re-running?
+opts
+
+```
