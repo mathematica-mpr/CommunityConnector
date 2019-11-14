@@ -86,3 +86,21 @@ def remove_from_dict(data):
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
+
+def fix_percentages(data_dictionary, data):
+
+    pct_vars = data_dictionary[data_dictionary['data_type'] == 'percentage']['column_name']
+    for col in pct_vars:
+        if max(data[col]) < 1:
+            print(col + " is being adjusted")
+            print(max(data[col]))
+            print(min(data[col]))
+            data[col] = data[col] * 100
+    return data
+
+def check_negatives(data_dictionary, data):
+    print("Any negative values in data?")
+    for col in data_dictionary[data_dictionary['data_type'] != 'ID']['column_name']:
+        if 'sdoh_score' not in col:
+            if min(data[col]) < 0:
+                print(col)
