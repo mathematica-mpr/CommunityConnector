@@ -83,3 +83,6 @@ def remove_from_dict(data):
     data_dict = pd.merge(data_dict, rest_cols, on = "column_name")
     print(f"Dropped {pre_rows - data_dict.shape[0]} existing rows")
     return [data_dict, add_cols]
+
+def custom_replace(col):
+    return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
