@@ -42,4 +42,7 @@ for var in data.columns.values:
         count += 1
 print("# columns dropped due to low coverage: " + str(count))
 
+# check to make sure all of the percentage variables are between 0-100, not 0-1
+
+
 data.to_csv('data/full_data_relative.csv', index = False)
