@@ -54,7 +54,7 @@ ui <- fluidPage(#theme = "styles.css",
                                             div(id = "density_plot_container",
                                                 uiOutput(outputId = "density_graphs_ui")))),
                                  tabPanel("County Map",
-                                          fluidRow(plotlyOutput("map")))
+                                          fluidRow(leafletOutput("map")))
                      )
               )
     )
