@@ -345,6 +345,9 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
         #hover label
         #  hoverinfo = 'none',
         name = paste(df_one$county, df_one$state),
+        hovertemplate = ~paste('<b>Category</b>: %{theta}',
+                               '<br><b>Score</b>: %{r:.2f}',
+                               '<extra></extra>'),
         subplot = paste0('polar', i)
       ) 
   }
