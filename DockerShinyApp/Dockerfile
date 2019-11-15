@@ -4,7 +4,9 @@ RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     libxml2-dev \
     libgit2-dev \
-    libpng-dev
+    libpng-dev \
+    libudunits2-dev \
+    libgdal-dev
 
 RUN R -e "install.packages(c('shiny', 'shinydashboard', 'tidyverse', 'devtools', 'DT', 'forcats', 'ggplot2', 'plotly', 'shinytest'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('yaml', 'shinyWidgets'), repos='http://cran.rstudio.com/')"
@@ -20,7 +22,8 @@ RUN R -e "install.packages(c('maps'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('usmap'), repos='http://cran.rstudio.com/')"
 RUN R -e "devtools::install_version('plotly', version = '4.5.6', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('viridis'), repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('plotly'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('sf'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('leaflet'), repos='http://cran.rstudio.com/')"
 #RUN R -e "shinytest::installDependencies()"
 
 
@@ -28,13 +31,3 @@ RUN R -e "install.packages(c('plotly'), repos='http://cran.rstudio.com/')"
 
 
 EXPOSE 8787
-
-CMD ["/init"]
-#COPY app /srv/shiny-server/
-
-#CMD ["/usr/bin/shiny-server.sh"]
-
-
-
-
-  
