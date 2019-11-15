@@ -10,8 +10,8 @@ rm(list = ls())
 ```{r}
 source('utilities.R')
 
-data_dictionary <- read.csv('../../data/final_data_dictionary.csv')
-data <- read.csv('../../data/final_data.csv')
+data_dictionary <- read.csv('../../data/inter_data_dictionary.csv')
+data <- read.csv('../../data/inter_data.csv')
 ```
 
 ```{r}
