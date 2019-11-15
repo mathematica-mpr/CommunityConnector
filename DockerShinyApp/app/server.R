@@ -337,40 +337,134 @@ server <- function(input, output) {
     )
   })
   
-  output$map <- renderPlotly({
+  output$map <- renderLeaflet({
     req(county_check())
     
-    st <- dat %>% pull(state) %>% unique()
-    state <- state.name[match(st, state.abb)]
+    df <- find_my_matches(county_fips(), dat)[[1]] %>%
+      mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
+      mutate(NAME = str_replace(county, " County", ""))
     
-    df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
-      mutate(county = gsub(" county", "", tolower(county)))
+    st_fips <- str_sub(df$GEOID, 1, 2)[1]
+    cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
     
-    county_map_df <- map_data("county") %>%
-      filter(region == tolower(state))
+    selected_state_shp <- st_shp %>%
+      filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+      left_join(., df)
     
-    df <- full_join(df, county_map_df, by = c("county" = "subregion"))
+    # Compute approximate centroid and edges of study area
+    selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+    x_min <- selected_state_shp_box[1]
+    x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+    x_max <- selected_state_shp_box[3]
+    y_min <- selected_state_shp_box[2]
+    y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+    y_max <- selected_state_shp_box[4]
     
-    df %>%
-      group_by(group) %>%
-      plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
-              colors = viridis_pal(option="D")(3),
-              text = ~county, hoverinfo = 'text') %>%
-      add_polygons(line = list(width = 0.4)) %>%
-      add_polygons(
-        fillcolor = 'transparent',
-        line = list(color = 'black', width = 0.5),
-        showlegend = FALSE, hoverinfo = 'none'
-      ) %>%
-      layout(
-        xaxis = list(title = "", showgrid = FALSE,
-                     zeroline = FALSE, showticklabels = FALSE),
-        yaxis = list(title = "", showgrid = FALSE,
-                     zeroline = FALSE, showticklabels = FALSE),
-        showlegend = FALSE
-      )
-                     
+    # Plot counties with proximity score
+    # Remove selected county from consideration in popups, and plot separately
+    selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+    selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips)
+    
+    county_label <- sprintf(
+      "<strong>Selected County:</strong> %s (%s) <br/>
+    <strong>Comparison County:</strong> %s (%s) <br/>
+    <strong>Distance:</strong> %g </sup>",
+      selected_geo$NAME[1], selected_geo$GEOID[1],
+      selected_state_shp$NAME, selected_state_shp$GEOID, round(selected_state_shp$distance, 3)
+    ) %>%
+      lapply(htmltools::HTML)
+    selected_county_label <- sprintf(
+      "<strong>Selected County:</strong> %s (%s) <br/>
+    <strong>Comparison County:</strong> NA <br/>
+    <strong>Distance:</strong> NA </sup>",
+      selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
+      lapply(htmltools::HTML)
+    
+    # Width of bins depends on range of distances
+    if (ceiling(max(selected_state_shp$distance)) > 6) {
+      color_pal <- colorBin("magma", selected_state_shp$distance,
+                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 1.5)),
+                            reverse = TRUE)
+    } else if (ceiling(max(selected_state_shp$distance)) <= 6 & ceiling(max(selected_state_shp$distance)) > 3) {
+      color_pal <- colorBin("magma", selected_state_shp$distance,
+                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 1)),
+                            reverse = TRUE)
+    } else {
+      color_pal <- colorBin("magma", selected_state_shp$distance,
+                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 0.5)),
+                            reverse = TRUE)
+    }
+    
+    leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+      setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+      setMaxBounds(lng1 = x_min,
+                   lat1 = y_min,
+                   lng2 = x_max,
+                   lat2 = y_max) %>%
+      addProviderTiles(providers$Stamen.TonerLite) %>%
+      addPolygons(data = selected_state_shp,
+                  color = ~color_pal(selected_state_shp$distance),
+                  weight = 1,
+                  smoothFactor = 1,
+                  label = county_label,
+                  labelOptions = labelOptions(
+                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                    textsize = "15px",
+                    direction = "auto"),
+                  highlightOptions = highlightOptions(color = "black",
+                                                      weight =  2,
+                                                      bringToFront = TRUE)) %>%
+      addLegend(pal = color_pal, values = selected_state_shp$distance, position = "topright",
+                labFormat = labelFormat(suffix = " Units"), title = "Distance") %>%
+      addPolygons(data = selected_geo,
+                  color = "black",
+                  fillOpacity = 0.7,
+                  weight = 2,
+                  smoothFactor = 1,
+                  label = selected_county_label,
+                  labelOptions = labelOptions(
+                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                    textsize = "15px",
+                    direction = "auto"),
+                  highlightOptions = highlightOptions(color = "black",
+                                                      weight =  2,
+                                                      bringToFront = TRUE))
   })
+  
+  # output$map <- renderPlotly({
+  #   req(county_check())
+  #   
+  #   st <- dat %>% pull(state) %>% unique()
+  #   state <- state.name[match(st, state.abb)]
+  #   
+  #   df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
+  #     mutate(county = gsub(" county", "", tolower(county)))
+  #   
+  #   county_map_df <- map_data("county") %>%
+  #     filter(region == tolower(state))
+  #   
+  #   df <- full_join(df, county_map_df, by = c("county" = "subregion"))
+  #   
+  #   df %>%
+  #     group_by(group) %>%
+  #     plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
+  #             colors = viridis_pal(option="D")(3),
+  #             text = ~county, hoverinfo = 'text') %>%
+  #     add_polygons(line = list(width = 0.4)) %>%
+  #     add_polygons(
+  #       fillcolor = 'transparent',
+  #       line = list(color = 'black', width = 0.5),
+  #       showlegend = FALSE, hoverinfo = 'none'
+  #     ) %>%
+  #     layout(
+  #       xaxis = list(title = "", showgrid = FALSE,
+  #                    zeroline = FALSE, showticklabels = FALSE),
+  #       yaxis = list(title = "", showgrid = FALSE,
+  #                    zeroline = FALSE, showticklabels = FALSE),
+  #       showlegend = FALSE
+  #     )
+  #                    
+  # })
   
   # dynamic number of density graphs -------------------------------------------
   output$health_outcomes_header <- renderUI({
