@@ -278,6 +278,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
     rotation = 0
   )
   
+  hoverlabel_list <- list(
+    namelength = -1
+  )
+  
   # get first county
   df1 <- df[1,]
   points1 <- select(df1, starts_with("sdoh"))
@@ -304,8 +308,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      hoverinfo = 'name',
-      name = paste(df1$county, df1$state)
+      hoverinfo = 'text',
+      text = paste(df1$county, df1$state)
     ) %>% 
     layout(  
       polar = list(
@@ -314,7 +318,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (1 / n_rows) + t, 1 - t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) 
   
   # create all subsequent radar charts
@@ -343,8 +348,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                       opacity = 1),
         opacity = .9,
         #hover label
-        hoverinfo = 'name',
-        name = paste(df_one$county, df_one$state),
+        hoverinfo = 'text',
+        text = paste(df_one$county, df_one$state),
         subplot = paste0('polar', i)
       ) 
   }
@@ -358,7 +363,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (1 / n_rows) + t, 1 - t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list, 
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar3 = list(
@@ -367,7 +373,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (1 / n_rows) + t, 1 - t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar4 = list(
@@ -376,7 +383,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (1 / n_rows) + t, 1 - t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%  
     layout(
       polar5 = list(
@@ -385,7 +393,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%
     layout(
       polar6 = list(
@@ -394,7 +403,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar7 = list(
@@ -403,7 +413,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar8 = list(
@@ -412,7 +423,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%  
     layout(
       polar9 = list(
@@ -421,7 +433,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%
     layout(
       polar10 = list(
@@ -430,7 +443,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar11 = list(
@@ -439,7 +453,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar12 = list(
@@ -448,7 +463,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%  
     layout(
       polar13 = list(
@@ -457,7 +473,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%
     layout(
       polar14 = list(
@@ -466,7 +483,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar15 = list(
@@ -475,7 +493,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar16 = list(
@@ -484,7 +503,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       ))  %>%  
     layout(
       polar17 = list(
@@ -493,7 +513,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>%
     layout(
       polar18 = list(
@@ -502,7 +523,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar19 = list(
@@ -511,7 +533,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(
       polar20 = list(
@@ -520,7 +543,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
           y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
         ),
         radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
+        angularaxis = angularaxis_list,
+        hoverlabel = hoverlabel_list
       )) %>% 
     layout(showlegend = F)
   
