@@ -304,7 +304,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      #   hoverinfo = 'none',
+      hoverinfo = 'name',
       name = paste(df1$county, df1$state)
     ) %>% 
     layout(  
@@ -343,11 +343,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                       opacity = 1),
         opacity = .9,
         #hover label
-        #  hoverinfo = 'none',
+        hoverinfo = 'name',
         name = paste(df_one$county, df_one$state),
-        hovertemplate = ~paste('<b>Category</b>: %{theta}',
-                               '<br><b>Score</b>: %{r:.2f}',
-                               '<extra></extra>'),
         subplot = paste0('polar', i)
       ) 
   }
