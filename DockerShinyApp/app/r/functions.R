@@ -289,7 +289,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
     unlist()
   
   # create first county radar chart
-  p <- plot_ly() %>% 
+  p <- plot_ly(width = 1000, height = 1000) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
@@ -566,7 +566,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
       ),
       hoverlabel = hoverlabel_list
     ) %>% 
-    layout(showlegend = F)
+    layout(showlegend = F,
+           autosize = F,
+           grid = list(pattern = 'independent'),
+           margin = list(t = 10, b = 10, l = 1, r = 1))
   
   return(p)
 
