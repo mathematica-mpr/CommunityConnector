@@ -31,6 +31,12 @@ print(final_dict[final_dict['keep'] == 0]['column_name'])
 final_dict.loc[(final_dict.outcome == 1) & (final_dict.source == "RWJF"), 'keep'] = 0
 
 # check the descriptions of the variables we are keeping
-print(final_dict[final_dict.keep == 1]['description'])
+final_dict = final_dict[final_dict.keep == 1]
+print(final_dict['description'])
 
+# keep only variables needed and output final data
+data = pd.read_csv('data/inter_data.csv')
+final_data = data[final_dict['column_name']]
+
+final_data.to_csv('data/final_data.csv')
 final_dict.to_csv('data/final_data_dictionary.csv', index = False)
