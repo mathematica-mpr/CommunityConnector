@@ -309,7 +309,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
       opacity = .9,
       #hover label
       hoverinfo = 'text',
-      text = paste(df1$county, df1$state)
+      text = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(  
       polar = list(
@@ -349,7 +349,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
         opacity = .9,
         #hover label
         hoverinfo = 'text',
-        text = paste(df_one$county, df_one$state),
+        text = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
       ) 
   }
