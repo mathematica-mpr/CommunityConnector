@@ -568,7 +568,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
     ) %>% 
     layout(showlegend = F,
            autosize = F,
-           grid = list(pattern = 'independent'),
+           grid = list(pattern = 'independent', 
+                       domain = list(x = c(0,.1), y = c(0,.1))),
            margin = list(t = 10, b = 10, l = 1, r = 1))
   
   return(p)
