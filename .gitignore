@@ -18,4 +18,9 @@ data/*
 
 methodology/codes/.Rhistory
 
+*.shp
+*.shx
+*.dbf
+*.prj
+
 .Rproj.user
