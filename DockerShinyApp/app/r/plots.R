@@ -288,7 +288,11 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
                     color = paste0(config$colors$green100),
                     opacity = 1),
       opacity = .6,
-      hoverinfo = 'none',
+      #hover label
+      name = paste(df[1,1], "County"),
+      hovertemplate = ~paste('<b>Category</b>: %{theta}',
+                             '<br><b>Score</b>: %{r:.2f}',
+                             '<extra></extra>')
       name = paste(df2[1,1], "County")
     ) %>% 
     layout(
