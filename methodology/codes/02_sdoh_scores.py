@@ -98,11 +98,10 @@ data_dictionary.column_name = [custom_replace(col) for col in data_dictionary.co
 print(data.columns.values[:5])
 print(data_dictionary.column_name[:5])
 
-data.to_csv('data/final_data.csv', index = False)
-
 # merge and output data dictionary
 inter_dict = pd.merge(data_dictionary, spca_dict, left_on = 'column_name', right_on = 'Variable_Name', how = 'left')
 inter_dict.drop(['Variable_Name','total_loading','pct_loading','total_variance_explained','pct_var','Loading_abs'], axis = 1, inplace = True)
 print(inter_dict.columns.values)
 
+data.to_csv('data/inter_data.csv', index = False)
 inter_dict.to_csv('data/inter_data_dictionary.csv', index = False)

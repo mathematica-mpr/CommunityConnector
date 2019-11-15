@@ -1,5 +1,4 @@
-county_fips <- "1"
-
+county_fips <- "8001"
 county_dat <- dat %>% filter(fips == county_fips)
 
 st <- dat %>% pull(state) %>% unique()
@@ -7,7 +6,7 @@ state <- state.name[match(st, state.abb)]
 
 my_matches <- find_my_matches(county_fips, dat)[[2]] 
 
-
+#
 # radar chart ----------------------------
 
 radardd <- get_dd(dd,"sdoh_score")
@@ -27,32 +26,92 @@ radarchart(df,
 # county map ------------------------------
 
 df <- find_my_matches(county_fips, dat)[[1]] %>%
-  rename(fips = fips) %>%
-  mutate(county = gsub(" county", "", tolower(county)))
+  mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
+  mutate(NAME = str_replace(county, " County", ""))
 
-county_map_df <- map_data("county") %>%
-  filter(region == tolower(state))
+co <- st_shp %>%
+  filter(str_sub(GEOID, 1, 2) == "08")
 
-df <- full_join(df, county_map_df, by = c("county" = "subregion"))
+co <- left_join(co, df)
 
-df %>%
-  group_by(group) %>%
-  plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
-          colors = viridis_pal(option="D")(3),
-          text = ~county, hoverinfo = 'text') %>%
-  add_polygons(line = list(width = 0.4)) %>%
-  add_polygons(
-    fillcolor = 'transparent',
-    line = list(color = 'black', width = 0.5),
-    showlegend = FALSE, hoverinfo = 'none'
-  ) %>%
-  layout(
-    xaxis = list(title = "", showgrid = FALSE,
-                 zeroline = FALSE, showticklabels = FALSE),
-    yaxis = list(title = "", showgrid = FALSE,
-                 zeroline = FALSE, showticklabels = FALSE),
-    showlegend = FALSE
-  )
+# Compute approximate centroid and edges of study area
+co_box <- as.numeric(st_bbox(co))
+x_min <- co_box[1]
+x_mid <- (co_box[3] - co_box[1]) / 2 + co_box[1]
+x_max <- co_box[3]
+y_min <- co_box[2]
+y_mid <- (co_box[4] - co_box[2]) / 2 + co_box[2]
+y_max <- co_box[4]
+
+# Plot counties with proximity score
+# Remove selected county from consideration in popups, and plot separately
+selected_geo <- co %>% filter(GEOID == str_pad(county_fips, width = 5, side = "left", pad = "0"))
+co <- co %>% filter(GEOID != str_pad(county_fips, width = 5, side = "left", pad = "0"))
+county_label <- sprintf(
+  "<strong>Selected County:</strong> %s (%s) <br/>
+  <strong>Comparison County:</strong> %s (%s) <br/>
+  <strong>Distance:</strong> %g </sup>",
+  selected_geo$NAME[1], selected_geo$GEOID[1],
+  co$NAME, co$GEOID, round(co$distance, 3)
+) %>%
+  lapply(htmltools::HTML)
+selected_county_label <- sprintf(
+  "<strong>Selected County:</strong> %s (%s) <br/>
+  <strong>Comparison County:</strong> NA <br/>
+  <strong>Distance:</strong> NA </sup>",
+  selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
+  lapply(htmltools::HTML)
+# Add labels for hospitals / overlap here
+
+# Number of breaks depends on range of distances
+if (ceiling(max(co$distance)) > 6) {
+  color_pal <- colorBin("magma", co$distance,
+                        bins = c(seq(0, ceiling(max(co$distance)), by = 1.5)),
+                        reverse = TRUE)
+} else if (ceiling(max(co$distance)) <= 6 & ceiling(max(co$distance)) > 3) {
+  color_pal <- colorBin("magma", co$distance,
+                        bins = c(seq(0, ceiling(max(co$distance)), by = 1)),
+                        reverse = TRUE)
+} else {
+  color_pal <- colorBin("magma", co$distance,
+                        bins = c(seq(0, ceiling(max(co$distance)), by = 0.5)),
+                        reverse = TRUE)
+}
+
+map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+  setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+  setMaxBounds(lng1 = x_min,
+               lat1 = y_min,
+               lng2 = x_max,
+               lat2 = y_max) %>%
+  addProviderTiles(providers$Stamen.TonerLite) %>%
+  addPolygons(data = co,
+              color = ~color_pal(co$distance),
+              weight = 1,
+              smoothFactor = 1,
+              label = county_label,
+              labelOptions = labelOptions(
+                style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                textsize = "15px",
+                direction = "auto"),
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight =  2,
+                                                  bringToFront = TRUE)) %>%
+  addLegend(pal = color_pal, values = co$distance, position = "topright",
+            labFormat = labelFormat(suffix = " Units"), title = "Distance") %>%
+  addPolygons(data = selected_geo,
+              color = "black",
+              fillOpacity = 0.7,
+              weight = 2,
+              smoothFactor = 1,
+              label = selected_county_label,
+              labelOptions = labelOptions(
+                style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                textsize = "15px",
+                direction = "auto"),
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight =  2,
+                                                  bringToFront = TRUE))
 
 # single outcome density ----------------------------------
 outcomes_dd <- get_dd(dd, "outcome")
@@ -85,10 +144,10 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 #Radar Chart with Plotly-----
 
 #example dataframe
-testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh_score"))) %>% 
+testdf <- c("Rio Grande", state, county_dat %>% select(starts_with("sdoh_score"))) %>% 
   as.data.frame()
 
-#Radar Chart Function-----
+#Radar Chart Function
 radar_chart <- function(df, dictionary) {
   #function to output interactive polar plot of SDOH Scores for one county
   
@@ -268,3 +327,138 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 }
 
 radar_chart_overlay(testdf, testdf2, dd)
+
+
+#
+#Density plot: All + Matches, Plotly------
+
+testdf <- df_outcome1
+
+density_plot <- function(data) {
+  #function to output density plot for specific outcome
+  
+  #finding densities
+  density_all <- density(data$value)
+  density_matches <- filter(data, type == 'matches') %>% 
+    pull(value) %>% 
+    density()
+  #Density Plot
+  p <- plot_ly() %>%
+    #Density plot for All Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'lines',
+      x = ~density_all$x,
+      y = ~density_all$y,
+      line = list(
+        color = paste0(config$colors$grey100),
+        width = 2
+      ),
+      fill = 'tozeroy',
+      fillcolor = paste0(config$colors$grey100, '70'),
+      name = "Density Plot Of\nAll Counties",
+      hoverinfo = 'name'
+    ) %>% 
+    #Density plot for Matching Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'lines',
+      x = ~density_matches$x,
+      y = ~density_matches$y,
+      fill = 'tozeroy',
+      fillcolor = paste0(config$colors$teal100, '65'),
+      line = list(
+        color = paste0(config$colors$teal100), 
+        width = 2
+      ),
+      name = 'Density Plot of\nMatching Counties',
+      hoverinfo = 'name'
+    ) %>% 
+    #Markers for Matching Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'markers+lines',
+      x = filter(data, type == 'matches')$value,
+      y = 0, 
+      marker = list(
+        symbol = 'diamond',
+        color = paste0(config$colors$teal100),
+        opacity = .8,
+        size = 17,
+        line = list(
+          width = 1,
+          color = paste0(config$colors$white100)
+        )
+      ),
+      line = list(
+        width = 0
+      ),
+      text = filter(data, type == 'matches')$county,
+      hoverinfo = 'text',
+      cliponaxis = F
+    ) %>% 
+    #Markers for my County
+    add_trace(
+      type = 'scatter',
+      mode = 'markers+lines',
+      x = filter(data, type == 'selected')$value,
+      y = 0,
+      marker = list(
+        symbol = 'diamond',
+        color = paste0(config$colors$yellow125),
+        opacity = 1,
+        size = 17,
+        line = list(
+          width = 1, 
+          color = paste0(config$colors$yellow125)
+        )
+      ),
+      text = filter(data, type == 'selected')$county,
+      hoverinfo = 'text',
+      cliponaxis = F
+    ) %>% 
+    layout(
+      title = list(
+        text = paste(data$description[1]),
+        font = list(
+          size = 18,
+          color = paste0(config$colors$purple100)
+        ),
+        xref = 'paper',
+        x = '0'
+      ),
+      hoverlabel = list(
+        namelength = 40
+      ),
+      #Line for My County
+      shapes = list(
+        type = 'line',
+        xref = 'x',
+        yref = 'y',
+        x0 = filter(data, type == 'selected')$value,
+        x1 = filter(data, type == 'selected')$value,
+        y0 = 0,
+        y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
+        line = list(
+          color = paste0(config$colors$yellow125),
+          width = 3,
+          dash = 'longdash'
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showgrid = F,
+        zeroline = T
+      ),
+      yaxis = list(
+        title = "Relative Frequency",
+        showgrid = F,
+        showline = T, 
+        range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
+      ),
+      showlegend = F
+    )
+  return(p)
+}
+
+density_plot(testdf)
