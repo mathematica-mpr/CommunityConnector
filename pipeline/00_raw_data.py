@@ -59,6 +59,7 @@ class SelectVariables(luigi.Task):
 
 ## TODO: from here, we can run SPCA
 ## which data and dictionary should 01_variable_reduction.R use?
+## this can't be part of the pipeline because there is a manual component to it
 
 class SdohScores(luigi.Task):
     def requires(self):
