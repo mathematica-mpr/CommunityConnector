@@ -24,10 +24,12 @@ class DemOppAtlas(luigi.Task):
     def requires(self):
         return None
     def output(self):
-        return None
+        # return None
+        return luigi.LocalTarget(os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
     def run(self):
-        pu.OppAtlas(output = os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
-
+        # pu.OppAtlas(output = os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
+        pu.OppAtlas(output = self.output().path)
+        
 class MergeCleaned(luigi.Task):
     def requires(self):
         # return DemOppAtlas()
