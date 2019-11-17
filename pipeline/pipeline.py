@@ -34,6 +34,8 @@ class MergeCleaned(luigi.Task):
     def requires(self):
         # return DemOppAtlas()
         # TODO: eventually will require all of the scraping/data cleaning
+        # This task also allows us to pull in data that is stored in the data/cleaned
+        # folder, even if it was pulled manually or wasn't incorporated into this pipeline
         return None
     def output(self):
         return luigi.LocalTarget(os.path.join(final_output, 'data_1_merged.csv'))
