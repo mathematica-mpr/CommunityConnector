@@ -5,6 +5,7 @@ import os
 import sys
 sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
+import methodology_utilities as mu
 
 raw_output = 'data/01_raw/'
 cleaned_output = 'data/02_cleaned/'
@@ -54,13 +55,19 @@ class SelectVariables(luigi.Task):
     def output(self):
         return luigi.LocalTarget(os.path.join(final_output,'data_2_selected_variables.csv'))
     def run(self):
-        # TODO: pull from MergeCleaned output
-        # pu.SelectVariables(input = 'data/full_data.csv', output = self.output().path)
         pu.SelectVariables(input = self.input().path, output = self.output().path)
 
 ## TODO: from here, we can run SPCA
 ## which data and dictionary should 01_variable_reduction.R use?
 
+class SdohScores(luigi.Task):
+    def requires(self):
+        return SelectVariables()
+    def output(self):
+        return luigi.LocalTarget(os.path.join(final_output, 'data_3_sdoh_scores.csv'))
+    def run(self):
+        mu.SdohScores(input = self.input().path, spca_dictionary = 'data/DictionaryPostSPCA.csv', output = self.output().path,
+        output_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'))
 
 if __name__ == '__main__':
     luigi.run()
