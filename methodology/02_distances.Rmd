@@ -39,13 +39,6 @@ We decided not to remove variables manually based on previous analysis - not imp
 ```{r}
 results <- implement_methodology(opts, outcomes, data, data_dictionary)
 
-# look at alpha and lambdas selected
-# lambda = 0 = OLS
-# with increase in lambda, bias increases & variance decreases
-# alpha = 0 = ridge, = 1 = LASSO
-# ridge keeps all variables. could keep all for larger values of alpha too if they are all important
-# lambda penalizes the sum of the coefficients
-
 results[1][[1]] %>% 
   dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
   unique()
