@@ -70,5 +70,16 @@ class SdohScores(luigi.Task):
         mu.SdohScores(input = self.input().path, spca_dictionary = 'data/DictionaryPostSPCA.csv', output = self.output().path,
         output_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'))
 
+## TODO: change inputs to R methodology code as these outputs
+
+class ReduceDisplayVars(luigi.Task):
+    def requires(self):
+        return SdohScores()
+    def output(self):
+        return luigi.LocalTarget(os.path.join(final_output, 'final_data.csv'))
+    def run(self):
+        # TODO: multiple outputs from SdohScores to read in the data dictionary directly
+        pu.ReduceDisplayVars(input = self.input().path, input_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'),
+        output = self.output().path, output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 if __name__ == '__main__':
     luigi.run()
