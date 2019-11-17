@@ -209,5 +209,5 @@ final_distance %>%
 #after standardizing, got 8059 Jefferson county which is also near Denver
 
 # output distance matrix with FIPS code as identifier
-write.csv(final_distance, '../../data/final_distance.csv')
+write.csv(final_distance, '../data/final_distance.csv')
 ```
