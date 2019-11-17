@@ -39,10 +39,10 @@ class MergeCleaned(luigi.Task):
         # TODO: eventually will require all of the scraping/data cleaning
         return None
     def output(self):
-        return luigi.LocalTarget(final_output)
+        return luigi.LocalTarget(os.path.join(final_output, 'data_1_merged.csv'))
     def run(self):
         # TODO: will eventually move this to the pipeline_cleaned/folder
-        pu.MergeCleaned(cleaned_drive = old_cleaned_output, outdir = self.output().path)
+        pu.MergeCleaned(cleaned_drive = old_cleaned_output, output = self.output().path)
 
 ######################################
 ######        Methodology       ######
