@@ -7,9 +7,9 @@ sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
-raw_output = 'data/01_raw/'
-cleaned_output = 'data/02_cleaned/'
-final_output = 'data/03_final'
+raw_output = 'data/raw/'
+cleaned_output = 'data/cleaned/'
+final_output = 'data/'
 
 ######################################
 ###### Data scraping & cleaning ######
