@@ -12,6 +12,10 @@ cleaned_output = 'data/pipeline_cleaned/'
 old_cleaned_output = 'data/cleaned'
 final_output = 'data/test_final'
 
+######################################
+###### Data scraping & cleaning ######
+######################################
+
 # class DemGeographicPUF(luigi.Task):
 #     def requires(self):
 #         return None
@@ -39,7 +43,11 @@ class MergeCleaned(luigi.Task):
     def run(self):
         # TODO: will eventually move this to the pipeline_cleaned/folder
         pu.MergeCleaned(cleaned_drive = old_cleaned_output, outdir = self.output().path)
-    
+
+######################################
+######        Methodology       ######
+######################################
+
 class SelectVariables(luigi.Task):
     def requires(self):
         return MergeCleaned()
@@ -47,7 +55,10 @@ class SelectVariables(luigi.Task):
         return luigi.LocalTarget(os.path.join(final_output,'data_2_selected_variables.csv'))
     def run(self):
         # TODO: pull from MergeCleaned output
-        pu.SelectVariables(input = 'data/full_data.csv', output = self.output().path)
+        # pu.SelectVariables(input = 'data/full_data.csv', output = self.output().path)
+        pu.SelectVariables(input = self.input().path, output = self.output().path)
+
+## from here, we can run SPCA
 
 if __name__ == '__main__':
     luigi.run()
