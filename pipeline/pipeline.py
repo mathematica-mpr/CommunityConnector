@@ -9,8 +9,6 @@ import methodology_utilities as mu
 
 raw_output = 'data/01_raw/'
 cleaned_output = 'data/02_cleaned/'
-# TODO: replace this with cleaned_output when ready
-old_cleaned_output = 'data/cleaned'
 final_output = 'data/03_final'
 
 ######################################
@@ -24,8 +22,6 @@ final_output = 'data/03_final'
 #         return None
 #     def run(self):
 #         pu.GeographicPUF(outdir = raw_output)
-
-# TODO: UserWarning: Task DemOppAtlas() without outputs has no custom complete() method
 class DemOppAtlas(luigi.Task):
     def requires(self):
         return None
@@ -43,7 +39,7 @@ class MergeCleaned(luigi.Task):
         return luigi.LocalTarget(os.path.join(final_output, 'data_1_merged.csv'))
     def run(self):
         # TODO: will eventually move this to the pipeline_cleaned/folder
-        pu.MergeCleaned(cleaned_drive = old_cleaned_output, output = self.output().path)
+        pu.MergeCleaned(cleaned_drive = cleaned_output, output = self.output().path)
 
 ######################################
 ######        Methodology       ######
