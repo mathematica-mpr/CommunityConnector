@@ -110,7 +110,7 @@ def OppAtlas(output, input = 'data/raw/opp_atlas_stay.csv',
     print(output)
     data.to_csv(output, index = False)
 
-def MergeCleaned(cleaned_drive, outdir, data_types = ['01_Demographic','02_SDoH','03_Outcome']):
+def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH','03_Outcome']):
 
     count = 0
     for t in data_types:
@@ -157,7 +157,7 @@ def MergeCleaned(cleaned_drive, outdir, data_types = ['01_Demographic','02_SDoH'
     columns = columns.append(pd.DataFrame({'column_name': sdoh_score_names,
     'type': ['aggregate']*6}))
 
-    full_data.to_csv(os.path.join(outdir, 'full_data.csv'), index = False)
+    full_data.to_csv(output, index = False)
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
