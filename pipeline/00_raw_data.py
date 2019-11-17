@@ -6,11 +6,11 @@ import sys
 sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 
-raw_output = 'data/pipeline_raw/'
-cleaned_output = 'data/pipeline_cleaned/'
+raw_output = 'data/01_raw/'
+cleaned_output = 'data/02_cleaned/'
 # TODO: replace this with cleaned_output when ready
 old_cleaned_output = 'data/cleaned'
-final_output = 'data/test_final'
+final_output = 'data/03_final'
 
 ######################################
 ###### Data scraping & cleaning ######
