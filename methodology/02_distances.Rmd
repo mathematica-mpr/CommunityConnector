@@ -5,8 +5,8 @@ source('utilities.R')
 ```
 
 ```{r Read data}
-data_dictionary <- read.csv('../../data/inter_data_dictionary.csv')
-data <- read.csv('../../data/inter_data.csv')
+data_dictionary <- read.csv('../data/inter_data_dictionary.csv')
+data <- read.csv('../data/inter_data.csv')
 
 # outcomes <- data_dictionary %>% 
 #   filter(outcome == 1) %>% 
