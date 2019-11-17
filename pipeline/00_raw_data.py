@@ -10,6 +10,7 @@ raw_output = 'data/pipeline_raw/'
 cleaned_output = 'data/pipeline_cleaned/'
 # TODO: replace this with cleaned_output when ready
 old_cleaned_output = 'data/cleaned'
+final_output = 'data/test_final'
 
 # class DemGeographicPUF(luigi.Task):
 #     def requires(self):
@@ -24,22 +25,29 @@ class DemOppAtlas(luigi.Task):
     def requires(self):
         return None
     def output(self):
-        # return None
         return luigi.LocalTarget(os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
     def run(self):
-        # pu.OppAtlas(output = os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
         pu.OppAtlas(output = self.output().path)
-        
+
 class MergeCleaned(luigi.Task):
     def requires(self):
         # return DemOppAtlas()
         # TODO: eventually will require all of the scraping/data cleaning
         return None
     def output(self):
-        return None
+        return luigi.LocalTarget(final_output)
     def run(self):
         # TODO: will eventually move this to the pipeline_cleaned/folder
-        pu.MergeCleaned(cleaned_drive = old_cleaned_output, outdir = 'data/test_final')
+        pu.MergeCleaned(cleaned_drive = old_cleaned_output, outdir = self.output().path)
+    
+class SelectVariables(luigi.Task):
+    def requires(self):
+        return MergeCleaned()
+    def output(self):
+        return luigi.LocalTarget(os.path.join(final_output,'data_2_selected_variables.csv'))
+    def run(self):
+        # TODO: pull from MergeCleaned output
+        pu.SelectVariables(input = 'data/full_data.csv', output = self.output().path)
 
 if __name__ == '__main__':
     luigi.run()
