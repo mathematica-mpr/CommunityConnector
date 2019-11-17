@@ -8,6 +8,8 @@ codes/.ipynb_checkpoints/
 *.log
 
 data/*
+!data/data_2_selected_variables.csv
+!data/dictionary_1_manual.csv
 !data/final_data.csv
 !data/final_data_dictionary.csv
 !data/DictionaryPostSPCA.csv
