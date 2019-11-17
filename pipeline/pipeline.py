@@ -56,7 +56,6 @@ class SelectVariables(luigi.Task):
         pu.SelectVariables(input = self.input().path, output = self.output().path)
 
 ## TODO: from here, we can run SPCA
-## which data and dictionary should 01_variable_reduction.R use?
 ## this can't be part of the pipeline because there is a manual component to it
 
 class SdohScores(luigi.Task):
@@ -67,8 +66,6 @@ class SdohScores(luigi.Task):
     def run(self):
         mu.SdohScores(input = self.input().path, spca_dictionary = 'data/DictionaryPostSPCA.csv', output = self.output().path,
         output_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'))
-
-## TODO: change inputs to R methodology code as these outputs
 
 class ReduceDisplayVars(luigi.Task):
     def requires(self):
