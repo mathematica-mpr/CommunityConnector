@@ -1,0 +1,68 @@
+```{r Set up}
+rm(list = ls())
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+source('utilities.R')
+```
+
+```{r Read data}
+data <- read.csv('../data/data_3_sdoh_scores.csv')
+data_dictionary <- read.csv('../data/dictionary_2_sdoh_scores.csv')
+
+# We are going to run the model on only the overobese_pct outcome, because it is the most broad
+# and upstream to the others
+outcomes <- c("overobese_pct")
+```
+
+```{r Methodology Parameters}
+method <- "lasso euclidean all"
+opts <- data.frame("use_sdoh_scores" = 0,
+                   "use_sdoh_raw" = 1,
+                   "use_dems" =  1,
+                   "remove_modifiable" = 0,
+                   "methodology" = method,
+                   "meth_num" = 1)
+
+# Need to standardize variables prior to input for certain methodologies
+if(method %in% c("lasso euclidean all","lasso euclidean dem")){
+  num_cols <- unlist(lapply(data, is.numeric))
+  data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols])
+}
+
+```
+
+Methodology Notes:
+
+Do we want to remove variables manually? We would consider this because, for example, elevation shows up in some of the models. Elevation is not causal, but there must be a correlation. We worry that elevation is correlated to other variables, perhaps a modifiable (walkability) and another nonmodifiable, or something. Elevation is sucking up the impact of these variables, which is fine for prediction. However, we want to use the coefficients of the modifiable and nonmodifiable variables differently. If this is the case, keeping elevation would remove our ability to parse out these two impacts.
+
+We decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome. If we decide to use another outcome, may want to test again
+
+```{r}
+results <- implement_methodology(opts, outcomes, data, data_dictionary)
+
+results[1][[1]] %>% 
+  dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
+  unique()
+```
+
+```{r Look at coefficients from all models}
+coefs_df <- results[3][[1]]
+
+write.csv(coefs_df, '../data/lasso_coefficients.csv',row.names = FALSE)
+```
+
+```{r Output final distance matrix}
+final_distance <- as.data.frame(as.matrix(results[2][[1]][[1]]))
+final_distance$sim_county <- rownames(final_distance)
+head(final_distance)
+
+# find the minimum distance for each county that is not 0
+min_not_0 <- function(x){
+  x <- as.numeric(x)
+  x <- x[x!=0]
+  min(x)
+}
+apply(final_distance, 1, min_not_0)
+
+# output distance matrix with FIPS code as identifier
+write.csv(final_distance, '../data/final_distance.csv')
+```
