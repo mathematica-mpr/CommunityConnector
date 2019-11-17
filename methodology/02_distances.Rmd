@@ -42,8 +42,6 @@ Do we want to remove variables manually?
 # Decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome
 # If we decide to use another outcome, may want to test again
 
-Do we want to normalize variables prior to the model? Yes - the changes seemed to make sense
-
 ```{r}
 results <- implement_methodology(opts, outcomes, data, data_dictionary)
 
