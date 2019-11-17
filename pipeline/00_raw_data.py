@@ -58,7 +58,9 @@ class SelectVariables(luigi.Task):
         # pu.SelectVariables(input = 'data/full_data.csv', output = self.output().path)
         pu.SelectVariables(input = self.input().path, output = self.output().path)
 
-## from here, we can run SPCA
+## TODO: from here, we can run SPCA
+## which data and dictionary should 01_variable_reduction.R use?
+
 
 if __name__ == '__main__':
     luigi.run()
