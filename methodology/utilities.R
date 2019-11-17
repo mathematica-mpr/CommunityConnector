@@ -1,26 +1,8 @@
-library(tidyverse)
-# devtools::install_github("UrbanInstitute/urbnmapr")
-library(urbnmapr)
-library(plotly)
-library(ggplot2)
-# install.packages("maps")
-# install.packages("mapdata")
-library(maps)
-library(mapdata)
-library(stringr)
-library(fmsb)
-library(randomForest)
-library(caret)
-library(glmnet)
-library(glmnetUtils)
-library(data.table)
-library(gbm)
-library(MLmetrics)
-# install.packages("distances")
-library(distances)
-# install.packages("psycho")
-library(psycho)
-library(OpenRepGrid)
+list.of.packages <- c("tidyverse","plotly","ggplot2","maps","mapdata","stringr","fmsb","randomForest",
+                      "caret","glmnet","glmnetUtils","data.table","gbm","MLmetrics","distances",
+                      "psycho","OpenRepGrid")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
