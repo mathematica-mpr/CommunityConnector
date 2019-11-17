@@ -63,12 +63,6 @@ results[1][[1]] %>%
 coefs_df <- results[3][[1]]
 
 write.csv(coefs_df, '../data/lasso_coefficients.csv',row.names = FALSE)
-
-# which matrices would be most general/incorporate the most data
-# looking at the variables used, overobese_pct definitely uses the most
-# followed by pct obese & the std spend vars, which we won't want to use
-# let's just use the distance matrix for overobese_pct for now
-# this also is a lower level outcome than the others (i.e. impacts them down the road, so makes sense to use)
 ```
 
 ```{r Output final distance matrix}
@@ -83,14 +77,6 @@ min_not_0 <- function(x){
   min(x)
 }
 apply(final_distance, 1, min_not_0)
-
-# 8031 is denver - which is it most similar to?
-final_distance %>% 
-  mutate(distance = !!rlang::sym('8031')) %>% 
-  dplyr::select(distance, sim_county) %>%
-  filter(distance < 5 & distance != 0)
-#8005 - part of denver county area - makes sense!
-#after standardizing, got 8059 Jefferson county which is also near Denver
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../data/final_distance.csv')
