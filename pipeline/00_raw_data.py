@@ -1,10 +1,4 @@
 # https://bionics.it/posts/luigi-tutorial
-# Targets = data that is persisted between task runs
-# Tasks = python classes that subclass the luigi.Task super class. Methods:
-# - requires()
-# - output()
-# - run() --> all the code the task should run
-# - input()
 
 import luigi
 import os
