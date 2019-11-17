@@ -5,18 +5,15 @@ source('utilities.R')
 ```
 
 ```{r Read data}
-data_dictionary <- read.csv('../data/inter_data_dictionary.csv')
-data <- read.csv('../data/inter_data.csv')
+data_dictionary <- read.csv('../data/data_3_sdoh_scores.csv')
+data <- read.csv('../data/dictionary_2_sdoh_scores.csv')
 
-# outcomes <- data_dictionary %>% 
-#   filter(outcome == 1) %>% 
-#   dplyr::select(column_name) %>% 
-#   mutate(column_name = as.character(column_name)) %>% 
-#   pull()
+# We are going to run the model on only the overobese_pct outcome, because it is the most broad
+# and upstream to the others
 outcomes <- c("overobese_pct")
 ```
 
-```{r One-row data frame with all parameters}
+```{r Methodology Parameters}
 method <- "lasso euclidean all"
 opts <- data.frame("use_sdoh_scores" = 0,
                    "use_sdoh_raw" = 1,
@@ -24,13 +21,12 @@ opts <- data.frame("use_sdoh_scores" = 0,
                    "remove_modifiable" = 0,
                    "methodology" = method,
                    "meth_num" = 1)
+
+# Need to standardize variables prior to input for certain methodologies
 if(method %in% c("lasso euclidean all","lasso euclidean dem")){
   num_cols <- unlist(lapply(data, is.numeric))
   data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols])
 }
-
-# check to make sure fips wasn't normalized
-head(data$fips)
 
 ```
 
