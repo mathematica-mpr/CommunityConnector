@@ -1,3 +1,5 @@
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 library(ggplot2)                 #graphing
 library(ggcorrplot)              #correlations graphs
 library(GGally)                  #correlations graphs
@@ -21,9 +23,8 @@ library(ClustOfVar)
 #data-----
 
 #inputting data
-sdohallorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
-# TODO: change this to using the preliminary data_dictionary.csv & set relative wd
-dictionaryorig <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
+sdohallorig <- read.csv('../data/data_2_selected_variables.csv')
+dictionaryorig <- read.csv("../data/dictionary_1_manual.csv")
 
 #quick fixes for data dictionary
 dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), c(10,12)] <- 0
@@ -196,6 +197,6 @@ remove_index <- which(Dictionary_PostSPCA$Variable_Name %in% remove)
 Dictionary_PostSPCA[remove_index, 2:5] <- NA
 
 #outputting new dictionary
-write.csv(Dictionary_PostSPCA, "C:/Users/ECody/Desktop/DictionaryPostSPCA.csv", na = "", row.names = F)
+write.csv(Dictionary_PostSPCA, "../data/DictionaryPostSPCA", na = "", row.names = F)
 
 S2PC
