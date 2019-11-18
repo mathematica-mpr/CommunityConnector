@@ -15,6 +15,7 @@ library(DT)
 library(viridis)
 library(sf)
 library(leaflet)
+library(shinyBS)
 
 config <- yaml.load_file("./config.yaml")
 
