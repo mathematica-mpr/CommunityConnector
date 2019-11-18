@@ -13,7 +13,7 @@ RUN R -e "install.packages('git2r', type='source', configure.vars='autobrew=yes'
 RUN R -e "devtools::install_github('rstudio/renv')"
 RUN R -e "devtools::install_version('plotly', version = '4.9.0', repos='http://cran.rstudio.com/')"
 #RUN R -e "shinytest::installDependencies()"
-
+RUN R -e "devtools::install_version('shinyBS', repos='http://cran.rstudio.com/')"
 
 
 
