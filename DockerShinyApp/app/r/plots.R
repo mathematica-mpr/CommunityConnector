@@ -225,6 +225,7 @@ radar_chart(testdf, dd)
 
 
 #Radar Chart Overlay Function-----
+#with adjust
 
 #test datframe
 testdf
@@ -287,7 +288,11 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
                     color = paste0(config$colors$green100),
                     opacity = 1),
       opacity = .6,
-      hoverinfo = 'none',
+      #hover label
+      name = paste(df[1,1], "County"),
+      hovertemplate = ~paste('<b>Category</b>: %{theta}',
+                             '<br><b>Score</b>: %{r:.2f}',
+                             '<extra></extra>')
       name = paste(df2[1,1], "County")
     ) %>% 
     layout(
@@ -462,3 +467,257 @@ density_plot <- function(data) {
 }
 
 density_plot(testdf)
+
+
+#################################
+grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
+  # get labels for sdohs
+  radar_names <- get_dd(dd, "sdoh_score") %>% 
+    dplyr::pull(descrip_new)
+  radar_names <- append(radar_names, radar_names[1])
+  
+  # !! hard coding sdoh names as abbreviations
+  radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
+  
+  # parameters
+  n_rows <- ceiling(n_matches / 4) # exec decision to make 4 columns
+  
+  # this should go outside of this function since it applies to all radar graphs
+  radialaxis_list <- list(
+    range = c(0,1),
+    angle = 90,
+    tickangle = 90,
+    dtick = .5, 
+    tickwidth = 2,
+    tickfont = list(size = 8)
+  )
+  
+  angularaxis_list <- list(
+    tickfont = list(size =  10),
+    rotation = 0
+  )
+  
+  hoverlabel_list <- list(
+    namelength = -1
+  )
+  
+  # get first county
+  df1 <- df[1,]
+  points1 <- select(df1, starts_with("sdoh"))
+  points1 <- append(points1, points1[1]) %>% 
+    unlist()
+  
+  # create first county radar chart
+  p <- plot_ly(width = 1000, height = 1000) %>% 
+    add_trace(
+      type = 'scatterpolar',
+      mode = 'markers+lines',
+      r = points1,
+      theta = radar_names,
+      #aesthetics
+      fill = 'toself',
+      fillcolor = paste0(config$colors$teal100, "CC"),
+      line = list(dash = "solid", 
+                  color = paste0(config$colors$green100), 
+                  width = .8, 
+                  shape = 'spline', 
+                  smoothing = .9),
+      marker = list(size = 7,
+                    color = paste0(config$colors$green100),
+                    opacity = 1),
+      opacity = .9,
+      #hover label
+      hoverinfo = 'text',
+      text = paste0(df1$county, ", ", df1$state)
+    ) %>% 
+    layout(  
+      polar = list(
+        domain = list(row = 0, column = 0),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) 
+  
+  # create all subsequent radar charts
+  for (i in 2:dim(df)[1]) {
+    df_one <- df[i,]
+    radar_points <- select(df_one, starts_with("sdoh"))
+    radar_points <- append(radar_points, radar_points[1]) %>% 
+      unlist()
+    
+    p <- p %>%  
+      add_trace(
+        type = 'scatterpolar',
+        mode = 'markers+lines',
+        r = radar_points,
+        theta = radar_names,
+        #aesthetics
+        fill = 'toself',
+        fillcolor = paste0(config$colors$teal100, "CC"),
+        line = list(dash = "solid", 
+                    color = paste0(config$colors$green100), 
+                    width = .8, 
+                    shape = 'spline', 
+                    smoothing = .9),
+        marker = list(size = 7,
+                      color = paste0(config$colors$green100),
+                      opacity = 1),
+        opacity = .9,
+        #hover label
+        hoverinfo = 'text',
+        text = paste0(df_one$county, ", ", df_one$state),
+        subplot = paste0('polar', i)
+      ) 
+  }
+  
+  # hard coding positions of the 20 plots
+  p <- p %>% 
+    layout(
+      polar2 = list(
+        domain = list(row = 0, column = 1),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar3 = list(
+        domain = list(row = 0, column = 2),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar4 = list(
+        domain = list(row = 0, column = 3),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%  
+    layout(
+      polar5 = list(
+        domain = list(row = 1, column = 0),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%
+    layout(
+      polar6 = list(
+        domain = list(row = 1, column = 1),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar7 = list(
+        domain = list(row = 1, column = 2),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar8 = list(
+        domain = list(row = 1, column = 3),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%  
+    layout(
+      polar9 = list(
+        domain = list(row = 2, column = 0),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%
+    layout(
+      polar10 = list(
+        domain = list(row = 2, column = 1),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar11 = list(
+        domain = list(row = 2, column = 2),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar12 = list(
+        domain = list(row = 2, column = 3),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%  
+    layout(
+      polar13 = list(
+        domain = list(row = 3, column = 0),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%
+    layout(
+      polar14 = list(
+        domain = list(row = 3, column = 1),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar15 = list(
+        domain = list(row = 3, column = 2),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar16 = list(
+        domain = list(row = 3, column = 3),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    )  %>%  
+    layout(
+      polar17 = list(
+        domain = list(row = 4, column = 0),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>%
+    layout(
+      polar18 = list(
+        domain = list(row = 4, column = 1),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar19 = list(
+        domain = list(row = 4, column = 2),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(
+      polar20 = list(
+        domain = list(row = 4, column = 3),
+        radialaxis = radialaxis_list,
+        angularaxis = angularaxis_list
+      )
+    ) %>% 
+    layout(showlegend = F,
+           hoverlabel = hoverlabel_list,
+           grid = list(
+             rows = 5,
+             columns = 4,
+             pattern = 'independent',
+             xgap = .0001
+           ),
+           autosize = F,
+           margin = list(t = 1, b = 1, r = 1, l = 1)
+           )
+  
+  return(p)
+  
+}
+grid_radar(dat, dd)
