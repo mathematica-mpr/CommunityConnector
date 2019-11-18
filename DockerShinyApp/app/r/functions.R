@@ -243,7 +243,6 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
-      margin = list(t=70),
       showlegend = T
     )
   return(p)
@@ -251,7 +250,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .007) {
+grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -319,7 +318,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -327,8 +326,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       hoverlabel = hoverlabel_list,
       title = list(
         text = 'Scores for Matching Counties'
-      ),
-      margin = list(t = 30)
+      )
     ) 
   
   # create all subsequent radar charts
@@ -369,7 +367,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar2 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -380,7 +378,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar3 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -391,7 +389,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar4 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -402,7 +400,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar5 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -413,7 +411,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar6 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -424,7 +422,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar7 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -435,7 +433,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar8 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -446,7 +444,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar9 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -457,7 +455,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar10 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -468,7 +466,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar11 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -479,7 +477,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar12 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -490,7 +488,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar13 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -501,7 +499,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar14 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -512,7 +510,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar15 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -523,7 +521,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar16 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -534,7 +532,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar17 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -545,7 +543,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar18 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -556,7 +554,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar19 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
@@ -567,7 +565,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
       polar20 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
