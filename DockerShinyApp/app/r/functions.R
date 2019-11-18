@@ -250,7 +250,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -293,7 +293,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
     unlist()
   
   # create first county radar chart
-  p <- plot_ly(width = 800, height = 800) %>% 
+  p <- plot_ly(width = 700, height = 800) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
@@ -577,9 +577,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
       ),
       hoverlabel = hoverlabel_list
     ) %>% 
-    layout(showlegend = F,
-           grid = list(pattern = 'independent', 
-                       domain = list(x = c(0,.1), y = c(0,.1)))
+    layout(showlegend = F
            )
   
   return(p)
