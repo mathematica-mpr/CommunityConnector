@@ -30,8 +30,8 @@ ui <- bootstrapPage(
                                                       )))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
-                     tabsetPanel(type = 'tabs',
-                                 tabPanel("My Matches",
+                     tabsetPanel(type = 'pills',
+                                 tabPanel("My Matches", 
                                           plotlyOutput("compare_county_radars",
                                                        height = "600px"
                                                        ),
