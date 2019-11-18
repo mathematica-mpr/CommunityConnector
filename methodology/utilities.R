@@ -1,26 +1,9 @@
-library(tidyverse)
-# devtools::install_github("UrbanInstitute/urbnmapr")
-library(urbnmapr)
-library(plotly)
-library(ggplot2)
-# install.packages("maps")
-# install.packages("mapdata")
-library(maps)
-library(mapdata)
-library(stringr)
-library(fmsb)
-library(randomForest)
-library(caret)
-library(glmnet)
-library(glmnetUtils)
-library(data.table)
-library(gbm)
-library(MLmetrics)
-# install.packages("distances")
-library(distances)
-# install.packages("psycho")
-library(psycho)
-library(OpenRepGrid)
+list.of.packages <- c("tidyverse","plotly","ggplot2","maps","mapdata","stringr","fmsb","randomForest",
+                      "caret","glmnet","glmnetUtils","data.table","gbm","MLmetrics","distances",
+                      "psycho","OpenRepGrid")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+lapply(list.of.packages, library, character.only = TRUE)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
@@ -172,15 +155,15 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
     
     # cross validation for alpha and lambda
     if(length(n_rows) == 0){
-      cva <- cva.glmnet(formula, data = use_data)
+      cva <- glmnetUtils::cva.glmnet(formula, data = use_data)
       
-      cv.glmnet.dt <- data.table()
+      cv.glmnet.dt <- data.table::data.table()
       for (i in c(1:length(cva$alpha))){
         glmnet.model <- cva$modlist[[i]]
         min.mse <-  min(glmnet.model$cvm)
         min.lambda <- glmnet.model$lambda.min
         alpha.value <- cva$alpha[i]
-        new.cv.glmnet.dt <- data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
+        new.cv.glmnet.dt <- data.table::data.table(alpha=alpha.value,min_mse=min.mse,min_lambda=min.lambda)
         cv.glmnet.dt <- rbind(cv.glmnet.dt,new.cv.glmnet.dt)
       }
       
@@ -320,11 +303,20 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
   methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
   
+  # check for normal variables
+  if(method %in% c("lasso euclidean all","lasso euclidean dem")){
+    message("All variables must be normalized")
+  }
+  
+  # empty list that will be filled in with distance matrices
+  distance_list <- list()
+  
   start_time <- Sys.time()
   print(methodology)
   print(start_time)
   
   # Loop through all outcomes
+  n <- 1
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
@@ -336,6 +328,8 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
                                         sdoh_scores = use_sdoh_scores, sdoh_raw = use_sdoh_raw,
                                         outcome = use_outcome, dem = use_dems)
     
+    # this chunk makes the code more efficient so we don't have to tune the same model multiple times for the same outcome/variables
+    # instead, we can input tuning parameters from a past best model
     n_rows <- nrow(all_outcome_params)
     model_params <- NA
     if(length(n_rows) != 0){
@@ -348,17 +342,20 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
     dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
     distancem <- dist_results[1][[1]]
     mse <- dist_results[2][[1]]
+    # best tuning parameters to save in case we need to re-run
     mtry <- dist_results[3][[1]]
     alpha <- dist_results[4][[1]]
     min_lambda <- dist_results[5][[1]]
+    coefs_df <- dist_results[6][[1]]
     
+    # use total number of counties if we didn't specify how many to use
     if(is.na(num_counties)){
       n_counties <- dim(distancem)[1]
     } else {
       n_counties <- num_counties
     }
     
-    # Loop through counties
+    # Loop through counties to get spread metrics for each county's top 5 most similar
     for(county_num in c(1:n_counties)){
       data <- select_county(orig_data, distancem, county_num)
       
@@ -388,13 +385,25 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
       }
       
     }
+    
+    # append coefficients of all models
+    if(n == 1){
+      coefs_all <- coefs_df
+    } else {
+      coefs_all <- coefs_all %>% 
+        merge(coefs_df, by = "name", all.x = TRUE, all.y = TRUE)
+    }
+    names(coefs_all)[n+1] <- use_outcome
+    distance_list[[n]] <- distancem
+    n <- n+1
+    
   }
   
   end_time <- Sys.time()
   print(paste0("Time elapsed: ", end_time - start_time))
   start_time <- end_time
   
-  return(full_results)
+  return(list(full_results,distance_list, coefs_all))
 }
 
 check_normal <- function(use_data){
