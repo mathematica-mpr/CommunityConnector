@@ -3,10 +3,9 @@ ui <- bootstrapPage(
  # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
     column(width = 4, h2("Community Connector")),
-    column(width = 6,
-           HTML("Discover communities that are similar to yours.<br>
-                   Understand how you compare in health outcomes and utilzation.<br>
-                   See what your peers do differently.")),
+    column(width = 3,
+           HTML(lang_cfg$intro)),
+    column(width = 3),
     column(width = 2, uiOutput("logo"))),
   fluidRow(
     sidebarPanel(width = 2,
