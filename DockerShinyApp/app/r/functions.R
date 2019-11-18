@@ -320,7 +320,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .007) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      title = list(
+        text = 'Scores for Matching Counties'
+      ),
+      margin = list(t = 30)
     ) 
   
   # create all subsequent radar charts
