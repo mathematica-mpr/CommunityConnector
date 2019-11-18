@@ -18,6 +18,7 @@ library(leaflet)
 library(shinyBS)
 
 config <- yaml.load_file("./config.yaml")
+lang_cfg <- yaml.load("./lang_cfg.yaml")
 
 source("./r/functions.R")
 
