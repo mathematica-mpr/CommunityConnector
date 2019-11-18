@@ -325,8 +325,12 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
       ),
       hoverlabel = hoverlabel_list,
       title = list(
-        text = 'Scores for Matching Counties'
-      )
+        text = 'Scores for Matching Counties',
+        font = list(
+          size = 20
+        )
+      ),
+      margin = list(t = 50, l = 1, r = 10)
     ) 
   
   # create all subsequent radar charts
