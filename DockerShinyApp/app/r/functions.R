@@ -278,7 +278,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
   )
   
   hoverlabel_list <- list(
-    namelength = -1
+    namelength = -1,
+    bgcolor = paste0(config$colors$green100)
   )
   
   margin_list <- list(
@@ -311,8 +312,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      hoverinfo = 'text',
-      text = paste0(df1$county, ", ", df1$state)
+      hoverinfo = 'name',
+      name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(  
       polar = list(
@@ -359,8 +360,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .006, ty = .015) {
                       opacity = 1),
         opacity = .9,
         #hover label
-        hoverinfo = 'text',
-        text = paste0(df_one$county, ", ", df_one$state),
+        hoverinfo = 'name',
+        name = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
       ) 
   }
