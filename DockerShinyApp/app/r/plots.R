@@ -1,4 +1,5 @@
 county_fips <- "8001"
+
 county_dat <- dat %>% filter(fips == county_fips)
 
 st <- dat %>% pull(state) %>% unique()
@@ -6,7 +7,7 @@ state <- state.name[match(st, state.abb)]
 
 my_matches <- find_my_matches(county_fips, dat)[[2]] 
 
-#
+
 # radar chart ----------------------------
 
 radardd <- get_dd(dd,"sdoh_score")
@@ -48,35 +49,24 @@ y_max <- co_box[4]
 selected_geo <- co %>% filter(GEOID == str_pad(county_fips, width = 5, side = "left", pad = "0"))
 co <- co %>% filter(GEOID != str_pad(county_fips, width = 5, side = "left", pad = "0"))
 county_label <- sprintf(
-  "<strong>Selected County:</strong> %s (%s) <br/>
-  <strong>Comparison County:</strong> %s (%s) <br/>
-  <strong>Distance:</strong> %g </sup>",
-  selected_geo$NAME[1], selected_geo$GEOID[1],
-  co$NAME, co$GEOID, round(co$distance, 3)
+  "<strong>Comparison County:</strong> %s County (%s) <br/>
+  <strong>Similarity to %s County:</strong> %s <br/>",
+  co$NAME, co$GEOID, selected_geo$NAME[1], co$cat
 ) %>%
   lapply(htmltools::HTML)
 selected_county_label <- sprintf(
-  "<strong>Selected County:</strong> %s (%s) <br/>
-  <strong>Comparison County:</strong> NA <br/>
-  <strong>Distance:</strong> NA </sup>",
+  "<strong>Selected County:</strong> %s (%s) <br/>",
   selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
   lapply(htmltools::HTML)
 # Add labels for hospitals / overlap here
 
-# Number of breaks depends on range of distances
-if (ceiling(max(co$distance)) > 6) {
-  color_pal <- colorBin("magma", co$distance,
-                        bins = c(seq(0, ceiling(max(co$distance)), by = 1.5)),
-                        reverse = TRUE)
-} else if (ceiling(max(co$distance)) <= 6 & ceiling(max(co$distance)) > 3) {
-  color_pal <- colorBin("magma", co$distance,
-                        bins = c(seq(0, ceiling(max(co$distance)), by = 1)),
-                        reverse = TRUE)
-} else {
-  color_pal <- colorBin("magma", co$distance,
-                        bins = c(seq(0, ceiling(max(co$distance)), by = 0.5)),
-                        reverse = TRUE)
-}
+# Always 4 quantile breaks
+co <- co %>%
+  mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
+    labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
+    include.lowest = TRUE))
+
+color_pal <- colorFactor("magma", co$cat, na.color = "gray")
 
 map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
   setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
@@ -86,7 +76,7 @@ map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
                lat2 = y_max) %>%
   addProviderTiles(providers$Stamen.TonerLite) %>%
   addPolygons(data = co,
-              color = ~color_pal(co$distance),
+              color = ~color_pal(co$cat),
               weight = 1,
               smoothFactor = 1,
               label = county_label,
@@ -97,8 +87,8 @@ map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
               highlightOptions = highlightOptions(color = "black",
                                                   weight =  2,
                                                   bringToFront = TRUE)) %>%
-  addLegend(pal = color_pal, values = co$distance, position = "topright",
-            labFormat = labelFormat(suffix = " Units"), title = "Distance") %>%
+  addLegend(pal = color_pal, values = co$cat, position = "topright",
+            title = "Similarity to selected county") %>%
   addPolygons(data = selected_geo,
               color = "black",
               fillOpacity = 0.7,
@@ -144,10 +134,10 @@ ggplot(df_outcome1, aes(x=value)) + geom_density() +
 #Radar Chart with Plotly-----
 
 #example dataframe
-testdf <- c("Rio Grande", state, county_dat %>% select(starts_with("sdoh_score"))) %>% 
+testdf <- c("Cook", state, county_dat %>% select(starts_with("sdoh_score"))) %>% 
   as.data.frame()
 
-#Radar Chart Function
+#Radar Chart Function-----
 radar_chart <- function(df, dictionary) {
   #function to output interactive polar plot of SDOH Scores for one county
   
@@ -225,7 +215,6 @@ radar_chart(testdf, dd)
 
 
 #Radar Chart Overlay Function-----
-#with adjust
 
 #test datframe
 testdf
@@ -288,11 +277,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
                     color = paste0(config$colors$green100),
                     opacity = 1),
       opacity = .6,
-      #hover label
-      name = paste(df[1,1], "County"),
-      hovertemplate = ~paste('<b>Category</b>: %{theta}',
-                             '<br><b>Score</b>: %{r:.2f}',
-                             '<extra></extra>')
+      hoverinfo = 'none',
       name = paste(df2[1,1], "County")
     ) %>% 
     layout(
@@ -332,392 +317,3 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 }
 
 radar_chart_overlay(testdf, testdf2, dd)
-
-
-#
-#Density plot: All + Matches, Plotly------
-
-testdf <- df_outcome1
-
-density_plot <- function(data) {
-  #function to output density plot for specific outcome
-  
-  #finding densities
-  density_all <- density(data$value)
-  density_matches <- filter(data, type == 'matches') %>% 
-    pull(value) %>% 
-    density()
-  #Density Plot
-  p <- plot_ly() %>%
-    #Density plot for All Counties
-    add_trace(
-      type = 'scatter',
-      mode = 'lines',
-      x = ~density_all$x,
-      y = ~density_all$y,
-      line = list(
-        color = paste0(config$colors$grey100),
-        width = 2
-      ),
-      fill = 'tozeroy',
-      fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Density Plot Of\nAll Counties",
-      hoverinfo = 'name'
-    ) %>% 
-    #Density plot for Matching Counties
-    add_trace(
-      type = 'scatter',
-      mode = 'lines',
-      x = ~density_matches$x,
-      y = ~density_matches$y,
-      fill = 'tozeroy',
-      fillcolor = paste0(config$colors$teal100, '65'),
-      line = list(
-        color = paste0(config$colors$teal100), 
-        width = 2
-      ),
-      name = 'Density Plot of\nMatching Counties',
-      hoverinfo = 'name'
-    ) %>% 
-    #Markers for Matching Counties
-    add_trace(
-      type = 'scatter',
-      mode = 'markers+lines',
-      x = filter(data, type == 'matches')$value,
-      y = 0, 
-      marker = list(
-        symbol = 'diamond',
-        color = paste0(config$colors$teal100),
-        opacity = .8,
-        size = 17,
-        line = list(
-          width = 1,
-          color = paste0(config$colors$white100)
-        )
-      ),
-      line = list(
-        width = 0
-      ),
-      text = filter(data, type == 'matches')$county,
-      hoverinfo = 'text',
-      cliponaxis = F
-    ) %>% 
-    #Markers for my County
-    add_trace(
-      type = 'scatter',
-      mode = 'markers+lines',
-      x = filter(data, type == 'selected')$value,
-      y = 0,
-      marker = list(
-        symbol = 'diamond',
-        color = paste0(config$colors$yellow125),
-        opacity = 1,
-        size = 17,
-        line = list(
-          width = 1, 
-          color = paste0(config$colors$yellow125)
-        )
-      ),
-      text = filter(data, type == 'selected')$county,
-      hoverinfo = 'text',
-      cliponaxis = F
-    ) %>% 
-    layout(
-      title = list(
-        text = paste(data$description[1]),
-        font = list(
-          size = 18,
-          color = paste0(config$colors$purple100)
-        ),
-        xref = 'paper',
-        x = '0'
-      ),
-      hoverlabel = list(
-        namelength = 40
-      ),
-      #Line for My County
-      shapes = list(
-        type = 'line',
-        xref = 'x',
-        yref = 'y',
-        x0 = filter(data, type == 'selected')$value,
-        x1 = filter(data, type == 'selected')$value,
-        y0 = 0,
-        y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
-        line = list(
-          color = paste0(config$colors$yellow125),
-          width = 3,
-          dash = 'longdash'
-        )
-      ),
-      xaxis = list(
-        title = "",
-        showgrid = F,
-        zeroline = T
-      ),
-      yaxis = list(
-        title = "Relative Frequency",
-        showgrid = F,
-        showline = T, 
-        range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
-      ),
-      showlegend = F
-    )
-  return(p)
-}
-
-density_plot(testdf)
-
-
-#################################
-grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
-  # get labels for sdohs
-  radar_names <- get_dd(dd, "sdoh_score") %>% 
-    dplyr::pull(descrip_new)
-  radar_names <- append(radar_names, radar_names[1])
-  
-  # !! hard coding sdoh names as abbreviations
-  radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
-  
-  # parameters
-  n_rows <- ceiling(n_matches / 4) # exec decision to make 4 columns
-  
-  # this should go outside of this function since it applies to all radar graphs
-  radialaxis_list <- list(
-    range = c(0,1),
-    angle = 90,
-    tickangle = 90,
-    dtick = .5, 
-    tickwidth = 2,
-    tickfont = list(size = 8)
-  )
-  
-  angularaxis_list <- list(
-    tickfont = list(size =  10),
-    rotation = 0
-  )
-  
-  hoverlabel_list <- list(
-    namelength = -1
-  )
-  
-  # get first county
-  df1 <- df[1,]
-  points1 <- select(df1, starts_with("sdoh"))
-  points1 <- append(points1, points1[1]) %>% 
-    unlist()
-  
-  # create first county radar chart
-  p <- plot_ly(width = 1000, height = 1000) %>% 
-    add_trace(
-      type = 'scatterpolar',
-      mode = 'markers+lines',
-      r = points1,
-      theta = radar_names,
-      #aesthetics
-      fill = 'toself',
-      fillcolor = paste0(config$colors$teal100, "CC"),
-      line = list(dash = "solid", 
-                  color = paste0(config$colors$green100), 
-                  width = .8, 
-                  shape = 'spline', 
-                  smoothing = .9),
-      marker = list(size = 7,
-                    color = paste0(config$colors$green100),
-                    opacity = 1),
-      opacity = .9,
-      #hover label
-      hoverinfo = 'text',
-      text = paste0(df1$county, ", ", df1$state)
-    ) %>% 
-    layout(  
-      polar = list(
-        domain = list(row = 0, column = 0),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) 
-  
-  # create all subsequent radar charts
-  for (i in 2:dim(df)[1]) {
-    df_one <- df[i,]
-    radar_points <- select(df_one, starts_with("sdoh"))
-    radar_points <- append(radar_points, radar_points[1]) %>% 
-      unlist()
-    
-    p <- p %>%  
-      add_trace(
-        type = 'scatterpolar',
-        mode = 'markers+lines',
-        r = radar_points,
-        theta = radar_names,
-        #aesthetics
-        fill = 'toself',
-        fillcolor = paste0(config$colors$teal100, "CC"),
-        line = list(dash = "solid", 
-                    color = paste0(config$colors$green100), 
-                    width = .8, 
-                    shape = 'spline', 
-                    smoothing = .9),
-        marker = list(size = 7,
-                      color = paste0(config$colors$green100),
-                      opacity = 1),
-        opacity = .9,
-        #hover label
-        hoverinfo = 'text',
-        text = paste0(df_one$county, ", ", df_one$state),
-        subplot = paste0('polar', i)
-      ) 
-  }
-  
-  # hard coding positions of the 20 plots
-  p <- p %>% 
-    layout(
-      polar2 = list(
-        domain = list(row = 0, column = 1),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar3 = list(
-        domain = list(row = 0, column = 2),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar4 = list(
-        domain = list(row = 0, column = 3),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%  
-    layout(
-      polar5 = list(
-        domain = list(row = 1, column = 0),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%
-    layout(
-      polar6 = list(
-        domain = list(row = 1, column = 1),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar7 = list(
-        domain = list(row = 1, column = 2),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar8 = list(
-        domain = list(row = 1, column = 3),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%  
-    layout(
-      polar9 = list(
-        domain = list(row = 2, column = 0),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%
-    layout(
-      polar10 = list(
-        domain = list(row = 2, column = 1),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar11 = list(
-        domain = list(row = 2, column = 2),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar12 = list(
-        domain = list(row = 2, column = 3),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%  
-    layout(
-      polar13 = list(
-        domain = list(row = 3, column = 0),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%
-    layout(
-      polar14 = list(
-        domain = list(row = 3, column = 1),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar15 = list(
-        domain = list(row = 3, column = 2),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar16 = list(
-        domain = list(row = 3, column = 3),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    )  %>%  
-    layout(
-      polar17 = list(
-        domain = list(row = 4, column = 0),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>%
-    layout(
-      polar18 = list(
-        domain = list(row = 4, column = 1),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar19 = list(
-        domain = list(row = 4, column = 2),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(
-      polar20 = list(
-        domain = list(row = 4, column = 3),
-        radialaxis = radialaxis_list,
-        angularaxis = angularaxis_list
-      )
-    ) %>% 
-    layout(showlegend = F,
-           hoverlabel = hoverlabel_list,
-           grid = list(
-             rows = 5,
-             columns = 4,
-             pattern = 'independent',
-             xgap = .0001
-           ),
-           autosize = F,
-           margin = list(t = 1, b = 1, r = 1, l = 1)
-           )
-  
-  return(p)
-  
-}
-grid_radar(dat, dd)
