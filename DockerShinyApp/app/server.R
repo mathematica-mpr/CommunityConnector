@@ -467,6 +467,7 @@ server <- function(input, output) {
   # })
   
   # dynamic number of density graphs -------------------------------------------
+
   output$health_outcomes_header <- renderUI({
     req(county_check())
     tagList(
@@ -487,7 +488,7 @@ server <- function(input, output) {
       mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
       # arrange by rank
       arrange_rank(input$outcome_sort) %>%
-      mutate(graphs = purrr::map(data, make_density_graph)) %>%
+      mutate(graphs = purrr::map(data, density_plot)) %>%
       pull(graphs)
   })
   
@@ -496,7 +497,7 @@ server <- function(input, output) {
     
     purrr::iwalk(density_graphs(), ~{
       output_name <- paste0("density_graph", .y)
-      output[[output_name]] <- renderPlot(.x)
+      output[[output_name]] <- renderPlotly(.x)
     })
   })
   
@@ -506,7 +507,7 @@ server <- function(input, output) {
     
     density_plots_list <- purrr::imap(density_graphs(), ~{
       tagList(
-        plotOutput(
+        plotlyOutput(
           outputId = paste0("density_graph", .y)
         ),
         br()
@@ -516,4 +517,4 @@ server <- function(input, output) {
   })
   
   
- }
+}
