@@ -244,7 +244,6 @@ server <- function(input, output) {
     selectInput('comparison_county_selection', label = "Select a county to compare:",
                 choices = c("None", comp_counties), selected = "None")
   })
-
   
   output$comp_county_demo <- DT::renderDT({
     req(comp_county_dat())
@@ -420,38 +419,61 @@ server <- function(input, output) {
   })
   
   # dynamic number of density graphs -------------------------------------------
+
   output$health_outcomes_header <- renderUI({
     req(county_check())
     tagList(
       HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
-      selectInput('outcome_sort', label = 'Sort outcomes by', 
-                  choices = c('most unique' = 'unique', 
-                              'best outcome' = 'best', 'worst outcome' = 'worst'),
-                  selected = 'unique')
-    )
+      fluidRow(
+        column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
+                           choices = c('most unique' = 'unique', 
+                                       'best outcome' = 'best', 'worst outcome' = 'worst'),
+                           selected = 'unique')
+        ),
+        column(width = 6, checkboxInput(inputId = 'show_matches', 
+                                        label = 'Include Density Plot from Matching Counties'),
+               value = F)))
   })
   
-  density_graphs <- eventReactive(input$outcome_sort, {
+  
+  density_graphs <- eventReactive(
+    {input$outcome_sort
+     input$show_matches}, {
     req(outcomes_dat())
     
-    outcomes_dat() %>%
-      group_by(column_name, higher_better) %>%
-      nest() %>%
-      mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-      # arrange by rank
-      arrange_rank(input$outcome_sort) %>%
-      mutate(graphs = purrr::map(data, make_density_graph)) %>%
-      pull(graphs)
+    if (!input$show_matches) {
+      outcomes_dat() %>%
+        group_by(column_name, higher_better) %>%
+        nest() %>%
+        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+        # arrange by rank
+        arrange_rank(input$outcome_sort) %>%
+        mutate(graphs = purrr::map(data, density_plot)) %>%
+        pull(graphs)
+    } else {
+      outcomes_dat() %>%
+        group_by(column_name, higher_better) %>%
+        nest() %>%
+        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+        # arrange by rank
+        arrange_rank(input$outcome_sort) %>%
+        mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+        pull(graphs)
+    }
   })
   
-  observeEvent(input$outcome_sort, {
+  observeEvent(
+    {input$outcome_sort
+    input$show_matches}, {
     req(density_graphs())
     
     purrr::iwalk(density_graphs(), ~{
       output_name <- paste0("density_graph", .y)
-      output[[output_name]] <- renderPlot(.x)
+      output[[output_name]] <- renderPlotly(.x)
     })
   })
+  
+  
   
   output$density_graphs_ui <- renderUI({
     req(county_check())
@@ -459,7 +481,7 @@ server <- function(input, output) {
     
     density_plots_list <- purrr::imap(density_graphs(), ~{
       tagList(
-        plotOutput(
+        plotlyOutput(
           outputId = paste0("density_graph", .y)
         ),
         br()
@@ -469,4 +491,4 @@ server <- function(input, output) {
   })
   
   
- }
+}
