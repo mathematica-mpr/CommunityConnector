@@ -2,14 +2,14 @@ import pandas as pd
 import numpy as np
 import copy
 
-def use_sdoh_normalize(spca_dict, data_dictionary, data, sdoh_score_num):
+def use_sdoh_normalize(data_dictionary, data, sdoh_score_num):
         # https://medium.com/@rrfd/standardize-or-normalize-examples-in-python-e3f174b65dfc
         # normalize variables to get all values between 0 and 1
         # TODO: consider standardizing instead, to get values centered around 0?
         # the outliers still remain visible
         # then take weighted average using pct variance explained from PCA
         
-        spca_dict_data = spca_dict[spca_dict['sdoh_Category'] == sdoh_score_num]
+        spca_dict_data = data_dictionary[data_dictionary['sdoh_Category'] == sdoh_score_num]
 
         cols = list(spca_dict_data['Variable_Name'])
         print(cols)
@@ -94,7 +94,7 @@ def SdohScores(input, input_data_dictionary, output):
 
     for i in range(1,7):
         print(i)
-        data[f'sdoh_score_{i}'] = use_sdoh_normalize(spca_dict, data_dictionary, data, i)
+        data[f'sdoh_score_{i}'] = use_sdoh_normalize(data_dictionary, data, i)
 
     # are any SDoH scores too correlated
     cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
