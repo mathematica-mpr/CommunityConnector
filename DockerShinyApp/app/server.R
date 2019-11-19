@@ -244,7 +244,6 @@ server <- function(input, output) {
     selectInput('comparison_county_selection', label = "Select a county to compare:",
                 choices = c("None", comp_counties), selected = "None")
   })
-
   
   output$comp_county_demo <- DT::renderDT({
     req(comp_county_dat())
@@ -363,37 +362,25 @@ server <- function(input, output) {
     # Plot counties with proximity score
     # Remove selected county from consideration in popups, and plot separately
     selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
-    selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips)
+    selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
+      mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
+                       labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
+                       include.lowest = TRUE))
     
     county_label <- sprintf(
-      "<strong>Selected County:</strong> %s (%s) <br/>
-    <strong>Comparison County:</strong> %s (%s) <br/>
-    <strong>Distance:</strong> %g </sup>",
-      selected_geo$NAME[1], selected_geo$GEOID[1],
-      selected_state_shp$NAME, selected_state_shp$GEOID, round(selected_state_shp$distance, 3)
+      "<strong>Comparison County:</strong> %s County (%s) <br/>
+      <strong>Similarity to %s County: </strong> %s <br/>",
+      selected_state_shp$NAME, selected_state_shp$GEOID,
+      selected_geo$NAME[1], selected_state_shp$cat
     ) %>%
       lapply(htmltools::HTML)
     selected_county_label <- sprintf(
-      "<strong>Selected County:</strong> %s (%s) <br/>
-    <strong>Comparison County:</strong> NA <br/>
-    <strong>Distance:</strong> NA </sup>",
+      "<strong>Selected County:</strong> %s (%s) <br/>",
       selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
       lapply(htmltools::HTML)
     
-    # Width of bins depends on range of distances
-    if (ceiling(max(selected_state_shp$distance)) > 6) {
-      color_pal <- colorBin("magma", selected_state_shp$distance,
-                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 1.5)),
-                            reverse = TRUE)
-    } else if (ceiling(max(selected_state_shp$distance)) <= 6 & ceiling(max(selected_state_shp$distance)) > 3) {
-      color_pal <- colorBin("magma", selected_state_shp$distance,
-                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 1)),
-                            reverse = TRUE)
-    } else {
-      color_pal <- colorBin("magma", selected_state_shp$distance,
-                            bins = c(seq(0, ceiling(max(selected_state_shp$distance)), by = 0.5)),
-                            reverse = TRUE)
-    }
+    # Always 4 quantile breaks
+    color_pal <- colorFactor("magma", selected_state_shp$cat, na.color = "gray")
     
     leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
       setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
@@ -403,7 +390,7 @@ server <- function(input, output) {
                    lat2 = y_max) %>%
       addProviderTiles(providers$Stamen.TonerLite) %>%
       addPolygons(data = selected_state_shp,
-                  color = ~color_pal(selected_state_shp$distance),
+                  color = ~color_pal(selected_state_shp$cat),
                   weight = 1,
                   smoothFactor = 1,
                   label = county_label,
@@ -414,8 +401,8 @@ server <- function(input, output) {
                   highlightOptions = highlightOptions(color = "black",
                                                       weight =  2,
                                                       bringToFront = TRUE)) %>%
-      addLegend(pal = color_pal, values = selected_state_shp$distance, position = "topright",
-                labFormat = labelFormat(suffix = " Units"), title = "Distance") %>%
+      addLegend(pal = color_pal, values = selected_state_shp$cat, position = "topright",
+                title = "Similarity to selected county") %>%
       addPolygons(data = selected_geo,
                   color = "black",
                   fillOpacity = 0.7,
@@ -431,74 +418,62 @@ server <- function(input, output) {
                                                       bringToFront = TRUE))
   })
   
-  # output$map <- renderPlotly({
-  #   req(county_check())
-  #   
-  #   st <- dat %>% pull(state) %>% unique()
-  #   state <- state.name[match(st, state.abb)]
-  #   
-  #   df <- find_my_matches(county_fips(), dat, 20)[[1]] %>%
-  #     mutate(county = gsub(" county", "", tolower(county)))
-  #   
-  #   county_map_df <- map_data("county") %>%
-  #     filter(region == tolower(state))
-  #   
-  #   df <- full_join(df, county_map_df, by = c("county" = "subregion"))
-  #   
-  #   df %>%
-  #     group_by(group) %>%
-  #     plot_ly(x = ~long, y = ~lat, color = ~fct_explicit_na(fct_rev(factor(distance))),
-  #             colors = viridis_pal(option="D")(3),
-  #             text = ~county, hoverinfo = 'text') %>%
-  #     add_polygons(line = list(width = 0.4)) %>%
-  #     add_polygons(
-  #       fillcolor = 'transparent',
-  #       line = list(color = 'black', width = 0.5),
-  #       showlegend = FALSE, hoverinfo = 'none'
-  #     ) %>%
-  #     layout(
-  #       xaxis = list(title = "", showgrid = FALSE,
-  #                    zeroline = FALSE, showticklabels = FALSE),
-  #       yaxis = list(title = "", showgrid = FALSE,
-  #                    zeroline = FALSE, showticklabels = FALSE),
-  #       showlegend = FALSE
-  #     )
-  #                    
-  # })
-  
   # dynamic number of density graphs -------------------------------------------
+
   output$health_outcomes_header <- renderUI({
     req(county_check())
     tagList(
       HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
-      selectInput('outcome_sort', label = 'Sort outcomes by', 
-                  choices = c('most unique' = 'unique', 
-                              'best outcome' = 'best', 'worst outcome' = 'worst'),
-                  selected = 'unique')
-    )
+      fluidRow(
+        column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
+                           choices = c('most unique' = 'unique', 
+                                       'best outcome' = 'best', 'worst outcome' = 'worst'),
+                           selected = 'unique')
+        ),
+        column(width = 6, checkboxInput(inputId = 'show_matches', 
+                                        label = 'Include Density Plot from Matching Counties'),
+               value = F)))
   })
   
-  density_graphs <- eventReactive(input$outcome_sort, {
+  
+  density_graphs <- eventReactive(
+    {input$outcome_sort
+     input$show_matches}, {
     req(outcomes_dat())
     
-    outcomes_dat() %>%
-      group_by(column_name, higher_better) %>%
-      nest() %>%
-      mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-      # arrange by rank
-      arrange_rank(input$outcome_sort) %>%
-      mutate(graphs = purrr::map(data, make_density_graph)) %>%
-      pull(graphs)
+    if (!input$show_matches) {
+      outcomes_dat() %>%
+        group_by(column_name, higher_better) %>%
+        nest() %>%
+        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+        # arrange by rank
+        arrange_rank(input$outcome_sort) %>%
+        mutate(graphs = purrr::map(data, density_plot)) %>%
+        pull(graphs)
+    } else {
+      outcomes_dat() %>%
+        group_by(column_name, higher_better) %>%
+        nest() %>%
+        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+        # arrange by rank
+        arrange_rank(input$outcome_sort) %>%
+        mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+        pull(graphs)
+    }
   })
   
-  observeEvent(input$outcome_sort, {
+  observeEvent(
+    {input$outcome_sort
+    input$show_matches}, {
     req(density_graphs())
     
     purrr::iwalk(density_graphs(), ~{
       output_name <- paste0("density_graph", .y)
-      output[[output_name]] <- renderPlot(.x)
+      output[[output_name]] <- renderPlotly(.x)
     })
   })
+  
+  
   
   output$density_graphs_ui <- renderUI({
     req(county_check())
@@ -506,7 +481,7 @@ server <- function(input, output) {
     
     density_plots_list <- purrr::imap(density_graphs(), ~{
       tagList(
-        plotOutput(
+        plotlyOutput(
           outputId = paste0("density_graph", .y)
         ),
         br()
@@ -516,4 +491,4 @@ server <- function(input, output) {
   })
   
   
- }
+}
