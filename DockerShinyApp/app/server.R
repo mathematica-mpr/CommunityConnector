@@ -479,7 +479,7 @@ server <- function(input, output) {
   })
   
   
-  density_graphs <- eventReactive(c(input$Comp, input$outcome_sort), {
+  density_graphs <- eventReactive(input$outcome_sort, {
     req(outcomes_dat())
     
     if (input$Matches == FALSE) {
