@@ -471,11 +471,15 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
-      selectInput('outcome_sort', label = 'Sort outcomes by', 
-                  choices = c('most unique' = 'unique', 
-                              'best outcome' = 'best', 'worst outcome' = 'worst'),
-                  selected = 'unique')
-    )
+      fluidRow(
+        column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
+                           choices = c('most unique' = 'unique', 
+                                       'best outcome' = 'best', 'worst outcome' = 'worst'),
+                           selected = 'unique')
+        ),
+        column(width = 6, checkboxInput(inputId = 'Matches', 
+                                        label = 'Include Density Plot from Matching Counties'),
+               value = F)))
   })
   
   
