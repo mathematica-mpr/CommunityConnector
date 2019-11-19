@@ -52,11 +52,8 @@ ui <- bootstrapPage(
                                             column(width = 6, DT::DTOutput('my_county_health'))
                                           )),
                                  tabPanel("Health Outcomes",
-                                          #fluidRow(uiOutput('health_outcomes_header')),
-                                          #fluidRow(checkboxInput(inputId = "Matches", 
-                                           #                      label = 'Include Density Plot from Matching Counties', value = F)),
                                           bootstrapPage(div(style = "display:inline-block", uiOutput('health_outcomes_header')),
-                                                        div(style = "display:inline-block", 
+                                                        div(style = "display:inline-block; width: 200px", 
                                                             checkboxInput(inputId = 'Matches', 
                                                             label = 'Include Density Plot from Matching Counties'),
                                                             value = F)
