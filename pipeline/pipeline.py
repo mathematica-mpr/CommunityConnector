@@ -9,6 +9,7 @@ import methodology_utilities as mu
 
 raw_output = 'data/raw/'
 cleaned_output = 'data/cleaned/'
+output = 'data/'
 final_output = 'DockerShinyApp/app/data/'
 
 ######################################
@@ -38,7 +39,7 @@ class MergeCleaned(luigi.Task):
         # folder, even if it was pulled manually or wasn't incorporated into this pipeline
         return None
     def output(self):
-        return luigi.LocalTarget(os.path.join(final_output, 'data_1_merged.csv'))
+        return luigi.LocalTarget(os.path.join(output, 'data_1_merged.csv'))
     def run(self):
         # TODO: will eventually move this to the pipeline_cleaned/folder
         pu.MergeCleaned(cleaned_drive = cleaned_output, output = self.output().path)
@@ -51,7 +52,7 @@ class SelectVariables(luigi.Task):
     def requires(self):
         return MergeCleaned()
     def output(self):
-        return luigi.LocalTarget(os.path.join(final_output,'data_2_selected_variables.csv'))
+        return luigi.LocalTarget(os.path.join(output,'data_2_selected_variables.csv'))
     def run(self):
         pu.SelectVariables(input = self.input().path, output = self.output().path)
 
@@ -62,10 +63,10 @@ class SdohScores(luigi.Task):
     def requires(self):
         return SelectVariables()
     def output(self):
-        return luigi.LocalTarget(os.path.join(final_output, 'data_3_sdoh_scores.csv'))
+        return luigi.LocalTarget(os.path.join(output, 'data_3_sdoh_scores.csv'))
     def run(self):
         mu.SdohScores(input = self.input().path, spca_dictionary = 'data/DictionaryPostSPCA.csv', output = self.output().path,
-        output_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'))
+        output_data_dictionary = os.path.join(output, 'dictionary_2_sdoh_scores.csv'))
 
 class ReduceDisplayVars(luigi.Task):
     def requires(self):
@@ -74,7 +75,7 @@ class ReduceDisplayVars(luigi.Task):
         return luigi.LocalTarget(os.path.join(final_output, 'final_data.csv'))
     def run(self):
         # TODO: multiple outputs from SdohScores to read in the data dictionary directly
-        pu.ReduceDisplayVars(input = self.input().path, input_data_dictionary = os.path.join(final_output, 'dictionary_2_sdoh_scores.csv'),
+        pu.ReduceDisplayVars(input = self.input().path, input_data_dictionary = os.path.join(output, 'dictionary_2_sdoh_scores.csv'),
         output = self.output().path, output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 if __name__ == '__main__':
     luigi.run()
