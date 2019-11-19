@@ -477,7 +477,7 @@ server <- function(input, output) {
                                        'best outcome' = 'best', 'worst outcome' = 'worst'),
                            selected = 'unique')
         ),
-        column(width = 6, checkboxInput(inputId = 'Matches', 
+        column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Include Density Plot from Matching Counties'),
                value = F)))
   })
@@ -486,7 +486,7 @@ server <- function(input, output) {
   density_graphs <- eventReactive(input$outcome_sort, {
     req(outcomes_dat())
     
-    if (input$Matches == FALSE) {
+    if (input$show_matches == FALSE) {
       outcomes_dat() %>%
         group_by(column_name, higher_better) %>%
         nest() %>%
