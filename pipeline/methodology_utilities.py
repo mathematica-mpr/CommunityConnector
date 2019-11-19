@@ -47,7 +47,7 @@ def econ_adjust(econ_cor, data, i):
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
-def FinalDictionary(input, spca_dictionary, output, output_data_dictionary, input_data_dictionary = 'data/data_dictionary.csv'):
+def FinalDictionary(spca_dictionary, output_data_dictionary, input_data_dictionary = 'data/data_dictionary.csv'):
     
     data_dictionary = pd.read_csv(input_data_dictionary)
     spca_dict = pd.read_csv(spca_dictionary)
@@ -79,7 +79,7 @@ def FinalDictionary(input, spca_dictionary, output, output_data_dictionary, inpu
     
     inter_dict.to_csv(output_data_dictionary, index = False)
 
-def SdohScores(input, spca_dictionary, output, output_data_dictionary, input_data_dictionary = 'data/data_dictionary.csv'):
+def SdohScores(input, input_data_dictionary, output):
 
     # read in data and final dictionary
     data = pd.read_csv(input)
