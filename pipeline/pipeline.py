@@ -9,7 +9,7 @@ import methodology_utilities as mu
 
 raw_output = 'data/raw/'
 cleaned_output = 'data/cleaned/'
-final_output = 'data/'
+final_output = 'DockerShinyApp/app/data/'
 
 ######################################
 ###### Data scraping & cleaning ######
