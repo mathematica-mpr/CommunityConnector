@@ -31,6 +31,8 @@ class DemOppAtlas(luigi.Task):
     def run(self):
         pu.OppAtlas(output = self.output().path)
 
+# eventually would add all scraping & cleaning codes
+
 class MergeCleaned(luigi.Task):
     def requires(self):
         # return DemOppAtlas()
@@ -41,7 +43,6 @@ class MergeCleaned(luigi.Task):
     def output(self):
         return luigi.LocalTarget(os.path.join(output, 'data_1_merged.csv'))
     def run(self):
-        # TODO: will eventually move this to the pipeline_cleaned/folder
         pu.MergeCleaned(cleaned_drive = cleaned_output, output = self.output().path)
 
 ######################################
