@@ -9,17 +9,16 @@ library(stringr)
 library(forcats)
 library(ggplot2)
 library(plotly)
-library(r2d3)
 library(shinyWidgets)
 library(yaml)
-library(fmsb)
 library(DT)
-library(usmap)
-library(maps)
 library(viridis)
-
+library(sf)
+library(leaflet)
+library(shinyBS)
 
 config <- yaml.load_file("./config.yaml")
+lang_cfg <- yaml.load_file("./lang_cfg.yaml")
 
 source("./r/functions.R")
 
@@ -30,5 +29,5 @@ dd <- read_csv("./data/final_data_dictionary.csv") %>%
   mutate(descrip_new = str_wrap(description, 10))
 dist_mat <- read_csv("./data/final_distance.csv") %>%
   column_to_rownames(var = "X1")
-  
 
+st_shp <- st_read("./data/county_shp.shp")
