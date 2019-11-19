@@ -22,8 +22,9 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Da
 
 # Advisors
 * **Keri Calkins** - *research lead, methodology support, & back-end support*
-* **Elena Saavedra Jiminez** - *UX lead*
-* Additional thanks to Aaron White, Stephanie Tuerk, Alex Bohl, and Ravi Goyal
+* **Aaron White** - *Technical Advisor*
+* **Elena Saavedra Jimenez** - *UX lead*
+* Additional thanks to Stephanie Tuerk, Alex Bohl, and Ravi Goyal
 
 ## Contribute
 TODO: Explain how other users and developers can contribute to make your code better. 
