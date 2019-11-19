@@ -482,7 +482,7 @@ server <- function(input, output) {
   density_graphs <- eventReactive(c(input$Comp, input$outcome_sort), {
     req(outcomes_dat())
     
-    if (input$Comp == "All") {
+    if (input$Matches == FALSE) {
       outcomes_dat() %>%
         group_by(column_name, higher_better) %>%
         nest() %>%
