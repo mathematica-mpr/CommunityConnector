@@ -485,8 +485,7 @@ server <- function(input, output) {
   
   density_graphs <- eventReactive(
     {input$outcome_sort
-     input$show_matches
-     input$county_selection}, {
+     input$show_matches}, {
     req(outcomes_dat())
     
     if (!input$show_matches) {
