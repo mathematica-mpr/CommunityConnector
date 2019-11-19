@@ -483,10 +483,13 @@ server <- function(input, output) {
   })
   
   
-  density_graphs <- eventReactive(input$outcome_sort, {
+  density_graphs <- eventReactive(
+    {input$outcome_sort
+     input$show_matches
+     input$county_selection}, {
     req(outcomes_dat())
     
-    if (input$show_matches == FALSE) {
+    if (!input$show_matches) {
       outcomes_dat() %>%
         group_by(column_name, higher_better) %>%
         nest() %>%
@@ -507,7 +510,9 @@ server <- function(input, output) {
     }
   })
   
-  observeEvent(input$outcome_sort, {
+  observeEvent(
+    {input$outcome_sort
+    input$show_matches}, {
     req(density_graphs())
     
     purrr::iwalk(density_graphs(), ~{
