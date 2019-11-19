@@ -83,6 +83,7 @@ def SdohScores(input, input_data_dictionary, output):
 
     # read in data and final dictionary
     data = pd.read_csv(input)
+    data_dictionary = pd.read_csv(input_data_dictionary)
 
     # number of columns in data should equal to number of variables in data dictionary
     assert(data.shape[1] == data_dictionary[~data_dictionary['column_name'].str.contains('sdoh_score')].shape[0])
