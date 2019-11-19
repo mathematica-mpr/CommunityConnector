@@ -53,6 +53,7 @@ ui <- bootstrapPage(
                                           )),
                                  tabPanel("Health Outcomes",
                                           fluidRow(uiOutput('health_outcomes_header')),
+                                          fluidRow(selectInput(inputId = "Comp", label = 'Comp', choices = c('All', 'Matches'), selected = 'All')),
                                           fluidRow(
                                             div(id = "density_plot_container",
                                                 uiOutput(outputId = "density_graphs_ui")))),
