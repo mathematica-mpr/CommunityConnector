@@ -66,7 +66,7 @@ rank_outcome <- function(data, higher_better) {
 }
 
 arrange_rank <- function(data, outcome_sort) {
-  if (outcome_sort == 'exceptional') {
+  if (outcome_sort == 'unique') {
     data %>% dplyr::arrange(desc(abs(rank)))
   } else if (outcome_sort == 'best') {
     data %>% dplyr::arrange(rank)
@@ -243,7 +243,6 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
-      margin = list(t=70),
       showlegend = T
     )
   return(p)
@@ -251,7 +250,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -278,6 +277,15 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
     rotation = 0
   )
   
+  hoverlabel_list <- list(
+    namelength = -1,
+    bgcolor = paste0(config$colors$green100)
+  )
+  
+  margin_list <- list(
+    t = 25
+  ) 
+  
   # get first county
   df1 <- df[1,]
   points1 <- select(df1, starts_with("sdoh"))
@@ -285,7 +293,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
     unlist()
   
   # create first county radar chart
-  p <- plot_ly() %>% 
+  p <- plot_ly(width = 700, height = 800) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
@@ -304,18 +312,27 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      #   hoverinfo = 'none',
-      name = paste(df1$county, df1$state)
+      hoverinfo = 'name',
+      name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(  
       polar = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) 
+      ),
+      hoverlabel = hoverlabel_list,
+      title = list(
+        text = 'Scores for Matching Counties',
+        font = list(
+          size = 20
+        )
+      ),
+      margin = list(t = 50, l = 1, r = 10)
+    ) 
   
   # create all subsequent radar charts
   for (i in 2:dim(df)[1]) {
@@ -343,8 +360,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
                       opacity = 1),
         opacity = .9,
         #hover label
-        #  hoverinfo = 'none',
-        name = paste(df_one$county, df_one$state),
+        hoverinfo = 'name',
+        name = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
       ) 
   }
@@ -355,174 +372,213 @@ grid_radar <- function(df, dd, n_matches = 20, t = 0.05) {
       polar2 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar3 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar4 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (1 / n_rows) + t, 1 - t)
+          y = c(1 - (1 / n_rows) + ty, 1 - ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%  
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%  
     layout(
       polar5 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%
     layout(
       polar6 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar7 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar8 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (2 / n_rows) + t, 1 - (1 / n_rows) -  t)
+          y = c(1 - (2 / n_rows) + ty, 1 - (1 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%  
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%  
     layout(
       polar9 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%
     layout(
       polar10 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar11 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar12 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (3 / n_rows) + t, 1 - (2 / n_rows) -  t)
+          y = c(1 - (3 / n_rows) + ty, 1 - (2 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%  
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%  
     layout(
       polar13 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%
     layout(
       polar14 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar15 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar16 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (4 / n_rows) + t, 1 - (3 / n_rows) -  t)
+          y = c(1 - (4 / n_rows) + ty, 1 - (3 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      ))  %>%  
+      ),
+      hoverlabel = hoverlabel_list
+    )  %>%  
     layout(
       polar17 = list(
         domain = list(
           x = c(0 + t, (1 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>%
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>%
     layout(
       polar18 = list(
         domain = list(
           x = c((1/4) + t, (2 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar19 = list(
         domain = list(
           x = c((2/4) + t, (3 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
     layout(
       polar20 = list(
         domain = list(
           x = c((3/4) + t, (4 / 4) - t),
-          y = c(1 - (5 / n_rows) + t, 1 - (4 / n_rows) -  t)
+          y = c(1 - (5 / n_rows) + ty, 1 - (4 / n_rows) -  ty)
         ),
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
-      )) %>% 
-    layout(showlegend = F)
+      ),
+      hoverlabel = hoverlabel_list
+    ) %>% 
+    layout(showlegend = F
+           )
   
   return(p)
 
@@ -545,4 +601,218 @@ make_density_graph <- function(data) {
     geom_vline(data = filter(data, type != "other"),
                aes(xintercept = value, color = as.factor(type))) +
     ggtitle(first(str_wrap(data$description, 80)))
+}
+
+#density plot overlay function-------------------
+density_plot_overlay <- function(data) {
+  #function to output density plot for specific outcome
+  
+  #finding densities
+  density_all <- density(data$value)
+  density_matches <- filter(data, type == 'matches') %>% 
+    pull(value) %>% 
+    density()
+  #Density Plot
+  p <- plot_ly() %>%
+    #Density plot for All Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'lines',
+      x = ~density_all$x,
+      y = ~density_all$y,
+      line = list(
+        color = paste0(config$colors$grey100),
+        width = 2
+      ),
+      fill = 'tozeroy',
+      fillcolor = paste0(config$colors$grey100, '70'),
+      name = "Density Plot Of\nAll Counties",
+      hoverinfo = 'name'
+    ) %>% 
+    #Density plot for Matching Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'lines',
+      x = ~density_matches$x,
+      y = ~density_matches$y,
+      fill = 'tozeroy',
+      fillcolor = paste0(config$colors$teal100, '65'),
+      line = list(
+        color = paste0(config$colors$teal100), 
+        width = 2
+      ),
+      name = 'Density Plot of\nMatching Counties',
+      hoverinfo = 'name'
+    ) %>% 
+    #Markers for Matching Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'markers+lines',
+      x = filter(data, type == 'matches')$value,
+      y = 0, 
+      marker = list(
+        symbol = 'diamond',
+        color = paste0(config$colors$teal100),
+        opacity = .8,
+        size = 17,
+        line = list(
+          width = 1,
+          color = paste0(config$colors$white100)
+        )
+      ),
+      line = list(
+        width = 0
+      ),
+      text = filter(data, type == 'matches')$county,
+      hoverinfo = 'text',
+      cliponaxis = F
+    ) %>% 
+    #Markers for my County
+    add_trace(
+      type = 'scatter',
+      mode = 'markers+lines',
+      x = filter(data, type == 'selected')$value,
+      y = 0,
+      marker = list(
+        symbol = 'diamond',
+        color = paste0(config$colors$yellow125),
+        opacity = 1,
+        size = 17,
+        line = list(
+          width = 1, 
+          color = paste0(config$colors$yellow125)
+        )
+      ),
+      text = filter(data, type == 'selected')$county,
+      hoverinfo = 'text',
+      cliponaxis = F
+    ) %>% 
+    layout(
+      title = list(
+        text = paste(data$description[1]),
+        font = list(
+          size = 18,
+          color = paste0(config$colors$purple100)
+        ),
+        xref = 'paper',
+        x = '0'
+      ),
+      hoverlabel = list(
+        namelength = 40
+      ),
+      #Line for My County
+      shapes = list(
+        type = 'line',
+        xref = 'x',
+        yref = 'y',
+        x0 = filter(data, type == 'selected')$value,
+        x1 = filter(data, type == 'selected')$value,
+        y0 = 0,
+        y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
+        line = list(
+          color = paste0(config$colors$yellow125),
+          width = 3,
+          dash = 'longdash'
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showgrid = F,
+        zeroline = T
+      ),
+      yaxis = list(
+        title = "Relative Frequency",
+        showgrid = F,
+        showline = T, 
+        range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
+      ),
+      showlegend = F
+    )
+  return(p)
+}
+
+density_plot <- function(data) {
+  #function to output density plot for specific outcome
+  
+  #finding densities
+  density_all <- density(data$value)
+  #Density Plot
+  p <- plot_ly() %>%
+    #Density plot for All Counties
+    add_trace(
+      type = 'scatter',
+      mode = 'lines',
+      x = ~density_all$x,
+      y = ~density_all$y,
+      line = list(
+        color = paste0(config$colors$grey100),
+        width = 2
+      ),
+      fill = 'tozeroy',
+      fillcolor = paste0(config$colors$grey100, '70'),
+      name = "Density Plot Of\nAll Counties",
+      hoverinfo = 'name'
+    ) %>% 
+    #Markers for my County
+    add_trace(
+      type = 'scatter',
+      mode = 'markers+lines',
+      x = filter(data, type == 'selected')$value,
+      y = 0,
+      marker = list(
+        symbol = 'diamond',
+        color = paste0(config$colors$yellow125),
+        opacity = 1,
+        size = 17,
+        line = list(
+          width = 1, 
+          color = paste0(config$colors$yellow125)
+        )
+      ),
+      text = filter(data, type == 'selected')$county,
+      hoverinfo = 'text',
+      cliponaxis = F
+    ) %>% 
+    layout(
+      title = list(
+        text = paste(data$description[1]),
+        font = list(
+          size = 18,
+          color = paste0(config$colors$purple100)
+        ),
+        xref = 'paper',
+        x = '0'
+      ),
+      hoverlabel = list(
+        namelength = 40
+      ),
+      #Line for My County
+      shapes = list(
+        type = 'line',
+        xref = 'x',
+        yref = 'y',
+        x0 = filter(data, type == 'selected')$value,
+        x1 = filter(data, type == 'selected')$value,
+        y0 = 0,
+        y1 = max(density_all$y)*.05 + max(density_all$y),
+        line = list(
+          color = paste0(config$colors$yellow125),
+          width = 3,
+          dash = 'longdash'
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showgrid = F,
+        zeroline = T
+      ),
+      yaxis = list(
+        title = "Relative Frequency",
+        showgrid = F,
+        showline = T, 
+        range = c(0, max(density_all$y)*.05 + max(density_all$y))
+      ),
+      showlegend = F
+    )
+  return(p)
 }
