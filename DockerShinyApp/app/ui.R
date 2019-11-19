@@ -30,15 +30,20 @@ ui <- bootstrapPage(
                                                       )))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
-                     tabsetPanel(type = 'pills',
-                                 tabPanel("My Matches", 
+      #               tags$style(HTML("
+      #  .tabbable > .nav > li > a {
+      #     background-color: #000;
+      #     color: #FFF;
+      #  }")),
+                     tabsetPanel(type = 'pills', id = "tabs",
+                                 tabPanel(span("My Matches", title = lang_cfg$my_matches),
                                           plotlyOutput("compare_county_radars",
                                                        height = "600px"
                                                        ),
                                           br(),
                                           HTML("<center>ES: Economic Stability, NEP: Neighborhood & Physical Environment, <br>
                                                E = Education, F = Food, C = Community, HC = Health Coverage </center>")),
-                                 tabPanel("Demographics",
+                                 tabPanel(span("Demographics", title = lang_cfg$demographics),
                                           fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
                                           fluidRow(
                                             column(width = 6, DT::DTOutput('my_county_econ_stab')),
@@ -52,12 +57,12 @@ ui <- bootstrapPage(
                                             column(width = 6, DT::DTOutput('my_county_community')),
                                             column(width = 6, DT::DTOutput('my_county_health'))
                                           )),
-                                 tabPanel("Health Outcomes",
+                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
                                           fluidRow(uiOutput('health_outcomes_header')),
                                           fluidRow(
                                             div(id = "density_plot_container",
                                                 uiOutput(outputId = "density_graphs_ui")))),
-                                 tabPanel("County Map",
+                                 tabPanel(span("County Map", title = lang_cfg$map),
                                           fluidRow(leafletOutput("map")))
                      )
               )
