@@ -60,14 +60,21 @@ class SelectVariables(luigi.Task):
 ## TODO: from here, we can run SPCA
 ## this can't be part of the pipeline because there is a manual component to it
 
-class SdohScores(luigi.Task):
+class FinalDictionary(luigi.Task):
     def requires(self):
         return SelectVariables()
     def output(self):
+        return luigi.LocalTarget(os.path.join(output, 'dictionary_2_sdoh_scores.csv'))
+    def run(self):
+        mu.FinalDictionary(spca_dictionary = 'data/DictionaryPostSPCA.csv', output_data_dictionary = self.output().path)
+
+class SdohScores(luigi.Task):
+    def requires(self):
+        return {'data': SelectVariables(), 'dictionary': FinalDictionary()}
+    def output(self):
         return luigi.LocalTarget(os.path.join(output, 'data_3_sdoh_scores.csv'))
     def run(self):
-        mu.SdohScores(input = self.input().path, spca_dictionary = 'data/DictionaryPostSPCA.csv', output = self.output().path,
-        output_data_dictionary = os.path.join(output, 'dictionary_2_sdoh_scores.csv'))
+        mu.SdohScores(input = self.input().path['data'], input_data_dictionary = self.input().path['dictionary'], output = self.output().path)
 
 class ReduceDisplayVars(luigi.Task):
     def requires(self):
