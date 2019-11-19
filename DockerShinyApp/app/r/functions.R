@@ -604,7 +604,7 @@ make_density_graph <- function(data) {
 }
 
 #density plot overlay function-------------------
-density_plot <- function(data) {
+density_plot_overlay <- function(data) {
   #function to output density plot for specific outcome
   
   #finding densities
