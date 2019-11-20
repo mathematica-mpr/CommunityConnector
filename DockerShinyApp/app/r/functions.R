@@ -256,9 +256,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
     dplyr::pull(descrip_new)
   radar_names <- append(radar_names, radar_names[1])
   
-  # !! hard coding sdoh names as abbreviations
-  #radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
-  
   # parameters
   n_rows <- ceiling(n_matches / 4) # exec decision to make 4 columns
   
@@ -281,8 +278,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
     namelength = -1,
     bgcolor = paste0(config$colors$green100)
   )
-  
-  hovertemplate_list = paste('%{theta}')
   
   margin_list <- list(
     t = 25
@@ -316,9 +311,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
       hovertemplate = paste("<b>%{theta} Score:</b>", 
                             "<br>%{r:.2f}",
                             '<extra></extra>'),
-      #hover label
-      #hoverinfo = 'name',
       name = paste0(df1$county, ", ", df1$state)
+      #text = 'Title', 
+      #textposition = "middle center",
+      #textfont = list(size = 10)
     ) %>% 
     layout(  
       polar = list(
@@ -336,20 +332,44 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
           size = 20
         )
       ),
-      margin = list(t = 50, l = 1, r = 10)
+      margin = list(t = 50, l = 1, r = 10),
+      annotations = list(
+        x = 0 + t,
+        y = 1 - ty,
+        text = paste(a[20]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'left',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) 
   
   # create all subsequent radar charts
+  a <- vector()
   for (i in 2:dim(df)[1]) {
     df_one <- df[i,]
     radar_points <- select(df_one, starts_with("sdoh"))
     radar_points <- append(radar_points, radar_points[1]) %>% 
       unlist()
+    #a[[i]] <- list(
+    #  text = paste(i),
+    #  xref = 'paper',
+    #  yref = 'paper',
+    #  yanchor = 'bottom',
+    #  xanchor = 'center',
+    #  alighn = 'center',
+    #  x = .5,
+    #  y = 1,
+    #  showarrow = F
+    #)
+    
+    a[i] <- df_one$county
     
     p <- p %>%  
       add_trace(
         type = 'scatterpolar',
-        mode = 'markers+lines',
+        mode = 'markers+lines+text',
         r = radar_points,
         theta = radar_names,
         #aesthetics
@@ -367,10 +387,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         hovertemplate = paste("<b>%{theta} Score:</b>", 
                               "<br>%{r:.2f}",
                               '<extra></extra>'),
-        #hover label
-        #hoverinfo = 'name',
         name = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
+        #text = paste(i),
+        #textposition = "middle center",
+        #textfont = list(size = 10)
       ) 
   }
   
@@ -385,7 +406,18 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (1/4) + t,
+        y = 1 - ty,
+        text = paste(a[2]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'top',
+        #align = 'center',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar3 = list(
@@ -396,7 +428,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (2/4) + t,
+        y = 1 - ty,
+        text = paste(a[3]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar4 = list(
@@ -407,7 +449,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (3/4) + t,
+        y = 1 - ty,
+        text = paste(a[4]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%  
     layout(
       polar5 = list(
@@ -418,7 +470,18 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = 0 + t,
+        y = 1 - (1 / n_rows) -  ty,
+        text = paste(a[5]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
+      
     ) %>%
     layout(
       polar6 = list(
@@ -429,7 +492,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (1/4) + t,
+        y = 1 - (1 / n_rows) -  ty,
+        text = paste(a[6]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar7 = list(
@@ -440,7 +513,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (2/4) + t,
+        y = 1 - (1 / n_rows) -  ty,
+        text = paste(a[7]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar8 = list(
@@ -451,7 +534,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (3/4) + t,
+        y = 1 - (1 / n_rows) -  ty,
+        text = paste(a[8]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%  
     layout(
       polar9 = list(
@@ -462,7 +555,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = 0 + t,
+        y = 1 - (2 / n_rows) -  ty,
+        text = paste(a[9]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%
     layout(
       polar10 = list(
@@ -473,7 +576,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (1/4) + t,
+        y = 1 - (2 / n_rows) -  ty,
+        text = paste(a[10]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar11 = list(
@@ -484,7 +597,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (2/4) + t,
+        y = 1 - (2 / n_rows) -  ty,
+        text = paste(a[11]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar12 = list(
@@ -495,7 +618,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (3/4) + t,
+        y = 1 - (2 / n_rows) -  ty,
+        text = paste(a[12]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%  
     layout(
       polar13 = list(
@@ -506,7 +639,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = 0 + t,
+        y = 1 - (3 / n_rows) -  ty,
+        text = paste(a[13]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%
     layout(
       polar14 = list(
@@ -517,7 +660,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (1/4) + t,
+        y = 1 - (3 / n_rows) -  ty,
+        text = paste(a[14]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar15 = list(
@@ -528,7 +681,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (2/4) + t,
+        y = 1 - (3 / n_rows) -  ty,
+        text = paste(a[15]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar16 = list(
@@ -539,7 +702,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (3/4) + t,
+        y = 1 - (3 / n_rows) -  ty,
+        text = paste(a[16]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     )  %>%  
     layout(
       polar17 = list(
@@ -550,7 +723,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = 0 + t,
+        y = 1 - (4 / n_rows) -  ty,
+        text = paste(a[17]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>%
     layout(
       polar18 = list(
@@ -561,7 +744,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (1/4) + t,
+        y = 1 - (4 / n_rows) -  ty,
+        text = paste(a[18]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar19 = list(
@@ -572,7 +765,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (2/4) + t,
+        y = 1 - (4 / n_rows) -  ty,
+        text = paste(a[19]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(
       polar20 = list(
@@ -583,7 +786,17 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      hoverlabel = hoverlabel_list,
+      annotations = list(
+        x = (3/4) + t,
+        y = 1 - (4 / n_rows) -  ty,
+        text = paste(a[20]),
+        xref = 'paper',
+        yref = 'paper',
+        xanchor = 'center',
+        yanchor = 'bottom',
+        showarrow = F
+      )
     ) %>% 
     layout(showlegend = F
            )
