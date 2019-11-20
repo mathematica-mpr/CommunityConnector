@@ -111,10 +111,10 @@ radar_chart <- function(df, dictionary) {
                     opacity = 1),
       opacity = .9,
       #hover label
-      name = paste0(df$county, ", ", df$state),
-      hovertemplate = ~paste('<b>Category</b>: %{theta}',
+      hovertemplate = paste('<b>Category</b>: %{theta}',
                              '<br><b>Score</b>: %{r:.2f}',
-                             '<extra></extra>')
+                             '<extra></extra>'),
+      name = paste0(df$county, ", ", df$state)
     ) %>% 
     layout(
       title = list(
@@ -276,15 +276,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
     rotation = 0
   )
   
-  hoverlabel_list <- list(
-    namelength = -1,
-    bgcolor = paste0(config$colors$green100)
-  )
-  
-  margin_list <- list(
-    t = 25
-  ) 
-  
   annotations_list <- list(
     xref = 'paper',
     yref = 'paper',
@@ -335,7 +326,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
+      hoverlabel = list(
+        namelength = -1,
+        bgcolor = paste0(config$colors$green100)
+      ),
       title = list(
         text = 'Scores for Matching Counties',
         font = list(
@@ -398,7 +392,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      #hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (1/4) + t,
         y = 1 - ty,
@@ -414,7 +407,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (2/4) + t,
         y = 1 - ty,
@@ -430,7 +422,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (3/4) + t,
         y = 1 - ty,
@@ -446,7 +437,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = 0 + t,
         y = 1 - (1 / n_rows) -  ty,
@@ -462,7 +452,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (1/4) + t,
         y = 1 - (1 / n_rows) -  ty,
@@ -478,7 +467,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (2/4) + t,
         y = 1 - (1 / n_rows) -  ty,
@@ -494,7 +482,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (3/4) + t,
         y = 1 - (1 / n_rows) -  ty,
@@ -510,7 +497,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = 0 + t,
         y = 1 - (2 / n_rows) -  ty,
@@ -526,7 +512,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (1/4) + t,
         y = 1 - (2 / n_rows) -  ty,
@@ -542,7 +527,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (2/4) + t,
         y = 1 - (2 / n_rows) -  ty,
@@ -558,7 +542,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (3/4) + t,
         y = 1 - (2 / n_rows) -  ty,
@@ -574,7 +557,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = 0 + t,
         y = 1 - (3 / n_rows) -  ty,
@@ -590,7 +572,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (1/4) + t,
         y = 1 - (3 / n_rows) -  ty,
@@ -606,7 +587,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (2/4) + t,
         y = 1 - (3 / n_rows) -  ty,
@@ -622,7 +602,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (3/4) + t,
         y = 1 - (3 / n_rows) -  ty,
@@ -638,7 +617,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = 0 + t,
         y = 1 - (4 / n_rows) -  ty,
@@ -654,7 +632,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (1/4) + t,
         y = 1 - (4 / n_rows) -  ty,
@@ -670,7 +647,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (2/4) + t,
         y = 1 - (4 / n_rows) -  ty,
@@ -686,7 +662,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
       annotations = c(list(
         x = (3/4) + t,
         y = 1 - (4 / n_rows) -  ty,
@@ -695,7 +670,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
     ) %>% 
     layout(
       showlegend = F
-           )
+      )
   
   return(p)
 
