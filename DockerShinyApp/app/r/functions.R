@@ -250,7 +250,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .02) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -312,9 +312,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
                             "<br>%{r:.2f}",
                             '<extra></extra>'),
       name = paste0(df1$county, ", ", df1$state)
-      #text = 'Title', 
-      #textposition = "middle center",
-      #textfont = list(size = 10)
     ) %>% 
     layout(  
       polar = list(
@@ -336,11 +333,13 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
       annotations = list(
         x = 0 + t,
         y = 1 - ty,
-        text = paste(a[20]),
+        text = paste0(df1$county, ", ", df1$state),
         xref = 'paper',
         yref = 'paper',
         xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) 
@@ -352,19 +351,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
     radar_points <- select(df_one, starts_with("sdoh"))
     radar_points <- append(radar_points, radar_points[1]) %>% 
       unlist()
-    #a[[i]] <- list(
-    #  text = paste(i),
-    #  xref = 'paper',
-    #  yref = 'paper',
-    #  yanchor = 'bottom',
-    #  xanchor = 'center',
-    #  alighn = 'center',
-    #  x = .5,
-    #  y = 1,
-    #  showarrow = F
-    #)
     
-    a[i] <- df_one$county
+    a[i] <- paste0(df_one$county, ", ", df_one$state)
     
     p <- p %>%  
       add_trace(
@@ -389,9 +377,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
                               '<extra></extra>'),
         name = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
-        #text = paste(i),
-        #textposition = "middle center",
-        #textfont = list(size = 10)
       ) 
   }
   
@@ -413,9 +398,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[2]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
-        yanchor = 'top',
-        #align = 'center',
+        xanchor = 'top',
+        yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -435,8 +421,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[3]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -456,8 +444,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[4]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%  
@@ -477,8 +467,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[5]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
       
@@ -499,8 +491,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[6]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -520,8 +514,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[7]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -541,8 +537,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[8]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%  
@@ -562,8 +560,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[9]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%
@@ -583,8 +583,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[10]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -604,8 +606,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[11]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -625,8 +629,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[12]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%  
@@ -646,8 +652,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[13]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%
@@ -667,8 +675,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[14]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -688,8 +698,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[15]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -709,8 +721,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[16]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     )  %>%  
@@ -730,8 +744,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[17]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>%
@@ -751,8 +767,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[18]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'top',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -772,8 +790,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[19]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
@@ -793,8 +813,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         text = paste(a[20]),
         xref = 'paper',
         yref = 'paper',
-        xanchor = 'center',
+        xanchor = 'left',
         yanchor = 'bottom',
+        xshift = 44,
+        yshift = 3,
         showarrow = F
       )
     ) %>% 
