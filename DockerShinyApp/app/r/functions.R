@@ -273,7 +273,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
   )
   
   angularaxis_list <- list(
-    tickfont = list(size =  10),
+    showticklabels = F,
     rotation = 0
   )
   
