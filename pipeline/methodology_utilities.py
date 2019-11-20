@@ -47,7 +47,8 @@ def econ_adjust(econ_cor, data, i):
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
-def FinalDictionary(spca_dictionary, output_data_dictionary, input_data_dictionary = 'data/data_dictionary.csv'):
+# TODO: make data dictionary parameter
+def FinalDictionary(spca_dictionary, output_data_dictionary, input_data_dictionary):
     
     data_dictionary = pd.read_csv(input_data_dictionary)
     spca_dict = pd.read_csv(spca_dictionary)
