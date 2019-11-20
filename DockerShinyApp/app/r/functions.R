@@ -257,7 +257,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
   radar_names <- append(radar_names, radar_names[1])
   
   # !! hard coding sdoh names as abbreviations
-  radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
+  #radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
   
   # parameters
   n_rows <- ceiling(n_matches / 4) # exec decision to make 4 columns
