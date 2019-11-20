@@ -110,7 +110,6 @@ radar_chart <- function(df, dictionary) {
                     color = paste0(config$colors$red100),
                     opacity = 1),
       opacity = .9,
-      #hover label
       hovertemplate = paste('<b>Category</b>: %{theta}',
                              '<br><b>Score</b>: %{r:.2f}',
                              '<extra></extra>'),
@@ -144,7 +143,8 @@ radar_chart <- function(df, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$red50)
+        bgcolor = paste0(config$colors$red50),
+        namelength = -1
       ),
       margin = list(t=70),
       showlegend = T,
