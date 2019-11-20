@@ -147,7 +147,8 @@ radar_chart <- function(df, dictionary) {
         bgcolor = paste0(config$colors$red50)
       ),
       margin = list(t=70),
-      showlegend = T
+      showlegend = T,
+      dragmode = F
     )
   return(p)
 }
@@ -243,7 +244,8 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
-      showlegend = T
+      showlegend = T,
+      dragmode = F
     )
   return(p)
 }
@@ -341,11 +343,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         )
       ),
       margin = list(t = 50, l = 1, r = 10),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = 0 + t,
         y = 1 - ty,
         text = paste0(df1$county, ", ", df1$state)
-      ))
+      ), annotations_list)
     ) 
   
   # create all subsequent radar charts
