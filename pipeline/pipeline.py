@@ -7,8 +7,6 @@ sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
-cleaned_output = 'data/cleaned/'
-output = 'data/'
 final_output = 'DockerShinyApp/app/data/'
 
 ######################################
@@ -36,6 +34,11 @@ final_output = 'DockerShinyApp/app/data/'
 # eventually would add all scraping & cleaning codes
 
 class MergeCleaned(luigi.Task):
+    cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
+                                     description = 'Input directory of cleaned, scraped data files')
+    output_dir = luigi.parameter.Parameter(default = 'data/',
+                             description = 'Intermediate data output directory')
+
     def requires(self):
         # return DemOppAtlas()
         # TODO: eventually will require all of the scraping/data cleaning
@@ -43,9 +46,9 @@ class MergeCleaned(luigi.Task):
         # folder, even if it was pulled manually or wasn't incorporated into this pipeline
         return None
     def output(self):
-        return luigi.LocalTarget(os.path.join(output, 'data_1_merged.csv'))
+        return luigi.LocalTarget(os.path.join(self.output_dir, 'data_1_merged.csv'))
     def run(self):
-        pu.MergeCleaned(cleaned_drive = cleaned_output, output = self.output().path)
+        pu.MergeCleaned(cleaned_drive = self.cleaned_output, output = self.output().path)
 
 ######################################
 ######        Methodology       ######
@@ -92,4 +95,4 @@ class ReduceDisplayVars(luigi.Task):
                              output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([ReduceDisplayVars()], local_scheduler=True)
+    luigi.build([MergeCleaned()], local_scheduler=True)
