@@ -7,13 +7,13 @@ sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
-final_output = 'DockerShinyApp/app/data/'
-
 class ParameterDefinitions(object):
     cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
                                      description = 'Input directory of cleaned, scraped data files')
     output_dir = luigi.parameter.Parameter(default = 'data/',
                              description = 'Intermediate data output directory')
+    final_output = luigi.parameter.Parameter(default = 'DockerShinyApp/app/data/',
+                             description = 'Data directory for app')
 
 ######################################
 ###### Data scraping & cleaning ######
