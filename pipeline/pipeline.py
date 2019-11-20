@@ -80,11 +80,11 @@ class FinalDictionary(ParameterDefinitions, luigi.Task):
                            output_data_dictionary = self.output().path,
                            input_data_dictionary = self.manual_dictionary)
 
-class SdohScores(luigi.Task):
+class SdohScores(ParameterDefinitions, luigi.Task):
     def requires(self):
         return {'data': SelectVariables(), 'dictionary': FinalDictionary()}
     def output(self):
-        return luigi.LocalTarget(os.path.join(output, 'data_3_sdoh_scores.csv'))
+        return luigi.LocalTarget(os.path.join(self.output_dir, 'data_3_sdoh_scores.csv'))
     def run(self):
         mu.SdohScores(input = self.input()['data'].path,
                       input_data_dictionary = self.input()['dictionary'].path,
@@ -102,4 +102,4 @@ class ReduceDisplayVars(luigi.Task):
                              output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([FinalDictionary()], local_scheduler=True)
+    luigi.build([SdohScores()], local_scheduler=True)
