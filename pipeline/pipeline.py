@@ -56,11 +56,11 @@ class MergeCleaned(ParameterDefinitions, luigi.Task):
 ######        Methodology       ######
 ######################################
 
-class SelectVariables(luigi.Task):
+class SelectVariables(ParameterDefinitions, luigi.Task):
     def requires(self):
         return MergeCleaned()
     def output(self):
-        return luigi.LocalTarget(os.path.join(output,'data_2_selected_variables.csv'))
+        return luigi.LocalTarget(os.path.join(self.output_dir,'data_2_selected_variables.csv'))
     def run(self):
         pu.SelectVariables(input = self.input().path, output = self.output().path)
 
@@ -97,4 +97,4 @@ class ReduceDisplayVars(luigi.Task):
                              output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([MergeCleaned()], local_scheduler=True)
+    luigi.build([SelectVariables()], local_scheduler=True)
