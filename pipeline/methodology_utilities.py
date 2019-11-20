@@ -11,7 +11,7 @@ def use_sdoh_normalize(data_dictionary, data, sdoh_score_num):
         
         spca_dict_data = data_dictionary[data_dictionary['sdoh_Category'] == sdoh_score_num]
 
-        cols = list(spca_dict_data['Variable_Name'])
+        cols = list(spca_dict_data['column_name'])
         print(cols)
         weights = list(spca_dict_data['weight'])
 
