@@ -12,6 +12,8 @@ class ParameterDefinitions(object):
                                      description = 'Input directory of cleaned, scraped data files')
     output_dir = luigi.parameter.Parameter(default = 'data/',
                              description = 'Intermediate data output directory')
+    manual_dictionary = luigi.parameter.Parameter(default = 'data/dictionary_1_manual.csv',
+                             description = 'Data dictionary created manually')
     final_output = luigi.parameter.Parameter(default = 'DockerShinyApp/app/data/',
                              description = 'Data directory for app')
 
@@ -62,7 +64,8 @@ class SelectVariables(ParameterDefinitions, luigi.Task):
     def output(self):
         return luigi.LocalTarget(os.path.join(self.output_dir,'data_2_selected_variables.csv'))
     def run(self):
-        pu.SelectVariables(input = self.input().path, output = self.output().path)
+        pu.SelectVariables(input = self.input().path, output = self.output().path,
+                           data_dictionary = self.manual_dictionary)
 
 ## TODO: from here, we can run SPCA
 ## this can't be part of the pipeline because there is a manual component to it
@@ -98,4 +101,4 @@ class ReduceDisplayVars(luigi.Task):
                              output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([FinalDictionary()], local_scheduler=True)
+    luigi.build([SelectVariables()], local_scheduler=True)
