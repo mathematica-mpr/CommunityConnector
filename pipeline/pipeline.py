@@ -74,7 +74,9 @@ class SdohScores(luigi.Task):
     def output(self):
         return luigi.LocalTarget(os.path.join(output, 'data_3_sdoh_scores.csv'))
     def run(self):
-        mu.SdohScores(input = self.input().path['data'], input_data_dictionary = self.input().path['dictionary'], output = self.output().path)
+        mu.SdohScores(input = self.input()['data'].path,
+                      input_data_dictionary = self.input()['dictionary'].path,
+                      output = self.output().path)
 
 class ReduceDisplayVars(luigi.Task):
     def requires(self):
