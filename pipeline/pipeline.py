@@ -84,7 +84,6 @@ class ReduceDisplayVars(luigi.Task):
     def output(self):
         return luigi.LocalTarget(os.path.join(final_output, 'final_data.csv'))
     def run(self):
-        # TODO: multiple outputs from SdohScores to read in the data dictionary directly
         pu.ReduceDisplayVars(input = self.input().path, input_data_dictionary = os.path.join(output, 'dictionary_2_sdoh_scores.csv'),
         output = self.output().path, output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
