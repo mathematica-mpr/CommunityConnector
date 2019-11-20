@@ -69,7 +69,7 @@ class SelectVariables(ParameterDefinitions, luigi.Task):
 
 ## TODO: from here, we can run SPCA
 ## this can't be part of the pipeline because there is a manual component to it
-
+## TODO: spca dictionary as a requirement
 class FinalDictionary(ParameterDefinitions, luigi.Task):
     def requires(self):
         return SelectVariables()
