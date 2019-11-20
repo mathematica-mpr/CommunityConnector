@@ -7,7 +7,6 @@ sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
-raw_output = 'data/raw/'
 cleaned_output = 'data/cleaned/'
 output = 'data/'
 final_output = 'DockerShinyApp/app/data/'
@@ -16,6 +15,8 @@ final_output = 'DockerShinyApp/app/data/'
 ###### Data scraping & cleaning ######
 ######################################
 
+# TODO: change this to a parameter
+# raw_output = 'data/raw/'
 # class DemGeographicPUF(luigi.Task):
 #     def requires(self):
 #         return None
@@ -23,13 +24,14 @@ final_output = 'DockerShinyApp/app/data/'
 #         return None
 #     def run(self):
 #         pu.GeographicPUF(outdir = raw_output)
-class DemOppAtlas(luigi.Task):
-    def requires(self):
-        return None
-    def output(self):
-        return luigi.LocalTarget(os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
-    def run(self):
-        pu.OppAtlas(output = self.output().path)
+# class DemOppAtlas(luigi.Task):
+#     # TODO: eventually will move cleaned_output parameter to this task
+#     def requires(self):
+#         return None
+#     def output(self):
+#         return luigi.LocalTarget(os.path.join(cleaned_output, 'opp_atlas_cleaned.csv'))
+#     def run(self):
+#         pu.OppAtlas(output = self.output().path)
 
 # eventually would add all scraping & cleaning codes
 
