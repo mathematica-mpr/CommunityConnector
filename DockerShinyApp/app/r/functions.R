@@ -335,7 +335,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
+      #hoverlabel = hoverlabel_list,
       title = list(
         text = 'Scores for Matching Counties',
         font = list(
@@ -347,7 +347,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         x = 0 + t,
         y = 1 - ty,
         text = paste0(df1$county, ", ", df1$state)
-      ), annotations_list)
+      ), annotations_list),
+      dragmode = F
     ) 
   
   # create all subsequent radar charts
@@ -397,7 +398,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
+      #hoverlabel = hoverlabel_list,
       annotations = c(annotations_list, list(
         x = (1/4) + t,
         y = 1 - ty,
@@ -692,7 +693,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         text = paste(a[20])
       ), annotations_list)
     ) %>% 
-    layout(showlegend = F
+    layout(
+      showlegend = F
            )
   
   return(p)
