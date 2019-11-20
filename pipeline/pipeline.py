@@ -9,6 +9,12 @@ import methodology_utilities as mu
 
 final_output = 'DockerShinyApp/app/data/'
 
+class ParameterDefinitions(object):
+    cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
+                                     description = 'Input directory of cleaned, scraped data files')
+    output_dir = luigi.parameter.Parameter(default = 'data/',
+                             description = 'Intermediate data output directory')
+
 ######################################
 ###### Data scraping & cleaning ######
 ######################################
@@ -33,11 +39,7 @@ final_output = 'DockerShinyApp/app/data/'
 
 # eventually would add all scraping & cleaning codes
 
-class MergeCleaned(luigi.Task):
-    cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
-                                     description = 'Input directory of cleaned, scraped data files')
-    output_dir = luigi.parameter.Parameter(default = 'data/',
-                             description = 'Intermediate data output directory')
+class MergeCleaned(ParameterDefinitions, luigi.Task):
 
     def requires(self):
         # return DemOppAtlas()
