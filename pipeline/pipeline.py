@@ -77,7 +77,8 @@ class FinalDictionary(ParameterDefinitions, luigi.Task):
         return luigi.LocalTarget(os.path.join(self.output_dir, 'dictionary_2_sdoh_scores.csv'))
     def run(self):
         mu.FinalDictionary(spca_dictionary = 'data/DictionaryPostSPCA.csv',
-                           output_data_dictionary = self.output().path)
+                           output_data_dictionary = self.output().path,
+                           input_data_dictionary = self.manual_dictionary)
 
 class SdohScores(luigi.Task):
     def requires(self):
@@ -101,4 +102,4 @@ class ReduceDisplayVars(luigi.Task):
                              output_data_dictionary = os.path.join(final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([SelectVariables()], local_scheduler=True)
+    luigi.build([FinalDictionary()], local_scheduler=True)
