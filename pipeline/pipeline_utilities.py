@@ -192,7 +192,7 @@ def check_low_coverage(data):
             count += 1
     return data, count
 
-def SelectVariables(input, output, data_dictionary = 'data/data_dictionary.csv'):
+def SelectVariables(input, output, data_dictionary = 'data/dictionary_1_manual.csv'):
 
     data = pd.read_csv(input)
     print("Original shape of data: " + str(data.shape))
