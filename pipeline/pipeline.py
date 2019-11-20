@@ -80,7 +80,7 @@ class SdohScores(luigi.Task):
 
 class ReduceDisplayVars(luigi.Task):
     def requires(self):
-        return {'data': SdoHScores(), 'dictionary': FinalDictionary()}
+        return {'data': SdohScores(), 'dictionary': FinalDictionary()}
     def output(self):
         return luigi.LocalTarget(os.path.join(final_output, 'final_data.csv'))
     def run(self):
