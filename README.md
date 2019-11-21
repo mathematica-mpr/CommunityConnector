@@ -3,15 +3,15 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Vi
 
 # Contents
 * pipeline/
-- for scraping and cleaning demographic, social determinant of health (SDoH), and outcome data
+  * for scraping and cleaning demographic, social determinant of health (SDoH), and outcome data
 * data/
-- for storing intermediate and final datasets and dictionaries
+  * for storing intermediate and final datasets and dictionaries
 * data-insights/
-- for examining preliminary insights
+  * for examining preliminary insights
 * methodology/
-- for calculating county-level SDoH scores and similarities
+  * for calculating county-level SDoH scores and similarities
 * DockerShinyApp
-- for building the Docker container and launching the app
+  * for building the Docker container and launching the app
 
 # Authors
 * **Kelsey Skvoretz** - *back-end lead*
