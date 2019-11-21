@@ -329,12 +329,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         namelength = -1,
         bgcolor = paste0(config$colors$green100)
       ),
-      #title = list(
-      #  text = 'Scores for Matching Counties',
-      #  font = list(
-      #    size = 20
-      #  )
-      #),
       margin = list(t = 7, l = 1, r = 10),
       annotations = c(list(
         x = 0 + t + txa,
@@ -409,7 +403,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - ty,
-        text = paste(grid_titles[3])
+        text = grid_titles[3]
       ), annotations_list)
     ) %>% 
     layout(
@@ -424,7 +418,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - ty,
-        text = paste(grid_titles[4])
+        text = grid_titles[4]
       ), annotations_list)
     ) %>%  
     layout(
@@ -439,7 +433,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(annotations_list, list(
         x = 0 + t + txa,
         y = 1 - (1 / n_rows) -  ty,
-        text = paste(grid_titles[5])
+        text = grid_titles[5]
       ))
     ) %>%
     layout(
@@ -454,7 +448,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
-        text = paste(grid_titles[6])
+        text = grid_titles[6]
       ), annotations_list)
     ) %>% 
     layout(
@@ -469,7 +463,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
-        text = paste(grid_titles[7])
+        text = grid_titles[7]
       ), annotations_list)
     ) %>% 
     layout(
@@ -484,7 +478,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
-        text = paste(grid_titles[8])
+        text = grid_titles[8]
       ), annotations_list)
     ) %>%  
     layout(
@@ -499,7 +493,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - (2 / n_rows) -  ty,
-        text = paste(grid_titles[9])
+        text = grid_titles[9]
       ), annotations_list)
     ) %>%
     layout(
@@ -514,7 +508,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
-        text = paste(grid_titles[10])
+        text = grid_titles[10]
       ), annotations_list)
     ) %>% 
     layout(
@@ -529,7 +523,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
-        text = paste(grid_titles[11])
+        text = grid_titles[11]
       ), annotations_list)
     ) %>% 
     layout(
@@ -544,7 +538,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
-        text = paste(grid_titles[12])
+        text = grid_titles[12]
       ), annotations_list)
     ) %>%  
     layout(
@@ -559,7 +553,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - (3 / n_rows) -  ty,
-        text = paste(grid_titles[13])
+        text = grid_titles[13]
       ), annotations_list)
     ) %>%
     layout(
@@ -574,7 +568,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
-        text = paste(grid_titles[14])
+        text = grid_titles[14]
       ), annotations_list)
     ) %>% 
     layout(
@@ -589,7 +583,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
-        text = paste(grid_titles[15])
+        text = grid_titles[15]
       ), annotations_list)
     ) %>% 
     layout(
@@ -604,7 +598,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
-        text = paste(grid_titles[16])
+        text = grid_titles[16]
       ), annotations_list)
     )  %>%  
     layout(
@@ -619,7 +613,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - (4 / n_rows) -  ty,
-        text = paste(grid_titles[17])
+        text = grid_titles[17]
       ), annotations_list)
     ) %>%
     layout(
@@ -634,7 +628,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
-        text = paste(grid_titles[18])
+        text = grid_titles[18]
       ), annotations_list)
     ) %>% 
     layout(
@@ -649,7 +643,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
-        text = paste(grid_titles[19])
+        text = grid_titles[19]
       ), annotations_list)
     ) %>% 
     layout(
@@ -664,7 +658,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
-        text = paste(grid_titles[20])
+        text = grid_titles[20]
       ), annotations_list)
     ) %>% 
     layout(
