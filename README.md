@@ -25,6 +25,3 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Vi
 * **Elena Saavedra Jimenez** - *UX lead*
 * **Aaron White** - *technical consultant*
 * Additional thanks to Stephanie Tuerk, Alex Bohl, and Ravi Goyal
-
-## Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
