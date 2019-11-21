@@ -281,8 +281,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
     yref = 'paper',
     xanchor = 'center',
     yanchor = 'bottom',
-    #xshift = 90,
-    #yshift = 3,
     showarrow = F,
     font = list(size = 13)
   )
@@ -392,11 +390,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - ty,
         text = grid_titles[2]
-      ))
+      ), annotations_list)
     ) %>% 
     layout(
       polar3 = list(
@@ -407,11 +405,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - ty,
         text = paste(grid_titles[3])
-      ))
+      ), annotations_list)
     ) %>% 
     layout(
       polar4 = list(
@@ -422,11 +420,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - ty,
         text = paste(grid_titles[4])
-      ))
+      ), annotations_list)
     ) %>%  
     layout(
       polar5 = list(
@@ -452,11 +450,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (1/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[6])
-      ))
+      ), annotations_list)
     ) %>% 
     layout(
       polar7 = list(
@@ -467,11 +465,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (2/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[7])
-      ))
+      ), annotations_list)
     ) %>% 
     layout(
       polar8 = list(
@@ -482,11 +480,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      annotations = c(annotations_list, list(
+      annotations = c(list(
         x = (3/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[8])
-      ))
+      ), annotations_list)
     ) %>%  
     layout(
       polar9 = list(
