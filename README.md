@@ -1,5 +1,5 @@
 # Introduction 
-This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Data Visualization Competition](https://www.ahrq.gov/sdoh-challenge/index.html).
+This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Visualization Resources of Community-Level Social Determinants of Health (SDoH) Challenge](https://www.ahrq.gov/sdoh-challenge/index.html).
 
 # Contents
 * pipeline/
