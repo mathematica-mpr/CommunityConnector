@@ -329,7 +329,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         namelength = -1,
         bgcolor = paste0(config$colors$green100)
       ),
-      margin = list(t = 7, l = 1, r = 10),
+      margin = list(t = 7, l = 1, r = 7),
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - ty,
