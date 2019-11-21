@@ -437,9 +437,10 @@ server <- function(input, output) {
   
   
   density_graphs <- eventReactive(
-    {input$outcome_sort
-     input$show_matches}, {
-    req(outcomes_dat())
+    {outcomes_dat()
+     input$outcome_sort
+     input$show_matches
+     }, {
     
     if (!input$show_matches) {
       outcomes_dat() %>%
@@ -463,7 +464,8 @@ server <- function(input, output) {
   })
   
   observeEvent(
-    {input$outcome_sort
+    {outcomes_dat()
+    input$outcome_sort
     input$show_matches}, {
     req(density_graphs())
     
