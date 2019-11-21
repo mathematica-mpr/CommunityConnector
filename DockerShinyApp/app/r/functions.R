@@ -252,7 +252,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -281,8 +281,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
     yref = 'paper',
     xanchor = 'center',
     yanchor = 'bottom',
-    xshift = 90,
-    yshift = 3,
+    #xshift = 90,
+    #yshift = 3,
     showarrow = F,
     font = list(size = 13)
   )
@@ -338,7 +338,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
       ),
       margin = list(t = 50, l = 1, r = 10),
       annotations = c(list(
-        x = 0 + t,
+        x = 0 + t + txa,
         y = 1 - ty,
         text = paste0(df1$county, ", ", df1$state)
       ), annotations_list),
@@ -393,9 +393,9 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (1/4) + t,
+        x = (1/4) + t + txa,
         y = 1 - ty,
-        text = paste(grid_titles[2])
+        text = grid_titles[2]
       ))
     ) %>% 
     layout(
@@ -408,7 +408,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (2/4) + t,
+        x = (2/4) + t + txa,
         y = 1 - ty,
         text = paste(grid_titles[3])
       ))
@@ -423,7 +423,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (3/4) + t,
+        x = (3/4) + t + txa,
         y = 1 - ty,
         text = paste(grid_titles[4])
       ))
@@ -438,7 +438,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = 0 + t,
+        x = 0 + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[5])
       ))
@@ -453,7 +453,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (1/4) + t,
+        x = (1/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[6])
       ))
@@ -468,7 +468,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (2/4) + t,
+        x = (2/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[7])
       ))
@@ -483,7 +483,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(annotations_list, list(
-        x = (3/4) + t,
+        x = (3/4) + t + txa,
         y = 1 - (1 / n_rows) -  ty,
         text = paste(grid_titles[8])
       ))
@@ -498,7 +498,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = 0 + t,
+        x = 0 + t + txa,
         y = 1 - (2 / n_rows) -  ty,
         text = paste(grid_titles[9])
       ), annotations_list)
@@ -513,7 +513,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (1/4) + t,
+        x = (1/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
         text = paste(grid_titles[10])
       ), annotations_list)
@@ -528,7 +528,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (2/4) + t,
+        x = (2/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
         text = paste(grid_titles[11])
       ), annotations_list)
@@ -543,7 +543,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (3/4) + t,
+        x = (3/4) + t + txa,
         y = 1 - (2 / n_rows) -  ty,
         text = paste(grid_titles[12])
       ), annotations_list)
@@ -558,7 +558,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = 0 + t,
+        x = 0 + t + txa,
         y = 1 - (3 / n_rows) -  ty,
         text = paste(grid_titles[13])
       ), annotations_list)
@@ -573,7 +573,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (1/4) + t,
+        x = (1/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
         text = paste(grid_titles[14])
       ), annotations_list)
@@ -588,7 +588,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (2/4) + t,
+        x = (2/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
         text = paste(grid_titles[15])
       ), annotations_list)
@@ -603,7 +603,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (3/4) + t,
+        x = (3/4) + t + txa,
         y = 1 - (3 / n_rows) -  ty,
         text = paste(grid_titles[16])
       ), annotations_list)
@@ -618,7 +618,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = 0 + t,
+        x = 0 + t + txa,
         y = 1 - (4 / n_rows) -  ty,
         text = paste(grid_titles[17])
       ), annotations_list)
@@ -633,7 +633,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (1/4) + t,
+        x = (1/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
         text = paste(grid_titles[18])
       ), annotations_list)
@@ -648,7 +648,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (2/4) + t,
+        x = (2/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
         text = paste(grid_titles[19])
       ), annotations_list)
@@ -663,7 +663,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025) {
         angularaxis = angularaxis_list
       ),
       annotations = c(list(
-        x = (3/4) + t,
+        x = (3/4) + t + txa,
         y = 1 - (4 / n_rows) -  ty,
         text = paste(grid_titles[20])
       ), annotations_list)
