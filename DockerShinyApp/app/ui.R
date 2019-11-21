@@ -40,9 +40,7 @@ ui <- bootstrapPage(
                                           plotlyOutput("compare_county_radars",
                                                        height = "600px"
                                                        ),
-                                          br(),
-                                          HTML("<center>ES: Economic Stability, NEP: Neighborhood & Physical Environment, <br>
-                                               E = Education, F = Food, C = Community, HC = Health Coverage </center>")),
+                                          br()),
                                  tabPanel(span("Demographics", title = lang_cfg$demographics),
                                           fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
                                           fluidRow(
