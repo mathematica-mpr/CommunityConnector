@@ -252,7 +252,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
@@ -329,13 +329,13 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
         namelength = -1,
         bgcolor = paste0(config$colors$green100)
       ),
-      title = list(
-        text = 'Scores for Matching Counties',
-        font = list(
-          size = 20
-        )
-      ),
-      margin = list(t = 50, l = 1, r = 10),
+      #title = list(
+      #  text = 'Scores for Matching Counties',
+      #  font = list(
+      #    size = 20
+      #  )
+      #),
+      margin = list(t = 7, l = 1, r = 10),
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - ty,
