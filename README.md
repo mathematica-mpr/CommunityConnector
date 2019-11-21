@@ -10,7 +10,7 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Vi
   * for examining preliminary insights
 * methodology/
   * for calculating county-level SDoH scores and similarities
-* DockerShinyApp
+* DockerShinyApp/
   * for building the Docker container and launching the app
 
 # Authors
