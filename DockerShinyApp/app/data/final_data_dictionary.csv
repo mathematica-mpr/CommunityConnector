@@ -1,65 +1,65 @@
 column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6,source,higher_better,modifiable,Notes,Interventions,sdoh_Category,PC_Number,Variance_Explained,Loading,weight,keep
 pct_lt_18,% Under age 18,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
 pct_65_and_over,% Age 65 and over,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
-pct_alcoholimpaired,% Driving deaths involving alcohol,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,1,Does not have the same relationship to income as % excessive drinking,,2,5,0.064,0.960238226,0.072480181,1
-hosp_pp_rate,# Hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1,1,,,6,2,0.162,-0.69314038,0.187717265,1
-chronic_kidney_disease_pct,% Chronic Kidney Disease in Medicare age 65+,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0,,,,,,,,,1
+pct_alcoholimpaired,% Driving deaths involving alcohol,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0,1.0,Does not have the same relationship to income as % excessive drinking,,2.0,5.0,0.064,0.960238226234666,0.07248018120045298,1
+hosp_pp_rate,# Hospitals per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0,1.0,,,6.0,2.0,0.162,-0.693140379748914,0.1877172653534183,1
+chronic_kidney_disease_pct,% Chronic Kidney Disease in Medicare age 65+,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0,,,,,,,,,1
 pct_female,% Female,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
-pct_free_or_reduced_lunch,% Children with free or reduced lunch,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0,,,,1,1,0.401,-0.97110145,0.512787724,1
+pct_free_or_reduced_lunch,% Children with free or reduced lunch,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0,,,,1.0,1.0,0.401,-0.971101449632971,0.5127877237851663,1
 pct_hispanic,% Hispanic,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
-pct_good_air,% Days with good air quality,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1,1,,,2,13,0.022,-0.958397073,0.024915062,1
+pct_good_air,% Days with good air quality,0,1,0,0,percentage,0,1,0,0,0,0,AHRF,1.0,1.0,,,2.0,13.0,0.022,-0.958397073072221,0.024915062287655717,1
 pop_dens,Population density per sq mi,1,0,0,0,rate,0,0,0,0,0,0,AHRF,,,,,,,,,,1
-pct_long_commute_drives_alone,% Lone drivers commuting >30 minutes,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,,Also considered for SDoH 5,,2,3,0.111,0.960048459,0.125707814,1
-chronic_kidney_disease_std_spend,Medicare Chronic Kidney Disease Spending per Capita,0,0,1,0,continuous,0,0,0,0,0,0,CMS,0,1,,,,,,,,1
+pct_long_commute_drives_alone,% Lone drivers commuting >30 minutes,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0,,Also considered for SDoH 5,,2.0,3.0,0.111,0.9600484587141692,0.12570781426953564,1
+chronic_kidney_disease_std_spend,Medicare Chronic Kidney Disease Spending per Capita ($),0,0,1,0,continuous,0,0,0,0,0,0,CMS,0.0,1.0,,,,,,,,1
 pct_nonhispanic_white,% Non-Hispanic white,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
-diab_hosp_rate_adj,"Diabetes Hospitalization Rate (per 100,000)",0,0,1,0,rate,0,0,0,0,0,0,CDPHE,0,,,,,,,,,1
-pct_physically_inactive,% Adults with no physical activity,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,1,"Opted to keep this as a SDoH and not a health outcome, since it is more tangible & there are clear ways of addressing it directly",,2,1,0.172,-0.961415065,0.194790487,1
+diab_hosp_rate_adj,"Diabetes Hospitalization Rate (per 100,000)",0,0,1,0,rate,0,0,0,0,0,0,CDPHE,0.0,,,,,,,,,1
+pct_physically_inactive,% Adults with no physical activity,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0,1.0,"Opted to keep this as a SDoH and not a health outcome, since it is more tangible & there are clear ways of addressing it directly",,2.0,1.0,0.172,-0.961415065191942,0.19479048697621734,1
 pct_rural,% Rural,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,,,,,,,1
-diabetes_incidence_2016,"Newly Diagnosed Diabetes Rate (per 1,000)",0,0,1,0,rate,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-pct_severe_housing_cost_burden,% Households spending at least 50% of income on housing,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0,1,,,1,2,0.205,-0.970598059,0.262148338,1
-pct_some_college,% Adults with more than high school education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1,,,,3,1,0.581,0.975681982,0.632208923,1
-pct_unemployed,% Unemployed,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0,,,,1,5,0.082,0.97094097,0.104859335,1
-pct_uninsured,% Uninsured (< age 65),0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0,1,,,6,1,0.246,0.654028351,0.134720164,1
-diabetes_incidence_5_year_diff,5-Year Change in % Adults with Newly Diagnosed Diabetes,0,0,1,0,rate,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-diabetes_pct,% Diabetes in Medicare age 65+,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0,,,,,,,,,1
-pct_lack_basic_literacy,% Low literacy,1,0,0,0,percentage,0,0,1,0,0,0,NCES,0,,,,3,3,0.114,0.976662811,0.124047878,1
-average_daily_pm2.5,Average Daily Particle Pollution (PM2.5),0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0,1,,,2,2,0.146,-0.960163722,0.165345413,1
-budget_air,Gov't budget for air pollution (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1,1,,,2,7,0.052,0.960446854,0.058890147,1
-budget_disease,Gov't budget for communicable disease control (% of county total),0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov,1,1,,,6,6,0.067,0.964130733,0.077636153,1
-budget_emergency,Gov't budget for emergency preparedness (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1,1,,,2,8,0.046,-0.959210014,0.05209513,1
-budget_environmental,Gov't budget for environmental health (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1,1,,,2,6,0.055,0.960266617,0.062287656,1
-budget_health_equity,Gov't budget for health equity (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1,1,,,5,6,0.073,-0.956429366,0.08174692,1
-budget_health_svcs,Gov't budget for health facilities (% of county total),0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov,1,1,,,6,4,0.083,0.963862695,0.09617613,1
-budget_laboratory_svcs,Gov't budget for public health laboratory services (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1,1,,,5,5,0.088,0.955766634,0.098544233,1
-budget_planning,Gov't budget for public health planning (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1,1,,,5,3,0.099,0.956672297,0.110862262,1
-budget_prevention,Gov't budget for health prevention services (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1,1,,,5,7,0.054,-0.956316968,0.060470325,1
-budget_water,Gov't budget for water quality (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1,1,,,2,16,0.015,0.960179864,0.016987542,1
-pct_food_insecure,% Food insecure,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0,1,,,4,2,0.332,1.012464371,0.337398374,1
-diabetes_prevalence_2016,% Adults with Diabetes ,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-pct_limited_access,% Low access to healthy foods,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0,1,,,4,1,0.652,0.699899237,0.662601626,1
+diabetes_incidence_2016,"Newly Diagnosed Diabetes Rate (per 1,000)",0,0,1,0,rate,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+pct_severe_housing_cost_burden,% Households spending at least 50% of income on housing,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0,1.0,,,1.0,2.0,0.205,-0.970598059349611,0.26214833759590794,1
+pct_some_college,% Adults with more than high school education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0,,,,3.0,1.0,0.581,0.9756819819354,0.6322089227421109,1
+pct_unemployed,% Unemployed,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0.0,,,,1.0,5.0,0.08199999999999999,0.9709409695865991,0.10485933503836316,1
+pct_uninsured,% Uninsured (< age 65),0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0,1.0,,,6.0,1.0,0.246,0.654028350584272,0.13472016392283664,1
+diabetes_incidence_5_year_diff,5-Year Change in % Adults with Newly Diagnosed Diabetes,0,0,1,0,rate,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+diabetes_pct,% Diabetes in Medicare age 65+,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0.0,,,,,,,,,1
+pct_lack_basic_literacy,% Low literacy,1,0,0,0,percentage,0,0,1,0,0,0,NCES,0.0,,,,3.0,3.0,0.114,0.976662811023258,0.12404787812840044,1
+average_daily_pm2.5,Average Daily Particle Pollution (PM2.5),0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0,1.0,,,2.0,2.0,0.146,-0.9601637218960508,0.16534541336353334,1
+budget_air,Gov't budget for air pollution (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0,1.0,,,2.0,7.0,0.052000000000000005,0.9604468544225072,0.05889014722536805,1
+budget_disease,Gov't budget for communicable disease control (% of county total),0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov,1.0,1.0,,,6.0,6.0,0.067,0.964130732767417,0.0776361529548088,1
+budget_emergency,Gov't budget for emergency preparedness (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0,1.0,,,2.0,8.0,0.046,-0.9592100142935028,0.05209513023782558,1
+budget_environmental,Gov't budget for environmental health (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0,1.0,,,2.0,6.0,0.055,0.960266616744015,0.06228765571913927,1
+budget_health_equity,Gov't budget for health equity (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1.0,1.0,,,5.0,6.0,0.073,-0.9564293656025,0.08174692049272117,1
+budget_health_svcs,Gov't budget for health facilities (% of county total),0,1,0,0,percentage,0,0,0,0,0,1,colorado.gov,1.0,1.0,,,6.0,4.0,0.083,0.963862694654508,0.09617612977983776,1
+budget_laboratory_svcs,Gov't budget for public health laboratory services (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1.0,1.0,,,5.0,5.0,0.08800000000000001,0.95576663424259,0.0985442329227324,1
+budget_planning,Gov't budget for public health planning (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1.0,1.0,,,5.0,3.0,0.099,0.9566722974450842,0.11086226203807392,1
+budget_prevention,Gov't budget for health prevention services (% of county total),0,1,0,0,percentage,0,0,0,0,1,0,colorado.gov,1.0,1.0,,,5.0,7.0,0.054000000000000006,-0.9563169676640332,0.06047032474804032,1
+budget_water,Gov't budget for water quality (% of county total),0,1,0,0,percentage,0,1,0,0,0,0,colorado.gov,1.0,1.0,,,2.0,16.0,0.015,0.960179863728943,0.01698754246885617,1
+pct_food_insecure,% Food insecure,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0,1.0,,,4.0,2.0,0.332,1.0124643705931602,0.33739837398373984,1
+diabetes_prevalence_2016,% Adults with Diabetes ,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+pct_limited_access,% Low access to healthy foods,0,1,0,0,percentage,0,0,0,1,0,0,RWJF,0.0,1.0,,,4.0,1.0,0.652,0.699899236985691,0.6626016260162602,1
 fips,FIPS code,0,0,0,0,ID,0,0,0,0,0,0,All,,,,,,,,,,1
 county,County Name,0,0,0,0,ID,0,0,0,0,0,0,All,,,,,,,,,,1
 state,State Name,0,0,0,0,ID,0,0,0,0,0,0,All,,,,,,,,,,1
-graduation_rate,HS graduation rate (%),0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1,,,,3,2,0.224,0.975965542,0.243743199,1
-life_expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1,,,,,,,,,1
-mds_dos_pp_rate,# Physicians per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1,1,,,6,7,0.059,0.963865704,0.068366165,1
-mentally_unhealthy_days,# Reported mentally unhealthy days per month,0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0,,,,5,1,0.348,0.7159468,0.389697648,1
-inadequate_facilities,% Households with limited kitchen or plumbing,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,1,,,2,4,0.078,0.960130272,0.088335221,1
-diabetes_prevalence_5_year_diff,5-Year Change in % Adults with Diabetes,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-mhp_rate,"# Mental health providers per 100,000 people",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1,1,,,6,3,0.113,0.962824428,0.130938586,1
-overcrowding,% Overcrowded households,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,,,,2,12,0.023,-0.960141031,0.026047565,1
-pcp_rate,"# Primary care physicians per 100,000 people",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1,1,,,6,8,0.052,-0.96426028,0.060254925,1
-preventable_hosp._rate,"# Preventable hospital admissions per 100,000 Medicare enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0,1,,,6,5,0.081,0.964783805,0.093858633,1
-pct_adult_uninsured,% Uninsured adults,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0,1,,,6,1,0.246,0.729819308,0.15033198,1
-sdoh_score_1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-sdoh_score_2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-sdoh_score_3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-sdoh_score_4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-sdoh_score_5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-sdoh_score_6,Health Care System,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1,,,,,,,,,1
-teen_birth_rate,"# Teenage births per 1,000 (females age 15-19)",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0,1,,,5,8,0.035,0.950686245,0.039193729,1
-violent_crime_rate,"# Violent crimes per 100,000 people",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0,1,,,2,11,0.024,0.960191756,0.027180068,1
-ann_avg_job_growth_2004_2013,% Average annual job growth,1,0,0,0,percentage,1,0,0,0,0,0,Opportunity Atlas,1,,,,1,4,0.094,-0.971527976,0.120204604,1
+graduation_rate,HS graduation rate (%),0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1.0,,,,3.0,2.0,0.224,0.975965542357153,0.24374319912948855,1
+life_expectancy,Life expectancy,1,0,0,0,continuous,0,0,0,0,0,0,RWJF,1.0,,,,,,,,,1
+mds_dos_pp_rate,# Physicians per person,0,1,0,0,rate,0,0,0,0,0,1,AHRF,1.0,1.0,,,6.0,7.0,0.059,0.963865704137507,0.06836616454229431,1
+mentally_unhealthy_days,# Reported mentally unhealthy days per month,0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0,,,,5.0,1.0,0.348,0.715946799887707,0.3896976483762598,1
+inadequate_facilities,% Households with limited kitchen or plumbing,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0,1.0,,,2.0,4.0,0.078,0.960130271788938,0.08833522083805208,1
+diabetes_prevalence_5_year_diff,5-Year Change in % Adults with Diabetes,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+mhp_rate,"# Mental health providers per 100,000 people",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1.0,1.0,,,6.0,3.0,0.113,0.962824427803867,0.13093858632676708,1
+overcrowding,% Overcrowded households,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0.0,,,,2.0,12.0,0.023,-0.960141030610524,0.02604756511891279,1
+pcp_rate,"# Primary care physicians per 100,000 people",0,1,0,0,rate,0,0,0,0,0,1,RWJF,1.0,1.0,,,6.0,8.0,0.052000000000000005,-0.9642602800301,0.06025492468134415,1
+preventable_hosp._rate,"# Preventable hospital admissions per 100,000 Medicare enrollees",0,1,0,0,rate,0,0,0,0,0,1,RWJF,0.0,1.0,,,6.0,5.0,0.081,0.9647838053197828,0.09385863267670913,1
+pct_adult_uninsured,% Uninsured adults,0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0.0,1.0,,,6.0,1.0,0.246,0.7298193076733019,0.15033197976198376,1
+sdoh_score_1,Economic Stability,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+sdoh_score_2,Neighborhood & Physical Environment,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+sdoh_score_3,Education,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+sdoh_score_4,Food,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+sdoh_score_5,Community,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+sdoh_score_6,Health Care System,0,0,0,1,aggregate,0,0,0,0,0,0,Created,1.0,,,,,,,,,1
+teen_birth_rate,"# Teenage births per 1,000 (females age 15-19)",0,1,0,0,continuous,0,0,0,0,1,0,RWJF,0.0,1.0,,,5.0,8.0,0.035,0.9506862445838228,0.03919372900335947,1
+violent_crime_rate,"# Violent crimes per 100,000 people",0,1,0,0,continuous,0,1,0,0,0,0,RWJF,0.0,1.0,,,2.0,11.0,0.024,0.9601917555501288,0.02718006795016987,1
+ann_avg_job_growth_2004_2013,% Average annual job growth,1,0,0,0,percentage,1,0,0,0,0,0,Opportunity Atlas,1.0,,,,1.0,4.0,0.094,-0.97152797613025,0.12020460358056267,1
 pct_staying_in_same_tract_as_adults_rp_gp_pall,% Children live in same census tract as adults,1,0,0,0,percentage,0,0,0,0,0,0,Opportunity Atlas,,,"Do we think it's good or bad for a high % people to stay in the same census tract as adults? I think I had good originally, indicating a strong sense of community. However, a higher percentage could also mean that economic mobility is really poor and they are unable to leave to seek better opportunities for financial reasons. Removed since no clear directionality",,,,,,,1
 race_estimate_total_american_indian_and_alaska_native_alone,% American Indian or Alaskan Native,1,0,0,0,percentage,0,0,0,0,0,0,ACS,,,,,,,,,,1
 race_estimate_total_asian_alone,% Asian,1,0,0,0,percentage,0,0,0,0,0,0,ACS,,,,,,,,,,1
@@ -69,12 +69,12 @@ race_estimate_total_some_other_race_alone,% Other race,1,0,0,0,percentage,0,0,0,
 race_estimate_total_two_or_more_races,% Two or More races,1,0,0,0,percentage,0,0,0,0,0,0,ACS,,,,,,,,,,1
 race_estimate_total_white_alone,% White,1,0,0,0,percentage,0,0,0,0,0,0,ACS,,,,,,,,,,1
 pct_only_english,% Speak Only English,1,0,0,0,percentage,0,0,0,0,0,0,ACS,,,,,,,,,,1
-median_income,Median household income,1,0,0,0,continuous,1,0,0,0,0,0,ACS,1,,,,,,,,,1
-gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,1,0,ACS,0,,,,5,4,0.09,-0.954441002,0.100783875,1
-association_rate,"# Social club members per 10,000 people",0,1,0,0,rate,0,0,0,0,1,0,RWJF,1,1,,,5,2,0.106,-0.956748747,0.118701008,1
-med_2br_rent_per_med_inc,Ratio of 2 bdrm apartment median rent to median income,1,0,0,0,percentage,0,1,0,0,0,0,ACS & Opportunity Atlas,0,,,,2,9,0.041,-0.960452141,0.046432616,1
-walk_score,Walkability,0,1,0,0,continuous,0,1,0,0,0,0,Walkscore.com,1,1,,,2,10,0.034,-0.960187202,0.038505096,1
-diabetes_std_spend,Medicare Diabetes Spending per Capita,0,1,1,0,continuous,0,0,0,0,0,0,CMS,0,1,,,,,,,,1
-obesity_prevalence_2016,% Adults who are Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-obesity_prevalence_5_year_diff,5-Year Change in % Adults who are Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0,,,,,,,,,1
-overobese_pct,% Adults who are Overweight or Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDPHE,0,,,,,,,,,1
+median_income,Median household income ($),1,0,0,0,continuous,1,0,0,0,0,0,ACS,1.0,,,,,,,,,1
+gini_index_of_income_inequality_estimate_gini_index,Gini Index of Income Inequality,1,0,0,0,continuous,0,0,0,0,1,0,ACS,0.0,,,,5.0,4.0,0.09,-0.954441001926428,0.1007838745800672,1
+association_rate,"# Social club members per 10,000 people",0,1,0,0,rate,0,0,0,0,1,0,RWJF,1.0,1.0,,,5.0,2.0,0.106,-0.956748747102057,0.1187010078387458,1
+med_2br_rent_per_med_inc,Ratio of 2 bdrm apartment median rent to median income,1,0,0,0,rate,0,1,0,0,0,0,ACS & Opportunity Atlas,0.0,,,,2.0,9.0,0.041,-0.9604521413438628,0.04643261608154019,1
+walk_score,Walkability,0,1,0,0,continuous,0,1,0,0,0,0,Walkscore.com,1.0,1.0,,,2.0,10.0,0.034,-0.960187202063428,0.03850509626274065,1
+diabetes_std_spend,Medicare Diabetes Spending per Capita ($),0,1,1,0,continuous,0,0,0,0,0,0,CMS,0.0,1.0,,,,,,,,1
+obesity_prevalence_2016,% Adults who are Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+obesity_prevalence_5_year_diff,5-Year Change in % Adults who are Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDC,0.0,,,,,,,,,1
+overobese_pct,% Adults who are Overweight or Obese,0,0,1,0,percentage,0,0,0,0,0,0,CDPHE,0.0,,,,,,,,,1
