@@ -281,8 +281,9 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
     yref = 'paper',
     xanchor = 'center',
     yanchor = 'bottom',
+    yshift = 4,
     showarrow = F,
-    font = list(size = 13)
+    font = list(size = 11)
   )
   
   # get first county
@@ -338,7 +339,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
       annotations = c(list(
         x = 0 + t + txa,
         y = 1 - ty,
-        text = paste0(df1$county, ", ", df1$state)
+        text = paste0("<b>", df1$county, ", ", df1$state, "</b>")
       ), annotations_list),
       dragmode = F
     ) 
@@ -351,7 +352,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .13) {
     radar_points <- append(radar_points, radar_points[1]) %>% 
       unlist()
     
-    grid_titles[i] <- paste0(df_one$county, ", ", df_one$state)
+    grid_titles[i] <- paste0("<b>", df_one$county, ", ", df_one$state, "</b>")
     
     p <- p %>%  
       add_trace(
