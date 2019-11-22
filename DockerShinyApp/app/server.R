@@ -36,6 +36,11 @@ server <- function(input, output) {
     }
   })
   
+  county_state <- reactive({
+    req(county_check())
+    dat %>% filter(fips == county_fips()) %>% pull(state)
+  })
+  
   county_dat <- reactive({
     dat %>% filter(fips == county_fips())
   })
@@ -104,7 +109,7 @@ server <- function(input, output) {
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h4>My County Selection</h4>"))
+    HTML(paste0("<h4>See How ", county_name(), ", ", county_state(), " is Doing</h4>"))
   })
   
   
@@ -319,10 +324,10 @@ server <- function(input, output) {
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   ## comparison counties info --------------------------------------------------
-  output$my_matches_header <- renderUI({
+  output$comp_radar_header <- renderUI({
     req(my_matches())
     tagList(
-      HTML(paste0("<h3>My Matches<br/></h3><h4>", length(my_matches()), " communities</h4>"))
+      HTML(paste0("<h4>What Counties are Most Similar to ", county_name(), ", ", county_state(), "</h4>"))
     )
   })
   
