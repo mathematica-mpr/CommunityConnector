@@ -90,6 +90,17 @@ server <- function(input, output) {
                    choices = choice_list)
   })
   
+  ## radar chart description modal dialogue ------------------------------------
+  observeEvent(input$radar_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$radar_modal_title,
+      HTML(lang_cfg$howto),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
   ## selected county information -----------------------------------------------
   output$my_county_name <- renderUI({
     req(county_check())
