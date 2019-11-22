@@ -102,9 +102,9 @@ server <- function(input, output) {
   })
   
   ## selected county information -----------------------------------------------
-  output$my_county_name <- renderUI({
+  output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>My County Selection</h3>"))
+    HTML(paste0("<h4>My County Selection</h4>"))
   })
   
   
@@ -433,7 +433,6 @@ server <- function(input, output) {
   output$health_outcomes_header <- renderUI({
     req(county_check())
     tagList(
-      HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
       fluidRow(
         column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
                            choices = c('most unique' = 'unique', 
