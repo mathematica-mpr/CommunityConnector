@@ -11,7 +11,7 @@ server <- function(input, output) {
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
     if (input$county_selection_type == "fips") {
-      input$county_selection %in% dat$fips
+      gsub("^0", "", input$county_selection) %in% dat$fips
     } else if (input$county_selection_type == "name") {
       input$county_selection %in% dat$county
     }
@@ -21,7 +21,7 @@ server <- function(input, output) {
   county_fips <- reactive({
     req(county_check())
     if (input$county_selection_type == "fips") {
-      input$county_selection
+      gsub("^0", "", input$county_selection)
     } else if (input$county_selection_type == "name") {
       dat %>% filter(county == input$county_selection) %>% pull(fips)
     }
@@ -32,7 +32,7 @@ server <- function(input, output) {
     if (input$county_selection_type == "name") {
       input$county_selection
     } else if (input$county_selection_type == "fips") {
-      dat %>% filter(fips == input$county_selection) %>% pull(county)
+      dat %>% filter(fips == gsub("^0", "", input$county_selection)) %>% pull(county)
     }
   })
   
@@ -78,6 +78,18 @@ server <- function(input, output) {
   })
   
   # output ---------------------------------------------------------------------
+  output$select_my_county <- renderUI({
+    req(input$county_selection_type)
+    
+    if (input$county_selection_type == "fips") {
+      choice_list <- sort(str_pad(dat$fips, width = 5, pad = "0"))
+    } else if (input$county_selection_type == "name") {
+      choice_list <- sort(dat$county)
+    }
+    selectizeInput('county_selection', label = lang_cfg$titles$county_selection,
+                   choices = choice_list)
+  })
+  
   ## selected county information -----------------------------------------------
   output$my_county_name <- renderUI({
     req(county_check())
