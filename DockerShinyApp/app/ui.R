@@ -14,15 +14,13 @@ ui <- bootstrapPage(
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
                  searchInput('county_selection', label = '', placeholder = 'Search your county',
                              btnSearch = icon('search'), value = "8001"),
+                 uiOutput('select_comparison_county'),
                  br(),
                  HTML(lang_cfg$howto)),
     mainPanel(width = 10, 
               column(width = 6, 
                      fluidRow(
                        column(width = 6, htmlOutput("my_county_name"))),
-                     fluidRow(
-                       column(width = 6, 
-                              uiOutput('select_comparison_county'))),
                      fluidRow(
                        column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%"
