@@ -14,8 +14,7 @@ ui <- bootstrapPage(
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
                  uiOutput('select_my_county'),
                  uiOutput('select_comparison_county'),
-                 br(),
-                 HTML(lang_cfg$howto)),
+                 br()),
     mainPanel(width = 10, 
               column(width = 6, 
                      fluidRow(
@@ -30,6 +29,8 @@ ui <- bootstrapPage(
                                                       )))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
+                     
+                     # css styles for tab colors
                      tags$style(HTML("
         .tabbable > .nav > li > a {
            background-color: #28b78d;
