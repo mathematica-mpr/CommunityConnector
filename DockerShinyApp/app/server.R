@@ -245,7 +245,7 @@ server <- function(input, output) {
     }
     
     df <- df %>%
-      rename(`Health Coverage` = name)
+      rename(`Health Care System` = name)
     
     DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
