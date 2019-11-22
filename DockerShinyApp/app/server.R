@@ -228,7 +228,7 @@ server <- function(input, output) {
   output$select_comparison_county <- renderUI({
     req(my_matches())
     comp_counties <- dat %>% filter(fips %in% my_matches()) %>% pull(county)
-    selectInput('comparison_county_selection', label = "Select a county to compare:",
+    selectInput('comparison_county_selection', label = lang_cfg$titles$comparison_county_selection,
                 choices = c("None", comp_counties), selected = "None")
   })
   
