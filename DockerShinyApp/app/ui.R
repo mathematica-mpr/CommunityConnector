@@ -2,14 +2,14 @@
 ui <- bootstrapPage(
  # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
-    column(width = 4, h2(lang_cfg$title)),
-    column(width = 3,
-           HTML(lang_cfg$intro)),
+    column(width = 3, h1(lang_cfg$title)),
+    column(width = 4,
+           h4(HTML(lang_cfg$intro))),
     column(width = 3),
     column(width = 2, align = "right", uiOutput("logo"))),
   fluidRow(
     sidebarPanel(width = 2,
-                 h3("Get Started"),
+                 h2("Get Started"),
                  selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
                  uiOutput('select_my_county'),
