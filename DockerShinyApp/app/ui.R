@@ -6,7 +6,7 @@ ui <- bootstrapPage(
     column(width = 3,
            HTML(lang_cfg$intro)),
     column(width = 3),
-    column(width = 2, uiOutput("logo"))),
+    column(width = 2, align = "right", uiOutput("logo"))),
   fluidRow(
     sidebarPanel(width = 2,
                  h3("Get Started"),
