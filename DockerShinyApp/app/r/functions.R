@@ -816,7 +816,7 @@ density_plot_overlay <- function(data) {
   return(p)
 }
 
-density_plot <- function(data) {
+density_plot <- function(data, comparedat = T) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -899,5 +899,27 @@ density_plot <- function(data) {
       ),
       showlegend = F
     )
+  
+  if (comparedat==T) {
+    p <- p %>% 
+      layout(
+        shapes = list(
+          type = 'line',
+          xref = 'x',
+          yref = 'y',
+          x0 = pull(comp_county_dat, data$column_name[1]),
+          x1 = pull(comp_county_dat, data$column_name[1]),
+          y0 = 0,
+          y1 = max(density_all$y)*.05 + max(density_all$y),
+          line = list(
+            color = 'green',
+            width = 3,
+            dash = 'longdash'
+          )
+        )
+      )
+  } else {
+    p <- p
+  }
   return(p)
 }
