@@ -1,5 +1,5 @@
-county_fips <- "8001"
-comparison_county_selection <- "8023"
+county_fips <- "8067"
+comparison_county_selection <- "8097"
 
 county_dat <- dat %>% filter(fips == county_fips)
 
@@ -109,12 +109,6 @@ outcomes_dd <- get_dd(dd, "outcome")
 
 outcomes <- outcomes_dd %>% pull(column_name)
 
-comp_county_dat <- reactive({
-  req(county_check())
-  req(input$comparison_county_selection)
-  dat %>% filter(county == input$comparison_county_selection)
-})
-
 comp_county_dat <- dat %>% filter(fips==comparison_county_selection)
 
 
@@ -132,7 +126,7 @@ df_outcomes <- dat %>% select(fips, state, county, outcomes) %>%
   left_join(outcomes_dd, by = "column_name") 
 
 df_outcome1 <- df_outcomes %>% 
-  filter(column_name == outcomes[2])
+  filter(column_name == outcomes[5])
 
 ggplot(df_outcome1, aes(x=value)) + geom_density() + 
   geom_vline(data = filter(df_outcome1, type != "other"),
@@ -382,7 +376,7 @@ density_plot <- function(data, comparedata) {
         y = 0,
         marker = list(
           symbol = 'diamond',
-          color = paste0(config$colors$yellow125),
+          color = paste0(config$colors$red100),
           opacity = 1,
           size = 17,
           line = list(
@@ -495,6 +489,16 @@ density_plot <- function(data, comparedata) {
   
   return(p)
 }
-density_plot(df_outcome1, comp_county_dat)
+density_plot(df_outcome1)
+dim(comp_county_dat)
+coln <- test$column_name
+t <- select(comp_county_dat, coln)
+t
 
+test <- df_outcomes %>% 
+  group_by(column_name, higher_better) %>%
+  nest() %>% 
+  mutate(graphs = purrr::map2(data, 40, density_plot)) %>%
+  pull(graphs)
+test  
 
