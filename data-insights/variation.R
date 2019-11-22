@@ -10,6 +10,7 @@ rm(list=ls())
 list.files('../DockerShinyApp/app/data/')
 
 data <- read.csv('../DockerShinyApp/app/data/final_data.csv')
+dict <- read.csv('../DockerShinyApp/app/data/final_data_dictionary.csv')
 sdoh_scores <- paste0("sdoh_score_",c(1:6))
 summary(data[,sdoh_scores])
 
@@ -36,4 +37,13 @@ for(other_score in sdoh_scores[c(2:6)]){
 
 # relationship of un-adjusted scores with econ score
 
-# relationship
+# relationship of outcomes with scores
+data$quartile <- cut(data$overobese_pct,4)
+
+for(other_score in sdoh_scores){
+  p <- ggplot(data = data,
+              aes(x = quartile,
+                  y = !!rlang::sym(other_score))) +
+    geom_boxplot()
+  print(p)
+}
