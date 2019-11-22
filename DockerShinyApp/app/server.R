@@ -5,19 +5,6 @@ server <- function(input, output) {
     img(src='logo.png', aligh = 'right', height = '50px')
   })
   
-#  county_selection_check <- reactive({
-#    validate({
-#      if (input$county_selection_type == "fips") {
-#        need(nchar(input$county_selection) == 4, 'Please enter a four digit fips Code for your county.')
-#      } else if (input$county_selection_type == "name") {
-#        need(input$county_selection %in% dat$county, 'Please enter a valid county name.')
-#      }
-#    })
-#  })
-#  
-#  output$county_selection_message <- renderText({
-#    county_selection_check
-#  })
   
   options(DT.options = list(dom = "t", ordering = F))
 
