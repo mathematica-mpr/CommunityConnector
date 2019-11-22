@@ -330,7 +330,7 @@ radar_chart_overlay(testdf, testdf2, dd)
 
 ####Density Plot Compare------
 
-density_plot <- function(data, comparedat=T) {
+density_plot <- function(data, comparedata) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -371,73 +371,130 @@ density_plot <- function(data, comparedat=T) {
       text = filter(data, type == 'selected')$county,
       hoverinfo = 'text',
       cliponaxis = F
-    ) %>% 
-    layout(
-      title = list(
-        text = paste(data$description[1]),
-        font = list(
-          size = 18,
-          color = paste0(config$colors$purple100)
-        ),
-        xref = 'paper',
-        x = '0'
-      ),
-      hoverlabel = list(
-        namelength = 40
-      ),
-      #Line for My County
-      shapes = list(
-        type = 'line',
-        xref = 'x',
-        yref = 'y',
-        x0 = filter(data, type == 'selected')$value,
-        x1 = filter(data, type == 'selected')$value,
-        y0 = 0,
-        y1 = max(density_all$y)*.05 + max(density_all$y),
-        line = list(
-          color = paste0(config$colors$yellow125),
-          width = 3,
-          dash = 'longdash'
-        )
-      ),
-      xaxis = list(
-        title = "",
-        showgrid = F,
-        zeroline = T
-      ),
-      yaxis = list(
-        title = "Relative Frequency",
-        showgrid = F,
-        showline = T, 
-        range = c(0, max(density_all$y)*.05 + max(density_all$y))
-      ),
-      showlegend = F
-    )
+    ) 
   
-  if (comparedat==T) {
+  if (!missing(comparedata)) {
+    p <- p %>% 
+      add_trace(
+        type = 'scatter',
+        mode = 'markers+linses',
+        x = pull(comp_county_dat, df_outcome1$column_name[1]),
+        y = 0,
+        marker = list(
+          symbol = 'diamond',
+          color = paste0(config$colors$yellow125),
+          opacity = 1,
+          size = 17,
+          line = list(
+            width = 1, 
+            color = paste0(config$colors$red100)
+          )
+        ),
+        text = comp_county_dat$county,
+        hoverinfo = 'text',
+        cliponaxis = F
+      ) %>% layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = 40
+        ),
+        #Line for My County
+        shapes = list(
+          list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = filter(data, type == 'selected')$value,
+            x1 = filter(data, type == 'selected')$value,
+            y0 = 0,
+            y1 = max(density_all$y)*.05 + max(density_all$y),
+            line = list(
+              color = paste0(config$colors$yellow125),
+              width = 3,
+              dash = 'longdash'
+            )
+          ), list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = pull(comp_county_dat, df_outcome1$column_name[1]),
+            x1 = pull(comp_county_dat, df_outcome1$column_name[1]),
+            y0 = 0,
+            y1 = max(density_all$y)*.05 + max(density_all$y),
+            line = list(
+              color = paste0(config$colors$red100),
+              width = 3,
+              dash = 'longdash'
+            )
+          )),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = T
+        ),
+        yaxis = list(
+          title = "Relative Frequency",
+          showgrid = F,
+          showline = T, 
+          range = c(0, max(density_all$y)*.05 + max(density_all$y))
+        ),
+        showlegend = F
+      )
+  } else {
     p <- p %>% 
       layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = 40
+        ),
+        #Line for My County
         shapes = list(
           type = 'line',
           xref = 'x',
           yref = 'y',
-          x0 = pull(comp_county_dat, data$column_name[1]),
-          x1 = pull(comp_county_dat, data$column_name[1]),
+          x0 = filter(data, type == 'selected')$value,
+          x1 = filter(data, type == 'selected')$value,
           y0 = 0,
           y1 = max(density_all$y)*.05 + max(density_all$y),
           line = list(
-            color = 'green',
+            color = paste0(config$colors$yellow125),
             width = 3,
             dash = 'longdash'
           )
-        )
+        ),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = T
+        ),
+        yaxis = list(
+          title = "Relative Frequency",
+          showgrid = F,
+          showline = T, 
+          range = c(0, max(density_all$y)*.05 + max(density_all$y))
+        ),
+        showlegend = F
       )
-  } else {
-    p <- p
   }
-
+  
   return(p)
 }
-density_plot(df_outcome1, comparedat = F)
+density_plot(df_outcome1, comp_county_dat)
 
 
