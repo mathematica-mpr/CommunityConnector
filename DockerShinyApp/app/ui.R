@@ -2,7 +2,7 @@
 ui <- bootstrapPage(
  # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
-    column(width = 4, h2("Community Connector")),
+    column(width = 4, h2(lang_cfg$title)),
     column(width = 3,
            HTML(lang_cfg$intro)),
     column(width = 3),
@@ -10,7 +10,7 @@ ui <- bootstrapPage(
   fluidRow(
     sidebarPanel(width = 2,
                  h3("Get Started"),
-                 selectInput('county_selection_type', label = 'Select your county by',
+                 selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
                  searchInput('county_selection', label = '', placeholder = 'Search your county',
                              btnSearch = icon('search'), value = "8001"),
