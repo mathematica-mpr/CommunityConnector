@@ -95,6 +95,28 @@ server <- function(input, output) {
                    choices = choice_list)
   })
   
+  ## methodology modal dialogue ------------------------------------------------
+  observeEvent(input$method_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$method_modal,
+      HTML(lang_cfg$method),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
+  ## data sources modal dialogue -----------------------------------------------
+  observeEvent(input$data_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$data_source_modal,
+      HTML(lang_cfg$data),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
