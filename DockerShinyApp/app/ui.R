@@ -19,18 +19,29 @@ ui <- bootstrapPage(
     mainPanel(width = 10, 
               column(width = 6, 
                      fluidRow(
-                       column(width = 6, htmlOutput("my_county_name"))),
+                       column(width = 6, htmlOutput("my_county_name")),
+                       column(width = 6, actionBttn("radar_read_more", 
+                                                    label = lang_cfg$titles$radar_read_more,
+                                                    size = "sm", color = "success",
+                                                    style = "pill"))),
                      fluidRow(
                        column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%"
                                                       )))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
-      #               tags$style(HTML("
-      #  .tabbable > .nav > li > a {
-      #     background-color: #000;
-      #     color: #FFF;
-      #  }")),
+                     tags$style(HTML("
+        .tabbable > .nav > li > a {
+           background-color: #28b78d;
+           color: #FFF;
+      }")),
+                     tags$style(HTML("
+        .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+           background-color: #046B5C;
+                                     color: #FFF;
+                                       }")),
+             
+          
                      tabsetPanel(type = 'pills', id = "tabs",
                                  tabPanel(span("My Matches", title = lang_cfg$my_matches),
                                           plotlyOutput("compare_county_radars",
