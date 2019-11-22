@@ -2,7 +2,7 @@ server <- function(input, output) {
   
   # mathematica logo
   output$logo <- renderUI({
-    img(src='logo.png', aligh = 'right', height = '100px')
+    img(src='logo.png', aligh = 'right', height = '50px')
   })
   
 #  county_selection_check <- reactive({
