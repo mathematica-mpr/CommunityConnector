@@ -15,18 +15,26 @@ ui <- bootstrapPage(
                  uiOutput('select_my_county'),
                  uiOutput('select_comparison_county'),
                  br()),
-    mainPanel(width = 10, 
+    mainPanel(width = 10,
               column(width = 6, 
                      fluidRow(
-                       column(width = 6, htmlOutput("my_county_name")),
-                       column(width = 6, actionBttn("radar_read_more", 
-                                                    label = lang_cfg$titles$radar_read_more,
-                                                    size = "sm", color = "success",
-                                                    style = "pill"))),
+                       column(width = 12, h1(" "))
+                     ), 
+                     fluidRow(
+                       column(width = 12, h1(" "))
+                     ),
+                     fluidRow(
+                       column(width = 6, htmlOutput("my_county_header"))),
+                     fluidRow(
+                       column(width = 12, align = "right",
+                              actionBttn("radar_read_more", 
+                                         label = lang_cfg$titles$radar_read_more,
+                                         size = "sm", color = "success",
+                                         style = "pill"))),
                      fluidRow(
                        column(width = 12, plotlyOutput("my_county_radar",
-                                                      height = "80%"
-                                                      )))),
+                                                       height = "80%"
+                       )))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
                      
@@ -45,11 +53,17 @@ ui <- bootstrapPage(
           
                      tabsetPanel(type = 'pills', id = "tabs",
                                  tabPanel(span("My Matches", title = lang_cfg$my_matches),
+                                          fluidRow(
+                                            column(width = 12, h1(" "))
+                                          ),
                                           plotlyOutput("compare_county_radars",
                                                        height = "600px"
                                                        ),
                                           br()),
                                  tabPanel(span("Demographics", title = lang_cfg$demographics),
+                                          fluidRow(
+                                            column(width = 12, h1(" "))
+                                          ),
                                           fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
                                           fluidRow(
                                             column(width = 6, DT::DTOutput('my_county_econ_stab')),
@@ -64,11 +78,17 @@ ui <- bootstrapPage(
                                             column(width = 6, DT::DTOutput('my_county_health'))
                                           )),
                                  tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
+                                          fluidRow(
+                                            column(width = 12, h1(" "))
+                                          ),
                                           fluidRow(uiOutput('health_outcomes_header')),
                                           fluidRow(
                                             div(id = "density_plot_container",
                                                 uiOutput(outputId = "density_graphs_ui")))),
                                  tabPanel(span("County Map", title = lang_cfg$map),
+                                          fluidRow(
+                                            column(width = 12, h1(" "))
+                                          ),
                                           fluidRow(leafletOutput("map")))
                      )
               )
