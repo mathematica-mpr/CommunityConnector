@@ -5,8 +5,18 @@ ui <- bootstrapPage(
     column(width = 3, h1(lang_cfg$title)),
     column(width = 4,
            h4(HTML(lang_cfg$intro))),
-    column(width = 3),
-    column(width = 2, align = "right", uiOutput("logo"))),
+    column(width = 2, align = "right",
+           actionBttn("method_read_more", 
+                      label = lang_cfg$titles$method_read_more,
+                      size = "xs", color = "success",
+                      style = "minimal"),
+           actionBttn("data_read_more", 
+                      label = lang_cfg$titles$data_read_more,
+                      size = "xs", color = "success",
+                      style = "minimal")
+           ),
+    
+    column(width = 3, align = "right", uiOutput("logo"))),
   fluidRow(
     sidebarPanel(width = 2,
                  h2("Get Started"),
