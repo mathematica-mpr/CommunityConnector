@@ -14,7 +14,6 @@ ui <- bootstrapPage(
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
                  searchInput('county_selection', label = '', placeholder = 'Search your county',
                              btnSearch = icon('search'), value = "8001"),
-                 textOutput('county_selection_message'),
                  br(),
                  HTML(lang_cfg$howto)),
     mainPanel(width = 10, 
