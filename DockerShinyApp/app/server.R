@@ -94,7 +94,7 @@ server <- function(input, output) {
   ## selected county information -----------------------------------------------
   output$my_county_name <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$state, "</h4>"))
+    HTML(paste0("<h3>My County Selection</h3>"))
   })
   
   
