@@ -52,7 +52,7 @@ ui <- bootstrapPage(
              
           
                      tabsetPanel(type = 'pills', id = "tabs",
-                                 tabPanel(span("My Matches", title = lang_cfg$my_matches),
+                                 tabPanel(span("My Most Similar Counties", title = lang_cfg$my_matches),
                                           fluidRow(
                                             column(width = 12, h1(" "))
                                           ),
