@@ -190,13 +190,6 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df1$county, ", ", df1$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
