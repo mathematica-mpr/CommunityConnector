@@ -19,6 +19,10 @@ ui <- bootstrapPage(
     column(width = 3, align = "right", uiOutput("logo"))),
   fluidRow(
     sidebarPanel(width = 2,
+                 tags$style(HTML("
+        .selectize-control.single .selectize-input:after{
+        visibility:hidden;
+        }")),
                  h2("Get Started"),
                  selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
                              choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
