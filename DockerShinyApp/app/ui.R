@@ -68,8 +68,7 @@ ui <- bootstrapPage(
                                         #    column(width = 12, h1(" "))
                                         #  ),
                                         #  fluidRow(align = "center", uiOutput("comp_radar_header")),
-                                          plotlyOutput("compare_county_radars",
-                                                       height = "600px"
+                                          plotlyOutput("compare_county_radars"
                                                        ) %>% 
                                           withSpinner(type = getOption("spinner.type", default = 1)),
                                           br()),
