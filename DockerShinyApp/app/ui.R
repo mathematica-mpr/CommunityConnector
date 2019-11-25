@@ -5,17 +5,7 @@ ui <- bootstrapPage(
     column(width = 3, h1(lang_cfg$title)),
     column(width = 4,
            h4(HTML(lang_cfg$intro))),
-    column(width = 2, align = "right",
-           actionBttn("method_read_more", 
-                      label = lang_cfg$titles$method_read_more,
-                      size = "xs", color = "success",
-                      style = "minimal"),
-           actionBttn("data_read_more", 
-                      label = lang_cfg$titles$data_read_more,
-                      size = "xs", color = "success",
-                      style = "minimal")
-    ),
-    
+    column(width = 2),
     column(width = 3, align = "right", uiOutput("logo"))),
   fluidPage(
     fluidRow(
@@ -29,7 +19,17 @@ ui <- bootstrapPage(
                          choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
              uiOutput('select_my_county'),
              uiOutput('select_comparison_county'),
-             br()),
+             br(),
+             actionBttn("method_read_more", 
+                        label = lang_cfg$titles$method_read_more,
+                        size = "sm", color = "success",
+                        style = "minimal"),
+             br(),
+             br(),
+             actionBttn("data_read_more", 
+                        label = lang_cfg$titles$data_read_more,
+                        size = "sm", color = "success",
+                        style = "minimal")),
       column(width = 10,
              column(width = 6, 
                     fluidRow(
