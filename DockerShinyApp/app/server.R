@@ -520,7 +520,8 @@ server <- function(input, output) {
     density_plots_list <- purrr::imap(density_graphs(), ~{
       tagList(
         plotlyOutput(
-          outputId = paste0("density_graph", .y)
+          outputId = paste0("density_graph", .y),
+          height = '200px'
         ),
         br()
       )
