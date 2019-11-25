@@ -438,33 +438,63 @@ server <- function(input, output) {
   
   density_graphs <- eventReactive(
     {outcomes_dat()
+     comp_county_dat()
      input$outcome_sort
      input$show_matches
      }, {
-    
-    if (!input$show_matches) {
-      outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
-        nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
-        mutate(graphs = purrr::map(data, density_plot)) %>%
-        pull(graphs)
+       
+    if(input$comparison_county_selection == "None") {
+      if (!input$show_matches) {
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+          # arrange by rank
+          arrange_rank(input$outcome_sort) %>%
+          mutate(graphs = purrr::map(data, density_plot)) %>%
+          pull(graphs)
+      } else {
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+          # arrange by rank
+          arrange_rank(input$outcome_sort) %>%
+          mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     } else {
-      outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
-        nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
-        mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
-        pull(graphs)
+      if (!input$show_matches) {
+        #crashes the app
+        compare_countyname <- comp_county_dat() %>% 
+          pull(value)
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+          # arrange by rank
+          arrange_rank(input$outcome_sort) %>%
+          mutate(comparison = purrr::map(data, get_compare_value))
+          mutate(graphs = purrr::map2(data, comparison, density_plot)) %>%
+          pull(graphs)
+      } else {
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
+          # arrange by rank
+          arrange_rank(input$outcome_sort) %>%
+          mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     }
+    
+    
   })
   
   observeEvent(
     {outcomes_dat()
+    comp_county_dat()
     input$outcome_sort
     input$show_matches}, {
     req(density_graphs())
