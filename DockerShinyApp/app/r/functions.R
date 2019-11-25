@@ -817,7 +817,7 @@ density_plot_overlay <- function(data) {
 
 }
 
-density_plot <- function(data, comparedata) {
+density_plot <- function(data, comparevalue) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -860,12 +860,12 @@ density_plot <- function(data, comparedata) {
       cliponaxis = F
     ) 
   
-  if (!missing(comparedata)) {
+  if (!missing(comparevalue)) {
     p <- p %>% 
       add_trace(
         type = 'scatter',
         mode = 'markers+linses',
-        x = pull(comp_county_dat, df_outcome1$column_name[1]),
+        x = comparevalue,
         y = 0,
         marker = list(
           symbol = 'diamond',
@@ -912,8 +912,8 @@ density_plot <- function(data, comparedata) {
             type = 'line',
             xref = 'x',
             yref = 'y',
-            x0 = pull(comp_county_dat, df_outcome1$column_name[1]),
-            x1 = pull(comp_county_dat, df_outcome1$column_name[1]),
+            x0 = comparevalue,
+            x1 = comparevalue,
             y0 = 0,
             y1 = max(density_all$y)*.05 + max(density_all$y),
             line = list(
@@ -981,4 +981,10 @@ density_plot <- function(data, comparedata) {
   }
   
   return(p)
+}
+
+getcompvalue <- function(data) {
+  val <- filter(data, county==compare_countyname) %>% 
+    pull(value)
+  return(val)
 }
