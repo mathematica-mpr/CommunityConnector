@@ -474,18 +474,22 @@ server <- function(input, output) {
           mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
           # arrange by rank
           arrange_rank(input$outcome_sort) %>%
-          mutate(comparename = rep(countyname)) %>% 
-          mutate(comparison = purrr::map2(data, comparename, get_compare_value)) %>% 
-          mutate(graphs = purrr::map2(data, comparison, density_plot)) %>%
+          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot)) %>%
           pull(graphs)
       } else {
+        compare_countyname <- comp_county_dat() %>% 
+          pull(county)
         outcomes_dat() %>%
           group_by(column_name, higher_better) %>%
           nest() %>%
           mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
           # arrange by rank
           arrange_rank(input$outcome_sort) %>%
-          mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot_overlay)) %>%
           pull(graphs)
       }
     }
