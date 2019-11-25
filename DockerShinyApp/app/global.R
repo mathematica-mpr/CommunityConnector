@@ -34,7 +34,8 @@ source("./r/functions.R")
 dat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data.csv") %>%
   mutate(fips = as.character(fips))
 dd <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data_dictionary.csv") %>% 
-  mutate(descrip_new = str_wrap(description, 10))
+  mutate(descrip_new = str_wrap(description, 10)) %>%
+  mutate_at(vars(c("column_name", "description", "data_type", "source", "Notes")), as.character)
 dist_mat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_distance.csv") %>% 
   column_to_rownames(var = "X")
 names(dist_mat) <- gsub("^X", "", names(dist_mat))
