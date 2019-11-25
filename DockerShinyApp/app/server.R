@@ -131,7 +131,7 @@ server <- function(input, output) {
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>See How ", county_name(), ", ", county_state(), " is Doing</h3>"))
+    HTML(paste0("<h3>Social Determinants of Health in <br>", county_name(), ", ", county_state(), "</h3>"))
   })
   
   
@@ -461,7 +461,7 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectInput('outcome_filter', label = 'Filter outcomes by', 
+        column(width = 6, selectInput('outcome_filter', label = 'Filter by health conditions:', 
                            choices = c('All' = 'all', 
                                        'Diabetes' = 'diabetes',  
                                        'Kidney Disease' = 'kidney',
@@ -522,7 +522,7 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ),
+        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
         br()
       )
     })
