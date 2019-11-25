@@ -16,18 +16,41 @@ library(viridis)
 library(sf)
 library(leaflet)
 library(shinyBS)
+library(aws.signature)
+library(aws.ec2metadata)
+library(aws.s3)
+
+if (!is_ec2() & !is_ecs()) {
+  Sys.setenv("AWS_PROFILE"='ahrq')
+}
+
+
 
 config <- yaml.load_file("./config.yaml")
 lang_cfg <- yaml.load_file("./lang_cfg.yaml")
 
 source("./r/functions.R")
 
-
-# will have to read this in from s3 bucket
-dat <- read_csv("./data/final_data.csv", col_types = cols(fips = col_character()))
-dd <- read_csv("./data/final_data_dictionary.csv") %>%
+dat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data.csv") %>%
+  mutate(fips = as.character(fips))
+dd <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data_dictionary.csv") %>% 
   mutate(descrip_new = str_wrap(description, 10))
-dist_mat <- read_csv("./data/final_distance.csv") %>%
-  column_to_rownames(var = "X1")
+dist_mat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_distance.csv") %>% 
+  column_to_rownames(var = "X")
+names(dist_mat) <- gsub("^X", "", names(dist_mat))
 
-st_shp <- st_read("./data/county_shp.shp")
+
+t <- paste0(tempdir(), "/county_shp.shp")
+tp <- paste0(tempdir(), "/county_shp.prj")
+td <- paste0(tempdir(), "/county_shp.dbf")
+tx <- paste0(tempdir(), "/county_shp.shx")
+
+
+save_object(object = "s3://community-connector/county_shp.shp", file = t)
+save_object(object = "s3://community-connector/county_shp.prj", file = tp)
+save_object(object = "s3://community-connector/county_shp.dbf", file = td)
+save_object(object = "s3://community-connector/county_shp.shx", file = tx)
+
+st_shp <- st_read(t)
+
+rm(t, tp, td, tx)
