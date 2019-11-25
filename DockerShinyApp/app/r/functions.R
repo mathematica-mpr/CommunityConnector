@@ -3,6 +3,14 @@ format_dat <- function(cols) {
   round(cols, digits = 2)
 }
 
+format_table_dat <- function(col, description){
+  col <- as.character(col)
+  col <- case_when(grepl("%", description) ~ paste0(col, "%"),
+                   grepl("$", description) ~ paste0("$", col),
+                   TRUE ~ col)
+  return(col)
+}
+
 # get specific column names from data dictionary -------------------------------
 get_dd <- function(dd, column_type) {
   # column type can be: demographic, outcome, or sdoh_score
@@ -19,7 +27,9 @@ get_table_data <- function(data, dd, column_type, county) {
   
   df <- data %>% select(dd_cols) %>%
     rename_at(vars(sub_dd$column_name), ~ sub_dd$description) %>%
+    
     pivot_longer(cols = sub_dd$description) %>%
+    mutate(value = format_table_dat(value, name)) %>% 
     rename(!!(county) := value )
 }
 
