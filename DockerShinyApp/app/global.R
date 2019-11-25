@@ -32,7 +32,7 @@ lang_cfg <- yaml.load_file("./lang_cfg.yaml")
 source("./r/functions.R")
 
 dat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data.csv") %>%
-  mutate(fips = as.character(fips))
+  mutate_at(vars(c("fips", "county", "state")), as.character)
 dd <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data_dictionary.csv") %>% 
   mutate(descrip_new = str_wrap(description, 10)) %>%
   mutate_at(vars(c("column_name", "description", "data_type", "source", "Notes")), as.character)
