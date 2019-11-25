@@ -267,7 +267,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
     unlist()
   
   # create first county radar chart
-  p <- plot_ly(width = 700, height = 800) %>% 
+  p <- plot_ly(width = 650, height = 750) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
