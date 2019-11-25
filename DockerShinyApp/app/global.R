@@ -20,17 +20,19 @@ library(aws.signature)
 library(aws.ec2metadata)
 library(aws.s3)
 
+# setting aws profile for credentials
 if (!is_ec2() & !is_ecs()) {
   Sys.setenv("AWS_PROFILE"='ahrq')
 }
 
-
-
+# read in config files
 config <- yaml.load_file("./config.yaml")
 lang_cfg <- yaml.load_file("./lang_cfg.yaml")
 
+# helper functions
 source("./r/functions.R")
 
+# read in data from s3
 dat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data.csv") %>%
   mutate_at(vars(c("fips", "county", "state")), as.character)
 dd <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/final_data_dictionary.csv") %>% 
@@ -40,12 +42,11 @@ dist_mat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/fi
   column_to_rownames(var = "X")
 names(dist_mat) <- gsub("^X", "", names(dist_mat))
 
-
+# read in shape files from s3
 t <- paste0(tempdir(), "/county_shp.shp")
 tp <- paste0(tempdir(), "/county_shp.prj")
 td <- paste0(tempdir(), "/county_shp.dbf")
 tx <- paste0(tempdir(), "/county_shp.shx")
-
 
 save_object(object = "s3://community-connector/county_shp.shp", file = t)
 save_object(object = "s3://community-connector/county_shp.prj", file = tp)
