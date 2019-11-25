@@ -75,19 +75,16 @@ ui <- bootstrapPage(
                                           fluidRow(
                                             column(width = 12, h1(" "))
                                           ),
-                                          fluidRow(column(width = 12, DT::DTOutput("my_county_demo"))),
-                                          fluidRow(
-                                            column(width = 6, DT::DTOutput('my_county_econ_stab')),
-                                            column(width = 6, DT::DTOutput('my_county_neigh'))
-                                          ),
-                                          fluidRow(
-                                            column(width = 6, DT::DTOutput('my_county_edu')),
-                                            column(width = 6, DT::DTOutput('my_county_food'))
-                                          ),
-                                          fluidRow(
-                                            column(width = 6, DT::DTOutput('my_county_community')),
-                                            column(width = 6, DT::DTOutput('my_county_health'))
-                                          )),
+                                          fluidRow(column(width = 12, 
+                                                          DT::DTOutput("my_county_demo"),
+                                                          DT::DTOutput('my_county_econ_stab'),
+                                                          DT::DTOutput('my_county_neigh'),
+                                                          DT::DTOutput('my_county_edu'),
+                                                          DT::DTOutput('my_county_food'),
+                                                          DT::DTOutput('my_county_community'),
+                                                          DT::DTOutput('my_county_health')
+                                                          ))
+                                        ),
                                  tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
                                           fluidRow(
                                             column(width = 12, h1(" "))
