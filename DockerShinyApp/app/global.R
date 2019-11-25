@@ -56,3 +56,11 @@ save_object(object = "s3://community-connector/county_shp.shx", file = tx)
 st_shp <- st_read(t)
 
 rm(t, tp, td, tx)
+
+# data formatting for tables
+demo_cols <- dd %>% 
+  filter(demographic | used_sdoh_1 | used_sdoh_2 | used_sdoh_3 | used_sdoh_4 | used_sdoh_5 | used_sdoh_6) %>% 
+  pull(column_name)
+
+dat <- dat %>% 
+  mutate_at(demo_cols, format_dat)
