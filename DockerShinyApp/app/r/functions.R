@@ -182,12 +182,12 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       fill = "toself",
       fillcolor = paste0(config$colors$teal100, "CC"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$green100), 
+                  color = paste0(config$colors$teal100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$green100),
+                    color = paste0(config$colors$teal100),
                     opacity = 1),
       opacity = .6,
       hoverinfo = 'none',
@@ -303,12 +303,12 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       fill = 'toself',
       fillcolor = paste0(config$colors$teal100, "CC"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$green100), 
+                  color = paste0(config$colors$teal100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$green100),
+                    color = paste0(config$colors$teal100),
                     opacity = 1),
       opacity = .9,
       hovertemplate = paste("<b>%{theta} Score:</b>", 
@@ -327,7 +327,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       ),
       hoverlabel = list(
         namelength = -1,
-        bgcolor = paste0(config$colors$green100)
+        bgcolor = paste0(config$colors$teal100)
       ),
       margin = list(t = 7, l = 1, r = 7),
       annotations = c(list(
@@ -358,12 +358,12 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         fill = 'toself',
         fillcolor = paste0(config$colors$teal100, "CC"),
         line = list(dash = "solid", 
-                    color = paste0(config$colors$green100), 
+                    color = paste0(config$colors$teal100), 
                     width = .8, 
                     shape = 'spline', 
                     smoothing = .9),
         marker = list(size = 7,
-                      color = paste0(config$colors$green100),
+                      color = paste0(config$colors$teal100),
                       opacity = 1),
         opacity = .9,
         hovertemplate = paste("<b>%{theta} Score:</b>", 
@@ -983,7 +983,7 @@ density_plot <- function(data, comparevalue) {
   return(p)
 }
 
-getcompvalue <- function(data) {
+get_compare_value <- function(data) {
   val <- filter(data, county==compare_countyname) %>% 
     pull(value)
   return(val)
