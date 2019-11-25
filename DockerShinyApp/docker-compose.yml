@@ -6,8 +6,10 @@ services:
       - PASSWORD=${PASSWORD}
     build: .
     volumes:
-    #  - .:/home/rstudio
+      - .:/home/rstudio
+      - ~/.aws:/home/rstudio/.aws
 
     ports:
      - '8787:8787' # Rstudio
+     - '8080:8080'
      #- '3838:3838' # Shiny

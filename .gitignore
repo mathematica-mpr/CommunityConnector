@@ -17,6 +17,7 @@ data/*
 !data/locations*.csv
 
 methodology/.Rhistory
+DockerShinyApp/app/data/*
 
 *.shp
 *.shx

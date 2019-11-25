@@ -14,7 +14,7 @@ RUN R -e "devtools::install_github('rstudio/renv')"
 RUN R -e "devtools::install_version('plotly', version = '4.9.0', repos='http://cran.rstudio.com/')"
 #RUN R -e "shinytest::installDependencies()"
 RUN R -e "devtools::install_version('shinyBS', repos='http://cran.rstudio.com/')"
-
+RUN R -e "install.packages(c('aws.signature', 'aws.ec2metadata', 'aws.s3'), repos='http://cran.rstudio.com/')"
 
 
 
