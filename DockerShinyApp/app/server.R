@@ -2,29 +2,16 @@ server <- function(input, output) {
   
   # mathematica logo
   output$logo <- renderUI({
-    img(src='logo.png', aligh = 'right', height = '100px')
+    img(src='logo.png', aligh = 'right', height = '50px')
   })
   
-#  county_selection_check <- reactive({
-#    validate({
-#      if (input$county_selection_type == "fips") {
-#        need(nchar(input$county_selection) == 4, 'Please enter a four digit fips Code for your county.')
-#      } else if (input$county_selection_type == "name") {
-#        need(input$county_selection %in% dat$county, 'Please enter a valid county name.')
-#      }
-#    })
-#  })
-#  
-#  output$county_selection_message <- renderText({
-#    county_selection_check
-#  })
   
   options(DT.options = list(dom = "t", ordering = F))
 
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
     if (input$county_selection_type == "fips") {
-      input$county_selection %in% dat$fips
+      gsub("^0", "", input$county_selection) %in% dat$fips
     } else if (input$county_selection_type == "name") {
       input$county_selection %in% dat$county
     }
@@ -34,7 +21,7 @@ server <- function(input, output) {
   county_fips <- reactive({
     req(county_check())
     if (input$county_selection_type == "fips") {
-      input$county_selection
+      gsub("^0", "", input$county_selection)
     } else if (input$county_selection_type == "name") {
       dat %>% filter(county == input$county_selection) %>% pull(fips)
     }
@@ -45,8 +32,13 @@ server <- function(input, output) {
     if (input$county_selection_type == "name") {
       input$county_selection
     } else if (input$county_selection_type == "fips") {
-      dat %>% filter(fips == input$county_selection) %>% pull(county)
+      dat %>% filter(fips == gsub("^0", "", input$county_selection)) %>% pull(county)
     }
+  })
+  
+  county_state <- reactive({
+    req(county_check())
+    dat %>% filter(fips == county_fips()) %>% pull(state)
   })
   
   county_dat <- reactive({
@@ -91,10 +83,55 @@ server <- function(input, output) {
   })
   
   # output ---------------------------------------------------------------------
+  output$select_my_county <- renderUI({
+    req(input$county_selection_type)
+    
+    if (input$county_selection_type == "fips") {
+      choice_list <- sort(str_pad(dat$fips, width = 5, pad = "0"))
+    } else if (input$county_selection_type == "name") {
+      choice_list <- sort(dat$county)
+    }
+    selectizeInput('county_selection', label = lang_cfg$titles$county_selection,
+                   choices = choice_list)
+  })
+  
+  ## methodology modal dialogue ------------------------------------------------
+  observeEvent(input$method_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$method_modal,
+      HTML(lang_cfg$method),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
+  ## data sources modal dialogue -----------------------------------------------
+  observeEvent(input$data_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$data_source_modal,
+      HTML(lang_cfg$data),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
+  ## radar chart description modal dialogue ------------------------------------
+  observeEvent(input$radar_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$radar_modal_title,
+      HTML(lang_cfg$howto),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
   ## selected county information -----------------------------------------------
-  output$my_county_name <- renderUI({
+  output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>My Selection<br/></h3>", "<h4>", county_name(), ", ", county_dat()$state, "</h4>"))
+    HTML(paste0("<h3>See How ", county_name(), ", ", county_state(), " is Doing</h3>"))
   })
   
   
@@ -230,7 +267,7 @@ server <- function(input, output) {
     }
     
     df <- df %>%
-      rename(`Health Coverage` = name)
+      rename(`Health Care System` = name)
     
     DT::datatable(df, rownames = FALSE, class = "stripe") %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
@@ -241,7 +278,7 @@ server <- function(input, output) {
   output$select_comparison_county <- renderUI({
     req(my_matches())
     comp_counties <- dat %>% filter(fips %in% my_matches()) %>% pull(county)
-    selectInput('comparison_county_selection', label = "Select a county to compare:",
+    selectInput('comparison_county_selection', label = lang_cfg$titles$comparison_county_selection,
                 choices = c("None", comp_counties), selected = "None")
   })
   
@@ -309,10 +346,10 @@ server <- function(input, output) {
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
   ## comparison counties info --------------------------------------------------
-  output$my_matches_header <- renderUI({
+  output$comp_radar_header <- renderUI({
     req(my_matches())
     tagList(
-      HTML(paste0("<h3>My Matches<br/></h3><h4>", length(my_matches()), " communities</h4>"))
+      HTML(paste0("<h4>What Counties are Most Similar to ", county_name(), ", ", county_state(), "</h4>"))
     )
   })
   
@@ -423,12 +460,13 @@ server <- function(input, output) {
   output$health_outcomes_header <- renderUI({
     req(county_check())
     tagList(
-      HTML(paste0("<h3>My Health Outcomes<br/></h3>")),
       fluidRow(
-        column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
-                           choices = c('most unique' = 'unique', 
-                                       'best outcome' = 'best', 'worst outcome' = 'worst'),
-                           selected = 'unique')
+        column(width = 6, selectInput('outcome_filter', label = 'Filter outcomes by', 
+                           choices = c('All' = 'all', 
+                                       'Diabetes' = 'diabetes',  
+                                       'Kidney Disease' = 'kidney',
+                                       'Obesity' = 'obesity'),
+                           selected = 'all')
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Include Density Plot from Matching Counties'),
@@ -438,26 +476,24 @@ server <- function(input, output) {
   
   density_graphs <- eventReactive(
     {outcomes_dat()
-     input$outcome_sort
+     input$outcome_filter
      input$show_matches
      }, {
     
     if (!input$show_matches) {
       outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
+        group_by(column_name) %>%
         nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
+        # filter by dropdown selection
+        filter_category(input$outcome_filter) %>%
         mutate(graphs = purrr::map(data, density_plot)) %>%
         pull(graphs)
     } else {
       outcomes_dat() %>%
         group_by(column_name, higher_better) %>%
         nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
+        # filter by dropdown selection
+        filter_category(input$outcome_filter) %>%
         mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
         pull(graphs)
     }
@@ -465,7 +501,7 @@ server <- function(input, output) {
   
   observeEvent(
     {outcomes_dat()
-    input$outcome_sort
+    input$outcome_filter
     input$show_matches}, {
     req(density_graphs())
     
@@ -484,7 +520,8 @@ server <- function(input, output) {
     density_plots_list <- purrr::imap(density_graphs(), ~{
       tagList(
         plotlyOutput(
-          outputId = paste0("density_graph", .y)
+          outputId = paste0("density_graph", .y),
+          height = '200px'
         ),
         br()
       )
