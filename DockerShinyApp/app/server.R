@@ -461,10 +461,12 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectInput('outcome_sort', label = 'Sort outcomes by', 
-                           choices = c('most unique' = 'unique', 
-                                       'best outcome' = 'best', 'worst outcome' = 'worst'),
-                           selected = 'unique')
+        column(width = 6, selectInput('outcome_filter', label = 'Filter outcomes by', 
+                           choices = c('All' = 'all', 
+                                       'Diabetes' = 'diabetes',  
+                                       'Kidney Disease' = 'kidney',
+                                       'Obesity' = 'obesity'),
+                           selected = 'all')
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Include Density Plot from Matching Counties'),
@@ -474,26 +476,24 @@ server <- function(input, output) {
   
   density_graphs <- eventReactive(
     {outcomes_dat()
-     input$outcome_sort
+     input$outcome_filter
      input$show_matches
      }, {
     
     if (!input$show_matches) {
       outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
+        group_by(column_name) %>%
         nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
+        # filter by dropdown selection
+        filter_category(input$outcome_filter) %>%
         mutate(graphs = purrr::map(data, density_plot)) %>%
         pull(graphs)
     } else {
       outcomes_dat() %>%
         group_by(column_name, higher_better) %>%
         nest() %>%
-        mutate(rank = unlist(purrr::map2(data, higher_better, rank_outcome))) %>%
-        # arrange by rank
-        arrange_rank(input$outcome_sort) %>%
+        # filter by dropdown selection
+        filter_category(input$outcome_filter) %>%
         mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
         pull(graphs)
     }
@@ -501,7 +501,7 @@ server <- function(input, output) {
   
   observeEvent(
     {outcomes_dat()
-    input$outcome_sort
+    input$outcome_filter
     input$show_matches}, {
     req(density_graphs())
     
