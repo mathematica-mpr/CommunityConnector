@@ -117,6 +117,17 @@ server <- function(input, output) {
     ))
   })
   
+  ## contact info modal dialogue -----------------------------------------------
+  observeEvent(input$contact, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$contact_info_modal,
+      HTML(lang_cfg$contact),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
