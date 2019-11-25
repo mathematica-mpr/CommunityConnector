@@ -522,7 +522,7 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ),
+        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
         br()
       )
     })
