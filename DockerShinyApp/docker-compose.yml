@@ -1,6 +1,6 @@
 version: '3'
 services:
-  shinyapp:
+  rstudio:
     environment:
     #  - ADD=SHINY
       - PASSWORD=${PASSWORD}
