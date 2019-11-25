@@ -40,41 +40,18 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
-# function to create ranking of outcomes based on my county and my county matches
-rank_outcome <- function(data, higher_better) {
-  # data = data for specific outcome
-  # higher_better flag (0 = lower is better, 1 = higher is better)
-  
-  my_county_value <- data %>% 
-    filter(type == "selected") %>%
-    pull(value)
-  
-  outcome_vals <- data %>% 
-    filter(type != "other") %>%
-    pull(value)
-  
-  median_val <- median(outcome_vals)
-  
-  std_val <- sd(outcome_vals)
-  
-  if (higher_better) {
-    rank <- (median_val - my_county_value) / std_val
+# function to filter outcomes based on selection
+filter_category <- function(data, outcome_filter) {
+  if (outcome_filter == "diabetes") {
+    data %>% filter(grepl("diab", unique(column_name)))
+  } else if (outcome_filter == "kidney") {
+    data %>% filter(grepl("kidney", unique(column_name)))
+  } else if (outcome_filter == "obesity") {
+    data %>% filter(grepl("obes", unique(column_name)))
   } else {
-    rank <- (my_county_value - median_val) / std_val
+    data
   }
-  rank
 }
-
-arrange_rank <- function(data, outcome_sort) {
-  if (outcome_sort == 'unique') {
-    data %>% dplyr::arrange(desc(abs(rank)))
-  } else if (outcome_sort == 'best') {
-    data %>% dplyr::arrange(rank)
-  } else if (outcome_sort == 'worst') {
-    data %>% dplyr::arrange(desc(rank))
-  }
-  
-} 
 
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
@@ -116,13 +93,6 @@ radar_chart <- function(df, dictionary) {
       name = paste0(df$county, ", ", df$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df$county, ", ", df$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
