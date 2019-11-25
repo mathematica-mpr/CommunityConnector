@@ -100,7 +100,7 @@ radar_chart <- function(df, dictionary) {
       theta = radar_names,
       #aesthetics
       fill = 'toself',
-      fillcolor = paste0(config$colors$yellow50),
+      fillcolor = paste0(config$colors$yellow50, "CC"),
       line = list(dash = "solid", 
                   color = paste0(config$colors$red100), 
                   width = .8, 
@@ -180,7 +180,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       r = radar_points2,
       theta = radar_names,
       fill = "toself",
-      fillcolor = paste0(config$colors$teal100, "CC"),
+      fillcolor = paste0(config$colors$teal100, "70"),
       line = list(dash = "solid", 
                   color = paste0(config$colors$teal100), 
                   width = .8, 
@@ -189,7 +189,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       marker = list(size = 7,
                     color = paste0(config$colors$teal100),
                     opacity = 1),
-      opacity = .6,
+      #opacity = .6,
       hoverinfo = 'none',
       name = paste0(df2$county, ", ", df2$state)
     ) %>% 
@@ -721,7 +721,7 @@ density_plot_overlay <- function(data, comparedata) {
       x = ~density_matches$x,
       y = ~density_matches$y,
       fill = 'tozeroy',
-      fillcolor = paste0(config$colors$teal100, '60'),
+      fillcolor = paste0(config$colors$teal100, '70'),
       line = list(
         color = paste0(config$colors$teal100), 
         width = 2
@@ -738,7 +738,7 @@ density_plot_overlay <- function(data, comparedata) {
       marker = list(
         symbol = 'diamond',
         color = paste0(config$colors$teal100),
-        opacity = .8,
+        opacity = .65,
         size = 17,
         line = list(
           width = 1,
@@ -761,7 +761,6 @@ density_plot_overlay <- function(data, comparedata) {
       marker = list(
         symbol = 'diamond',
         color = paste0(config$colors$yellow50),
-        opacity = 1,
         size = 17,
         line = list(
           width = 1, 
@@ -786,12 +785,12 @@ density_plot_overlay <- function(data, comparedata) {
         y = 0,
         marker = list(
           symbol = 'diamond',
-          color = paste0(config$colors$red100),
+          color = paste0(config$colors$green100),
           opacity = 1,
           size = 17,
           line = list(
-            width = 1, 
-            color = paste0(config$colors$red100)
+            width = 1.2, 
+            color = paste0(config$colors$green100)
           )
         ),
         text = comparename,
@@ -835,7 +834,7 @@ density_plot_overlay <- function(data, comparedata) {
             y0 = 0,
             y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
             line = list(
-              color = paste0(config$colors$red100),
+              color = paste0(config$colors$green100),
               width = 3,
               dash = 'longdash'
             )
@@ -958,12 +957,12 @@ density_plot <- function(data, comparedata) {
         y = 0,
         marker = list(
           symbol = 'diamond',
-          color = paste0(config$colors$red100),
+          color = paste0(config$colors$green100),
           opacity = 1,
           size = 17,
           line = list(
             width = 1, 
-            color = paste0(config$colors$red100)
+            color = paste0(config$colors$green100)
           )
         ),
         text = comparename,
@@ -1006,7 +1005,7 @@ density_plot <- function(data, comparedata) {
             y0 = 0,
             y1 = max(density_all$y)*.05 + max(density_all$y),
             line = list(
-              color = paste0(config$colors$red100),
+              color = paste0(config$colors$green100),
               width = 3,
               dash = 'longdash'
             )
@@ -1049,7 +1048,7 @@ density_plot <- function(data, comparedata) {
           y0 = 0,
           y1 = max(density_all$y)*.05 + max(density_all$y),
           line = list(
-            color = paste0(config$colors$yellow50),
+            color = paste0(config$colors$yellow50, "CC"),
             width = 3,
             dash = 'longdash'
           )
