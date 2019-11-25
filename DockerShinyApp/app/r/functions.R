@@ -1,3 +1,8 @@
+# format function for demographic tables ---------------------------------------
+format_dat <- function(cols) {
+  round(cols, digits = 2)
+}
+
 # get specific column names from data dictionary -------------------------------
 get_dd <- function(dd, column_type) {
   # column type can be: demographic, outcome, or sdoh_score
@@ -40,41 +45,18 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
-# function to create ranking of outcomes based on my county and my county matches
-rank_outcome <- function(data, higher_better) {
-  # data = data for specific outcome
-  # higher_better flag (0 = lower is better, 1 = higher is better)
-  
-  my_county_value <- data %>% 
-    filter(type == "selected") %>%
-    pull(value)
-  
-  outcome_vals <- data %>% 
-    filter(type != "other") %>%
-    pull(value)
-  
-  median_val <- median(outcome_vals)
-  
-  std_val <- sd(outcome_vals)
-  
-  if (higher_better) {
-    rank <- (median_val - my_county_value) / std_val
+# function to filter outcomes based on selection
+filter_category <- function(data, outcome_filter) {
+  if (outcome_filter == "diabetes") {
+    data %>% filter(grepl("diab", unique(column_name)))
+  } else if (outcome_filter == "kidney") {
+    data %>% filter(grepl("kidney", unique(column_name)))
+  } else if (outcome_filter == "obesity") {
+    data %>% filter(grepl("obes", unique(column_name)))
   } else {
-    rank <- (my_county_value - median_val) / std_val
+    data
   }
-  rank
 }
-
-arrange_rank <- function(data, outcome_sort) {
-  if (outcome_sort == 'unique') {
-    data %>% dplyr::arrange(desc(abs(rank)))
-  } else if (outcome_sort == 'best') {
-    data %>% dplyr::arrange(rank)
-  } else if (outcome_sort == 'worst') {
-    data %>% dplyr::arrange(desc(rank))
-  }
-  
-} 
 
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
@@ -110,20 +92,12 @@ radar_chart <- function(df, dictionary) {
                     color = paste0(config$colors$red100),
                     opacity = 1),
       opacity = .9,
-      #hover label
-      name = paste0(df$county, ", ", df$state),
-      hovertemplate = ~paste('<b>Category</b>: %{theta}',
+      hovertemplate = paste('<b>Category</b>: %{theta}',
                              '<br><b>Score</b>: %{r:.2f}',
-                             '<extra></extra>')
+                             '<extra></extra>'),
+      name = paste0(df$county, ", ", df$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df$county, ", ", df$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
@@ -144,12 +118,17 @@ radar_chart <- function(df, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$red50)
+        bgcolor = paste0(config$colors$red50),
+        namelength = -1
       ),
       margin = list(t=70),
-      showlegend = T
+      showlegend = T,
+      dragmode = F
     )
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
 # function for two county radar plot -------------------------------------------
@@ -214,13 +193,6 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df1$county, ", ", df1$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
@@ -243,21 +215,22 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$red50)
       ),
-      showlegend = T
+      showlegend = T,
+      dragmode = F
     )
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
 # multiple radar chart grid ----------------------------------------------------
 # !! a lot of this is hard coded and expects only 20 comparison counties !!
-grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
+grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) {
   # get labels for sdohs
   radar_names <- get_dd(dd, "sdoh_score") %>% 
     dplyr::pull(descrip_new)
   radar_names <- append(radar_names, radar_names[1])
-  
-  # !! hard coding sdoh names as abbreviations
-  radar_names <- c("ES", "NPE", "E", "F", "C", "HC", "ES")
   
   # parameters
   n_rows <- ceiling(n_matches / 4) # exec decision to make 4 columns
@@ -273,18 +246,19 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
   )
   
   angularaxis_list <- list(
-    tickfont = list(size =  10),
+    showticklabels = F,
     rotation = 0
   )
   
-  hoverlabel_list <- list(
-    namelength = -1,
-    bgcolor = paste0(config$colors$green100)
+  annotations_list <- list(
+    xref = 'paper',
+    yref = 'paper',
+    xanchor = 'center',
+    yanchor = 'bottom',
+    yshift = 4,
+    showarrow = F,
+    font = list(size = 11)
   )
-  
-  margin_list <- list(
-    t = 25
-  ) 
   
   # get first county
   df1 <- df[1,]
@@ -293,7 +267,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
     unlist()
   
   # create first county radar chart
-  p <- plot_ly(width = 700, height = 800) %>% 
+  p <- plot_ly(width = 650, height = 750) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
@@ -311,8 +285,9 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
                     color = paste0(config$colors$green100),
                     opacity = 1),
       opacity = .9,
-      #hover label
-      hoverinfo = 'name',
+      hovertemplate = paste("<b>%{theta} Score:</b>", 
+                            "<br>%{r:.2f}",
+                            '<extra></extra>'),
       name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(  
@@ -324,27 +299,33 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list,
-      title = list(
-        text = 'Scores for Matching Counties',
-        font = list(
-          size = 20
-        )
+      hoverlabel = list(
+        namelength = -1,
+        bgcolor = paste0(config$colors$green100)
       ),
-      margin = list(t = 50, l = 1, r = 10)
+      margin = list(t = 7, l = 1, r = 7),
+      annotations = c(list(
+        x = 0 + t + txa,
+        y = 1 - ty,
+        text = paste0("<b>", df1$county, ", ", df1$state, "</b>")
+      ), annotations_list),
+      dragmode = F
     ) 
   
   # create all subsequent radar charts
+  grid_titles <- vector()
   for (i in 2:dim(df)[1]) {
     df_one <- df[i,]
     radar_points <- select(df_one, starts_with("sdoh"))
     radar_points <- append(radar_points, radar_points[1]) %>% 
       unlist()
     
+    grid_titles[i] <- paste0("<b>", df_one$county, ", ", df_one$state, "</b>")
+    
     p <- p %>%  
       add_trace(
         type = 'scatterpolar',
-        mode = 'markers+lines',
+        mode = 'markers+lines+text',
         r = radar_points,
         theta = radar_names,
         #aesthetics
@@ -359,8 +340,9 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
                       color = paste0(config$colors$green100),
                       opacity = 1),
         opacity = .9,
-        #hover label
-        hoverinfo = 'name',
+        hovertemplate = paste("<b>%{theta} Score:</b>", 
+                              "<br>%{r:.2f}",
+                              '<extra></extra>'),
         name = paste0(df_one$county, ", ", df_one$state),
         subplot = paste0('polar', i)
       ) 
@@ -377,7 +359,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (1/4) + t + txa,
+        y = 1 - ty,
+        text = grid_titles[2]
+      ), annotations_list)
     ) %>% 
     layout(
       polar3 = list(
@@ -388,7 +374,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (2/4) + t + txa,
+        y = 1 - ty,
+        text = grid_titles[3]
+      ), annotations_list)
     ) %>% 
     layout(
       polar4 = list(
@@ -399,7 +389,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (3/4) + t + txa,
+        y = 1 - ty,
+        text = grid_titles[4]
+      ), annotations_list)
     ) %>%  
     layout(
       polar5 = list(
@@ -410,7 +404,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(annotations_list, list(
+        x = 0 + t + txa,
+        y = 1 - (1 / n_rows) -  ty,
+        text = grid_titles[5]
+      ))
     ) %>%
     layout(
       polar6 = list(
@@ -421,7 +419,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (1/4) + t + txa,
+        y = 1 - (1 / n_rows) -  ty,
+        text = grid_titles[6]
+      ), annotations_list)
     ) %>% 
     layout(
       polar7 = list(
@@ -432,7 +434,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (2/4) + t + txa,
+        y = 1 - (1 / n_rows) -  ty,
+        text = grid_titles[7]
+      ), annotations_list)
     ) %>% 
     layout(
       polar8 = list(
@@ -443,7 +449,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (3/4) + t + txa,
+        y = 1 - (1 / n_rows) -  ty,
+        text = grid_titles[8]
+      ), annotations_list)
     ) %>%  
     layout(
       polar9 = list(
@@ -454,7 +464,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = 0 + t + txa,
+        y = 1 - (2 / n_rows) -  ty,
+        text = grid_titles[9]
+      ), annotations_list)
     ) %>%
     layout(
       polar10 = list(
@@ -465,7 +479,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (1/4) + t + txa,
+        y = 1 - (2 / n_rows) -  ty,
+        text = grid_titles[10]
+      ), annotations_list)
     ) %>% 
     layout(
       polar11 = list(
@@ -476,7 +494,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (2/4) + t + txa,
+        y = 1 - (2 / n_rows) -  ty,
+        text = grid_titles[11]
+      ), annotations_list)
     ) %>% 
     layout(
       polar12 = list(
@@ -487,7 +509,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (3/4) + t + txa,
+        y = 1 - (2 / n_rows) -  ty,
+        text = grid_titles[12]
+      ), annotations_list)
     ) %>%  
     layout(
       polar13 = list(
@@ -498,7 +524,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = 0 + t + txa,
+        y = 1 - (3 / n_rows) -  ty,
+        text = grid_titles[13]
+      ), annotations_list)
     ) %>%
     layout(
       polar14 = list(
@@ -509,7 +539,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (1/4) + t + txa,
+        y = 1 - (3 / n_rows) -  ty,
+        text = grid_titles[14]
+      ), annotations_list)
     ) %>% 
     layout(
       polar15 = list(
@@ -520,7 +554,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (2/4) + t + txa,
+        y = 1 - (3 / n_rows) -  ty,
+        text = grid_titles[15]
+      ), annotations_list)
     ) %>% 
     layout(
       polar16 = list(
@@ -531,7 +569,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (3/4) + t + txa,
+        y = 1 - (3 / n_rows) -  ty,
+        text = grid_titles[16]
+      ), annotations_list)
     )  %>%  
     layout(
       polar17 = list(
@@ -542,7 +584,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = 0 + t + txa,
+        y = 1 - (4 / n_rows) -  ty,
+        text = grid_titles[17]
+      ), annotations_list)
     ) %>%
     layout(
       polar18 = list(
@@ -553,7 +599,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (1/4) + t + txa,
+        y = 1 - (4 / n_rows) -  ty,
+        text = grid_titles[18]
+      ), annotations_list)
     ) %>% 
     layout(
       polar19 = list(
@@ -564,7 +614,11 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (2/4) + t + txa,
+        y = 1 - (4 / n_rows) -  ty,
+        text = grid_titles[19]
+      ), annotations_list)
     ) %>% 
     layout(
       polar20 = list(
@@ -575,12 +629,20 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .015) {
         radialaxis = radialaxis_list,
         angularaxis = angularaxis_list
       ),
-      hoverlabel = hoverlabel_list
+      annotations = c(list(
+        x = (3/4) + t + txa,
+        y = 1 - (4 / n_rows) -  ty,
+        text = grid_titles[20]
+      ), annotations_list)
     ) %>% 
-    layout(showlegend = F
-           )
+    layout(
+      showlegend = F
+      )
   
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 
 }
 
