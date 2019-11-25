@@ -721,7 +721,7 @@ density_plot_overlay <- function(data) {
       x = ~density_matches$x,
       y = ~density_matches$y,
       fill = 'tozeroy',
-      fillcolor = paste0(config$colors$teal100, '65'),
+      fillcolor = paste0(config$colors$teal100, '60'),
       line = list(
         color = paste0(config$colors$teal100), 
         width = 2
@@ -760,12 +760,12 @@ density_plot_overlay <- function(data) {
       y = 0,
       marker = list(
         symbol = 'diamond',
-        color = paste0(config$colors$yellow125),
+        color = paste0(config$colors$yellow50),
         opacity = 1,
         size = 17,
         line = list(
           width = 1, 
-          color = paste0(config$colors$yellow125)
+          color = paste0(config$colors$yellow50)
         )
       ),
       text = filter(data, type == 'selected')$county,
@@ -795,7 +795,7 @@ density_plot_overlay <- function(data) {
         y0 = 0,
         y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
         line = list(
-          color = paste0(config$colors$yellow125),
+          color = paste0(config$colors$yellow50),
           width = 3,
           dash = 'longdash'
         )
@@ -847,12 +847,12 @@ density_plot <- function(data, comparevalue) {
       y = 0,
       marker = list(
         symbol = 'diamond',
-        color = paste0(config$colors$yellow125),
+        color = paste0(config$colors$yellow50),
         opacity = 1,
         size = 17,
         line = list(
           width = 1, 
-          color = paste0(config$colors$yellow125)
+          color = paste0(config$colors$yellow50)
         )
       ),
       text = filter(data, type == 'selected')$county,
@@ -904,7 +904,7 @@ density_plot <- function(data, comparevalue) {
             y0 = 0,
             y1 = max(density_all$y)*.05 + max(density_all$y),
             line = list(
-              color = paste0(config$colors$yellow125),
+              color = paste0(config$colors$yellow50),
               width = 3,
               dash = 'longdash'
             )
@@ -960,7 +960,7 @@ density_plot <- function(data, comparevalue) {
           y0 = 0,
           y1 = max(density_all$y)*.05 + max(density_all$y),
           line = list(
-            color = paste0(config$colors$yellow125),
+            color = paste0(config$colors$yellow50),
             width = 3,
             dash = 'longdash'
           )
