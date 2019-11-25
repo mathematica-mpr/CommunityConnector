@@ -43,10 +43,12 @@ dist_mat <- aws.s3::s3read_using(read.csv, object = "s3://community-connector/fi
 names(dist_mat) <- gsub("^X", "", names(dist_mat))
 
 # read in shape files from s3
-t <- paste0(tempdir(), "/county_shp.shp")
-tp <- paste0(tempdir(), "/county_shp.prj")
-td <- paste0(tempdir(), "/county_shp.dbf")
-tx <- paste0(tempdir(), "/county_shp.shx")
+tmp <- tempdir()
+tmp_pth <- . %>% file.path(tmp, .)
+t <- tmp_pth("county_shp.shp")
+tp <- tmp_pth("county_shp.prj")
+td <- tmp_pth("county_shp.dbf")
+tx <- tmp_pth("county_shp.shx")
 
 save_object(object = "s3://community-connector/county_shp.shp", file = t)
 save_object(object = "s3://community-connector/county_shp.prj", file = tp)
