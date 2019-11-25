@@ -461,7 +461,7 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectInput('outcome_filter', label = 'Filter outcomes by', 
+        column(width = 6, selectInput('outcome_filter', label = 'Filter by health conditions:', 
                            choices = c('All' = 'all', 
                                        'Diabetes' = 'diabetes',  
                                        'Kidney Disease' = 'kidney',
