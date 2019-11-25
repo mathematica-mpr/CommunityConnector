@@ -92,9 +92,9 @@ radar_chart <- function(df, dictionary) {
                     color = paste0(config$colors$red100),
                     opacity = 1),
       opacity = .9,
-      hovertemplate = paste('<b>Category</b>: %{theta}',
-                             '<br><b>Score</b>: %{r:.2f}',
-                             '<extra></extra>'),
+      hovertemplate = paste("<b>%{theta} Score:</b>", 
+                            "<br>%{r:.2f}",
+                            '<extra></extra>'),
       name = paste0(df$county, ", ", df$state)
     ) %>% 
     layout(
