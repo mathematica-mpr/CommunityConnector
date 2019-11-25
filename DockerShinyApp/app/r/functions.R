@@ -689,7 +689,7 @@ make_density_graph <- function(data) {
 }
 
 #density plot overlay function-------------------
-density_plot_overlay <- function(data, comparevalue) {
+density_plot_overlay <- function(data, comparedata) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -773,7 +773,11 @@ density_plot_overlay <- function(data, comparevalue) {
       cliponaxis = F
     )
   
-  if(!missing(comparevalue)) {
+  if(!missing(comparedata)) {
+    comparename <- comparedata %>% 
+      pull(county)
+    comparevalue <- comparedata %>% 
+      pull(value)
     p <- p %>% 
       add_trace(
         type = 'scatter',
@@ -790,7 +794,7 @@ density_plot_overlay <- function(data, comparevalue) {
             color = paste0(config$colors$red100)
           )
         ),
-        text = comp_county_dat$county,
+        text = comparename,
         hoverinfo = 'text',
         cliponaxis = F
       ) %>% 
@@ -898,7 +902,7 @@ density_plot_overlay <- function(data, comparevalue) {
   
 }
 
-density_plot <- function(data, comparevalue) {
+density_plot <- function(data, comparedata) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -941,7 +945,11 @@ density_plot <- function(data, comparevalue) {
       cliponaxis = F
     ) 
   
-  if (!missing(comparevalue)) {
+  if (!missing(comparedata)) {
+    comparename <- comparedata %>% 
+      pull(county)
+    comparevalue <- comparedata %>% 
+      pull(value)
     p <- p %>% 
       add_trace(
         type = 'scatter',
@@ -958,7 +966,7 @@ density_plot <- function(data, comparevalue) {
             color = paste0(config$colors$red100)
           )
         ),
-        text = comp_county_dat$county,
+        text = comparename,
         hoverinfo = 'text',
         cliponaxis = F
       ) %>% layout(
