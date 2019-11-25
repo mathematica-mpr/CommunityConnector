@@ -43,8 +43,9 @@ ui <- bootstrapPage(
                                          style = "pill"))),
                      fluidRow(
                        column(width = 12, plotlyOutput("my_county_radar",
-                                                       height = "80%"
-                       )))),
+                                                       height = "80%") %>%
+                                withSpinner(type = getOption("spinner.type", default = 1))
+                              ))),
               column(width = 6,
                      #style = "max-height: 80vh; overflow-y: auto;",
                      
