@@ -17,3 +17,5 @@ colors:
   purple100: "#360B7F"
   black100: "000000"
   white100: "#FFFFFF"
+formatting:
+  digits: 2
