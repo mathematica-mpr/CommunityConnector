@@ -4,7 +4,7 @@ format_dat <- function(cols) {
 }
 
 format_table_dat <- function(col, description){
-  col <- as.character(col)
+  col <- format(col, nsmall = 2, big.mark = ",")
   col <- case_when(grepl("%", description) ~ paste0(col, "%"),
                    grepl("$", description) ~ paste0("$", col),
                    TRUE ~ col)
