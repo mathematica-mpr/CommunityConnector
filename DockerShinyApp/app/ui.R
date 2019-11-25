@@ -63,9 +63,9 @@ ui <- bootstrapPage(
           
                      tabsetPanel(type = 'pills', id = "tabs",
                                  tabPanel(span("My Most Similar Counties", title = lang_cfg$my_matches),
-                                          fluidRow(
-                                            column(width = 12, h1(" "))
-                                          ),
+                                        #  fluidRow(
+                                        #    column(width = 12, h1(" "))
+                                        #  ),
                                         #  fluidRow(align = "center", uiOutput("comp_radar_header")),
                                           plotlyOutput("compare_county_radars",
                                                        height = "600px"
