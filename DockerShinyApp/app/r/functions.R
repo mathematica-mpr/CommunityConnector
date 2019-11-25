@@ -1,3 +1,8 @@
+# format function for demographic tables ---------------------------------------
+format_dat <- function(cols) {
+  round(cols, digits = 2)
+}
+
 # get specific column names from data dictionary -------------------------------
 get_dd <- function(dd, column_type) {
   # column type can be: demographic, outcome, or sdoh_score
