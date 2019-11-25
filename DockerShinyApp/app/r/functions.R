@@ -983,8 +983,8 @@ density_plot <- function(data, comparevalue) {
   return(p)
 }
 
-get_compare_value <- function(data) {
-  val <- filter(data, county==compare_countyname) %>% 
+get_compare_value <- function(data, comparison_name) {
+  val <- filter(data, county==comparison_name) %>% 
     pull(value)
   return(val)
 }
