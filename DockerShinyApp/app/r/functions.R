@@ -1,10 +1,10 @@
 # format function for demographic tables ---------------------------------------
 format_dat <- function(cols) {
-  round(cols, digits = 2)
+  round(cols, digits = config$formatting$digits)
 }
 
 format_table_dat <- function(col, description){
-  col <- format(col, nsmall = 2, big.mark = ",")
+  col <- format(col, nsmall = config$formatting$digit, big.mark = ",")
   col <- case_when(grepl("%", description) ~ paste0(col, "%"),
                    grepl("[$]", description) ~ paste0("$", col),
                    TRUE ~ col)
