@@ -840,7 +840,8 @@ density_plot_overlay <- function(data, comparedata) {
           range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
         ),
         showlegend = F,
-        dragmode = F
+        dragmode = F,
+        margin = list(l = 0)
       ) 
   } else {
     p <- p %>% 
@@ -886,7 +887,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 2)
+        margin = list(l = 0)
       ) 
   }
   
@@ -1018,7 +1019,8 @@ density_plot <- function(data, comparedata) {
           range = c(0, max(density_all$y)*.05 + max(density_all$y))
         ),
         showlegend = F,
-        dragmode = F
+        dragmode = F,
+        margin = list(l = 0)
       )
   } else {
     p <- p %>% 
@@ -1063,7 +1065,8 @@ density_plot <- function(data, comparedata) {
           range = c(0, max(density_all$y)*.05 + max(density_all$y))
         ),
         showlegend = F,
-        dragmode = F
+        dragmode = F,
+        margin = list(l = 0)
       )
   }
   
