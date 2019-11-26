@@ -830,7 +830,7 @@ density_plot_overlay <- function(data, comparedata) {
         xaxis = list(
           title = "",
           showgrid = F,
-          zeroline = T
+          zeroline = F
         ),
         yaxis = list(
           title = "Relative Frequency",
@@ -874,7 +874,7 @@ density_plot_overlay <- function(data, comparedata) {
         xaxis = list(
           title = "",
           showgrid = F,
-          zeroline = T
+          zeroline = F
         ),
         yaxis = list(
           title = "Relative Frequency",
@@ -1005,7 +1005,7 @@ density_plot <- function(data, comparedata) {
         xaxis = list(
           title = "",
           showgrid = F,
-          zeroline = T
+          zeroline = F
         ),
         yaxis = list(
           title = "Relative Frequency",
@@ -1049,7 +1049,7 @@ density_plot <- function(data, comparedata) {
         xaxis = list(
           title = "",
           showgrid = F,
-          zeroline = T
+          zeroline = F
         ),
         yaxis = list(
           title = "Relative Frequency",
