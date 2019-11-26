@@ -71,15 +71,6 @@ ui <- bootstrapPage(
                     
                     
                     tabsetPanel(type = 'pills', id = "tabs",
-                                tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches),
-                                         fluidRow(
-                                           column(width = 12, h1(" "))
-                                         ),
-                                         # fluidRow(align = "center", uiOutput("comp_radar_header")),
-                                         plotlyOutput("compare_county_radars"
-                                         ) %>% 
-                                           withSpinner(type = getOption("spinner.type", default = 1)),
-                                         br()),
                                 tabPanel(span("Demographics", title = lang_cfg$demographics),
                                          fluidRow(
                                            column(width = 12, h1(" "))
@@ -94,6 +85,24 @@ ui <- bootstrapPage(
                                                          DT::DTOutput('my_county_health')
                                          ))
                                 ),
+                                tabPanel(span("County Map", title = lang_cfg$map),
+                                         fluidRow(
+                                           column(width = 12, h1(" "))
+                                         ),
+                                         fluidRow(leafletOutput("map") %>% 
+                                                    withSpinner(type = getOption("spinner.type", default = 1))
+                                         )
+                                ),
+                                tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches),
+                                         fluidRow(
+                                           column(width = 12, h1(" "))
+                                         ),
+                                         # fluidRow(align = "center", uiOutput("comp_radar_header")),
+                                         plotlyOutput("compare_county_radars"
+                                         ) %>% 
+                                           withSpinner(type = getOption("spinner.type", default = 1)),
+                                         br()
+                                ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
                                          fluidRow(
                                            column(width = 12, h1(" "))
@@ -101,14 +110,8 @@ ui <- bootstrapPage(
                                          fluidRow(uiOutput('health_outcomes_header')),
                                          fluidRow(
                                            div(id = "density_plot_container",
-                                               uiOutput(outputId = "density_graphs_ui")))),
-                                tabPanel(span("County Map", title = lang_cfg$map),
-                                         fluidRow(
-                                           column(width = 12, h1(" "))
-                                         ),
-                                         fluidRow(leafletOutput("map") %>% 
-                                                    withSpinner(type = getOption("spinner.type", default = 1))
-                                         ))
+                                               uiOutput(outputId = "density_graphs_ui")))
+                                )
                     )
              )
       )
