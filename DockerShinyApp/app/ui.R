@@ -6,7 +6,8 @@ ui <- bootstrapPage(
     column(width = 3, align = "right", uiOutput("logo"))),
   fluidRow(
     align = "center",
-    wellPanel(h4(HTML(lang_cfg$intro)), style = paste0("background: ",config$colors$tan25))
+    wellPanel(h1(lang_cfg$welcome), 
+                 h4(HTML(lang_cfg$intro)), style = paste0("background: ",config$colors$tan25))
   ),
   fluidPage(
     fluidRow(
