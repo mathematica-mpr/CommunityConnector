@@ -12,27 +12,29 @@ ui <- bootstrapPage(
   fluidPage(
     fluidRow(
       column(width = 2,
-             tags$style(HTML("
-        .selectize-control.single .selectize-input:after{
-        visibility:hidden;
-        }")),
-             h2("Get Started"),
-             selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
-                         choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
-             uiOutput('select_my_county'),
-             uiOutput('select_comparison_county'),
-             h6(em(lang_cfg$titles$comparison_county_footnote)),
-             br(),
-             actionBttn("method_read_more", 
-                        label = lang_cfg$titles$method_read_more,
-                        size = "sm", color = "success",
-                        style = "minimal"),
-             br(),
-             br(),
-             actionBttn("data_read_more", 
-                        label = lang_cfg$titles$data_read_more,
-                        size = "sm", color = "success",
-                        style = "minimal")),
+             wellPanel(
+               tags$style(HTML("
+          .selectize-control.single .selectize-input:after{
+          visibility:hidden;
+          }")),
+               h2("Get Started"),
+               selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
+                           choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
+               uiOutput('select_my_county'),
+               uiOutput('select_comparison_county'),
+               h6(em(lang_cfg$titles$comparison_county_footnote)),
+               br(),
+               actionBttn("method_read_more", 
+                          label = lang_cfg$titles$method_read_more,
+                          size = "sm", color = "success",
+                          style = "minimal"),
+               br(),
+               br(),
+               actionBttn("data_read_more", 
+                          label = lang_cfg$titles$data_read_more,
+                          size = "sm", color = "success",
+                          style = "minimal"),
+               style = paste0("background: ",config$colors$grey25))),
       column(width = 10,
              column(width = 6, 
                     fluidRow(
