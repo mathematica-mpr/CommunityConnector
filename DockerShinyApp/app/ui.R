@@ -71,7 +71,7 @@ ui <- bootstrapPage(
                     
                     
                     tabsetPanel(type = 'pills', id = "tabs",
-                                tabPanel(span("Demographics", title = lang_cfg$demographics),
+                                tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
                                          ),
@@ -85,7 +85,7 @@ ui <- bootstrapPage(
                                                          DT::DTOutput('my_county_health')
                                          ))
                                 ),
-                                tabPanel(span("County Map", title = lang_cfg$map),
+                                tabPanel(span("County Map", title = lang_cfg$map_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
                                          ),
@@ -93,7 +93,7 @@ ui <- bootstrapPage(
                                                     withSpinner(type = getOption("spinner.type", default = 1))
                                          )
                                 ),
-                                tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches),
+                                tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
                                          ),
@@ -105,7 +105,7 @@ ui <- bootstrapPage(
                                            withSpinner(type = getOption("spinner.type", default = 1)),
                                          br()
                                 ),
-                                tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
+                                tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
                                          ),
