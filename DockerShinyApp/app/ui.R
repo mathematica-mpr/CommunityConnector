@@ -5,8 +5,9 @@ ui <- bootstrapPage(
     column(width = 3, h1(lang_cfg$title)),
     column(width = 4,
            h4(HTML(lang_cfg$intro))),
-    column(width = 2),
-    column(width = 3, align = "right", uiOutput("logo"))),
+    column(width = 3, align = "center",
+           HTML(lang_cfg$browser)),
+    column(width = 2, align = "right", uiOutput("logo"))),
   fluidPage(
     fluidRow(
       column(width = 2,
