@@ -1,3 +1,16 @@
+# format function for demographic tables ---------------------------------------
+format_dat <- function(cols) {
+  round(cols, digits = config$formatting$digits)
+}
+
+format_table_dat <- function(col, description){
+  col <- format(col, nsmall = config$formatting$digit, big.mark = ",")
+  col <- case_when(grepl("%", description) ~ paste0(col, "%"),
+                   grepl("[$]", description) ~ paste0("$", col),
+                   TRUE ~ col)
+  return(col)
+}
+
 # get specific column names from data dictionary -------------------------------
 get_dd <- function(dd, column_type) {
   # column type can be: demographic, outcome, or sdoh_score
@@ -14,7 +27,9 @@ get_table_data <- function(data, dd, column_type, county) {
   
   df <- data %>% select(dd_cols) %>%
     rename_at(vars(sub_dd$column_name), ~ sub_dd$description) %>%
+    
     pivot_longer(cols = sub_dd$description) %>%
+    mutate(value = format_table_dat(value, name)) %>% 
     rename(!!(county) := value )
 }
 
@@ -40,41 +55,18 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   
 }
 
-# function to create ranking of outcomes based on my county and my county matches
-rank_outcome <- function(data, higher_better) {
-  # data = data for specific outcome
-  # higher_better flag (0 = lower is better, 1 = higher is better)
-  
-  my_county_value <- data %>% 
-    filter(type == "selected") %>%
-    pull(value)
-  
-  outcome_vals <- data %>% 
-    filter(type != "other") %>%
-    pull(value)
-  
-  median_val <- median(outcome_vals)
-  
-  std_val <- sd(outcome_vals)
-  
-  if (higher_better) {
-    rank <- (median_val - my_county_value) / std_val
+# function to filter outcomes based on selection
+filter_category <- function(data, outcome_filter) {
+  if (outcome_filter == "diabetes") {
+    data %>% filter(grepl("diab", unique(column_name)))
+  } else if (outcome_filter == "kidney") {
+    data %>% filter(grepl("kidney", unique(column_name)))
+  } else if (outcome_filter == "obesity") {
+    data %>% filter(grepl("obes", unique(column_name)))
   } else {
-    rank <- (my_county_value - median_val) / std_val
+    data
   }
-  rank
 }
-
-arrange_rank <- function(data, outcome_sort) {
-  if (outcome_sort == 'unique') {
-    data %>% dplyr::arrange(desc(abs(rank)))
-  } else if (outcome_sort == 'best') {
-    data %>% dplyr::arrange(rank)
-  } else if (outcome_sort == 'worst') {
-    data %>% dplyr::arrange(desc(rank))
-  }
-  
-} 
 
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
@@ -110,19 +102,12 @@ radar_chart <- function(df, dictionary) {
                     color = paste0(config$colors$red100),
                     opacity = 1),
       opacity = .9,
-      hovertemplate = paste('<b>Category</b>: %{theta}',
-                             '<br><b>Score</b>: %{r:.2f}',
-                             '<extra></extra>'),
+      hovertemplate = paste("<b>%{theta} Score:</b>", 
+                            "<br>%{r:.2f}",
+                            '<extra></extra>'),
       name = paste0(df$county, ", ", df$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df$county, ", ", df$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
@@ -150,7 +135,10 @@ radar_chart <- function(df, dictionary) {
       showlegend = T,
       dragmode = F
     )
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
 # function for two county radar plot -------------------------------------------
@@ -215,13 +203,6 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       name = paste0(df1$county, ", ", df1$state)
     ) %>% 
     layout(
-      title = list(
-        text = paste0(df1$county, ", ", df1$state),
-        font = list(
-          size = 18
-        ),
-        xref = 'paper'
-      ),
       polar = list(
         #tick labels
         radialaxis = list(
@@ -247,7 +228,10 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       showlegend = T,
       dragmode = F
     )
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
 # multiple radar chart grid ----------------------------------------------------
@@ -293,7 +277,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
     unlist()
   
   # create first county radar chart
-  p <- plot_ly(width = 700, height = 800) %>% 
+  p <- plot_ly(width = 650, height = 750) %>% 
     add_trace(
       type = 'scatterpolar',
       mode = 'markers+lines',
@@ -665,7 +649,10 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       showlegend = F
       )
   
-  return(p)
+  return(p %>% 
+           config(displaylogo = FALSE,
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 
 }
 
