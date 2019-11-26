@@ -1,5 +1,16 @@
+title: "Community Connector"
+titles:
+  county_selection_type: 'Select my county by:'
+  county_selection: 'Search my county:'
+  comparison_county_selection: "Search similar county to compare (sorted by similarity):"
+  radar_read_more: "Read more about this plot"
+  radar_modal: "More information about this plot"
+  method_read_more: "Read more about the methodology"
+  method_modal: "Methodology"
+  data_read_more: "Read more about the data sources"
+  data_source_modal: "Data Sources"
 intro: "Examine how your county compares to others in terms of social needs and health outcomes, and explore possible intervention areas that may improve health outcomes."
-howto: "The radar charts visualize how well your county and (optional) comparison county are doing in 6 social determinants of health pillars, as specified by the Kaiser Family Foundation: <br> 
+howto: "This fingerprint chart visualizes how well your county and (optional) comparison county are doing in 6 social determinants of health pillars, as specified by the Kaiser Family Foundation: <br> 
 <ul>
                       <li>Neighborhood & Physical Environment</li>
                       <li>Economic Stability</li>
@@ -9,6 +20,8 @@ howto: "The radar charts visualize how well your county and (optional) compariso
                       <li>Education</li>
                       </ul> <br>
                       Axes expanded towards the outer circular perimeter indicate the county is strong in that area, and axes closer to the center of the circle indicate the county is weaker in that area. For example, a county with a score of 0.93 in the Health Care System pillar has a relatively small uninsured population and a large availability of hospitals and doctors. A county with a score of 0.22 in the Economic Stability pillar has relatively high unemployment and weak job growth."
+method: "Under development"
+data: "Under development"
 my_matches: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
 demographics: "This section displays demographics, social determinant of health metrics, and health outcomes for the selected county and (optional) comparison county."
 health_outcomes: "This tab displays the distribution of health outcomes across all counties, dots along the x-axis to indicate where the top 20 most similar counties lie on the distribution, and a colored line to indicate how the selected county compares to the rest of the distribution."
