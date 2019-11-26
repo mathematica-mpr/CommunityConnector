@@ -24,11 +24,13 @@ sdoh_names <- dict %>%
 # pivot data
 long <- data %>% 
   select_at(sdoh_scores)
-names(long)
-sdoh_names
 names(long) <- sdoh_names
 long <- long %>% 
-  gather(sdoh_group, sdoh_score) 
+  gather(sdoh_group, sdoh_score) %>% 
+  rename(`SDoH Pillar` = sdoh_group) %>% 
+  mutate(`SDoH Pillar` = factor(`SDoH Pillar`, levels = c("Economic Stability","Neighborhood & Physical Environment",
+                                                             "Education","Food","Community","Health Care System"))) %>% 
+  arrange(`SDoH Pillar`) 
 head(long)
 
 ################################
@@ -39,9 +41,10 @@ head(long)
 
 ggplot(data = long,
          aes(y = sdoh_score,
-             group = sdoh_group,
-             fill = sdoh_group)) +
-  geom_boxplot()
+             group = `SDoH Pillar`,
+             fill = `SDoH Pillar`)) +
+  geom_boxplot() +
+  ylab("SDoH Score")
 
 ################################
 ########### Plot 2 #############
