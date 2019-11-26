@@ -19,7 +19,7 @@ ui <- bootstrapPage(
                          choices = c('FIPS Code' = 'fips', 'County Name' = 'name'), selected = 'fips'),
              uiOutput('select_my_county'),
              uiOutput('select_comparison_county'),
-             h6(lang_cfg$titles$comparison_county_footnote),
+             h6(em(lang_cfg$titles$comparison_county_footnote)),
              br(),
              actionBttn("method_read_more", 
                         label = lang_cfg$titles$method_read_more,
