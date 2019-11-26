@@ -5,7 +5,6 @@ server <- function(input, output) {
     img(src='logo.png', aligh = 'right', height = '50px')
   })
   
-  
   options(DT.options = list(dom = "t", ordering = F))
 
   # error handling checks ------------------------------------------------------
