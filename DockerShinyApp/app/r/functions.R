@@ -96,15 +96,7 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
 
 # function to filter outcomes based on selection
 filter_category <- function(data, outcome_filter) {
-  if (outcome_filter == "diabetes") {
-    data %>% filter(grepl("diab", unique(column_name)))
-  } else if (outcome_filter == "kidney") {
-    data %>% filter(grepl("kidney", unique(column_name)))
-  } else if (outcome_filter == "obesity") {
-    data %>% filter(grepl("obes", unique(column_name)))
-  } else {
-    data
-  }
+  data %>% filter(grepl(paste(outcome_filter, collapse = "|"), unique(column_name)))
 }
 
 # function for one county radar plot -------------------------------------------
