@@ -34,7 +34,19 @@ ui <- bootstrapPage(
                           label = lang_cfg$titles$data_read_more,
                           size = "sm", color = "success",
                           style = "minimal"),
-               style = paste0("background: ",config$colors$grey25))),
+               
+               br(),
+               br(),
+               br(),
+               br(),
+               br(),
+               br(),
+               uiOutput("health_plans_url"),
+               br(),
+               br(),
+               uiOutput("diab_prev_prog"),
+               style = paste0("background: ",config$colors$grey25))
+             ),
       column(width = 10,
              column(width = 6, 
                     fluidRow(
@@ -78,13 +90,9 @@ ui <- bootstrapPage(
                                            column(width = 12, h1(" "))
                                          ),
                                          fluidRow(column(width = 12, 
-                                                         DT::DTOutput("my_county_demo"),
-                                                         DT::DTOutput('my_county_econ_stab'),
-                                                         DT::DTOutput('my_county_neigh'),
-                                                         DT::DTOutput('my_county_edu'),
-                                                         DT::DTOutput('my_county_food'),
-                                                         DT::DTOutput('my_county_community'),
-                                                         DT::DTOutput('my_county_health')
+                                                         uiOutput('demo_tables_header'),
+                                                         uiOutput('demo_tables')
+                                                        
                                          ))
                                 ),
                                 tabPanel(span("County Map", title = lang_cfg$map_tab),
