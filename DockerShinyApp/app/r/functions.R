@@ -294,7 +294,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       marker = list(size = 7,
                     color = paste0(config$colors$teal100),
                     opacity = 1),
-      opacity = .9,
       hovertemplate = paste("<b>%{theta} Score:</b>", 
                             "<br>%{r:.2f}",
                             '<extra></extra>'),
@@ -341,6 +340,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         #aesthetics
         fill = 'toself',
         fillcolor = paste0(config$colors$teal100, "CC"),
+        opacity = .85,
         line = list(dash = "solid", 
                     color = paste0(config$colors$teal100), 
                     width = .8, 
@@ -349,7 +349,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         marker = list(size = 7,
                       color = paste0(config$colors$teal100),
                       opacity = 1),
-        opacity = .9,
         hovertemplate = paste("<b>%{theta} Score:</b>", 
                               "<br>%{r:.2f}",
                               '<extra></extra>'),
