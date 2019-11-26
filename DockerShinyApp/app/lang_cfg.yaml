@@ -1,9 +1,9 @@
 title: "Community Connector"
 welcome: "Welcome to the Community Connector App!"
 titles:
-  county_selection_type: '1. Select my county by:'
-  county_selection: '2. Search my county:'
-  comparison_county_selection: "3. Search similar county to compare*:"
+  county_selection_type: '1. Search for my county by:'
+  county_selection: '2. Select my county:'
+  comparison_county_selection: "3. Select similar county to compare*:"
   comparison_county_footnote: "*sorted by similarity to my county"
   radar_read_more: "Read more about this plot"
   radar_modal: "More information about this plot"
