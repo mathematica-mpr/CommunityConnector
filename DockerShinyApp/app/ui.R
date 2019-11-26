@@ -2,11 +2,12 @@
 ui <- bootstrapPage(
   # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
-    align = "center",
-    wellPanel(column(width = 3, align = "left"),
-              column(width = 6, h1(lang_cfg$welcome), 
-                                h4(HTML(lang_cfg$intro)), style = paste0("background: ",config$colors$tan25)),
-              column(width = 3, align = "right", uiOutput("logo")))
+    column(width = 2, align = "left"),
+    column(width = 8, align = 'center',
+           wellPanel(h1(lang_cfg$welcome), 
+                     h4(HTML(lang_cfg$intro)),
+                     style = paste0("background: ",config$colors$tan25))),
+    column(width = 2, align = "right", uiOutput("logo"))
   ),
   fluidPage(
     fluidRow(
