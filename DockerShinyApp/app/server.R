@@ -5,7 +5,6 @@ server <- function(input, output) {
     img(src='logo.png', aligh = 'right', height = '50px')
   })
   
-  
   options(DT.options = list(dom = "t", ordering = F))
 
   # error handling checks ------------------------------------------------------
@@ -117,6 +116,7 @@ server <- function(input, output) {
     ))
   })
   
+  
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
@@ -127,6 +127,21 @@ server <- function(input, output) {
       easyClose = T
     ))
   })
+  
+  ## local public health plans url ---------------------------------------------
+  output$health_plans_url <- renderUI({
+    tagList(a(lang_cfg$titles$health_plans, 
+              href = "https://www.colorado.gov/pacific/cdphe-lpha/chaps",
+              target = "_blank"))
+  })
+  
+  ## diabetes prevention programs url ---------------------------------------------
+  output$diab_prev_prog <- renderUI({
+    tagList(a(lang_cfg$titles$diab_prev_prog, 
+              href = " https://nccd.cdc.gov/DDT_DPRP/CitiesList.aspx?STATE=CO", 
+              target = "_blank"))
+  })
+  
   
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
@@ -154,125 +169,46 @@ server <- function(input, output) {
     }
   })
   
-  output$my_county_demo <- DT::renderDT({
+  ## demographics tables filter ------------------------------------------------
+  output$demo_tables_header <- renderUI({
     req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "demographic") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "demographic")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Essential facts` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+    tagList(
+      fluidRow(
+        column(width = 12, selectizeInput('demo_filter', label = 'Add or filter by demographic categories:', 
+                                      choices = c(
+                                                  'Essential Facts' = 'demographic',  
+                                                  'Economic Stability' = 'used_sdoh_1',
+                                                  'Neighborhood & Physical Environment' = 'used_sdoh_2',
+                                                  'Education' = 'used_sdoh_3',
+                                                  'Food' = 'used_sdoh_4',
+                                                  'Community' = 'used_sdoh_5',
+                                                  'Health Care System' = 'used_sdoh_6'),
+                                      selected = c('demographic'), multiple = T)
+        ))
+      )
   })
   
-  output$my_county_econ_stab <- DT::renderDT({
+  
+  ## render demo DTs based on selected input -----------------------------------
+  output$demo_tables <- renderUI({
     req(county_check())
     req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_1") 
+    req(input$demo_filter)
     
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_1")
-      df <- left_join(df, comp_df, by = "name")
-    }
+    demo_tables_list <- lapply(input$demo_filter, function(x) 
+      tagList(
+        make_demo_dt(county_dat = county_dat(),
+                     comp_county_dat = comp_county_dat(),
+                     comp_county_select = input$comparison_county_selection,
+                     demo_select = x,
+                     dd = dd)
+      )
+    )
     
-    df <- df %>%
-      rename(`Economic Stability` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+    tagList(
+      demo_tables_list
+    )
   })
-  
-  output$my_county_neigh <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_2") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_2")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Neighborhood & Physical Environment` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_edu <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_3") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_3")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Education` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_food <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_4") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_4")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Food` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_community <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_5") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_5")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Community` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_health <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_6") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_6")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Health Care System` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
   
   ## selected comparison county info -------------------------------------------
   output$select_comparison_county <- renderUI({
@@ -282,69 +218,7 @@ server <- function(input, output) {
                 choices = c("None", comp_counties), selected = "None")
   })
   
-  output$comp_county_demo <- DT::renderDT({
-    req(comp_county_dat())
 
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "demographic") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Essential facts", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_econ_stab <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_1") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Economic Stability", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_neigh <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_2") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Neighborhood & Physical Environment", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_edu <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_3") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Education", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_food <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_4") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Food", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_community <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_5") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Community", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$comp_county_health <- DT::renderDT({
-    req(comp_county_dat())
-    # duplicated descriptions for different variables. the .copy column will be dropped once those duplicates are removed
-    df <- get_table_data(comp_county_dat(), dd, "used_sdoh_6") 
-    
-    DT::datatable(df, rownames = FALSE, colnames = c("Health Coverage", ""), class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
   ## comparison counties info --------------------------------------------------
   output$comp_radar_header <- renderUI({
     req(my_matches())
@@ -461,46 +335,77 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectInput('outcome_filter', label = 'Filter by health conditions:', 
-                           choices = c('All' = 'all', 
-                                       'Diabetes' = 'diabetes',  
+        column(width = 6, selectizeInput('outcome_filter', label = 'Add or filter by health conditions:', 
+                           choices = c('Diabetes' = 'diab',  
                                        'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obesity'),
-                           selected = 'all')
+                                       'Obesity' = 'obes'),
+                           selected = c('diab', 'kidney', 'obes'), multiple = T)
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
-                                        label = 'Include Density Plot from Matching Counties'),
+                                        label = 'Compare to my most similar counties'),
                value = F)))
   })
   
   
   density_graphs <- eventReactive(
     {outcomes_dat()
+     comp_county_dat()
      input$outcome_filter
      input$show_matches
      }, {
     
-    if (!input$show_matches) {
-      outcomes_dat() %>%
-        group_by(column_name) %>%
-        nest() %>%
-        # filter by dropdown selection
-        filter_category(input$outcome_filter) %>%
-        mutate(graphs = purrr::map(data, density_plot)) %>%
-        pull(graphs)
+    if(input$comparison_county_selection == "None") {
+      if (!input$show_matches) {
+        outcomes_dat() %>%
+          group_by(column_name) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(graphs = purrr::map(data, density_plot)) %>%
+          pull(graphs)
+      } else {
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     } else {
-      outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
-        nest() %>%
-        # filter by dropdown selection
-        filter_category(input$outcome_filter) %>%
-        mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
-        pull(graphs)
+      if (!input$show_matches) {
+        compare_countyname <- comp_county_dat() %>% 
+          pull(county)
+        outcomes_dat() %>%
+          group_by(column_name) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(compare_name = compare_countyname) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot)) %>%
+          pull(graphs)
+      } else {
+        compare_countyname <- comp_county_dat() %>% 
+          pull(county)
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(compare_name = compare_countyname) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     }
+    
+    
   })
   
   observeEvent(
     {outcomes_dat()
+    comp_county_dat()
     input$outcome_filter
     input$show_matches}, {
     req(density_graphs())
