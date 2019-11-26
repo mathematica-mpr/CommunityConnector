@@ -93,6 +93,7 @@ ui <- bootstrapPage(
                                            column(width = 12, h1(" "))
                                          ),
                                          fluidRow(column(width = 12, 
+                                                         uiOutput('demo_tables_header'),
                                                          DT::DTOutput("my_county_demo"),
                                                          DT::DTOutput('my_county_econ_stab'),
                                                          DT::DTOutput('my_county_neigh'),
