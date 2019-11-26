@@ -5,8 +5,9 @@ ui <- bootstrapPage(
     column(width = 3, h1(lang_cfg$title)),
     column(width = 4,
            h4(HTML(lang_cfg$intro))),
-    column(width = 2),
-    column(width = 3, align = "right", uiOutput("logo"))),
+    column(width = 3, align = "center",
+           HTML(lang_cfg$browser)),
+    column(width = 2, align = "right", uiOutput("logo"))),
   fluidPage(
     fluidRow(
       column(width = 2,
@@ -29,7 +30,17 @@ ui <- bootstrapPage(
              actionBttn("data_read_more", 
                         label = lang_cfg$titles$data_read_more,
                         size = "sm", color = "success",
-                        style = "minimal")),
+                        style = "minimal"),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             br(),
+             uiOutput("health_plans_url"),
+             br(),
+             br(),
+             uiOutput("diab_prev_prog")),
       column(width = 10,
              column(width = 6, 
                     fluidRow(
@@ -82,13 +93,9 @@ ui <- bootstrapPage(
                                            column(width = 12, h1(" "))
                                          ),
                                          fluidRow(column(width = 12, 
-                                                         DT::DTOutput("my_county_demo"),
-                                                         DT::DTOutput('my_county_econ_stab'),
-                                                         DT::DTOutput('my_county_neigh'),
-                                                         DT::DTOutput('my_county_edu'),
-                                                         DT::DTOutput('my_county_food'),
-                                                         DT::DTOutput('my_county_community'),
-                                                         DT::DTOutput('my_county_health')
+                                                         uiOutput('demo_tables_header'),
+                                                         uiOutput('demo_tables')
+                                                        
                                          ))
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
