@@ -1,8 +1,9 @@
-title: "Community Connector"
+welcome: "Welcome to the Community Connector!"
 titles:
-  county_selection_type: 'Select my county by:'
-  county_selection: 'Search my county:'
-  comparison_county_selection: "Search similar county to compare (sorted by similarity):"
+  county_selection_type: '1. Search for my county by:'
+  county_selection: '2. Select my county:'
+  comparison_county_selection: "3. Select comparison county*:"
+  comparison_county_footnote: "*sorted by similarity to my county"
   radar_read_more: "Read more about this plot"
   radar_modal: "More information about this plot"
   method_read_more: "Read more about the methodology"
@@ -26,7 +27,8 @@ howto: "This fingerprint chart visualizes how well your county and (optional) co
 method: "Under development (method)"
 data: "Under development (data)"
 contact: "Under development (contact)"
-my_matches: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
-demographics: "This section displays demographics, social determinant of health metrics, and health outcomes for the selected county and (optional) comparison county."
-health_outcomes: "This tab displays the distribution of health outcomes across all counties, dots along the x-axis to indicate where the top 20 most similar counties lie on the distribution, and a colored line to indicate how the selected county compares to the rest of the distribution."
-map: "This tab displays a map of all counties, shaded by level of similarity to the selected county."
+my_matches_tab: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
+my_matches: "These are the social determinants of health of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
+demographics_tab: "This section displays demographics, social determinant of health metrics, and health outcomes for the selected county and (optional) comparison county."
+health_outcomes_tab: "This tab displays the distribution of health outcomes across all counties, dots along the x-axis to indicate where the top 20 most similar counties lie on the distribution, and a colored line to indicate how the selected county compares to the rest of the distribution."
+map_tab: "This tab displays a map of all counties, shaded by level of similarity to the selected county."
