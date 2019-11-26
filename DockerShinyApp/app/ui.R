@@ -94,13 +94,8 @@ ui <- bootstrapPage(
                                          ),
                                          fluidRow(column(width = 12, 
                                                          uiOutput('demo_tables_header'),
-                                                         DT::DTOutput("my_county_demo"),
-                                                         DT::DTOutput('my_county_econ_stab'),
-                                                         DT::DTOutput('my_county_neigh'),
-                                                         DT::DTOutput('my_county_edu'),
-                                                         DT::DTOutput('my_county_food'),
-                                                         DT::DTOutput('my_county_community'),
-                                                         DT::DTOutput('my_county_health')
+                                                         uiOutput('demo_tables')
+                                                        
                                          ))
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes),
