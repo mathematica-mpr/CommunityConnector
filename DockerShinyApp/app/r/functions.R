@@ -796,7 +796,7 @@ density_plot_overlay <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = 40
+          namelength = -1
         ),
         #line for my county and selected county
         shapes = list(
@@ -854,7 +854,7 @@ density_plot_overlay <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = 40
+          namelength = -1
         ),
         #line for my county
         shapes = list(
@@ -971,7 +971,7 @@ density_plot <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = 40
+          namelength = -1
         ),
         #line for my county and selected county
         shapes = list(
@@ -1029,7 +1029,7 @@ density_plot <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = 40
+          namelength = -1
         ),
         #line for my county
         shapes = list(
