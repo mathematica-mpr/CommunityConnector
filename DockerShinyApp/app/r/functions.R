@@ -33,6 +33,45 @@ get_table_data <- function(data, dd, column_type, county) {
     rename(!!(county) := value )
 }
 
+## DT function -----------------------------------------------------------------
+make_demo_dt <- function(county_dat, comp_county_dat,
+                         comp_county_select, demo_select, dd) {
+  DT::renderDT({
+    df <- get_table_data(county_dat, dd, demo_select) 
+    
+    if (comp_county_select != "None") {
+      comp_df <- get_table_data(comp_county_dat, dd, demo_select)
+      df <- left_join(df, comp_df, by = "name")
+    }
+    
+    if (demo_select == "demographic") {
+      df <- df %>%
+        rename(`Essential facts` = name)
+    } else if (demo_select == "used_sdoh_1") {
+      df <- df %>%
+        rename(`Economic Stability` = name)
+    } else if (demo_select == "used_sdoh_2") {
+      df <- df %>%
+        rename(`Neighborhood & Physical Environment` = name)
+    } else if (demo_select == "used_sdoh_3") {
+      df <- df %>%
+        rename(`Education` = name)
+    } else if (demo_select == "used_sdoh_4") {
+      df <- df %>%
+        rename(`Food` = name)
+    } else if (demo_select == "used_sdoh_5") {
+      df <- df %>%
+        rename(`Community` = name)
+    } else if (demo_select == "used_sdoh_6") {
+      df <- df %>%
+        rename(`Health Care System` = name)
+    }
+    
+    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
+      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+  })
+}
+
 
 # distance function to find my county matches ----------------------------------
 
