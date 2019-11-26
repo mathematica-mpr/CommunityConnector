@@ -139,6 +139,21 @@ server <- function(input, output) {
     ))
   })
   
+  ## local public health plans url ---------------------------------------------
+  output$health_plans_url <- renderUI({
+    tagList(a(lang_cfg$titles$health_plans, 
+              href = "https://www.colorado.gov/pacific/cdphe-lpha/chaps",
+              target = "_blank"))
+  })
+  
+  ## diabetes prevention programs url ---------------------------------------------
+  output$diab_prev_prog <- renderUI({
+    tagList(a(lang_cfg$titles$diab_prev_prog, 
+              href = " https://nccd.cdc.gov/DDT_DPRP/CitiesList.aspx?STATE=CO", 
+              target = "_blank"))
+  })
+  
+  
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
