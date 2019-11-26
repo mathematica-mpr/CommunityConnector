@@ -2,29 +2,50 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
-library("installMPR")
-install_mpr("plotMPR")
 
 rm(list=ls())
 
 list.files('../DockerShinyApp/app/data/')
-
 data <- read.csv('../DockerShinyApp/app/data/final_data.csv')
 dict <- read.csv('../DockerShinyApp/app/data/final_data_dictionary.csv')
+
+# read in config file for colors
+
+
 sdoh_scores <- paste0("sdoh_score_",c(1:6))
 summary(data[,sdoh_scores])
+sdoh_names <- dict %>% 
+  filter(column_name %in% sdoh_scores) %>% 
+  select(description) %>% 
+  pull() %>% 
+  as.character()
 
+?rename
 # pivot data
 long <- data %>% 
-  select_at(sdoh_scores) %>% 
-  gather(sdoh_group, sdoh_score)
+  select_at(sdoh_scores)
+names(long)
+sdoh_names
+names(long) <- sdoh_names
+long <- long %>% 
+  gather(sdoh_group, sdoh_score) 
+head(long)
+
+################################
+########### Plot 1 #############
+################################
 
 # histograms of all scores
+
 ggplot(data = long,
          aes(y = sdoh_score,
              group = sdoh_group,
              fill = sdoh_group)) +
   geom_boxplot()
+
+################################
+########### Plot 2 #############
+################################
 
 # relationship of all scores & econ score
 for(other_score in sdoh_scores[c(2:6)]){
