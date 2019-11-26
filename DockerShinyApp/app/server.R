@@ -170,6 +170,24 @@ server <- function(input, output) {
     }
   })
   
+  ## demographics tables filter ------------------------------------------------
+  output$demo_tables_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 6, selectizeInput('demo_filter', label = 'Filter by demographic categories:', 
+                                      choices = c(
+                                                  'Essential Facts' = 'ef',  
+                                                  'Economic Stability' = 'es',
+                                                  'Neighborhood & Physical Environment' = 'npe',
+                                                  'Education' = 'edu',
+                                                  'Food' = 'food',
+                                                  'Community' = 'com',
+                                                  'Health Care System' = 'hcs'),
+                                      selected = 'ef', multiple = T)
+        )))
+  })
+  
   output$my_county_demo <- DT::renderDT({
     req(county_check())
     req(input$comparison_county_selection)
