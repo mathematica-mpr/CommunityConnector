@@ -685,7 +685,7 @@ density_plot_overlay <- function(data, comparedata) {
     density()
   #Density Plot
   p <- plot_ly() %>%
-    #Density plot for All Counties
+    #density plot for all counties
     add_trace(
       type = 'scatter',
       mode = 'lines',
@@ -700,7 +700,7 @@ density_plot_overlay <- function(data, comparedata) {
       name = "Density Plot Of\nAll Counties",
       hoverinfo = 'name'
     ) %>% 
-    #Density plot for Matching Counties
+    #density plot for matching counties 
     add_trace(
       type = 'scatter',
       mode = 'lines',
@@ -715,7 +715,7 @@ density_plot_overlay <- function(data, comparedata) {
       name = 'Density Plot of\nMatching Counties',
       hoverinfo = 'name'
     ) %>% 
-    #Markers for Matching Counties
+    #markers for matching counties
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -738,7 +738,7 @@ density_plot_overlay <- function(data, comparedata) {
       hoverinfo = 'text',
       cliponaxis = F
     ) %>% 
-    #Markers for my County
+    #marker for my county
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -758,12 +758,14 @@ density_plot_overlay <- function(data, comparedata) {
       cliponaxis = F
     )
   
+  #add line for selecting a county match
   if(!missing(comparedata)) {
     comparename <- comparedata %>% 
       pull(county)
     comparevalue <- comparedata %>% 
       pull(value)
     p <- p %>% 
+      #marker for selected county
       add_trace(
         type = 'scatter',
         mode = 'markers+linses',
@@ -796,7 +798,7 @@ density_plot_overlay <- function(data, comparedata) {
         hoverlabel = list(
           namelength = 40
         ),
-        #Line for My County
+        #line for my county and selected county
         shapes = list(
           list(
             type = 'line',
@@ -854,7 +856,7 @@ density_plot_overlay <- function(data, comparedata) {
         hoverlabel = list(
           namelength = 40
         ),
-        #Line for My County
+        #line for my county
         shapes = list(
           type = 'line',
           xref = 'x',
@@ -896,7 +898,7 @@ density_plot <- function(data, comparedata) {
   density_all <- density(data$value)
   #Density Plot
   p <- plot_ly() %>%
-    #Density plot for All Counties
+    #density plot for all counties
     add_trace(
       type = 'scatter',
       mode = 'lines',
@@ -911,7 +913,7 @@ density_plot <- function(data, comparedata) {
       name = "Density Plot Of\nAll Counties",
       hoverinfo = 'name'
     ) %>% 
-    #Markers for my County
+    #marker for my county
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -932,12 +934,14 @@ density_plot <- function(data, comparedata) {
       cliponaxis = F
     ) 
   
+  #add line for selecting a matched county
   if (!missing(comparedata)) {
     comparename <- comparedata %>% 
       pull(county)
     comparevalue <- comparedata %>% 
       pull(value)
     p <- p %>% 
+      #marker for selected county
       add_trace(
         type = 'scatter',
         mode = 'markers+linses',
@@ -969,7 +973,7 @@ density_plot <- function(data, comparedata) {
         hoverlabel = list(
           namelength = 40
         ),
-        #Line for My County
+        #line for my county and selected county
         shapes = list(
           list(
             type = 'line',
@@ -1027,7 +1031,7 @@ density_plot <- function(data, comparedata) {
         hoverlabel = list(
           namelength = 40
         ),
-        #Line for My County
+        #line for my county
         shapes = list(
           type = 'line',
           xref = 'x',
@@ -1062,6 +1066,7 @@ density_plot <- function(data, comparedata) {
 }
 
 get_compare_value <- function(data, comparison_name) {
+  #function to pull selected county name and outcome value for outcomes df
   val <- filter(data, county==comparison_name) %>% 
     select(c(county, value))
   return(val)
