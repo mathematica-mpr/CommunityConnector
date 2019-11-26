@@ -175,138 +175,41 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectizeInput('demo_filter', label = 'Filter by demographic categories:', 
+        column(width = 12, selectizeInput('demo_filter', label = 'Filter by demographic categories:', 
                                       choices = c(
-                                                  'Essential Facts' = 'ef',  
-                                                  'Economic Stability' = 'es',
-                                                  'Neighborhood & Physical Environment' = 'npe',
-                                                  'Education' = 'edu',
-                                                  'Food' = 'food',
-                                                  'Community' = 'com',
-                                                  'Health Care System' = 'hcs'),
-                                      selected = 'ef', multiple = T)
-        )))
+                                                  'Essential Facts' = 'demographic',  
+                                                  'Economic Stability' = 'used_sdoh_1',
+                                                  'Neighborhood & Physical Environment' = 'used_sdoh_2',
+                                                  'Education' = 'used_sdoh_3',
+                                                  'Food' = 'used_sdoh_4',
+                                                  'Community' = 'used_sdoh_5',
+                                                  'Health Care System' = 'used_sdoh_6'),
+                                      selected = c('demographic'), multiple = T)
+        ))
+      )
   })
   
-  output$my_county_demo <- DT::renderDT({
+  
+  ## render demo DTs based on selected input -----------------------------------
+  output$demo_tables <- renderUI({
     req(county_check())
     req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "demographic") 
+    req(input$demo_filter)
     
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "demographic")
-      df <- left_join(df, comp_df, by = "name")
-    }
+    demo_tables_list <- lapply(input$demo_filter, function(x) 
+      tagList(
+        make_demo_dt(county_dat = county_dat(),
+                     comp_county_dat = comp_county_dat(),
+                     comp_county_select = input$comparison_county_selection,
+                     demo_select = x,
+                     dd = dd)
+      )
+    )
     
-    df <- df %>%
-      rename(`Essential facts` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
+    tagList(
+      demo_tables_list
+    )
   })
-  
-  output$my_county_econ_stab <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_1") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_1")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Economic Stability` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_neigh <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_2") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_2")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Neighborhood & Physical Environment` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_edu <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_3") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_3")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Education` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_food <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_4") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_4")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Food` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_community <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_5") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_5")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Community` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
-  output$my_county_health <- DT::renderDT({
-    req(county_check())
-    req(input$comparison_county_selection)
-    df <- get_table_data(county_dat(), dd, "used_sdoh_6") 
-    
-    if (input$comparison_county_selection != "None") {
-      comp_df <- get_table_data(comp_county_dat(), dd, "used_sdoh_6")
-      df <- left_join(df, comp_df, by = "name")
-    }
-    
-    df <- df %>%
-      rename(`Health Care System` = name)
-    
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
-      DT::formatStyle(columns = colnames(df), fontSize = "9pt")
-  })
-  
   
   ## selected comparison county info -------------------------------------------
   output$select_comparison_county <- renderUI({
