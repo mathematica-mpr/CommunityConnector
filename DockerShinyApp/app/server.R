@@ -336,12 +336,11 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectInput('outcome_filter', label = 'Filter by health conditions:', 
-                           choices = c('All' = 'all', 
-                                       'Diabetes' = 'diabetes',  
+        column(width = 6, selectizeInput('outcome_filter', label = 'Add or filter by health conditions:', 
+                           choices = c('Diabetes' = 'diab',  
                                        'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obesity'),
-                           selected = 'all')
+                                       'Obesity' = 'obes'),
+                           selected = c('diab', 'kidney', 'obes'), multiple = T)
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Include Density Plot from Matching Counties'),
