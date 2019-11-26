@@ -5,7 +5,6 @@ server <- function(input, output) {
     img(src='logo.png', aligh = 'right', height = '50px')
   })
   
-  
   options(DT.options = list(dom = "t", ordering = F))
 
   # error handling checks ------------------------------------------------------
@@ -343,7 +342,7 @@ server <- function(input, output) {
                            selected = c('diab', 'kidney', 'obes'), multiple = T)
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
-                                        label = 'Include Density Plot from Matching Counties'),
+                                        label = 'Compare to my most similar counties'),
                value = F)))
   })
   
