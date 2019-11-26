@@ -468,7 +468,7 @@ server <- function(input, output) {
                            selected = 'all')
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
-                                        label = 'Include Density Plot from Matching Counties'),
+                                        label = 'Compare to my most similar counties'),
                value = F)))
   })
   
