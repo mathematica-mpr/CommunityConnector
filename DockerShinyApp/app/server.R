@@ -175,7 +175,7 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 12, selectizeInput('demo_filter', label = 'Filter by demographic categories:', 
+        column(width = 12, selectizeInput('demo_filter', label = 'Add or filter by demographic categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
