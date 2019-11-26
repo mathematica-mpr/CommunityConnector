@@ -2,12 +2,11 @@
 ui <- bootstrapPage(
   # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
-    column(width = 9, h1(lang_cfg$title)),
-    column(width = 3, align = "right", uiOutput("logo"))),
-  fluidRow(
     align = "center",
-    wellPanel(h1(lang_cfg$welcome), 
-                 h4(HTML(lang_cfg$intro)), style = paste0("background: ",config$colors$tan25))
+    wellPanel(column(width = 3, align = "left"),
+              column(width = 6, h1(lang_cfg$welcome), 
+                                h4(HTML(lang_cfg$intro)), style = paste0("background: ",config$colors$tan25)),
+              column(width = 3, align = "right", uiOutput("logo")))
   ),
   fluidPage(
     fluidRow(
@@ -18,7 +17,7 @@ ui <- bootstrapPage(
         }")),
              h2("Get Started"),
              selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
-                         choices = c('County Name' = 'name','FIPS Code' = 'fips'), selected = 'name'),
+                         choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
              uiOutput('select_my_county'),
              uiOutput('select_comparison_county'),
              h6(em(lang_cfg$titles$comparison_county_footnote)),
