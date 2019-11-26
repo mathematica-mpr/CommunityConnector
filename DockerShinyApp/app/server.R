@@ -476,26 +476,55 @@ server <- function(input, output) {
   
   density_graphs <- eventReactive(
     {outcomes_dat()
+     comp_county_dat()
      input$outcome_filter
      input$show_matches
      }, {
     
-    if (!input$show_matches) {
-      outcomes_dat() %>%
-        group_by(column_name) %>%
-        nest() %>%
-        # filter by dropdown selection
-        filter_category(input$outcome_filter) %>%
-        mutate(graphs = purrr::map(data, density_plot)) %>%
-        pull(graphs)
+    if(input$comparison_county_selection == "None") {
+      if (!input$show_matches) {
+        outcomes_dat() %>%
+          group_by(column_name) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(graphs = purrr::map(data, density_plot)) %>%
+          pull(graphs)
+      } else {
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     } else {
-      outcomes_dat() %>%
-        group_by(column_name, higher_better) %>%
-        nest() %>%
-        # filter by dropdown selection
-        filter_category(input$outcome_filter) %>%
-        mutate(graphs = purrr::map(data, density_plot_overlay)) %>%
-        pull(graphs)
+      if (!input$show_matches) {
+        compare_countyname <- comp_county_dat() %>% 
+          pull(county)
+        outcomes_dat() %>%
+          group_by(column_name) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot)) %>%
+          pull(graphs)
+      } else {
+        compare_countyname <- comp_county_dat() %>% 
+          pull(county)
+        outcomes_dat() %>%
+          group_by(column_name, higher_better) %>%
+          nest() %>%
+          # filter by dropdown selection
+          filter_category(input$outcome_filter) %>%
+          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
+          mutate(graphs = purrr::map2(data, compare_value, density_plot_overlay)) %>%
+          pull(graphs)
+      }
     }
     
     
@@ -503,6 +532,7 @@ server <- function(input, output) {
   
   observeEvent(
     {outcomes_dat()
+    comp_county_dat()
     input$outcome_filter
     input$show_matches}, {
     req(density_graphs())
@@ -524,7 +554,8 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
+        ) #%>% withSpinner(type = getOption("spinner.type", default = 1))
+        ,
         br()
       )
     })
