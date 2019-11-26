@@ -833,9 +833,10 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Relative Frequency",
+          title = "",
           showgrid = F,
           showline = T, 
+          showticklabels = F,
           range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
         ),
         showlegend = F,
@@ -877,13 +878,15 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Relative Frequency",
+          title = "",
           showgrid = F,
           showline = T, 
+          showticklabels = F, 
           range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
         ),
         showlegend = F,
-        dragmode = F
+        dragmode = F,
+        margin = list(l = 2)
       ) 
   }
   
@@ -1008,9 +1011,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Relative Frequency",
+          title = "",
           showgrid = F,
           showline = T, 
+          showticklabels = F,
           range = c(0, max(density_all$y)*.05 + max(density_all$y))
         ),
         showlegend = F,
@@ -1052,9 +1056,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Relative Frequency",
+          title = "",
           showgrid = F,
           showline = T, 
+          showticklabels = F, 
           range = c(0, max(density_all$y)*.05 + max(density_all$y))
         ),
         showlegend = F,
