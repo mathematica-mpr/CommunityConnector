@@ -508,7 +508,7 @@ server <- function(input, output) {
           nest() %>%
           # filter by dropdown selection
           filter_category(input$outcome_filter) %>%
-          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_name = compare_countyname) %>% 
           mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
           mutate(graphs = purrr::map2(data, compare_value, density_plot)) %>%
           pull(graphs)
@@ -520,7 +520,7 @@ server <- function(input, output) {
           nest() %>%
           # filter by dropdown selection
           filter_category(input$outcome_filter) %>%
-          mutate(compare_name = rep(compare_countyname)) %>% 
+          mutate(compare_name = compare_countyname) %>% 
           mutate(compare_value = purrr::map2(data, compare_name, get_compare_value)) %>% 
           mutate(graphs = purrr::map2(data, compare_value, density_plot_overlay)) %>%
           pull(graphs)
