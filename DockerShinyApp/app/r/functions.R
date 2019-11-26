@@ -92,7 +92,7 @@ radar_chart <- function(df, dictionary) {
       theta = radar_names,
       #aesthetics
       fill = 'toself',
-      fillcolor = paste0(config$colors$yellow50),
+      fillcolor = paste0(config$colors$yellow50, "CC"),
       line = list(dash = "solid", 
                   color = paste0(config$colors$red100), 
                   width = .8, 
@@ -168,16 +168,16 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       r = radar_points2,
       theta = radar_names,
       fill = "toself",
-      fillcolor = paste0(config$colors$teal100, "CC"),
+      fillcolor = paste0(config$colors$teal100, "70"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$green100), 
+                  color = paste0(config$colors$teal100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$green100),
+                    color = paste0(config$colors$teal100),
                     opacity = 1),
-      opacity = .6,
+      #opacity = .6,
       hoverinfo = 'none',
       name = paste0(df2$county, ", ", df2$state)
     ) %>% 
@@ -287,14 +287,13 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       fill = 'toself',
       fillcolor = paste0(config$colors$teal100, "CC"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$green100), 
+                  color = paste0(config$colors$teal100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$green100),
+                    color = paste0(config$colors$teal100),
                     opacity = 1),
-      opacity = .9,
       hovertemplate = paste("<b>%{theta} Score:</b>", 
                             "<br>%{r:.2f}",
                             '<extra></extra>'),
@@ -311,7 +310,7 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       ),
       hoverlabel = list(
         namelength = -1,
-        bgcolor = paste0(config$colors$green100)
+        bgcolor = paste0(config$colors$teal100)
       ),
       margin = list(t = 7, l = 1, r = 7),
       annotations = c(list(
@@ -341,15 +340,15 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
         #aesthetics
         fill = 'toself',
         fillcolor = paste0(config$colors$teal100, "CC"),
+        opacity = .85,
         line = list(dash = "solid", 
-                    color = paste0(config$colors$green100), 
+                    color = paste0(config$colors$teal100), 
                     width = .8, 
                     shape = 'spline', 
                     smoothing = .9),
         marker = list(size = 7,
-                      color = paste0(config$colors$green100),
+                      color = paste0(config$colors$teal100),
                       opacity = 1),
-        opacity = .9,
         hovertemplate = paste("<b>%{theta} Score:</b>", 
                               "<br>%{r:.2f}",
                               '<extra></extra>'),
@@ -676,7 +675,7 @@ make_density_graph <- function(data) {
 }
 
 #density plot overlay function-------------------
-density_plot_overlay <- function(data) {
+density_plot_overlay <- function(data, comparedata) {
   #function to output density plot for specific outcome
   
   #finding densities
@@ -686,7 +685,7 @@ density_plot_overlay <- function(data) {
     density()
   #Density Plot
   p <- plot_ly() %>%
-    #Density plot for All Counties
+    #density plot for all counties
     add_trace(
       type = 'scatter',
       mode = 'lines',
@@ -701,14 +700,14 @@ density_plot_overlay <- function(data) {
       name = "Density Plot Of\nAll Counties",
       hoverinfo = 'name'
     ) %>% 
-    #Density plot for Matching Counties
+    #density plot for matching counties 
     add_trace(
       type = 'scatter',
       mode = 'lines',
       x = ~density_matches$x,
       y = ~density_matches$y,
       fill = 'tozeroy',
-      fillcolor = paste0(config$colors$teal100, '65'),
+      fillcolor = paste0(config$colors$teal100, '70'),
       line = list(
         color = paste0(config$colors$teal100), 
         width = 2
@@ -716,7 +715,7 @@ density_plot_overlay <- function(data) {
       name = 'Density Plot of\nMatching Counties',
       hoverinfo = 'name'
     ) %>% 
-    #Markers for Matching Counties
+    #markers for matching counties
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -725,7 +724,7 @@ density_plot_overlay <- function(data) {
       marker = list(
         symbol = 'diamond',
         color = paste0(config$colors$teal100),
-        opacity = .8,
+        opacity = .65,
         size = 17,
         line = list(
           width = 1,
@@ -739,7 +738,7 @@ density_plot_overlay <- function(data) {
       hoverinfo = 'text',
       cliponaxis = F
     ) %>% 
-    #Markers for my County
+    #marker for my county
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -747,70 +746,163 @@ density_plot_overlay <- function(data) {
       y = 0,
       marker = list(
         symbol = 'diamond',
-        color = paste0(config$colors$yellow125),
-        opacity = 1,
+        color = paste0(config$colors$yellow50),
         size = 17,
         line = list(
           width = 1, 
-          color = paste0(config$colors$yellow125)
+          color = paste0(config$colors$yellow50)
         )
       ),
       text = filter(data, type == 'selected')$county,
       hoverinfo = 'text',
       cliponaxis = F
-    ) %>% 
-    layout(
-      title = list(
-        text = paste(data$description[1]),
-        font = list(
-          size = 18,
-          color = paste0(config$colors$purple100)
-        ),
-        xref = 'paper',
-        x = '0'
-      ),
-      hoverlabel = list(
-        namelength = 40
-      ),
-      #Line for My County
-      shapes = list(
-        type = 'line',
-        xref = 'x',
-        yref = 'y',
-        x0 = filter(data, type == 'selected')$value,
-        x1 = filter(data, type == 'selected')$value,
-        y0 = 0,
-        y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
-        line = list(
-          color = paste0(config$colors$yellow125),
-          width = 3,
-          dash = 'longdash'
-        )
-      ),
-      xaxis = list(
-        title = "",
-        showgrid = F,
-        zeroline = T
-      ),
-      yaxis = list(
-        title = "Relative Frequency",
-        showgrid = F,
-        showline = T, 
-        range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
-      ),
-      showlegend = F
     )
+  
+  #add line for selecting a county match
+  if(!missing(comparedata)) {
+    comparename <- comparedata %>% 
+      pull(county)
+    comparevalue <- comparedata %>% 
+      pull(value)
+    p <- p %>% 
+      #marker for selected county
+      add_trace(
+        type = 'scatter',
+        mode = 'markers+linses',
+        x = comparevalue,
+        y = 0,
+        marker = list(
+          symbol = 'diamond',
+          color = paste0(config$colors$green100),
+          opacity = 1,
+          size = 17,
+          line = list(
+            width = 1.2, 
+            color = paste0(config$colors$green100)
+          )
+        ),
+        text = comparename,
+        hoverinfo = 'text',
+        cliponaxis = F
+      ) %>% 
+      layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = -1
+        ),
+        #line for my county and selected county
+        shapes = list(
+          list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = filter(data, type == 'selected')$value,
+            x1 = filter(data, type == 'selected')$value,
+            y0 = 0,
+            y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
+            line = list(
+              color = paste0(config$colors$yellow50),
+              width = 3,
+              dash = 'longdash'
+            )
+          ), list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = comparevalue,
+            x1 = comparevalue,
+            y0 = 0,
+            y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
+            line = list(
+              color = paste0(config$colors$green100),
+              width = 3,
+              dash = 'longdash'
+            )
+          )),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = F
+        ),
+        yaxis = list(
+          title = "",
+          showgrid = F,
+          showline = T, 
+          showticklabels = F,
+          range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
+        ),
+        showlegend = F,
+        dragmode = F,
+        margin = list(l = 0)
+      ) 
+  } else {
+    p <- p %>% 
+      layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = -1
+        ),
+        #line for my county
+        shapes = list(
+          type = 'line',
+          xref = 'x',
+          yref = 'y',
+          x0 = filter(data, type == 'selected')$value,
+          x1 = filter(data, type == 'selected')$value,
+          y0 = 0,
+          y1 = max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y),
+          line = list(
+            color = paste0(config$colors$yellow50),
+            width = 3,
+            dash = 'longdash'
+          )
+        ),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = F
+        ),
+        yaxis = list(
+          title = "",
+          showgrid = F,
+          showline = T, 
+          showticklabels = F, 
+          range = c(0, max(density_all$y, density_matches$y)*.05 + max(density_all$y, density_matches$y))
+        ),
+        showlegend = F,
+        dragmode = F,
+        margin = list(l = 0)
+      ) 
+  }
+  
   return(p)
+  
 }
 
-density_plot <- function(data) {
+density_plot <- function(data, comparedata) {
   #function to output density plot for specific outcome
   
   #finding densities
   density_all <- density(data$value)
   #Density Plot
   p <- plot_ly() %>%
-    #Density plot for All Counties
+    #density plot for all counties
     add_trace(
       type = 'scatter',
       mode = 'lines',
@@ -825,7 +917,7 @@ density_plot <- function(data) {
       name = "Density Plot Of\nAll Counties",
       hoverinfo = 'name'
     ) %>% 
-    #Markers for my County
+    #marker for my county
     add_trace(
       type = 'scatter',
       mode = 'markers+lines',
@@ -833,58 +925,157 @@ density_plot <- function(data) {
       y = 0,
       marker = list(
         symbol = 'diamond',
-        color = paste0(config$colors$yellow125),
+        color = paste0(config$colors$yellow50),
         opacity = 1,
         size = 17,
         line = list(
           width = 1, 
-          color = paste0(config$colors$yellow125)
+          color = paste0(config$colors$yellow50)
         )
       ),
       text = filter(data, type == 'selected')$county,
       hoverinfo = 'text',
       cliponaxis = F
-    ) %>% 
-    layout(
-      title = list(
-        text = paste(data$description[1]),
-        font = list(
-          size = 18,
-          color = paste0(config$colors$purple100)
+    ) 
+  
+  #add line for selecting a matched county
+  if (!missing(comparedata)) {
+    comparename <- comparedata %>% 
+      pull(county)
+    comparevalue <- comparedata %>% 
+      pull(value)
+    p <- p %>% 
+      #marker for selected county
+      add_trace(
+        type = 'scatter',
+        mode = 'markers+linses',
+        x = comparevalue,
+        y = 0,
+        marker = list(
+          symbol = 'diamond',
+          color = paste0(config$colors$green100),
+          opacity = 1,
+          size = 17,
+          line = list(
+            width = 1, 
+            color = paste0(config$colors$green100)
+          )
         ),
-        xref = 'paper',
-        x = '0'
-      ),
-      hoverlabel = list(
-        namelength = 40
-      ),
-      #Line for My County
-      shapes = list(
-        type = 'line',
-        xref = 'x',
-        yref = 'y',
-        x0 = filter(data, type == 'selected')$value,
-        x1 = filter(data, type == 'selected')$value,
-        y0 = 0,
-        y1 = max(density_all$y)*.05 + max(density_all$y),
-        line = list(
-          color = paste0(config$colors$yellow125),
-          width = 3,
-          dash = 'longdash'
-        )
-      ),
-      xaxis = list(
-        title = "",
-        showgrid = F,
-        zeroline = T
-      ),
-      yaxis = list(
-        title = "Relative Frequency",
-        showgrid = F,
-        showline = T, 
-        range = c(0, max(density_all$y)*.05 + max(density_all$y))
-      ),
-      showlegend = F
-    )
+        text = comparename,
+        hoverinfo = 'text',
+        cliponaxis = F
+      ) %>% layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = -1
+        ),
+        #line for my county and selected county
+        shapes = list(
+          list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = filter(data, type == 'selected')$value,
+            x1 = filter(data, type == 'selected')$value,
+            y0 = 0,
+            y1 = max(density_all$y)*.05 + max(density_all$y),
+            line = list(
+              color = paste0(config$colors$yellow50),
+              width = 3,
+              dash = 'longdash'
+            )
+          ), list(
+            type = 'line',
+            xref = 'x',
+            yref = 'y',
+            x0 = comparevalue,
+            x1 = comparevalue,
+            y0 = 0,
+            y1 = max(density_all$y)*.05 + max(density_all$y),
+            line = list(
+              color = paste0(config$colors$green100),
+              width = 3,
+              dash = 'longdash'
+            )
+          )),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = F
+        ),
+        yaxis = list(
+          title = "",
+          showgrid = F,
+          showline = T, 
+          showticklabels = F,
+          range = c(0, max(density_all$y)*.05 + max(density_all$y))
+        ),
+        showlegend = F,
+        dragmode = F,
+        margin = list(l = 0)
+      )
+  } else {
+    p <- p %>% 
+      layout(
+        title = list(
+          text = paste(data$description[1]),
+          font = list(
+            size = 18,
+            color = paste0(config$colors$purple100)
+          ),
+          xref = 'paper',
+          x = '0'
+        ),
+        hoverlabel = list(
+          namelength = -1
+        ),
+        #line for my county
+        shapes = list(
+          type = 'line',
+          xref = 'x',
+          yref = 'y',
+          x0 = filter(data, type == 'selected')$value,
+          x1 = filter(data, type == 'selected')$value,
+          y0 = 0,
+          y1 = max(density_all$y)*.05 + max(density_all$y),
+          line = list(
+            color = paste0(config$colors$yellow50, "CC"),
+            width = 3,
+            dash = 'longdash'
+          )
+        ),
+        xaxis = list(
+          title = "",
+          showgrid = F,
+          zeroline = F
+        ),
+        yaxis = list(
+          title = "",
+          showgrid = F,
+          showline = T, 
+          showticklabels = F, 
+          range = c(0, max(density_all$y)*.05 + max(density_all$y))
+        ),
+        showlegend = F,
+        dragmode = F,
+        margin = list(l = 0)
+      )
+  }
+  
   return(p)
+}
+
+get_compare_value <- function(data, comparison_name) {
+  #function to pull selected county name and outcome value for outcomes df
+  val <- filter(data, county==comparison_name) %>% 
+    select(c(county, value))
+  return(val)
 }
