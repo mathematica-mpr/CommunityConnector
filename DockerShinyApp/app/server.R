@@ -335,11 +335,12 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectizeInput('outcome_filter', label = 'Add or filter by health conditions:', 
+        column(width = 6, checkboxGroupInput('outcome_filter', label = 'Add or filter by health conditions:', 
                            choices = c('Diabetes' = 'diab',  
                                        'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obes'),
-                           selected = c('diab', 'kidney', 'obes'), multiple = T)
+                                       'Obesity' = 'obes')#,
+                           #selected = c('diab', 'kidney', 'obes')
+                           )
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Compare to my most similar counties'),
@@ -427,7 +428,8 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
+        ) #%>% withSpinner(type = getOption("spinner.type", default = 1))
+        ,
         br()
       )
     })
