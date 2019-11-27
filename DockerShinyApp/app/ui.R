@@ -59,10 +59,12 @@ ui <- bootstrapPage(
                       column(width = 12, align = "center", htmlOutput("my_county_header"))),
                     fluidRow(
                       column(width = 12, align = "right",
-                             actionBttn("radar_read_more", 
+                             actionButton("radar_read_more", 
                                         label = lang_cfg$titles$radar_read_more,
-                                        size = "sm", color = "success",
-                                        style = "pill"))),
+                                        size = "sm",
+                                        style = paste0("color: ", config$colors$white100,
+                                                       "; background-color: ", config$colors$purple100,
+                                                       "; border-color: ", config$colors$purple100)))),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%") #%>%
