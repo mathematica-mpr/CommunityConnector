@@ -18,7 +18,7 @@ ui <- bootstrapPage(
           visibility:hidden;
           }")),
                h2("Get Started"),
-               selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
+               radioButtons('county_selection_type', label = lang_cfg$titles$county_selection_type,
                            choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
                uiOutput('select_my_county'),
                uiOutput('select_comparison_county'),
