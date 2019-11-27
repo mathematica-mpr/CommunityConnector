@@ -95,14 +95,6 @@ ui <- bootstrapPage(
                                                         
                                          ))
                                 ),
-                                tabPanel(span("County Map", title = lang_cfg$map_tab),
-                                         fluidRow(
-                                           column(width = 12, h1(" "))
-                                         ),
-                                         fluidRow(leafletOutput("map") #%>% 
-                                                    #withSpinner(type = getOption("spinner.type", default = 1))
-                                         )
-                                ),
                                 tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
@@ -115,6 +107,14 @@ ui <- bootstrapPage(
                                            #withSpinner(type = getOption("spinner.type", default = 1))
                                            ,
                                          br()
+                                ),
+                                tabPanel(span("County Map", title = lang_cfg$map_tab),
+                                         fluidRow(
+                                           column(width = 12, h1(" "))
+                                         ),
+                                         fluidRow(leafletOutput("map") #%>% 
+                                                  #withSpinner(type = getOption("spinner.type", default = 1))
+                                         )
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
                                          fluidRow(
