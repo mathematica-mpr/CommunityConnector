@@ -254,19 +254,19 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     other_keep_vars = list(set(other_keep_vars))
 
     final_dict.loc[final_dict.column_name.isin(other_keep_vars), 'keep'] = 1
+    # remove one of the uninsured variables
+    final_dict.loc[final_dict['column_name'] == 'pct_adult_uninsured', 'keep'] = 0
+    # drop the RWJF outcomes in favor of the CDC outcomes
+    final_dict.loc[(final_dict.outcome == 1) & (final_dict.source == "RWJF"), 'keep'] = 0
 
     # check which ones we aren't keeping and add any additional
     print(final_dict[final_dict['keep'] == 0]['column_name'])
 
-    # drop the RWJF outcomes in favor of the CDC outcomes
-    final_dict.loc[(final_dict.outcome == 1) & (final_dict.source == "RWJF"), 'keep'] = 0
-
-    # check the descriptions of the variables we are keeping
     final_dict = final_dict[final_dict.keep == 1]
-    print(final_dict['description'])
 
     # keep only variables needed and output final data
     data = pd.read_csv(input)
+    print(final_dict['column_name'])
     final_data = data[final_dict['column_name']]
 
     final_data.to_csv(output, index = False)
