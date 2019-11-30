@@ -23,4 +23,6 @@ methodology/.Rhistory
 *.dbf
 *.prj
 
+*.png
+
 .Rproj.user
