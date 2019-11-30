@@ -70,13 +70,14 @@ outcomes %>%
 
 corr_data <- data %>% 
   select_at(c(sdoh_scores, "overobese_pct","diabetes_prevalence_2016","chronic_kidney_disease_pct"))
-names(corr_data) <- c(sdoh_names, "% Adults who are Overweight or Obese", "% Adults with Diabetes", "% Chronic Kidney Disease in Medicare age 65+")
+
+names(corr_data) <- str_wrap(c(sdoh_names, "% Adults who are Overweight or Obese", "% Adults with Diabetes", "% Chronic Kidney Disease in Medicare age 65+"), width = 20)
 summary(corr_data)
 corr_data_cor <- cor(corr_data)
 
 cplot <- ggcorrplot::ggcorrplot(corr_data_cor,
                        method = "square",
-                       colors = c(colors$red100, colors$grey25, colors$teal100),
-                       title = "Correlation across SDoH Scores and Outcomes")
+                       colors = c(colors$red100, colors$grey25, colors$teal100)) +
+  ggtitle("Correlation across SDoH Scores and Outcomes")
 cplot
 ggsave('Correlation.png', cplot)
