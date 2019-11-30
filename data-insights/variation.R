@@ -34,6 +34,7 @@ long <- long %>%
                                                              "Education","Food","Community","Health Care System"))) %>% 
   arrange(`SDoH Pillar`) 
 head(long)
+unique(long$`SDoH Pillar`)
 
 ################################
 ########### Plot 1 #############
@@ -41,16 +42,18 @@ head(long)
 
 # histograms of all scores
 
-ggplot(data = long,
+sdoh <- ggplot(data = long,
          aes(y = sdoh_score,
              group = `SDoH Pillar`,
-             fill = `SDoH Pillar`)) +
+             fill = str_wrap(`SDoH Pillar`, width = 10))) +
   geom_boxplot() +
   ylab("SDoH Score") +
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank()) +
   ggtitle("Social Determinants of Health Scores across Counties") +
   scale_fill_manual(values = c(colors$tan100, colors$green100, colors$grey100, colors$purple100, colors$yellow125, colors$teal100))
+sdoh
+ggsave('SDoH across Counties.png', sdoh)
 
 ################################
 ########### Plot 2 #############
