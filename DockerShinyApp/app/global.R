@@ -71,3 +71,6 @@ dat <- dat %>%
 # color gradient for similar counties
 max_distance <- max(dist_mat %>% 
                       select(-sim_county))
+palette <- colorRampPalette(c(config$colors$yellow125, config$colors$teal100))
+color_mapping <- data.frame('rounded_distance' = seq(0, ceiling(max_distance), by = 0.5))
+color_mapping$hex_color <- palette(nrow(color_mapping))
