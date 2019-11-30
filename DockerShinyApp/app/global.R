@@ -67,3 +67,7 @@ demo_cols <- dd %>%
 
 dat <- dat %>% 
   mutate_at(demo_cols, format_dat)
+
+# color gradient for similar counties
+max_distance <- max(dist_mat %>% 
+                      select(-sim_county))
