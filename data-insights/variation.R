@@ -3,6 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyverse)
 library(yaml)
+library(ggcorrplot)
 
 rm(list=ls())
 
@@ -45,13 +46,14 @@ unique(long$`SDoH Pillar`)
 sdoh <- ggplot(data = long,
          aes(y = sdoh_score,
              group = `SDoH Pillar`,
-             fill = str_wrap(`SDoH Pillar`, width = 10))) +
+             fill = str_wrap(`SDoH Pillar`, width = 20))) +
   geom_boxplot() +
   ylab("SDoH Score") +
+  ggtitle("Social Determinants of Health Scores across Counties") +
+  scale_fill_manual(values = c(colors$tan100, colors$green100, colors$grey100, colors$purple100, colors$yellow125, colors$teal100)) +
   theme(axis.ticks.x = element_blank(),
         axis.text.x = element_blank()) +
-  ggtitle("Social Determinants of Health Scores across Counties") +
-  scale_fill_manual(values = c(colors$tan100, colors$green100, colors$grey100, colors$purple100, colors$yellow125, colors$teal100))
+  labs(fill = "SDoH Pillar")
 sdoh
 ggsave('SDoH across Counties.png', sdoh)
 
@@ -59,24 +61,22 @@ ggsave('SDoH across Counties.png', sdoh)
 ########### Plot 2 #############
 ################################
 
-# relationship of all scores & econ score
-for(other_score in sdoh_scores[c(2:6)]){
-  p <- ggplot(data = data,
-         aes(x = sdoh_score_1,
-             y = !!rlang::sym(other_score))) +
-    geom_point()
-  print(p)
-}
+# correlation matrix between scores and outcomes
+# all scores & one outcome of each type
+outcomes <- dict %>% 
+  filter(outcome == 1)
+outcomes %>% 
+  select(column_name, description)
 
-# relationship of un-adjusted scores with econ score
+corr_data <- data %>% 
+  select_at(c(sdoh_scores, "overobese_pct","diabetes_prevalence_2016","chronic_kidney_disease_pct"))
+names(corr_data) <- c(sdoh_names, "% Adults who are Overweight or Obese", "% Adults with Diabetes", "% Chronic Kidney Disease in Medicare age 65+")
+summary(corr_data)
+corr_data_cor <- cor(corr_data)
 
-# relationship of outcomes with scores
-data$quartile <- cut(data$overobese_pct,4)
-
-for(other_score in sdoh_scores){
-  p <- ggplot(data = data,
-              aes(x = quartile,
-                  y = !!rlang::sym(other_score))) +
-    geom_boxplot()
-  print(p)
-}
+cplot <- ggcorrplot::ggcorrplot(corr_data_cor,
+                       method = "square",
+                       colors = c(colors$red100, colors$grey25, colors$teal100),
+                       title = "Correlation across SDoH Scores and Outcomes")
+cplot
+ggsave('Correlation.png', cplot)
