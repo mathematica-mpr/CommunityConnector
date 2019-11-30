@@ -2,6 +2,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(ggplot2)
 library(dplyr)
 library(tidyverse)
+library(yaml)
 
 rm(list=ls())
 
@@ -10,7 +11,9 @@ data <- read.csv('../DockerShinyApp/app/data/final_data.csv')
 dict <- read.csv('../DockerShinyApp/app/data/final_data_dictionary.csv')
 
 # read in config file for colors
-
+list.files('../DockerShinyApp/app/')
+config <- read_yaml('../DockerShinyApp/app/config.yaml')
+colors <- config$colors
 
 sdoh_scores <- paste0("sdoh_score_",c(1:6))
 summary(data[,sdoh_scores])
@@ -20,7 +23,6 @@ sdoh_names <- dict %>%
   pull() %>% 
   as.character()
 
-?rename
 # pivot data
 long <- data %>% 
   select_at(sdoh_scores)
@@ -44,7 +46,11 @@ ggplot(data = long,
              group = `SDoH Pillar`,
              fill = `SDoH Pillar`)) +
   geom_boxplot() +
-  ylab("SDoH Score")
+  ylab("SDoH Score") +
+  theme(axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) +
+  ggtitle("Social Determinants of Health Scores across Counties") +
+  scale_fill_manual(values = c(colors$tan100, colors$green100, colors$grey100, colors$purple100, colors$yellow125, colors$teal100))
 
 ################################
 ########### Plot 2 #############
