@@ -4,7 +4,7 @@ pd.set_option('display.max_columns', 30)
 import os
 import zipfile
 import sys
-sys.path.insert(1, 'pipeline/codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import pull_population, remove_from_dict
 import numpy as np
 
@@ -29,6 +29,7 @@ data = data[pd.notnull(data['State and County FIPS Code'])]
 keep_cols = ['State and County FIPS Code','Beneficiaries with Part A and Part B','Average Age','Percent Female','Average HCC Score',
 'Standardized Risk-Adjusted Per Capita Costs']
 data = data[keep_cols]
+# rename them
 data.columns = ['FIPS','Medicare_beneficiaries','Medicare_avg_age','Medicare_pct_female','Medicare_avg_hcc','Medicare_std_adj_cost_pp']
 data['Medicare_pct_female'] = [pct[:-2] for pct in data['Medicare_pct_female']]
 
@@ -36,7 +37,7 @@ data['Medicare_pct_female'] = [pct[:-2] for pct in data['Medicare_pct_female']]
 pop = pull_population()
 data = pd.merge(data, pop, on = "FIPS", how = 'left')
 data = data.replace("*", -1, regex = False)
-data['Pct_Medicare_beneficiaries'] = data['Medicare_beneficiaries'].astype(float)/data['population']
+data['Pct_Medicare_beneficiaries'] = data['Medicare_beneficiaries'].astype(float)*100/data['population']
 
 # TODO: not sure why I have to do this, but the Medicare_pct_female won't change to float without it
 data.to_csv(os.path.join(raw_output, "geo_var_cleaned_pre.csv"), index = False)
