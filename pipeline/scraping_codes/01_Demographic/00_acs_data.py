@@ -1,7 +1,7 @@
 # Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
 import os
 try:
-	os.chdir(os.path.join(os.getcwd(), 'pipeline\codes\01_Demographic'))
+	os.chdir(os.path.join(os.getcwd(), 'pipeline\scraping_codes\01_Demographic'))
 	print(os.getcwd())
 except:
 	pass
@@ -23,13 +23,11 @@ import censusdata
 import math
 import os
 from pathlib import Path
-
-n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
-output = os.path.join(Path(n_drive).parents[0], 'cleaned')
-
 key = '***REMOVED***'
 
-# # Read in table shells where I've flagged which variables to use
+# location of table shells where I"ve flagged which variables to use
+n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
+output = os.path.join(Path(n_drive).parents[0], 'cleaned')
 table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
 xl = pd.ExcelFile(table_shell)
 
