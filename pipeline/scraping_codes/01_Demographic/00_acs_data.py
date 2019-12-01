@@ -30,28 +30,15 @@ n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
 output = os.path.join(Path(n_drive).parents[0], 'cleaned')
 table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
 xl = pd.ExcelFile(table_shell)
-
 table_shell_df = xl.parse(xl.sheet_names[0])
 # variables I've flagged to use
 use_vars = table_shell_df[table_shell_df.Use == 1]
-print(use_vars)
 print(use_vars[['TableID','Stub','Use']])
-
-# Potentially others?
-# disability
-# vision/hearing difficulty?
-# other stuff by race?? -i.e. health insurance?
-# internet
-# population coverage
-
-# add category to variable names?
-
 use_vars.to_csv(os.path.join(n_drive, 'ACS_variables.csv'))
-
 variables = use_vars.TableID.tolist()
 
 # # Method 2: Use the census data package
-# Explore functionality
+# Examples of functionality
 censusdata.search('acs5', 2017, 'label','unemploy')
 # censusdata.search('acs5', 2017, 'concept', 'education')
 censusdata.printtable(censusdata.censustable('acs5',2017, 'B23025'))
@@ -74,9 +61,6 @@ def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0
     
     """
     
-    # TODO: create a test to count all variables and match with number of columns in final dataframe
-    # TODO: create a dictionary of variable names with column names
-    
     # Create a list of all variable names found related to the input variable group
     census_dict = censusdata.censustable(acs_version,year,variable)
     unique_ids = list(census_dict.keys())
@@ -86,9 +70,6 @@ def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0
     # Number of loops we'll have to do to pull groups of 50 or less variables
     num_loops = math.ceil(num_vars/max_vars)
     
-#     print(num_vars)
-#     print(num_loops)
-    
     # used to store the indices of the 50 variables to be pulled
     last = int(max_vars)
     first = 0
@@ -96,6 +77,7 @@ def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0
         
         print(len(unique_ids[first:last]))
         data = censusdata.download(acs_version, year,
+        # pulling for Colorado by county
                               censusdata.censusgeo([('state', '08'), ('county', '*')]),
                               unique_ids[first:last])
         
