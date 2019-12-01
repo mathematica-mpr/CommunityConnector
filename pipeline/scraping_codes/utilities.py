@@ -60,6 +60,28 @@ def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0
     
     return full_data
 
+def rwjf_replace_column_names(df):
+    colnames = df.head(1).values
+    colnames = list(colnames)[0]
+    df.columns = colnames
+    
+    # drop the first row that contains the column names
+    df.drop(df.index[0], inplace = True)
+    return df
+
+def rwjf_concatenate_column_names(df):
+    newcols = []
+    for col in df.columns.values:
+        if col in [0, 'FIPS','State','County']:
+            newcols.append(col)
+        else:
+            if col not in ['95% CI - Low','95% CI - High','Z-Score']:
+                metric = col
+                newcols.append(col)
+            else:
+                newcols.append(metric + "_" + col)
+    return newcols
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
