@@ -47,4 +47,4 @@ data.columns = abbrevs
 data.reset_index(inplace = True)
 print(data.head())
 
-data.to_csv(os.path.join(output, 'budget_cleaned.csv'))
+data.to_csv(os.path.join(output, 'budget_cleaned.csv'), index = False)
