@@ -1,6 +1,8 @@
 import requests
 import json
 import pandas as pd 
+import sys
+sys.path.insert(1, 'pipeline/codes')
 
 response = requests.get("https://opendata.arcgis.com/datasets/a27b6ee55fe3406fa5f2798ff87c0183_2.geojson")
 json = response.json()
@@ -54,18 +56,6 @@ print(over_data.head())
 # merge data to over_data
 data = pd.merge(data, over_data, on = "FIPS")
 data.drop(['County'], axis = 1, inplace = True)
-print(data.head())
-print(data.shape)
-
-data.to_csv('data/raw/cdphe.csv', index = False)
-
-import pandas as pd 
-import sys
-sys.path.insert(1, 'pipeline/codes')
-from utilities import remove_from_dict
-
-data = pd.read_csv('data/raw/cdphe.csv')
-data['overobese_pct'] = data['overobese_pct']/100
 print(data.head())
 print(data.shape)
 
