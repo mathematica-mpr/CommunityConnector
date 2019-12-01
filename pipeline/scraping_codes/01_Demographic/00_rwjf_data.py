@@ -25,5 +25,5 @@ for lkp in states:
         
     print(file)    
     addtl_data = pd.read_excel(file, 'Additional Measure Data')
-    measure_data.to_csv(f'N:/Transfer/KSkvoretz/AHRQ/data/01_Demographic/RWJF/Measure_Data_{read_state}.csv')
-    addtl_data.to_csv(f'N:/Transfer/KSkvoretz/AHRQ/data/01_Demographic/RWJF/Additional_Data{read_state}.csv')
+    measure_data.to_csv(f'data/raw/Measure_Data_{read_state}.csv')
+    addtl_data.to_csv(f'data/raw/Additional_Data{read_state}.csv')
