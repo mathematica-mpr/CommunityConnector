@@ -1,11 +1,3 @@
-# Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), 'pipeline\scraping_codes\01_Demographic'))
-	print(os.getcwd())
-except:
-	pass
-
 # Resources: 
 # Code lists, definitions, accuracy: https://www.census.gov/programs-surveys/acs/technical-documentation/code-lists.html
 # Gitter help: https://gitter.im/uscensusbureau/general
