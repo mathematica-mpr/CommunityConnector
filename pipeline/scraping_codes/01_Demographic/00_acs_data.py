@@ -100,22 +100,6 @@ keep_vars.extend(['median_income',
 full_data = full_data[keep_vars]
 full_data.columns.values[0] = 'FIPS'
 
-results = remove_from_dict(full_data)
-add_cols = results[1]
-full_data_dict = results[0]
-full_data_dict = full_data_dict[full_data_dict['source'] != "ACS"]
-
-print(len(add_cols))
-print(add_cols)
-
-dem_vars = [1]*13
-dem_vars.extend([0, 1])
-sdoh_raw_vars = [0]*12
-sdoh_raw_vars.extend([1, 1, 0])
-dtype_list = ['percentage']*10
-dtype_list.extend(['continuous','continuous','continuous','percentage','continuous'])
-sdoh_5_vars = sdoh_raw_vars
-
 full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'), index = False)
 
 
