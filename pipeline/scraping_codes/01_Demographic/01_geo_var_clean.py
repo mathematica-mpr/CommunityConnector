@@ -43,7 +43,7 @@ data['Pct_Medicare_beneficiaries'] = data['Medicare_beneficiaries'].astype(float
 data.to_csv(os.path.join(raw_output, "geo_var_cleaned_pre.csv"), index = False)
 data = pd.read_csv(os.path.join(raw_output, "geo_var_cleaned_pre.csv"))
 
-data['Medicare_pct_female'] = data['Medicare_pct_female'].astype(float)/100
+data['Medicare_pct_female'] = data['Medicare_pct_female'].astype(float)
 data.drop(['population','Medicare_beneficiaries'], axis = 1, inplace = True)
 
 # replace negatives with NAs
