@@ -16,6 +16,7 @@ censusgeocode = "*"
 pyarrow = "*"
 luigi = "*"
 tornado = "*"
+censusdata = "*"
 
 [requires]
 python_version = "3.7"
