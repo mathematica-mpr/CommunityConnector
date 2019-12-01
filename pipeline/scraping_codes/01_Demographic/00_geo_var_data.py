@@ -8,7 +8,7 @@ options.add_argument("--proxy-bypass-list=*")
 options.add_argument('--blink-settings=imagesEnabled=false')
 
 import sys
-sys.path.insert(1, 'pipeline/codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import click_button, move_from_downloads
 import time
 import pandas as pd
