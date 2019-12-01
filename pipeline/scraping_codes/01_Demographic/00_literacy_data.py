@@ -3,7 +3,7 @@
 
 import pandas as pd 
 import sys
-sys.path.insert(1, 'pipeline/codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import remove_from_dict
 
 data = pd.read_csv('data/raw/literacy_raw.csv')
