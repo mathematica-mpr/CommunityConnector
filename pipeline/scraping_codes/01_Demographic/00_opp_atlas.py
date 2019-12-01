@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import regex as re
 import sys
-sys.path.insert(1, 'pipeline/codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import remove_from_dict
 
 url="https://opportunityinsights.org/wp-content/uploads/2018/12/cty_covariates.csv"
@@ -19,10 +19,13 @@ data.columns.values[0] = "FIPS"
 # Download the Data --> % Staying in Same Tract as Adults --> Counties
 # "All" in the subgroup selections below
 stay = pd.read_csv('data/raw/opp_atlas_stay.csv', encoding = "ISO-8859-1")
+
+# format state and FIPS code
 stay['State'] = [re.split(', ',state,1)[1] for state in stay['Name']]
 stay['FIPS'] = [int(cty[-3:]) for cty in stay['cty']]
 stay = stay[stay['State'] == "CO"]
 stay = stay[['%_Staying_in_Same_Tract_as_Adults_rP_gP_pall','FIPS']]
 
+# merge the two datasets together
 data = pd.merge(data, stay, on = "FIPS")
 data.to_csv('data/cleaned/01_Demographic/opp_atlas_cleaned.csv', index = False)
