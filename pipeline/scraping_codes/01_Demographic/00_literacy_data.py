@@ -14,9 +14,4 @@ data.drop(['% Lacking basic literacy'], axis = 1, inplace = True)
 print(data.head())
 print(data.shape)
 
-results = remove_from_dict(data)
-data_dict = results[0]
-add_cols = results[1]
-print(add_cols)
-
 data.to_csv('data/cleaned/01_Demographic/literacy_cleaned.csv', index = False)
