@@ -5,8 +5,9 @@ import gzip
 import pandas as pd
 import numpy as np
 import sys
-sys.insert('pipeline/scraping_codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import rwjf_concatenate_column_names, rwjf_replace_column_names
+import os
 
 states = {"CO":"Colorado"}
 
@@ -39,12 +40,10 @@ output = 'data/cleaned/01_Demographic'
 
 measure_data = rwjf_replace_column_names(measure_data)
 measure_data.columns = rwjf_concatenate_column_names(measure_data)
-measure_data.drop(['Population',0], axis = 1, inplace = True)
 measure_data.rename(columns = {"% Uninsured": "pct_uninsured"}, inplace = True)
 
 addtl_data = rwjf_replace_column_names(addtl_data)
 addtl_data.columns = rwjf_concatenate_column_names(addtl_data)
-addtl_data.drop([0], axis = 1, inplace = True)
 
 # there are two columns called % uninsured
 ind = 0
