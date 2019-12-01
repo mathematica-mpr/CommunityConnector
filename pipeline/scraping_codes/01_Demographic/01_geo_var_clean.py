@@ -51,29 +51,4 @@ data.columns = map(str.lower, data.columns)
 data.columns.values[0] = 'FIPS'
 print(data.head())
 
-results = remove_from_dict(data)
-data_dict = results[0]
-add_cols = results[1]
-
-print(add_cols)
-add_rows = pd.DataFrame({'column_name': add_cols,
-'description': ["Medicare Average Age","Medicare % Female","Medicare Average HCC","Medicare Standardized Adjusted Cost per Person",
-"% Medicare Beneficiaries"],
-'demographic': [1, 1, 1, 0, 1],
-'sdoh_raw': [0, 0, 0, 1, 0],
-'outcome': [0]*5,
-'sdoh_score': [0]*5,
-'data_type': ['continuous','percentage','continuous','continuous','percentage'],
-'used_sdoh_1': [0,0,0,1,0],
-'used_sdoh_2': [0]*5,
-'used_sdoh_3': [0]*5,
-'used_sdoh_4': [0]*5,
-'used_sdoh_5': [0]*5,
-'used_sdoh_6': [0, 0, 0, 1, 0],
-'source': ['CMS']*5,
-'higher_better': ['','','',0,'']
-})
-data_dict = data_dict.append(add_rows)
-
-data_dict.to_csv(os.path.join('data/data_dictionary.csv'), index = False)
 data.to_csv(os.path.join(output, "geo_var_cleaned.csv"), index = False)
