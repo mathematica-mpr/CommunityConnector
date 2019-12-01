@@ -16,10 +16,10 @@ import math
 import os
 from pathlib import Path
 key = '***REMOVED***'
+output = 'data/cleaned/01_Demographic'
 
 # location of table shells where I"ve flagged which variables to use
 n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
-output = os.path.join(Path(n_drive).parents[0], 'cleaned')
 table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
 xl = pd.ExcelFile(table_shell)
 table_shell_df = xl.parse(xl.sheet_names[0])
@@ -119,8 +119,6 @@ print(full_data['FIPS'])
 full_data.drop(columns = "location", inplace = True)
 
 print(full_data.shape)
-print(output)
-
 full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'))
 
 
