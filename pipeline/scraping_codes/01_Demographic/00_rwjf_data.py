@@ -4,13 +4,6 @@ from urllib.parse import urljoin
 import gzip
 import pandas as pd
 
-# ## Loop through states and download data from available sheets:
-# #### 1. Outcomes & Factor Rankings - no
-# #### 2. Outcomes & Factor SubRankings - no
-# #### 3. Ranked Measure Data - yes, raw data
-# #### 4. Additional Measure Data - yes, raw data
-# #### 5./6. tabs on sources for reference: Ranked Measure Sources & Years and Addtl Measure Sources & Years
-
 states = {"CO":"Colorado"}
 
 def file_template(state, version):
