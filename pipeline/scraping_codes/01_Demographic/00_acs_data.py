@@ -27,7 +27,7 @@ from pathlib import Path
 n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
 output = os.path.join(Path(n_drive).parents[0], 'cleaned')
 
-key = '***REMOVED***'
+key = 'b34f5dfe18f660a15a278a309760c38ef401b395'
 
 # # Read in table shells where I've flagged which variables to use
 table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
