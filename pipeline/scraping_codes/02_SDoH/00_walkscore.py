@@ -120,4 +120,4 @@ for row in fips_urls_df.iterrows():
 #writing outfile
 df = pd.DataFrame(fips_scores).T
 
-df.to_csv(out_scores)
+df.to_csv(out_scores_path)
