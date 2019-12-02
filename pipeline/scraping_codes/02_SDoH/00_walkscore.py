@@ -9,7 +9,7 @@ from IPython.display import display
 from IPython.display import Image
 
 #FIND THE codes
-file_path = 'N:/Transfer/KSkvoretz/AHRQ/data/01_Demographic/Walkability'
+file_path = 'data/raw'
 
 uszips_path = file_path + 'uszips.csv'
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
