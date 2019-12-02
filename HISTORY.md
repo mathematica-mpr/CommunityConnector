@@ -1,6 +1,7 @@
 # Project History
-## v0.4.0 (11/26/2019)
+## v0.4.0 (12/02/2019)
 -----------------------
+* Dockerfile for deployment
 * aesthetic changes
 * text usability improvements
 * comparison county on density plot
