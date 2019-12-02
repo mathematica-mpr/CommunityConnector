@@ -13,15 +13,23 @@ print(hcup_files)
 # parameters used for each dataframe
 selections_df = pd.read_csv(os.path.join(input, "HCUP_selections.csv"))
 
+# pandas isn't working
+def getCSV(filePath, sep=","):
+    with open(filePath, "r") as f:
+        return [l.split(sep) for l in f]
+
 # Turn each dataframe into long and concatenate all
 for i in range(len(hcup_files)):
-    data = pd.read_csv(os.path.join(input, f"HCUP_{i}.csv"))
+    # data = pd.read_csv(os.path.join(input, f"HCUP_{i}.csv"))
+    data = pd.DataFrame(getCSV(os.path.join(input, f"HCUP_{i}.csv")))
     # remove the junk above the data
     data = data.iloc[6:]
+    print(data)
     # use the first row as the column names
     data.columns = data.iloc[0]
     data.columns.values[0:2] = ["County","FIPS"]
     data = data.iloc[7:]
+    data = data.iloc[1:]
 
     # assign data with the parameter selections, to make column names later
     data['Analysis Selection'] = selections_df.iloc[i]['Analysis Selection']
