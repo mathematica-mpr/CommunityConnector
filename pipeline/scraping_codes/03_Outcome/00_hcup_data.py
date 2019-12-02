@@ -1,4 +1,3 @@
-# TODO: clean this up since we now are using utilities.py
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -7,7 +6,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 options = Options()
-# TODO: switch to headless & decrease time.sleeps?
 # options.add_argument('--headless')
 # options to try to improve performance
 options.add_argument("--proxy-server='direct://'")
@@ -20,13 +18,14 @@ from os import listdir
 import regex as re
 from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
+import pandas as pd
 
 import sys
-sys.path.insert(1, 'pipeline/codes')
-from utilities import click_button
+sys.path.insert(1, 'pipeline/scraping_codes')
+from utilities import click_button, connect, move_from_downloads
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
-n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
+output = 'data/raw'
 state = "Colorado"
 website = "https://hcupnet.ahrq.gov"
 
@@ -54,27 +53,8 @@ drg = [["DP", "Medicare-Severity Diagnosis Related Groups (MS-DRG)", drg] for dr
 selections_list.extend(drg)
 print(selections_list)
 
-import pandas as pd
 selections_df = pd.DataFrame(selections_list, columns = ["Analysis Selection", "Classification", "Diagnosis"])
-selections_df.to_csv(os.path.join(n_drive, "HCUP_selections.csv"))
-
-
-def connect(website, timeout):
-    """
-    This function can be used to test the connection to the website. If it doesn't connect within timout seconds, the code will error out
-
-    Args:   
-        website (string): name of website to access
-        timeout (integer): seconds to wait before page times out
-
-    """
-    # For this to work, need to move chromedriver.exe to python Scripts/ folder
-    # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
-    driver = webdriver.Chrome(options=options)
-    driver.set_page_load_timeout(timeout)
-    driver.delete_all_cookies()
-    driver.get(website)
-    driver.quit()
+selections_df.to_csv(os.path.join(output, "HCUP_selections.csv"))
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 
@@ -89,7 +69,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
         num (integer): query number for exporting and saving data
         
     Returns:
-        
+        output csv moved into output folder
     """
     
     driver = webdriver.Chrome(options=options)
@@ -116,10 +96,9 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
             # search = driver.find_element_by_class_name("bs-searchbox")
             # search = driver.find_element_by_class_name("form-control")
             # search = driver.find_element_by_id("search-control") # element not interactible
-            search = driver.find_element_by_class_name("task-modal") # this might work??
+            search = driver.find_element_by_class_name("task-modal")
             time.sleep(10)
             search = driver.find_element_by_xpath("/html/body/div[6]/div/div/input")
-            # search = driver.find_element_by_class_name()
             search.send_keys(diagnosis_selection)
             search.send_keys(Keys.RETURN)
         else:
@@ -144,27 +123,9 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     csv = driver.find_element_by_class_name(csv_class)
     csv.click()
     
-    # TODO: use the function in utilties
     # This file ends up in Downloads. Export the most recent Download to our data folder
-    files = listdir(dirpath)
-    files = [x for x in files if re.search("export", x)] 
-    entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
-    entries = ((os.stat(path), path) for path in entries)
-    # leave only regular files, insert creation date
-    #NOTE: on Windows `ST_CTIME` is a creation date 
-    #NOTE: use `ST_MTIME` to sort by a modification date
-    entries = ((stat[ST_MTIME], path)
-               for stat, path in entries if S_ISREG(stat[ST_MODE]))
-    count = 0
-    for cdate, path in sorted(entries, reverse=True):
-        # keep only the first, most recent file name
-        while count == 0:
-            filename = os.path.basename(path)
-            count += 1
-
-    shutil.move(dirpath + filename, os.path.join(n_drive, f"HCUP_{num}.csv"))
+    move_from_downloads(dirpath, "export", output, f"HCUP_{num}.csv")
     driver.quit()
-
 
 if __name__ == "__main__":
 
@@ -174,7 +135,7 @@ if __name__ == "__main__":
     # connect(website, 600)
     # print('done connecting')
 
-    start_num = 1
+    start_num = 0
     num = start_num
     for parameters in selections_list[start_num:]:
         print(parameters)   
