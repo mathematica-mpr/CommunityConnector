@@ -1,5 +1,6 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
+  theme = "style.css",
   # style = "padding-right: 1%; padding-left: 1%;",
   fluidRow(
     column(width = 2, align = "left"),
