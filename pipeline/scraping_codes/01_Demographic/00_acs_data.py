@@ -20,17 +20,18 @@ import sys
 sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import censusdata_pull, available_vars
 key = 'b34f5dfe18f660a15a278a309760c38ef401b395'
-output = 'data/cleaned/01_Demographic'
 
+output = 'data/cleaned/01_Demographic'
 # location of table shells where I"ve flagged which variables to use
-n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
-table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
+input_drive = 'data/raw'
+
+table_shell = os.path.join(input_drive, 'ACS2017_Table_Shells.xlsx')
 xl = pd.ExcelFile(table_shell)
 table_shell_df = xl.parse(xl.sheet_names[0])
 # variables I've flagged to use
 use_vars = table_shell_df[table_shell_df.Use == 1]
 print(use_vars[['TableID','Stub','Use']])
-use_vars.to_csv(os.path.join(n_drive, 'ACS_variables.csv'))
+use_vars.to_csv(os.path.join(input_drive, 'ACS_variables.csv'))
 variables = use_vars.TableID.tolist()
 
 # Use the census data package
@@ -45,7 +46,6 @@ censusdata.geographies(censusdata.censusgeo([('state', '08'), ('county', '*')]),
 variables = [var for var in variables if 'C' not in var]
 variables = [var for var in variables if "B17002" not in var]
 
-get_ipython().run_line_magic('time', '')
 # loop through all variables and merge data together
 count = 0
 for variable in variables:
