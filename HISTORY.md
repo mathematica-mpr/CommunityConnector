@@ -1,4 +1,10 @@
 # Project History
+## v0.4.0 (11/26/2019)
+-----------------------
+* aesthetic changes
+* text usability improvements
+* comparison county on density plot
+
 ## v0.3.0 (11/25/2019)
 -----------------------
 * BREAKING: read data from S3
