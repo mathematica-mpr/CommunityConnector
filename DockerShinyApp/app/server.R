@@ -2,7 +2,7 @@ server <- function(input, output) {
   
   # mathematica logo
   output$logo <- renderUI({
-    img(src='logo.png', aligh = 'right', height = '50px')
+    img(src='logo.png', height = '50px')
   })
   
   options(DT.options = list(dom = "t", ordering = F))
@@ -120,8 +120,7 @@ server <- function(input, output) {
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
-      title = lang_cfg$titles$radar_modal_title,
-      HTML(lang_cfg$howto),
+      HTML('<center><img src="radar_read_more.jpg" width="800"></center>'),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
