@@ -61,6 +61,8 @@ addtl_data.columns.values[child_uninsured_ind] = "pct_child_uninsured"
 
 # combine measure data with additional data
 rwjf_data = pd.merge(measure_data, addtl_data, on = ['FIPS','State','County'])
+# Population_x is the population with some college education, Population_y is from Addtl data
+rwjf_data['Population'] = rwjf_data['Population_y']
 assert((measure_data.shape[0]) == (addtl_data.shape[0]) == (rwjf_data.shape[0]))
 
 rwjf_data.to_csv(os.path.join(output, 'RWJF_cleaned.csv'))
