@@ -1,3 +1,4 @@
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -21,7 +22,7 @@ import pandas as pd
 
 import sys
 sys.path.insert(1, 'pipeline/scraping_codes')
-from utilities import click_button, connect
+from utilities import click_button, connect, move_from_downloads
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
 output = 'data/raw'
@@ -95,10 +96,9 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
             # search = driver.find_element_by_class_name("bs-searchbox")
             # search = driver.find_element_by_class_name("form-control")
             # search = driver.find_element_by_id("search-control") # element not interactible
-            search = driver.find_element_by_class_name("task-modal") # this might work??
+            search = driver.find_element_by_class_name("task-modal")
             time.sleep(10)
             search = driver.find_element_by_xpath("/html/body/div[6]/div/div/input")
-            # search = driver.find_element_by_class_name()
             search.send_keys(diagnosis_selection)
             search.send_keys(Keys.RETURN)
         else:
@@ -123,27 +123,9 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
     csv = driver.find_element_by_class_name(csv_class)
     csv.click()
     
-    # TODO: use the function in utilties
     # This file ends up in Downloads. Export the most recent Download to our data folder
-    files = listdir(dirpath)
-    files = [x for x in files if re.search("export", x)] 
-    entries = (os.path.join(dirpath, fn) for fn in os.listdir(dirpath))
-    entries = ((os.stat(path), path) for path in entries)
-    # leave only regular files, insert creation date
-    #NOTE: on Windows `ST_CTIME` is a creation date 
-    #NOTE: use `ST_MTIME` to sort by a modification date
-    entries = ((stat[ST_MTIME], path)
-               for stat, path in entries if S_ISREG(stat[ST_MODE]))
-    count = 0
-    for cdate, path in sorted(entries, reverse=True):
-        # keep only the first, most recent file name
-        while count == 0:
-            filename = os.path.basename(path)
-            count += 1
-
-    shutil.move(dirpath + filename, os.path.join(output, f"HCUP_{num}.csv"))
+    move_from_downloads(dirpath, "export", output, f"HCUP_{num}.csv")
     driver.quit()
-
 
 if __name__ == "__main__":
 
