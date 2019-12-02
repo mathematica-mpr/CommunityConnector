@@ -6,10 +6,12 @@ ui <- bootstrapPage(
     column(width = 8, align = 'center',
            wellPanel(h1(lang_cfg$welcome), 
                      h4(HTML(lang_cfg$intro)),
-                     actionBttn("method_read_more", 
+                     actionButton("method_read_more", 
                                 label = lang_cfg$titles$method_read_more,
-                                size = "sm", color = "success",
-                                style = "minimal"),
+                                style = paste0("color: ", config$colors$purple100,
+                                               "; background-color: ", config$colors$tan25,
+                                               "; border-color: ", config$colors$purple100)
+                                ),
                      style = paste0("background: ",config$colors$tan25))),
     column(width = 2, align = "right", uiOutput("logo"))
   ),
