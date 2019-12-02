@@ -42,8 +42,9 @@ data = data[data['f00008'] == b"Colorado"]
 old_cols = data.columns.values
 
 # columns to keep
-# normalize by population
 data['population'] = data['f1198418']
+
+# naming these pp_rate because we will divide by total population later
 data['hosp_pp_rate'] = data['f0886817']
 data['adm_pp_rate'] = data['f0890917']
 data['kidn_hosp_pp_rate'] = data['f1407817']
@@ -53,6 +54,7 @@ data['mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
 data['short_hosp_pp_rate'] = data['f0886917']
 # number of community health centers (F15253) per total population
 data['comm_hlth_cntrs_pp_rate'] = data['f1525319']
+
 # % persons in deep poverty (F15419)
 data['pct_deep_poverty'] = data['f1541913']
 # % 18-64 without health insurance (F15498) - already have
@@ -72,6 +74,7 @@ new_cols = list(set(data.columns.values) - set(old_cols))
 new_cols = [c for c in new_cols if c != "FIPS"]
 print(new_cols)
 
+# some columns need to be summed, some columns need to be averaged
 sum_cols = [c for c in new_cols if 'pp_rate' in c]
 sum_cols.append('population')
 mean_cols = list(set(new_cols) - set(sum_cols))
@@ -79,20 +82,20 @@ print(sum_cols)
 print(mean_cols)
 
 grouped_sum = data.groupby(['FIPS']).sum()[sum_cols]
-# others need to be averaged
 # TODO: could be a weighted mean to be more accurate
 grouped_mean = data.groupby(['FIPS']).sum()[mean_cols]
-# then merge them back together
 
+# then merge them back together
 grouped = pd.merge(grouped_sum, grouped_mean, on = 'FIPS')
 
+# divide sum columns by population to make the 'pp_rate'
 vars_used = [c for c in sum_cols if c != "population"]
 grouped[vars_used] = grouped[vars_used].apply(lambda x: x/grouped['population'])
 
 grouped.drop(['population'], axis = 1, inplace = True)
 grouped.reset_index(inplace = True)
 
-# change to per 100,000 people
+# change to per 100,000 people for certain variables used
 grouped['hosp_pp_rate'] = grouped['hosp_pp_rate'] * 100000
 grouped['mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
 
