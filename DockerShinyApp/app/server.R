@@ -174,7 +174,8 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 12, selectizeInput('demo_filter', label = 'Add or filter by demographic categories:', 
+        column(width = 12, 
+               checkboxGroupInput('demo_filter', label = 'Add or filter by demographic categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
@@ -183,7 +184,7 @@ server <- function(input, output) {
                                                   'Food' = 'used_sdoh_4',
                                                   'Community' = 'used_sdoh_5',
                                                   'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'), multiple = T)
+                                      selected = c('demographic'))
         ))
       )
   })
