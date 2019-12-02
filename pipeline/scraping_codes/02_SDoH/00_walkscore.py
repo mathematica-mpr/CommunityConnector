@@ -9,6 +9,7 @@ import pandas as pd
 #FIND THE codes
 file_path = 'data/raw/'
 
+# location files for mapping from zip code --> FIPS code
 uszips_path = file_path + 'uszips.csv'
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
 ZIP_COUNTY_FIPS_path = file_path + 'ZIP-COUNTY-FIPS_2017-06.csv'
@@ -29,7 +30,7 @@ ZIP_COUNTY_FIPS_df.columns = map(str.lower, ZIP_COUNTY_FIPS_df.columns)
 #selecting state == CO
 ZIP_COUNTY_FIPS_df = ZIP_COUNTY_FIPS_df.query('state == "CO"')
 
-#ACS
+#ACS - using this to get population to find largest city within a fips code
 def api_pull(variable):
     url = f'https://api.census.gov/data/2017/acs/acs5?key={key}&get=NAME,group({variable})&for=tract:*&in=state:08'
     response = requests.get(url)
@@ -57,7 +58,7 @@ tract_county_pop = pd.merge(tract_county, census_pop_df, on = 'tract')
 largest_tract = tract_county_pop.sort_values('population', ascending=False).drop_duplicates(['stcountyfp'])
 largest_tract = pd.merge(largest_tract, uszips_df, on = 'zip')
 
-#Creating URLS 
+#Creating URLS to scrape from for each city
 fips_urls_df = largest_tract [['stcountyfp', 'city']]
 fips_urls_df.columns = ['fips', 'city']
 fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
@@ -66,7 +67,7 @@ fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
 #URLS come from the top
 
 #OUTFILE
-out_scores_path= "data/cleaned/" + 'out_scores.csv'
+out_scores_path= "data/cleaned/02_SDoH/" + 'out_scores.csv'
 
 #this is the dictionary
 fips_scores = {}
