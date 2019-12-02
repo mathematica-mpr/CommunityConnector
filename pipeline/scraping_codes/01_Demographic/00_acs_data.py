@@ -58,9 +58,8 @@ for variable in variables:
         full_data = full_data.join(data, how = 'outer')
     count += 1
 
-full_data.columns.values[0] = "location"
+full_data['location'] = full_data.index.values.astype(str)
 full_data['FIPS'] = [location[-3:] for location in full_data['location']]
-print(full_data['FIPS'])
 full_data.drop(columns = "location", inplace = True)
 
 full_data.columns = map(str.lower, full_data.columns)
@@ -101,5 +100,3 @@ full_data = full_data[keep_vars]
 full_data.columns.values[0] = 'FIPS'
 
 full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'), index = False)
-
-
