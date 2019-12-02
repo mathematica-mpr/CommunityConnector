@@ -7,7 +7,6 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 options = Options()
-# TODO: switch to headless & decrease time.sleeps?
 # options.add_argument('--headless')
 # options to try to improve performance
 options.add_argument("--proxy-server='direct://'")
@@ -22,11 +21,11 @@ from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
 
 import sys
-sys.path.insert(1, 'pipeline/codes')
+sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import click_button
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
-n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
+output = 'data/raw'
 state = "Colorado"
 website = "https://hcupnet.ahrq.gov"
 
@@ -56,7 +55,7 @@ print(selections_list)
 
 import pandas as pd
 selections_df = pd.DataFrame(selections_list, columns = ["Analysis Selection", "Classification", "Diagnosis"])
-selections_df.to_csv(os.path.join(n_drive, "HCUP_selections.csv"))
+selections_df.to_csv(os.path.join(output, "HCUP_selections.csv"))
 
 
 def connect(website, timeout):
@@ -162,7 +161,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
             filename = os.path.basename(path)
             count += 1
 
-    shutil.move(dirpath + filename, os.path.join(n_drive, f"HCUP_{num}.csv"))
+    shutil.move(dirpath + filename, os.path.join(output, f"HCUP_{num}.csv"))
     driver.quit()
 
 
