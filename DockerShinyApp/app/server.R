@@ -2,7 +2,7 @@ server <- function(input, output) {
   
   # mathematica logo
   output$logo <- renderUI({
-    img(src='logo.png', aligh = 'right', height = '50px')
+    img(src='logo.png', height = '50px')
   })
   
   options(DT.options = list(dom = "t", ordering = F))
@@ -109,7 +109,55 @@ server <- function(input, output) {
   observeEvent(input$data_read_more, {
     showModal(modalDialog(
       title = lang_cfg$titles$data_source_modal,
-      HTML(lang_cfg$data),
+      tagList(
+        "Demographic data:",
+        tags$br(),
+        a("American Community Survey", 
+          href = "https://www.census.gov/programs-surveys/acs/news/data-releases.html?#",
+          target = "_blank"),
+        tags$br(),
+        a("Opportunity Atlas", 
+          href = "https://www.opportunityatlas.org/",
+          target = "_blank"),
+        tags$br(),
+        a("Robert Wood Johnson Foundation", 
+          href = "https://www.countyhealthrankings.org/explore-health-rankings/use-data",
+          target = "_blank"),
+        tags$br(),
+        tags$br(),
+        "Social Determinants of Health data:",
+        tags$br(),
+        a("Area Health Resource Files (AHRF)", 
+          href = "https://data.hrsa.gov/topics/health-workforce/ahrf",
+          target = "_blank"),
+        tags$br(),
+        a("Budget data link (WIP)", 
+          href = "",
+          target = "_blank"),
+        tags$br(),
+        a("Walk Score", 
+          href = "https://www.walkscore.com/cities-and-neighborhoods/",
+          target = "_blank"),
+        tags$br(),
+        tags$br(),
+        "Outcomes data:",
+        tags$br(),
+        a("Centers for Disease Control and Prevention's (CDC) Diabetes Atlas", 
+          href = "https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#",
+          target = "_blank"),
+        a("Colorado Department of Public Health and Environment", 
+          href = "https://www.colorado.gov/pacific/cdphe/data",
+          target = "_blank"),
+        tags$br(),
+        a("Healthcare Cost and Utilization Project (HCUP) link (WIP)", 
+          href = "",
+          target = "_blank"),
+        tags$br(),
+        a("Centers for Medicare and Medicaid Services (CMS)", 
+          href = "https://www.cms.gov/Research-Statistics-Data-and-Systems/Research-Statistics-Data-and-Systems",
+          target = "_blank"),
+        tags$br(),
+),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
@@ -120,8 +168,7 @@ server <- function(input, output) {
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
-      title = lang_cfg$titles$radar_modal_title,
-      HTML(lang_cfg$howto),
+      HTML('<center><img src="radar_read_more.jpg" width="100%" max-width="900px"></center>'),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
@@ -427,7 +474,8 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
+        ) %>% withSpinner(type = getOption("spinner.type", default = 1),
+                          color = getOption("spinner.color", default = "#046B5C")),
         br()
       )
     })
