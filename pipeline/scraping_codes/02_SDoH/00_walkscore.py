@@ -39,7 +39,7 @@ def api_pull(variable):
     data = pd.DataFrame(formattedResponse)
     return data
 
-key = '***REMOVED***'
+key = 'e2675475712b1694b49a734a05e1ece105f45be4'
 variable = 'B01003'
 co = api_pull(variable)
 co = pd.DataFrame(co[1:])              

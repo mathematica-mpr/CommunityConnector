@@ -1,4 +1,10 @@
 # Project History
+## v0.5.0 (12/02/2019)
+-----------------------
+* include .jpg for how to read fingerprint plot
+* add data sources
+* use .css for styles
+
 ## v0.4.0 (12/02/2019)
 -----------------------
 * Dockerfile for deployment
