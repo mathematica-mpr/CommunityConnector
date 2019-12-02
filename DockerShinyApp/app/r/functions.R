@@ -818,7 +818,7 @@ density_plot_overlay <- function(data, comparedata) {
       ) %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = paste("Frequency of", data$description[1]),
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -878,7 +878,7 @@ density_plot_overlay <- function(data, comparedata) {
     p <- p %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = paste("Frequency of", data$description[1]),
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1000,7 +1000,7 @@ density_plot <- function(data, comparedata) {
         cliponaxis = F
       ) %>% layout(
         title = list(
-          text = paste(data$description[1]),
+          text = paste("Frequency of", data$description[1]),
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1060,7 +1060,7 @@ density_plot <- function(data, comparedata) {
     p <- p %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = paste("Frequency of", data$description[1]),
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
