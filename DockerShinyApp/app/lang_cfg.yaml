@@ -24,6 +24,7 @@ howto: "This fingerprint chart visualizes how well your county and (optional) co
                       <li>Education</li>
                       </ul> <br>
                       Axes expanded towards the outer circular perimeter indicate the county is strong in that area, and axes closer to the center of the circle indicate the county is weaker in that area. For example, a county with a score of 0.93 in the Health Care System pillar has a relatively small uninsured population and a large availability of hospitals and doctors. A county with a score of 0.22 in the Economic Stability pillar has relatively high unemployment and weak job growth."
+density_howto: "A density plot visualizes the distribution of data (in this case, the health outcomes across counties). The chart is essentially a smoothed histogram. The peaks of a density plot show where the health outcome value is most frequent across counties."
 method: "Under development (method)"
 data: "Under development (data)"
 contact: "Under development (contact)"
