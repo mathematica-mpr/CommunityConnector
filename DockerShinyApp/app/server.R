@@ -120,7 +120,7 @@ server <- function(input, output) {
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
-      HTML('<center><img src="radar_read_more.jpg" width="800"></center>'),
+      HTML('<center><img src="radar_read_more.jpg" width="100%" max-width="900px"></center>'),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
