@@ -62,7 +62,8 @@ ui <- bootstrapPage(
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%") %>%
-                               withSpinner(type = getOption("spinner.type", default = 1))
+                               withSpinner(type = getOption("spinner.type", default = 1),
+                                           color = getOption("spinner.color", default = "#046B5C"))
                       ))),
              column(width = 6,
                     tabsetPanel(type = 'pills', id = "tabs",
@@ -81,7 +82,8 @@ ui <- bootstrapPage(
                                            column(width = 12, h1(" "))
                                          ),
                                          fluidRow(leafletOutput("map") %>% 
-                                                    withSpinner(type = getOption("spinner.type", default = 1))
+                                                    withSpinner(type = getOption("spinner.type", default = 1),
+                                                                color = getOption("spinner.color", default = "#046B5C"))
                                          )
                                 ),
                                 tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
@@ -92,7 +94,8 @@ ui <- bootstrapPage(
                                          br(),
                                          plotlyOutput("compare_county_radars"
                                          ) %>% 
-                                           withSpinner(type = getOption("spinner.type", default = 1)),
+                                           withSpinner(type = getOption("spinner.type", default = 1),
+                                                       color = getOption("spinner.color", default = "#046B5C")),
                                          br()
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
