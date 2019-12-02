@@ -22,7 +22,7 @@ driver = webdriver.Chrome(options=options)
 driver.delete_all_cookies()
 driver.get(website)
 
-click_button(driver, "text","State/County Table - All Beneficiaries [ZIP, 68MB]")
-time.sleep(300)
+click_button(driver, "text","State/County Table - All Beneficiaries")
+time.sleep(100)
 move_from_downloads(downloads, "State-County-All-Table-2017",
 output, "geo_var_data.zip")
