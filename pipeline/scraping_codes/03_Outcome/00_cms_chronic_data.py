@@ -27,12 +27,12 @@ driver = webdriver.Chrome(options=options)
 driver.delete_all_cookies()
 driver.get(website)
 
-click_button(driver, "text","Prevalence State/County Level: All Beneficiaries by Age, 2007-2017 [ZIP, 20MB]")
+click_button(driver, "text","Prevalence State/County Level: All Beneficiaries by Age, 2007-2017  (ZIP)", 20)
 time.sleep(60)
 move_from_downloads(downloads, "CC_Prev_State_County_Age",
 raw_output, "cms_prev_data.zip")
 
-click_button(driver, "text","Spending County Level: All Beneficiaries, 2007-2017 [ZIP, 18MB]")
+click_button(driver, "text","Spending County Level: All Beneficiaries, 2007-2017 (ZIP)", 20)
 time.sleep(60)
 move_from_downloads(downloads, "CC_Spend_County.zip",
 raw_output, "cms_spend_data.zip")
