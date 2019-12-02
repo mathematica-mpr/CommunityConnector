@@ -5,8 +5,6 @@ import requests
 import json
 import re
 import pandas as pd
-from IPython.display import display
-from IPython.display import Image
 
 #FIND THE codes
 file_path = 'data/raw'
