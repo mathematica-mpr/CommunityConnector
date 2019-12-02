@@ -818,7 +818,7 @@ density_plot_overlay <- function(data, comparedata) {
       ) %>% 
       layout(
         title = list(
-          text = paste("Frequency of", data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -864,7 +864,10 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Frequency",
+          title = list(
+            text = "Frequency Across Counties",
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -878,7 +881,7 @@ density_plot_overlay <- function(data, comparedata) {
     p <- p %>% 
       layout(
         title = list(
-          text = paste("Frequency of", data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -910,7 +913,10 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Frequency",
+          title = list(
+            text = "Frequency Across Counties",
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F, 
@@ -1000,7 +1006,7 @@ density_plot <- function(data, comparedata) {
         cliponaxis = F
       ) %>% layout(
         title = list(
-          text = paste("Frequency of", data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1046,7 +1052,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Frequency",
+          title = list(
+            text = "Frequency Across Counties",
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -1060,7 +1069,7 @@ density_plot <- function(data, comparedata) {
     p <- p %>% 
       layout(
         title = list(
-          text = paste("Frequency of", data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1092,7 +1101,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "Frequency",
+          title = list(
+            text = "Frequency Across Counties",
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F, 
