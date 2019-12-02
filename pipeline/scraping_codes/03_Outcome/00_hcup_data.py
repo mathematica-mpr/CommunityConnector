@@ -68,7 +68,7 @@ def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selecti
         num (integer): query number for exporting and saving data
         
     Returns:
-        
+        output csv moved into output folder
     """
     
     driver = webdriver.Chrome(options=options)
