@@ -3,28 +3,25 @@ import pandas as pd
 import numpy as np
 import regex as re
 
-n_drive = 'N:/Transfer/KSkvoretz/AHRQ/data//03_Outcome/HCUP'
+input = 'data/raw'
 
-hcup_files = os.listdir(n_drive)
-hcup_files = [file for file in hcup_files if "csv" in file]
+hcup_files = os.listdir(input)
+hcup_files = [file for file in hcup_files if "HCUP" in file]
 hcup_files = [file for file in hcup_files if "selections" not in file]
 print(hcup_files)
 
 # parameters used for each dataframe
-selections_df = pd.read_csv(os.path.join(n_drive, "HCUP_selections.csv"))
+selections_df = pd.read_csv(os.path.join(input, "HCUP_selections.csv"))
 
 # Turn each dataframe into long and concatenate all
 for i in range(len(hcup_files)):
-    # 16th data frame doesn't work? - HCUP_8 is corrupt
-    data = pd.read_csv(os.path.join(n_drive, f"HCUP_{i}.csv"))
+    data = pd.read_csv(os.path.join(input, f"HCUP_{i}.csv"))
     # remove the junk above the data
     data = data.iloc[6:]
     # use the first row as the column names
     data.columns = data.iloc[0]
     data.columns.values[0:2] = ["County","FIPS"]
     data = data.iloc[7:]
-
-    # also need to drop bottom rows with notes and no data
 
     # assign data with the parameter selections, to make column names later
     data['Analysis Selection'] = selections_df.iloc[i]['Analysis Selection']
@@ -75,4 +72,4 @@ print(full_data.shape)
 print(full_data.head())
 
 # output data
-full_data.to_csv(os.path.join(os.path.dirname(n_drive),'cleaned','HCUP_cleaned.csv'))
+full_data.to_csv('data/cleaned/HCUP_cleaned.csv')
