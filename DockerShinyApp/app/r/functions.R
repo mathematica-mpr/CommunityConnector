@@ -864,7 +864,7 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = "Frequency",
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -872,7 +872,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       ) 
   } else {
     p <- p %>% 
@@ -910,7 +910,7 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = "Frequency",
           showgrid = F,
           showline = T, 
           showticklabels = F, 
@@ -918,7 +918,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       ) 
   }  
     
@@ -1046,7 +1046,7 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = "Frequency",
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -1054,7 +1054,7 @@ density_plot <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       )
   } else {
     p <- p %>% 
@@ -1092,7 +1092,7 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = "Frequency",
           showgrid = F,
           showline = T, 
           showticklabels = F, 
@@ -1100,7 +1100,7 @@ density_plot <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       )
   }
   
