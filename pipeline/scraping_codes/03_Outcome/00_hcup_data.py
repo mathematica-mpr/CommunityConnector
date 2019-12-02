@@ -135,7 +135,7 @@ if __name__ == "__main__":
     # connect(website, 600)
     # print('done connecting')
 
-    start_num = 1
+    start_num = 0
     num = start_num
     for parameters in selections_list[start_num:]:
         print(parameters)   
