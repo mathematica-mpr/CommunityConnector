@@ -474,7 +474,8 @@ server <- function(input, output) {
         plotlyOutput(
           outputId = paste0("density_graph", .y),
           height = '200px'
-        ) %>% withSpinner(type = getOption("spinner.type", default = 1)),
+        ) %>% withSpinner(type = getOption("spinner.type", default = 1),
+                          color = getOption("spinner.color", default = "#046B5C")),
         br()
       )
     })
