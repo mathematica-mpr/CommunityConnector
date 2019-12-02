@@ -1,11 +1,3 @@
-# Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), 'pipeline\codes\01_Demographic'))
-	print(os.getcwd())
-except:
-	pass
-
 # Resources: 
 # Code lists, definitions, accuracy: https://www.census.gov/programs-surveys/acs/technical-documentation/code-lists.html
 # Gitter help: https://gitter.im/uscensusbureau/general
@@ -23,112 +15,37 @@ import censusdata
 import math
 import os
 from pathlib import Path
+import numpy as np
+import sys
+sys.path.insert(1, 'pipeline/scraping_codes')
+from utilities import censusdata_pull, available_vars
+key = '***REMOVED***'
 
-n_drive = 'N:\Transfer\KSkvoretz\AHRQ\data\\01_Demographic\ACS'
-output = os.path.join(Path(n_drive).parents[0], 'cleaned')
+output = 'data/cleaned/01_Demographic'
+# location of table shells where I"ve flagged which variables to use
+input_drive = 'data/raw'
 
-key = 'b34f5dfe18f660a15a278a309760c38ef401b395'
-
-# # Read in table shells where I've flagged which variables to use
-table_shell = os.path.join(n_drive, 'ACS2017_Table_Shells.xlsx')
+table_shell = os.path.join(input_drive, 'ACS2017_Table_Shells.xlsx')
 xl = pd.ExcelFile(table_shell)
-
 table_shell_df = xl.parse(xl.sheet_names[0])
 # variables I've flagged to use
 use_vars = table_shell_df[table_shell_df.Use == 1]
-print(use_vars)
 print(use_vars[['TableID','Stub','Use']])
-
-# Potentially others?
-# disability
-# vision/hearing difficulty?
-# other stuff by race?? -i.e. health insurance?
-# internet
-# population coverage
-
-# add category to variable names?
-
-use_vars.to_csv(os.path.join(n_drive, 'ACS_variables.csv'))
-
+use_vars.to_csv(os.path.join(input_drive, 'ACS_variables.csv'))
 variables = use_vars.TableID.tolist()
 
-# # Method 2: Use the census data package
-# Explore functionality
+# Use the census data package
+# Examples of functionality
 censusdata.search('acs5', 2017, 'label','unemploy')
 # censusdata.search('acs5', 2017, 'concept', 'education')
 censusdata.printtable(censusdata.censustable('acs5',2017, 'B23025'))
 censusdata.geographies(censusdata.censusgeo([('state','*')]), 'acs5', 2017)
 censusdata.geographies(censusdata.censusgeo([('state', '08'), ('county', '*')]), 'acs5', 2017)
 
-def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0):
-    """
-    Used to pull and merge data for multiple variables, since we are using much more than 50
-    and 50 is the limit to pull from the API (According to the limit, it's 50, but it's actually 49)
-    
-    Args:
-        variable (string): variable group name
-        acs_version (string): 'acs5' for the 5-year survey
-        year (int): 2017 is the most recent as of now
-        max_vars (float): If API limit ever changes, we can adjust this default value from 49.0
-        
-    Returns:
-        dataframe
-    
-    """
-    
-    # TODO: create a test to count all variables and match with number of columns in final dataframe
-    # TODO: create a dictionary of variable names with column names
-    
-    # Create a list of all variable names found related to the input variable group
-    census_dict = censusdata.censustable(acs_version,year,variable)
-    unique_ids = list(census_dict.keys())
-    
-    # The API sets a limit of pulling 50 variables at a time
-    num_vars = len(unique_ids)    
-    # Number of loops we'll have to do to pull groups of 50 or less variables
-    num_loops = math.ceil(num_vars/max_vars)
-    
-#     print(num_vars)
-#     print(num_loops)
-    
-    # used to store the indices of the 50 variables to be pulled
-    last = int(max_vars)
-    first = 0
-    for i in range(num_loops):
-        
-        print(len(unique_ids[first:last]))
-        data = censusdata.download(acs_version, year,
-                              censusdata.censusgeo([('state', '08'), ('county', '*')]),
-                              unique_ids[first:last])
-        
-        # rename columns from variable names
-        new_colnames = {}
-        for key, value in census_dict.items():
-            new_name = value['concept'] + "_" + value['label']
-            new_name = new_name.replace('!!', "_").replace(" ", "_")
-            new_colnames[key] = new_name
-
-        data.rename(columns = new_colnames, inplace = True)
-        
-        if i == 0:
-            full_data = data
-        else:
-            # merge the data by county
-            full_data = full_data.join(data, how = 'outer')
-        
-        # increment to 50 variables later
-        last += int(max_vars)
-        first = last-int(max_vars)
-        if last > num_vars:
-            last = num_vars
-    
-    return full_data
-
 # doesn't seem like the C variables work, so remove them
 variables = [var for var in variables if 'C' not in var]
 variables = [var for var in variables if "B17002" not in var]
 
-get_ipython().run_line_magic('time', '')
 # loop through all variables and merge data together
 count = 0
 for variable in variables:
@@ -141,14 +58,45 @@ for variable in variables:
         full_data = full_data.join(data, how = 'outer')
     count += 1
 
-full_data.columns.values[0] = "location"
+full_data['location'] = full_data.index.values.astype(str)
 full_data['FIPS'] = [location[-3:] for location in full_data['location']]
-print(full_data['FIPS'])
 full_data.drop(columns = "location", inplace = True)
 
-print(full_data.shape)
-print(output)
+full_data.columns = map(str.lower, full_data.columns)
 
-full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'))
+# determine which columns to keep
+print(full_data.columns.values)
+keep_vars = ['fips']
 
+race_cols = available_vars(full_data, 'race')
+drop_race_cols = ["race_estimate_total", "race_estimate_total_two_or_more_races_two_races_including_some_other_race",
+"race_estimate_total_two_or_more_races_two_races_excluding_some_other_race_and_three_or_more_races"]
+race_cols = np.setdiff1d(race_cols, drop_race_cols)
+full_data[race_cols] = full_data[race_cols].apply(lambda x: x/full_data['race_estimate_total'])
+keep_vars.extend(race_cols)
 
+eng_vars = available_vars(full_data, 'english')
+eng_vars = ['place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_only_english',
+ 'place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_other_languages',
+ 'place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total_speak_other_languages_speak_english_very_well']
+full_data[eng_vars] = full_data[eng_vars].apply(lambda x: x/full_data['place_of_birth_by_language_spoken_at_home_and_ability_to_speak_english_in_the_united_states_estimate_total'])
+new_eng_vars = ['pct_only_english','pct_other_languages','pct_other_languages_eng_vwell']
+full_data[new_eng_vars] = full_data[eng_vars]
+keep_vars.extend(new_eng_vars)
+
+available_vars(full_data, 'occupancy')
+full_data['pct_vacant'] = full_data['occupancy_status_estimate_total_vacant']/full_data['occupancy_status_estimate_total']
+keep_vars.append('pct_vacant')
+
+available_vars(full_data, 'median_value')
+full_data['median_value'] = full_data['median_value_(dollars)_estimate_median_value_(dollars)']
+full_data['median_income'] = full_data['median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)_estimate_median_household_income_in_the_past_12_months_(in_2017_inflation-adjusted_dollars)']
+full_data['mean_hours'] = full_data['mean_usual_hours_worked_in_the_past_12_months_for_workers_16_to_64_years_estimate_total']
+keep_vars.extend(['median_income',
+'gini_index_of_income_inequality_estimate_gini_index',
+'mean_hours','median_value'])
+
+full_data = full_data[keep_vars]
+full_data.columns.values[0] = 'FIPS'
+
+full_data.to_csv(os.path.join(output, 'ACS_cleaned.csv'), index = False)
