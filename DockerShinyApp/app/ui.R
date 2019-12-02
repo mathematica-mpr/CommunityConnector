@@ -10,7 +10,7 @@ ui <- bootstrapPage(
                                 label = lang_cfg$titles$method_read_more,
                                 style = paste0("color: ", config$colors$purple100,
                                                "; background-color: ", config$colors$tan25,
-                                               "; border-color: ", config$colors$tan25)
+                                               "; border-color: ", config$colors$purple100)
                                 ),
                      style = paste0("background: ",config$colors$tan25))),
     column(width = 2, align = "right", uiOutput("logo"))
@@ -29,21 +29,23 @@ ui <- bootstrapPage(
                uiOutput('select_my_county'),
                uiOutput('select_comparison_county'),
                h6(em(lang_cfg$titles$comparison_county_footnote)),
-               actionButton("data_read_more", 
-                            label = lang_cfg$titles$data_read_more,
-                            style = paste0("color: ", config$colors$purple100,
-                                           "; background-color: ", config$colors$grey25,
-                                           "; border-color: ", config$colors$grey25)),
-               br(),
                style = paste0("background: ",config$colors$grey25)),
              wellPanel(
                tags$style(HTML("
           .selectize-control.single .selectize-input:after{
           visibility:hidden;
           }")),
+               actionButton("data_read_more", 
+                            label = lang_cfg$titles$data_read_more,
+                            style = paste0("color: ", config$colors$purple100,
+                                           "; background-color: ", config$colors$white100,
+                                           "; border-color: ", config$colors$purple100)),
+               br(),
+               br(),
                uiOutput("health_plans_url"),
                uiOutput("diab_prev_prog"),
-               style = paste0("background: ",config$colors$white100)
+               style = paste0("background: ",config$colors$white100,
+                              "; background-color: ", config$colors$white100)
              )
              ),
       column(width = 10,
