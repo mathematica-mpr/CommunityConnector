@@ -1,5 +1,3 @@
-# TODO: clean this up since we now are using utilities.py
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,10 +17,11 @@ from os import listdir
 import regex as re
 from stat import S_ISREG, ST_CTIME, ST_MODE, ST_MTIME
 import shutil
+import pandas as pd
 
 import sys
 sys.path.insert(1, 'pipeline/scraping_codes')
-from utilities import click_button
+from utilities import click_button, connect
 
 dirpath = 'C:/Users/kskvoretz/Downloads/'
 output = 'data/raw'
@@ -53,27 +52,8 @@ drg = [["DP", "Medicare-Severity Diagnosis Related Groups (MS-DRG)", drg] for dr
 selections_list.extend(drg)
 print(selections_list)
 
-import pandas as pd
 selections_df = pd.DataFrame(selections_list, columns = ["Analysis Selection", "Classification", "Diagnosis"])
 selections_df.to_csv(os.path.join(output, "HCUP_selections.csv"))
-
-
-def connect(website, timeout):
-    """
-    This function can be used to test the connection to the website. If it doesn't connect within timout seconds, the code will error out
-
-    Args:   
-        website (string): name of website to access
-        timeout (integer): seconds to wait before page times out
-
-    """
-    # For this to work, need to move chromedriver.exe to python Scripts/ folder
-    # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
-    driver = webdriver.Chrome(options=options)
-    driver.set_page_load_timeout(timeout)
-    driver.delete_all_cookies()
-    driver.get(website)
-    driver.quit()
 
 def hcup_pull(state, analysis_selection, classifier_selection, diagnosis_selection, num):
 

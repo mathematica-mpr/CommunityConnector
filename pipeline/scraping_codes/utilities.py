@@ -85,6 +85,24 @@ def rwjf_concatenate_column_names(df):
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium import webdriver
+
+def connect(website, timeout):
+    """
+    This function can be used to test the connection to the website. If it doesn't connect within timout seconds, the code will error out
+
+    Args:   
+        website (string): name of website to access
+        timeout (integer): seconds to wait before page times out
+
+    """
+    # For this to work, need to move chromedriver.exe to python Scripts/ folder
+    # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
+    driver = webdriver.Chrome(options=options)
+    driver.set_page_load_timeout(timeout)
+    driver.delete_all_cookies()
+    driver.get(website)
+    driver.quit()
 
 def click_button(driver, element_type, element_name, time_to_wait = 10):
     """
