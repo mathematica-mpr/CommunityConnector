@@ -335,11 +335,11 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, checkboxGroupInput('outcome_filter', label = 'Add or filter by health conditions:', 
+        column(width = 6, checkboxGroupInput('outcome_filter', label = 'Filter by health conditions:', 
                            choices = c('Diabetes' = 'diab',  
                                        'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obes')#,
-                           #selected = c('diab', 'kidney', 'obes')
+                                       'Obesity' = 'obes'),
+                           selected = c('diab', 'kidney', 'obes')
                            )
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
