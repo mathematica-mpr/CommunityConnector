@@ -43,12 +43,15 @@ body {
     box-shadow: inset 0 1px 1px rgba(0,0,0,.05);
 }
 
+/* green border for selection box */
 .selectize-input.full {
     background-color: #ffffff;
-    border-color: #57C6A6;
+    border-color: #17A673;
 }
+
+
 .selectize-input {
-    border: 1px solid #cccccc;
+    border: 1px solid #17A673;
     padding: 6px 12px;
     display: inline-block;
     width: 100%;
@@ -71,4 +74,26 @@ body {
 a {
     color: #0000EE;
     text-decoration: none;
+}
+
+/* remove dropdown arrows from all drop downs */
+.selectize-control.single .selectize-input:after{
+    visibility:hidden;
+}
+
+/* tabPanel color */
+.tabbable > .nav > li > a {
+    background-color: #17A673;
+    color: #FFF;
+}
+
+/* selected tabPanel color */
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+    background-color: #046B5C;
+    color: #FFF;
+}
+
+/* pill button color */
+.bttn-pill.bttn-success {
+    background: #17A673;
 }
