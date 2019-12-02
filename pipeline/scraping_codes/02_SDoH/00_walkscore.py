@@ -68,7 +68,7 @@ fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
 #URLS come from the top
 
 #OUTFILE
-out_scores_path= "N:/Transfer/KSkvoretz/AHRQ/data/03_Outcome/Walkscore/" + 'out_scores.csv'
+out_scores_path= "data/cleaned" + 'out_scores.csv'
 
 #this is the dictionary
 fips_scores = {}
