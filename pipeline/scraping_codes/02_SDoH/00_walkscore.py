@@ -7,7 +7,7 @@ import re
 import pandas as pd
 
 #FIND THE codes
-file_path = 'data/raw'
+file_path = 'data/raw/'
 
 uszips_path = file_path + 'uszips.csv'
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
@@ -66,7 +66,7 @@ fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
 #URLS come from the top
 
 #OUTFILE
-out_scores_path= "data/cleaned" + 'out_scores.csv'
+out_scores_path= "data/cleaned/" + 'out_scores.csv'
 
 #this is the dictionary
 fips_scores = {}
