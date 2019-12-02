@@ -865,7 +865,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency Across Counties",
+            text = "Frequency of Counties",
             font = list(size = 12)
           ),
           showgrid = F,
@@ -914,7 +914,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency Across Counties",
+            text = "Frequency of Counties",
             font = list(size = 12)
           ),
           showgrid = F,
@@ -1053,7 +1053,7 @@ density_plot <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency Across Counties",
+            text = "Frequency of Counties",
             font = list(size = 12)
           ),
           showgrid = F,
@@ -1102,7 +1102,7 @@ density_plot <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency Across Counties",
+            text = "Frequency of Counties",
             font = list(size = 12)
           ),
           showgrid = F,
