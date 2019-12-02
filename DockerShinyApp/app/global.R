@@ -23,7 +23,7 @@ library(aws.s3)
 
 # setting aws profile for credentials
 if (!is_ec2() & !is_ecs()) {
-  Sys.setenv("AWS_PROFILE"='ahrq')
+  use_credentials(profile = "ahrq")
 }
 
 # read in config files

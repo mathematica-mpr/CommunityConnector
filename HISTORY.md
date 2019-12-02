@@ -1,4 +1,11 @@
 # Project History
+## v0.4.0 (12/02/2019)
+-----------------------
+* Dockerfile for deployment
+* aesthetic changes
+* text usability improvements
+* comparison county on density plot
+
 ## v0.3.0 (11/25/2019)
 -----------------------
 * BREAKING: read data from S3
