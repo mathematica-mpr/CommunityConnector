@@ -1,6 +1,6 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
-  # style = "padding-right: 1%; padding-left: 1%;",
+  theme = "style.css",
   fluidRow(
     column(width = 2, align = "left"),
     column(width = 8, align = 'center',
@@ -13,10 +13,6 @@ ui <- bootstrapPage(
     fluidRow(
       column(width = 2,
              wellPanel(
-               tags$style(HTML("
-          .selectize-control.single .selectize-input:after{
-          visibility:hidden;
-          }")),
                h2("Get Started"),
                selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
                            choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
@@ -69,21 +65,6 @@ ui <- bootstrapPage(
                                withSpinner(type = getOption("spinner.type", default = 1))
                       ))),
              column(width = 6,
-                    #style = "max-height: 80vh; overflow-y: auto;",
-                    
-                    # css styles for tab colors
-                    tags$style(HTML("
-        .tabbable > .nav > li > a {
-           background-color: #28b78d;
-           color: #FFF;
-      }")),
-                    tags$style(HTML("
-        .nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
-           background-color: #046B5C;
-                                     color: #FFF;
-                                       }")),
-                    
-                    
                     tabsetPanel(type = 'pills', id = "tabs",
                                 tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
                                          fluidRow(
@@ -109,7 +90,6 @@ ui <- bootstrapPage(
                                          ),
                                          fluidRow(lang_cfg$my_matches, align = "center"),
                                          br(),
-                                         # fluidRow(align = "center", uiOutput("comp_radar_header")),
                                          plotlyOutput("compare_county_radars"
                                          ) %>% 
                                            withSpinner(type = getOption("spinner.type", default = 1)),
