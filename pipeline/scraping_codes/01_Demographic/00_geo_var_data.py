@@ -29,8 +29,7 @@ driver.get(website)
 
 click_button(driver, "text","State/County Table - All Beneficiaries")
 time.sleep(100)
-move_from_downloads(downloads, "State-County-All-Table-2017",
-output, "geo_var_data.zip")
+move_from_downloads(downloads, "State-County-All-Table-2017", raw_output, "geo_var_data.zip")
 time.sleep(5)
 
 # unzip
