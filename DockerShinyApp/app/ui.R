@@ -26,22 +26,23 @@ ui <- bootstrapPage(
                uiOutput('select_comparison_county'),
                h6(em(lang_cfg$titles$comparison_county_footnote)),
                style = paste0("background: ",config$colors$grey25)),
+             actionButton("data_read_more", 
+                          label = lang_cfg$titles$data_read_more,
+                          style = paste0("color: ", config$colors$purple100,
+                                         "; background-color: ", config$colors$white100,
+                                         "; border-color: ", config$colors$purple100)),
+             br(),
+             br(),
              wellPanel(
                tags$style(HTML("
           .selectize-control.single .selectize-input:after{
           visibility:hidden;
           }")),
-               actionButton("data_read_more", 
-                            label = lang_cfg$titles$data_read_more,
-                            style = paste0("color: ", config$colors$purple100,
-                                           "; background-color: ", config$colors$white100,
-                                           "; border-color: ", config$colors$purple100)),
-               br(),
-               br(),
                uiOutput("health_plans_url"),
                uiOutput("diab_prev_prog"),
                style = paste0("background: ",config$colors$white100,
-                              "; background-color: ", config$colors$white100)
+                              "; background-color: ", config$colors$white100,
+                              "; border-color: ", config$colors$purple100)
              )
              ),
       column(width = 10,
@@ -64,8 +65,8 @@ ui <- bootstrapPage(
                                                        "; border-color: ", config$colors$purple100)))),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
-                                                      height = "80%") %>%
-                               withSpinner(type = getOption("spinner.type", default = 1))
+                                                      height = "80%") #%>%
+                               #withSpinner(type = getOption("spinner.type", default = 1))
                       ))),
              column(width = 6,
                     tabsetPanel(type = 'pills', id = "tabs",
@@ -86,17 +87,18 @@ ui <- bootstrapPage(
                                          fluidRow(lang_cfg$my_matches, align = "center"),
                                          br(),
                                          plotlyOutput("compare_county_radars"
-                                         ) %>% 
-                                           withSpinner(type = getOption("spinner.type", default = 1)),
+                                         ) #%>% 
+                                           #withSpinner(type = getOption("spinner.type", default = 1))
+                                         ,
                                          br()
                                 ),
                                 tabPanel(span("County Map", title = lang_cfg$map_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
                                          ),
-                                         fluidRow(leafletOutput("map") %>% 
-                                                  withSpinner(type = getOption("spinner.type", default = 1))
-                                         )
+                                         fluidRow(leafletOutput("map") #%>% 
+                                                  #withSpinner(type = getOption("spinner.type", default = 1))
+                                         ),
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
                                          fluidRow(
