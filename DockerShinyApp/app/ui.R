@@ -51,8 +51,8 @@ ui <- bootstrapPage(
                              actionButton("radar_read_more", 
                                         label = lang_cfg$titles$radar_read_more,
                                         size = "sm",
-                                        style = paste0("color: ", config$colors$white100,
-                                                       "; background-color: ", config$colors$accent,
+                                        style = paste0("color: ", config$colors$accent,
+                                                       "; background-color: ", config$colors$white100,
                                                        "; border-color: ", config$colors$accent)))),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
