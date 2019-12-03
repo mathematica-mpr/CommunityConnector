@@ -12,6 +12,7 @@ titles:
   data_source_modal: "Data Sources"
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
+  density_y_axis: "Frequency of Counties"
 intro: "Examine how your county compares to others in terms of social needs and health outcomes, and explore possible intervention areas that may improve health outcomes."
 browser: "This website works best in a Google Chrome browser."
 howto: "This fingerprint chart visualizes how well your county and (optional) comparison county are doing in 6 social determinants of health pillars, as specified by the Kaiser Family Foundation: <br> 
@@ -31,3 +32,5 @@ my_matches: "These are the social determinants of health of 20 counties in your 
 demographics_tab: "This section displays demographics, social determinant of health metrics, and health outcomes for the selected county and (optional) comparison county."
 health_outcomes_tab: "This tab displays the distribution of health outcomes across all counties, dots along the x-axis to indicate where the top 20 most similar counties lie on the distribution, and a colored line to indicate how the selected county compares to the rest of the distribution."
 map_tab: "This tab displays a map of all counties, shaded by level of similarity to the selected county."
+density_hoverlabel_all: "Distribution of outcomes\nacross all counties"
+density_hoverlabel_matches: "Distribution of outcomes\nacross my most \nsimilar counties"
