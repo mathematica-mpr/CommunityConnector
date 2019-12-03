@@ -19,7 +19,6 @@ import numpy as np
 import sys
 sys.path.insert(1, 'pipeline/scraping_codes')
 from utilities import censusdata_pull, available_vars
-key = '***REMOVED***'
 
 output = 'data/cleaned/01_Demographic'
 # location of table shells where I"ve flagged which variables to use
