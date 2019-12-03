@@ -31,16 +31,17 @@ ZIP_COUNTY_FIPS_df.columns = map(str.lower, ZIP_COUNTY_FIPS_df.columns)
 ZIP_COUNTY_FIPS_df = ZIP_COUNTY_FIPS_df.query('state == "CO"')
 
 #ACS - using this to get population to find largest city within a fips code
-def api_pull(variable):
+def api_pull(key, variable):
     url = f'https://api.census.gov/data/2017/acs/acs5?key={key}&get=NAME,group({variable})&for=tract:*&in=state:08'
+    print(url)
     response = requests.get(url)
     formattedResponse = json.loads(response.text)
     data = pd.DataFrame(formattedResponse)
     return data
 
-key = os.environ.get("ACS_KEY")
+key = os.environ['ACS_KEY']
 variable = 'B01003'
-co = api_pull(variable)
+co = api_pull(key, variable)
 co = pd.DataFrame(co[1:])              
 co.columns = ["NAME","GEO_ID","B01003_001E","B01003_001M","NAME_2","B01003_001MA","B01003_001EA","state","county","tract"]
 
