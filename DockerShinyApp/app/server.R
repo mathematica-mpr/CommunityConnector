@@ -145,6 +145,7 @@ server <- function(input, output) {
         a("Centers for Disease Control and Prevention's (CDC) Diabetes Atlas", 
           href = "https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#",
           target = "_blank"),
+        tags$br(),
         a("Colorado Department of Public Health and Environment", 
           href = "https://www.colorado.gov/pacific/cdphe/data",
           target = "_blank"),
