@@ -11,18 +11,27 @@ server <- function(input, output) {
   landing_page <- modalDialog(id = "landing_page",
                               fluidRow(
                                 column(width = 12, align = "center",
-                                wellPanel(h1(lang_cfg$welcome), 
-                                          h4(HTML(lang_cfg$intro)),
-                                          style = paste0("background: ",config$colors$tan25)))),
+                                       wellPanel(h1(lang_cfg$welcome), 
+                                                 h4(HTML(lang_cfg$intro)),
+                                                 style = paste0("background: ",config$colors$tan25)))
+                              ),
                               fluidRow(
-                                column(width = 3,
+                                column(width = 12, align = "center",
+                                       h4(HTML(lang_cfg$landing$browser)))
+                              ),
+                              fluidRow(
+                                column(width = 2, align = "center",
+                                       HTML(lang_cfg$landing$get_started_instr)),
+                                column(width = 2, align = "center",
                                        HTML(lang_cfg$landing$my_county_instr)),
-                                column(width = 3,
+                                column(width = 2, align = "center",
+                                       HTML(lang_cfg$landing$demo_instr)),
+                                column(width = 2, align = "center",
                                        HTML(lang_cfg$landing$comp_county_instr)),
-                                column(width = 3,
-                                HTML(lang_cfg$landing$stats_instr)),
-                                column(width = 3,
-                              HTML(lang_cfg$landing$home_instr))
+                                column(width = 2, align = "center",
+                                       HTML(lang_cfg$landing$radar_overlay_instr)),
+                                column(width = 2, align = "center",
+                                       HTML(lang_cfg$landing$density_instr)),
                               ),
                               size = "l",
                               footer = modalButton("Go to app")
