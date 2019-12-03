@@ -728,7 +728,7 @@ density_plot_overlay <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Distribution of outcomes\nacross all counties",
+      name = lang_cfg$density_hoverlabel_all,
       hoverinfo = 'name'
     ) %>% 
     #density plot for matching counties 
@@ -743,7 +743,7 @@ density_plot_overlay <- function(data, comparedata) {
         color = paste0(config$colors$teal100), 
         width = 2
       ),
-      name = "Distribution of outcomes\nacross my most \nsimilar counties",
+      name = lang_cfg$density_hoverlabel_matches,
       hoverinfo = 'name'
     ) %>% 
     #markers for matching counties
@@ -865,7 +865,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency of Counties",
+            text = lang_cfg$titles$density_y_axis,
             font = list(size = 12)
           ),
           showgrid = F,
@@ -914,7 +914,7 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency of Counties",
+            text = lang_cfg$titles$density_y_axis,
             font = list(size = 12)
           ),
           showgrid = F,
@@ -952,7 +952,7 @@ density_plot <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Distribution of outcomes\nacross all counties",
+      name = lang_cfg$density_hoverlabel_all,
       hoverinfo = 'name'
     ) %>% 
     #marker for my county
@@ -1051,7 +1051,7 @@ density_plot <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency of Counties",
+            text = lang_cfg$titles$density_y_axis,
             font = list(size = 12)
           ),
           showgrid = F,
@@ -1100,7 +1100,7 @@ density_plot <- function(data, comparedata) {
         ),
         yaxis = list(
           title = list(
-            text = "Frequency of Counties",
+            text = lang_cfg$titles$density_y_axis,
             font = list(size = 12)
           ),
           showgrid = F,
