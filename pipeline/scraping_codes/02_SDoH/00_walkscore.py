@@ -38,7 +38,7 @@ def api_pull(variable):
     data = pd.DataFrame(formattedResponse)
     return data
 
-key = '***REMOVED***'
+key = os.environ.get("ACS_KEY")
 variable = 'B01003'
 co = api_pull(variable)
 co = pd.DataFrame(co[1:])              
