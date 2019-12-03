@@ -30,20 +30,11 @@ ui <- bootstrapPage(
                           label = lang_cfg$titles$data_read_more,
                           style = paste0("color: ", config$colors$purple100,
                                          "; background-color: ", config$colors$white100,
-                                         "; border-color: ", config$colors$purple100)),
-             br(),
-             br(),
-             wellPanel(
-               tags$style(HTML("
-          .selectize-control.single .selectize-input:after{
-          visibility:hidden;
-          }")),
-               uiOutput("health_plans_url"),
-               uiOutput("diab_prev_prog"),
-               style = paste0("background: ",config$colors$white100,
-                              "; background-color: ", config$colors$white100,
-                              "; border-color: ", config$colors$purple100)
-             )
+                                         "; border-color: ", config$colors$white100)),
+             column(width = 12,
+                    uiOutput("health_plans_url"),
+                    uiOutput("diab_prev_prog")
+                    )
              ),
       column(width = 10,
              column(width = 6, 
