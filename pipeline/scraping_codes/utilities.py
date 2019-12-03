@@ -1,6 +1,108 @@
+import censusdata
+import math
+
+def censusdata_pull(variable, acs_version = 'acs5', year = 2017, max_vars = 49.0):
+    """
+    Used to pull and merge data for multiple variables, since we are using much more than 50
+    and 50 is the limit to pull from the API (According to the limit, it's 50, but it's actually 49)
+    
+    Args:
+        variable (string): variable group name
+        acs_version (string): 'acs5' for the 5-year survey
+        year (int): 2017 is the most recent as of now
+        max_vars (float): If API limit ever changes, we can adjust this default value from 49.0
+        
+    Returns:
+        dataframe
+    
+    """
+    
+    # Create a list of all variable names found related to the input variable group
+    census_dict = censusdata.censustable(acs_version,year,variable)
+    unique_ids = list(census_dict.keys())
+    
+    # The API sets a limit of pulling 50 variables at a time
+    num_vars = len(unique_ids)    
+    # Number of loops we'll have to do to pull groups of 50 or less variables
+    num_loops = math.ceil(num_vars/max_vars)
+    
+    # used to store the indices of the 50 variables to be pulled
+    last = int(max_vars)
+    first = 0
+    for i in range(num_loops):
+        
+        print(len(unique_ids[first:last]))
+        data = censusdata.download(acs_version, year,
+        # pulling for Colorado by county
+                              censusdata.censusgeo([('state', '08'), ('county', '*')]),
+                              unique_ids[first:last])
+        
+        # rename columns from variable names
+        new_colnames = {}
+        for key, value in census_dict.items():
+            new_name = value['concept'] + "_" + value['label']
+            new_name = new_name.replace('!!', "_").replace(" ", "_")
+            new_colnames[key] = new_name
+
+        data.rename(columns = new_colnames, inplace = True)
+        
+        if i == 0:
+            full_data = data
+        else:
+            # merge the data by county
+            full_data = full_data.join(data, how = 'outer')
+        
+        # increment to 50 variables later
+        last += int(max_vars)
+        first = last-int(max_vars)
+        if last > num_vars:
+            last = num_vars
+    
+    return full_data
+
+def rwjf_replace_column_names(df):
+    colnames = df.head(1).values
+    colnames = list(colnames)[0]
+    df.columns = colnames
+    
+    # drop the first row that contains the column names
+    df.drop(df.index[0], inplace = True)
+    return df
+
+def rwjf_concatenate_column_names(df):
+    newcols = []
+    for col in df.columns.values:
+        if col in [0, 'FIPS','State','County']:
+            newcols.append(col)
+        else:
+            if col not in ['95% CI - Low','95% CI - High','Z-Score']:
+                metric = col
+                newcols.append(col)
+            else:
+                newcols.append(metric + "_" + col)
+    return newcols
+
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium import webdriver
+
+def connect(website, timeout):
+    """
+    This function can be used to test the connection to the website. If it doesn't connect within timout seconds, the code will error out
+
+    Args:   
+        website (string): name of website to access
+        timeout (integer): seconds to wait before page times out
+
+    """
+    # For this to work, need to move chromedriver.exe to python Scripts/ folder
+    # i.e. C:\Users\kskvoretz\AppData\Local\Continuum\anaconda3\Scripts
+    driver = webdriver.Chrome(options=options)
+    driver.set_page_load_timeout(timeout)
+    driver.delete_all_cookies()
+    driver.get(website)
+    driver.quit()
 
 def click_button(driver, element_type, element_name, time_to_wait = 10):
     """
