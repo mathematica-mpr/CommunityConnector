@@ -221,7 +221,8 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 12, selectizeInput('demo_filter', label = 'Add or filter by demographic categories:', 
+        column(width = 12, 
+               checkboxGroupInput('demo_filter', label = 'Add or filter by demographic categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
@@ -230,7 +231,7 @@ server <- function(input, output) {
                                                   'Food' = 'used_sdoh_4',
                                                   'Community' = 'used_sdoh_5',
                                                   'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'), multiple = T)
+                                      selected = c('demographic'))
         ))
       )
   })
@@ -382,11 +383,12 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectizeInput('outcome_filter', label = 'Add or filter by health conditions:', 
+        column(width = 6, checkboxGroupInput('outcome_filter', label = 'Filter by health conditions:', 
                            choices = c('Diabetes' = 'diab',  
                                        'Kidney Disease' = 'kidney',
                                        'Obesity' = 'obes'),
-                           selected = c('diab', 'kidney', 'obes'), multiple = T)
+                           selected = c('diab', 'kidney', 'obes')
+                           )
         ),
         column(width = 6, checkboxInput(inputId = 'show_matches', 
                                         label = 'Compare to my most similar counties'),

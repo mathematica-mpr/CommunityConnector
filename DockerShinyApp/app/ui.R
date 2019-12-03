@@ -6,6 +6,12 @@ ui <- bootstrapPage(
     column(width = 8, align = 'center',
            wellPanel(h1(lang_cfg$welcome), 
                      h4(HTML(lang_cfg$intro)),
+                     actionButton("method_read_more", 
+                                label = lang_cfg$titles$method_read_more,
+                                style = paste0("color: ", config$colors$purple100,
+                                               "; background-color: ", config$colors$tan25,
+                                               "; border-color: ", config$colors$purple100)
+                                ),
                      style = paste0("background: ",config$colors$tan25))),
     column(width = 2, align = "right", uiOutput("logo"))
   ),
@@ -14,34 +20,30 @@ ui <- bootstrapPage(
       column(width = 2,
              wellPanel(
                h2("Get Started"),
-               selectInput('county_selection_type', label = lang_cfg$titles$county_selection_type,
+               radioButtons('county_selection_type', label = lang_cfg$titles$county_selection_type,
                            choices = c('County Name' = 'name', 'FIPS Code' = 'fips'), selected = 'name'),
                uiOutput('select_my_county'),
                uiOutput('select_comparison_county'),
                h6(em(lang_cfg$titles$comparison_county_footnote)),
-               br(),
-               actionBttn("method_read_more", 
-                          label = lang_cfg$titles$method_read_more,
-                          size = "sm", color = "success",
-                          style = "minimal"),
-               br(),
-               br(),
-               actionBttn("data_read_more", 
+               style = paste0("background: ",config$colors$grey25)),
+             actionButton("data_read_more", 
                           label = lang_cfg$titles$data_read_more,
-                          size = "sm", color = "success",
-                          style = "minimal"),
-               
-               br(),
-               br(),
-               br(),
-               br(),
-               br(),
-               br(),
+                          style = paste0("color: ", config$colors$purple100,
+                                         "; background-color: ", config$colors$white100,
+                                         "; border-color: ", config$colors$purple100)),
+             br(),
+             br(),
+             wellPanel(
+               tags$style(HTML("
+          .selectize-control.single .selectize-input:after{
+          visibility:hidden;
+          }")),
                uiOutput("health_plans_url"),
-               br(),
-               br(),
                uiOutput("diab_prev_prog"),
-               style = paste0("background: ",config$colors$grey25))
+               style = paste0("background: ",config$colors$white100,
+                              "; background-color: ", config$colors$white100,
+                              "; border-color: ", config$colors$purple100)
+             )
              ),
       column(width = 10,
              column(width = 6, 
@@ -54,11 +56,13 @@ ui <- bootstrapPage(
                     fluidRow(
                       column(width = 12, align = "center", htmlOutput("my_county_header"))),
                     fluidRow(
-                      column(width = 12, align = "right",
-                             actionBttn("radar_read_more", 
+                      column(width = 12, align = "center",
+                             actionButton("radar_read_more", 
                                         label = lang_cfg$titles$radar_read_more,
-                                        size = "sm", color = "success",
-                                        style = "pill"))),
+                                        size = "sm",
+                                        style = paste0("color: ", config$colors$white100,
+                                                       "; background-color: ", config$colors$purple100,
+                                                       "; border-color: ", config$colors$purple100)))),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%") %>%
@@ -77,15 +81,6 @@ ui <- bootstrapPage(
                                                         
                                          ))
                                 ),
-                                tabPanel(span("County Map", title = lang_cfg$map_tab),
-                                         fluidRow(
-                                           column(width = 12, h1(" "))
-                                         ),
-                                         fluidRow(leafletOutput("map") %>% 
-                                                    withSpinner(type = getOption("spinner.type", default = 1),
-                                                                color = getOption("spinner.color", default = "#046B5C"))
-                                         )
-                                ),
                                 tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
                                          fluidRow(
                                            column(width = 12, h1(" "))
@@ -97,6 +92,15 @@ ui <- bootstrapPage(
                                            withSpinner(type = getOption("spinner.type", default = 1),
                                                        color = getOption("spinner.color", default = "#046B5C")),
                                          br()
+                                ),
+                                tabPanel(span("County Map", title = lang_cfg$map_tab),
+                                         fluidRow(
+                                           column(width = 12, h1(" "))
+                                         ),
+                                         fluidRow(leafletOutput("map") %>% 
+                                                    withSpinner(type = getOption("spinner.type", default = 1),
+                                                                color = getOption("spinner.color", default = "#046B5C"))
+                                         )
                                 ),
                                 tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
                                          fluidRow(

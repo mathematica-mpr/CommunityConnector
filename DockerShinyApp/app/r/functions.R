@@ -730,7 +730,7 @@ density_plot_overlay <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Density Plot Of\nAll Counties",
+      name = lang_cfg$density_hoverlabel_all,
       hoverinfo = 'name'
     ) %>% 
     #density plot for matching counties 
@@ -745,7 +745,7 @@ density_plot_overlay <- function(data, comparedata) {
         color = paste0(config$colors$teal100), 
         width = 2
       ),
-      name = 'Density Plot of\nMatching Counties',
+      name = lang_cfg$density_hoverlabel_matches,
       hoverinfo = 'name'
     ) %>% 
     #markers for matching counties
@@ -820,7 +820,7 @@ density_plot_overlay <- function(data, comparedata) {
       ) %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -866,7 +866,10 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = list(
+            text = lang_cfg$titles$density_y_axis,
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -874,13 +877,13 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       ) 
   } else {
     p <- p %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -912,7 +915,10 @@ density_plot_overlay <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = list(
+            text = lang_cfg$titles$density_y_axis,
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F, 
@@ -920,15 +926,13 @@ density_plot_overlay <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       ) 
-  }
-  
-  return(p %>% 
-           config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
-  
+  }  
+    
+  return(p %>% config(displaylogo = FALSE,
+                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                                 "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")) )
 }
 
 density_plot <- function(data, comparedata) {
@@ -950,7 +954,7 @@ density_plot <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Density Plot Of\nAll Counties",
+      name = lang_cfg$density_hoverlabel_all,
       hoverinfo = 'name'
     ) %>% 
     #marker for my county
@@ -1002,7 +1006,7 @@ density_plot <- function(data, comparedata) {
         cliponaxis = F
       ) %>% layout(
         title = list(
-          text = paste(data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1048,7 +1052,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = list(
+            text = lang_cfg$titles$density_y_axis,
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F,
@@ -1056,13 +1063,13 @@ density_plot <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       )
   } else {
     p <- p %>% 
       layout(
         title = list(
-          text = paste(data$description[1]),
+          text = data$description[1],
           font = list(
             size = 18,
             color = paste0(config$colors$purple100)
@@ -1094,7 +1101,10 @@ density_plot <- function(data, comparedata) {
           zeroline = F
         ),
         yaxis = list(
-          title = "",
+          title = list(
+            text = lang_cfg$titles$density_y_axis,
+            font = list(size = 12)
+          ),
           showgrid = F,
           showline = T, 
           showticklabels = F, 
@@ -1102,14 +1112,13 @@ density_plot <- function(data, comparedata) {
         ),
         showlegend = F,
         dragmode = F,
-        margin = list(l = 0)
+        margin = list(l = 11)
       )
   }
   
-  return(p %>% 
-           config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+  return(p %>% config(displaylogo = FALSE,
+                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                                 "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
 get_compare_value <- function(data, comparison_name) {
