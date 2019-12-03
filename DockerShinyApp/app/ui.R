@@ -4,13 +4,11 @@ ui <- bootstrapPage(
   tags$head(tags$style(HTML('
       .modal.in .modal-dialog{
         width:100%;
-        height:100%;
         margin:0px;
       }
 
       .modal-content{
         width:100%;
-        height:100%;
       }
     '))),
   fluidRow(
