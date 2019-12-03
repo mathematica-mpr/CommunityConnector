@@ -728,7 +728,7 @@ density_plot_overlay <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Frequency of outcomes\nacross all counties",
+      name = "Distribution of outcomes\nacross all counties",
       hoverinfo = 'name'
     ) %>% 
     #density plot for matching counties 
@@ -743,7 +743,7 @@ density_plot_overlay <- function(data, comparedata) {
         color = paste0(config$colors$teal100), 
         width = 2
       ),
-      name = 'Frequency of outcomes\nacross matching\ncounties',
+      name = "Distribution of outcomes\nacross my most \nsimilar counties",
       hoverinfo = 'name'
     ) %>% 
     #markers for matching counties
@@ -952,7 +952,7 @@ density_plot <- function(data, comparedata) {
       ),
       fill = 'tozeroy',
       fillcolor = paste0(config$colors$grey100, '70'),
-      name = "Frequency of outcomes\nacross all counties",
+      name = "Distribution of outcomes\nacross all counties",
       hoverinfo = 'name'
     ) %>% 
     #marker for my county
