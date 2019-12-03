@@ -40,30 +40,18 @@ server <- function(input, output) {
 
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
-    if (input$county_selection_type == "fips") {
-      gsub("^0", "", input$county_selection) %in% dat$fips
-    } else if (input$county_selection_type == "name") {
       input$county_selection %in% dat$county
-    }
   })
   
   # reactive values and data frames --------------------------------------------
   county_fips <- reactive({
     req(county_check())
-    if (input$county_selection_type == "fips") {
-      gsub("^0", "", input$county_selection)
-    } else if (input$county_selection_type == "name") {
-      dat %>% filter(county == input$county_selection) %>% pull(fips)
-    }
+    dat %>% filter(county == input$county_selection) %>% pull(fips)
   })
   
   county_name <- reactive({
     req(county_check())
-    if (input$county_selection_type == "name") {
       input$county_selection
-    } else if (input$county_selection_type == "fips") {
-      dat %>% filter(fips == gsub("^0", "", input$county_selection)) %>% pull(county)
-    }
   })
   
   county_state <- reactive({
@@ -114,13 +102,7 @@ server <- function(input, output) {
   
   # output ---------------------------------------------------------------------
   output$select_my_county <- renderUI({
-    req(input$county_selection_type)
-    
-    if (input$county_selection_type == "fips") {
-      choice_list <- sort(str_pad(dat$fips, width = 5, pad = "0"))
-    } else if (input$county_selection_type == "name") {
-      choice_list <- sort(dat$county)
-    }
+    choice_list <- sort(dat$county)
     selectizeInput('county_selection', label = lang_cfg$titles$county_selection,
                    choices = choice_list)
   })
@@ -220,7 +202,6 @@ server <- function(input, output) {
               href = " https://nccd.cdc.gov/DDT_DPRP/CitiesList.aspx?STATE=CO", 
               target = "_blank"))
   })
-  
   
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
