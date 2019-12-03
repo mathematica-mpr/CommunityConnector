@@ -1,6 +1,8 @@
 import requests
 import json
 import pandas as pd 
+import sys
+sys.path.insert(1, 'pipeline/codes')
 
 response = requests.get("https://opendata.arcgis.com/datasets/a27b6ee55fe3406fa5f2798ff87c0183_2.geojson")
 json = response.json()
@@ -57,4 +59,4 @@ data.drop(['County'], axis = 1, inplace = True)
 print(data.head())
 print(data.shape)
 
-data.to_csv('data/raw/cdphe.csv', index = False)
+data.to_csv('data/cleaned/03_Outcome/cdphe_cleaned.csv', index = False)

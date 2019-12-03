@@ -928,11 +928,9 @@ density_plot_overlay <- function(data, comparedata) {
       ) 
   }  
     
-  
   return(p %>% config(displaylogo = FALSE,
                       modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")) )
-  
 }
 
 density_plot <- function(data, comparedata) {
