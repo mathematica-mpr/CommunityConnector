@@ -19,22 +19,41 @@ server <- function(input, output) {
                                 column(width = 12, align = "center",
                                        h4(HTML(lang_cfg$landing$browser)))
                               ),
+                              # upper row
                               fluidRow(
-                                column(width = 2, align = "center",
+                                column(width = 4, align = "center",
+                                       HTML('<img src="get_started_instr.png" width="70%" max-width="10px">'),
+                                       br(),
                                        HTML(lang_cfg$landing$get_started_instr)),
-                                column(width = 2, align = "center",
+                                column(width = 4, align = "center",
+                                       HTML('<img src="my_county_instr.png" width="70%" max-width="10px">'),
+                                       br(),
                                        HTML(lang_cfg$landing$my_county_instr)),
-                                column(width = 2, align = "center",
-                                       HTML(lang_cfg$landing$demo_instr)),
-                                column(width = 2, align = "center",
-                                       HTML(lang_cfg$landing$comp_county_instr)),
-                                column(width = 2, align = "center",
-                                       HTML(lang_cfg$landing$radar_overlay_instr)),
-                                column(width = 2, align = "center",
-                                       HTML(lang_cfg$landing$density_instr)),
+                                column(width = 4, align = "center",
+                                       HTML('<img src="demo_instr.png" width="70%" max-width="10px">'),
+                                       br(),
+                                       HTML(lang_cfg$landing$demo_instr))
                               ),
+                              # bottom row
+                              fluidRow(
+                                column(width = 4, align = "center",
+                                       HTML('<img src="comp_county_instr.png" width="70%" max-width="10px">'),
+                                       br(),
+                                       HTML(lang_cfg$landing$comp_county_instr)),
+                                column(width = 4, align = "center",
+                                       HTML('<img src="radar_overlay_instr.png" width="70%" max-width="10px">'),
+                                       br(),
+                                       HTML(lang_cfg$landing$radar_overlay_instr)),
+                                column(width = 4, align = "center",
+                                       HTML('<img src="density_instr.png" width="70%" max-width="10px">'),
+                                       br(),
+                                       HTML(lang_cfg$landing$density_instr))
+                              ),
+                              fluidRow(
+                                column(width = 12, align = "center",
+                                       modalButton("Go to app"))),
                               size = "l",
-                              footer = modalButton("Go to app")
+                              footer = NULL
   )
   
   observeEvent(ignoreNULL = FALSE, eventExpr = start, {
