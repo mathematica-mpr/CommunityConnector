@@ -10,9 +10,20 @@ server <- function(input, output) {
   # landing page ---------------------------------------------------------------
   landing_page <- modalDialog(id = "landing_page",
                               fluidRow(
+                                column(width = 12, align = "center",
                                 wellPanel(h1(lang_cfg$welcome), 
                                           h4(HTML(lang_cfg$intro)),
-                                          style = paste0("background: ",config$colors$tan25))),
+                                          style = paste0("background: ",config$colors$tan25)))),
+                              fluidRow(
+                                column(width = 3,
+                                       HTML(lang_cfg$landing$my_county_instr)),
+                                column(width = 3,
+                                       HTML(lang_cfg$landing$comp_county_instr)),
+                                column(width = 3,
+                                HTML(lang_cfg$landing$stats_instr)),
+                                column(width = 3,
+                              HTML(lang_cfg$landing$home_instr))
+                              ),
                               size = "l",
                               footer = modalButton("Go to app")
   )
