@@ -8,9 +8,9 @@ ui <- bootstrapPage(
                      h4(HTML(lang_cfg$intro)),
                      actionButton("method_read_more", 
                                 label = lang_cfg$titles$method_read_more,
-                                style = paste0("color: ", config$colors$purple100,
+                                style = paste0("color: ", config$colors$accent,
                                                "; background-color: ", config$colors$tan25,
-                                               "; border-color: ", config$colors$purple100)
+                                               "; border-color: ", config$colors$accent)
                                 ),
                      style = paste0("background: ",config$colors$tan25))),
     column(width = 2, align = "right", uiOutput("logo"))
@@ -28,7 +28,7 @@ ui <- bootstrapPage(
                style = paste0("background: ",config$colors$grey25)),
              actionButton("data_read_more", 
                           label = lang_cfg$titles$data_read_more,
-                          style = paste0("color: ", config$colors$purple100,
+                          style = paste0("color: ", config$colors$accent,
                                          "; background-color: ", config$colors$white100,
                                          "; border-color: ", config$colors$white100)),
              column(width = 12,
@@ -52,8 +52,8 @@ ui <- bootstrapPage(
                                         label = lang_cfg$titles$radar_read_more,
                                         size = "sm",
                                         style = paste0("color: ", config$colors$white100,
-                                                       "; background-color: ", config$colors$purple100,
-                                                       "; border-color: ", config$colors$purple100)))),
+                                                       "; background-color: ", config$colors$accent,
+                                                       "; border-color: ", config$colors$accent)))),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%") %>%
