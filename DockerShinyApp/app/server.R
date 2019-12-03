@@ -8,25 +8,22 @@ server <- function(input, output) {
   options(DT.options = list(dom = "t", ordering = F))
   
   # landing page ---------------------------------------------------------------
-  start <- 1
+  landing_page <- modalDialog(id = "landing_page",
+                              fluidRow(
+                                wellPanel(h1(lang_cfg$welcome), 
+                                          h4(HTML(lang_cfg$intro)),
+                                          style = paste0("background: ",config$colors$tan25))),
+                              size = "l",
+                              footer = modalButton("Go to app")
+  )
+  
   observeEvent(ignoreNULL = FALSE, eventExpr = start, {
     # event will be called when start changes, which only happens once, when it is initially calculated
-    showModal(modalDialog(id = "landing_page",
-                          title = "Landing Page",
-                          h1('Landing Page'),
-                          p('Theoretically you can put whatever content you want in here'),
-                          size = "l"
-    ))
+    showModal(landing_page)
   })
   
-  observeEvent(input$method_read_more, {
-    # event will be called when start changes, which only happens once, when it is initially calculated
-    showModal(modalDialog(id = "landing_page",
-                          title = "Landing Page",
-                          h1('Landing Page'),
-                          p('Theoretically you can put whatever content you want in here'),
-                          size = "l"
-    ))
+  observeEvent(input$landing_page_bttn, {
+    showModal(landing_page)
   })
   
 
@@ -118,15 +115,15 @@ server <- function(input, output) {
   })
   
   ## methodology modal dialogue ------------------------------------------------
- # observeEvent(input$method_read_more, {
- #   showModal(modalDialog(
- #     title = lang_cfg$titles$method_modal,
- #     HTML(lang_cfg$method),
- #     size = "l",
- #     footer = modalButton("Close"),
- #     easyClose = T
- #   ))
- # })
+  observeEvent(input$method_read_more, {
+    showModal(modalDialog(
+      title = lang_cfg$titles$method_modal,
+      HTML(lang_cfg$method),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
   
   ## data sources modal dialogue -----------------------------------------------
   observeEvent(input$data_read_more, {

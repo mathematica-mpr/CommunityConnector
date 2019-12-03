@@ -1,8 +1,12 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
   theme = "style.css",
+
   fluidRow(
-    column(width = 2, align = "left"),
+    column(width = 2, align = "left",
+           actionBttn("landing_page_bttn",
+                      label = icon("home", lib = "font-awesome"),
+                      style = "pill")),
     column(width = 8, align = 'center',
            wellPanel(h1(lang_cfg$welcome), 
                      h4(HTML(lang_cfg$intro)),
