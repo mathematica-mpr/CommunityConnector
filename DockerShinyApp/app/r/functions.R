@@ -82,7 +82,9 @@ find_my_matches <- function(my_county, df, n_matches = 20) {
   my_county_distances <- dist_mat %>% 
     select(distance =  my_county) %>%
     rownames_to_column("fips") %>%
-    left_join(df %>% select(fips, county, state), by = "fips")
+    left_join(df %>% select(fips, county, state), by = "fips") %>% 
+    mutate(rounded_distance = round(distance*2)/2) %>% 
+    left_join(color_mapping, by = "rounded_distance")
   
   my_matches <-  my_county_distances %>%
     filter(fips != my_county) %>%
