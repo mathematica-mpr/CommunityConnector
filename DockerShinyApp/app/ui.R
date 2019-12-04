@@ -44,6 +44,8 @@ ui <- bootstrapPage(
                           column(width = 12, align = "center",
                                  wellPanel(h1(lang_cfg$welcome), 
                                            h4(HTML(lang_cfg$intro)),
+                                           actionButton(inputId = "fromlandingtoapp", label = "Go to app",
+                                                        class = "btn-primary btn-lg green-button"),
                                            style = paste0("background: ",config$colors$tan25)))
                         ),
                         fluidRow(
@@ -79,11 +81,7 @@ ui <- bootstrapPage(
                                  HTML('<img src="density_instr.png" width="70%" max-width="10px">'),
                                  br(),
                                  HTML(lang_cfg$landing$density_instr))
-                        ),
-                        fluidRow(
-                          column(width = 12, align = "center",
-                                 actionButton(inputId = "fromlandingtoapp", label = "Go to app",
-                                              class = "btn-primary btn-lg green-button")))
+                        )
                       )
                       
              ),
