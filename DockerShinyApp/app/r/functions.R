@@ -164,7 +164,7 @@ radar_chart <- function(df, dictionary) {
         bgcolor = paste0(config$colors$red50),
         namelength = -1
       ),
-      margin = list(t=70),
+      #margin = list(t=70),
       showlegend = T,
       dragmode = F
     )
