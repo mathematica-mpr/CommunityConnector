@@ -8,7 +8,7 @@ ui <- bootstrapPage(
   navbarPage(useShinyjs(), id = 'parenttabs', 
              position = 'fixed-top',
              selected = "landing",
-             title = "Community Connector",
+             title = span("Community Connector", style = "color: #000000"),
              # landing page --------------------------------------------------------------------------------------------
              tabPanel(icon("info-circle", lib = "font-awesome"), value = "landing",
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
