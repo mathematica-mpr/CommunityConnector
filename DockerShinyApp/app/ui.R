@@ -28,7 +28,7 @@ ui <- bootstrapPage(
                           label = lang_cfg$titles$data_read_more,
                           style = paste0("color: ", config$colors$accent,
                                          "; background-color: ", config$colors$white100,
-                                         "; border-color: ", config$colors$white100)),
+                                         "; border-color: ", config$colors$accent)),
              column(width = 12,
                     uiOutput("health_plans_url"),
                     uiOutput("diab_prev_prog")
