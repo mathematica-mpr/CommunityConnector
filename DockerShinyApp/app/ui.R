@@ -61,10 +61,11 @@ ui <- bootstrapPage(
              column(width = 6,
                     tabsetPanel(type = 'pills', id = "tabs",
                                 tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
-                                         fluidRow(
-                                           column(width = 12, h1(" "))
-                                         ),
+                                         # fluidRow(
+                                         #   column(width = 12, h1(" "))
+                                         # ),
                                          fluidRow(column(width = 12, 
+                                                         h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                          uiOutput('demo_tables_header'),
                                                          uiOutput('demo_tables')
                                                         

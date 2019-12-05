@@ -12,6 +12,7 @@ titles:
   data_source_modal: "Data Sources"
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
+  sdoh_table_title: "Which Factors Make Up Each Social Determinant of Health Score?"
   density_y_axis: "Frequency of Counties"
 intro: "Examine how your county compares to others in terms of social needs and health outcomes, and explore possible intervention areas that may improve health outcomes."
 browser: "This website works best in a Google Chrome browser."
