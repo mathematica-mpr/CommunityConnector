@@ -40,9 +40,6 @@ ui <- bootstrapPage(
                       column(width = 12, h1(" "))
                     ), 
                     fluidRow(
-                      column(width = 12, h1(" "))
-                    ),
-                    fluidRow(
                       column(width = 12, align = "center", htmlOutput("my_county_header"))),
                     fluidRow(
                       column(width = 12, align = "center",
@@ -51,7 +48,11 @@ ui <- bootstrapPage(
                                         size = "sm",
                                         style = paste0("color: ", config$colors$accent,
                                                        "; background-color: ", config$colors$white100,
-                                                       "; border-color: ", config$colors$accent)))),
+                                                       "; border-color: ", config$colors$accent))),
+                      br(),
+                      br(),
+                      br()
+                      ),
                     fluidRow(
                       column(width = 12, plotlyOutput("my_county_radar",
                                                       height = "80%") %>%
