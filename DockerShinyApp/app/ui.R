@@ -45,7 +45,8 @@ ui <- bootstrapPage(
                                  wellPanel(h1(lang_cfg$welcome), 
                                            h4(HTML(lang_cfg$intro)),
                                            actionButton(inputId = "fromlandingtoapp", label = "Go to app",
-                                                        class = "btn-primary btn-lg green-button"),
+                                                        class = "btn-primary btn-lg green-button",
+                                                        width = '30%'),
                                            style = paste0("background: ",config$colors$tan25)))
                         ),
                         fluidRow(
