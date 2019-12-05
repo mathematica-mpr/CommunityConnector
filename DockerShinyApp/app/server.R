@@ -183,6 +183,16 @@ server <- function(input, output, session) {
     ))
   })
   
+  ## radar chart description modal dialogue ------------------------------------
+  observeEvent(input$density_read_more, {
+    showModal(modalDialog(
+      HTML('<center><img src="density_read_more.jpg" width="100%" max-width="900px"></center>'),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
   ## local public health plans url ---------------------------------------------
   output$health_plans_url <- renderUI({
     tagList(a(lang_cfg$titles$health_plans, 
@@ -390,15 +400,22 @@ server <- function(input, output, session) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, checkboxGroupInput('outcome_filter', label = 'Filter by health conditions:', 
-                           choices = c('Diabetes' = 'diab',  
-                                       'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obes'),
-                           selected = c('diab', 'kidney', 'obes')
-                           )
+        column(width = 6, 
+               checkboxGroupInput('outcome_filter', label = 'Filter by health conditions:', 
+                                  choices = c('Diabetes' = 'diab',  
+                                              'Kidney Disease' = 'kidney',
+                                              'Obesity' = 'obes'),
+                                  selected = c('diab', 'kidney', 'obes')
+               )
         ),
-        column(width = 6, checkboxInput(inputId = 'show_matches', 
-                                        label = 'Compare to my most similar counties'),
+        column(width = 6, 
+               checkboxInput(inputId = 'show_matches', 
+                             label = 'Compare to my most similar counties'),
+               actionButton("density_read_more", 
+                            label = lang_cfg$titles$density_read_more,
+                            style = paste0("color: ", config$colors$accent,
+                                           "; background-color: ", config$colors$white100,
+                                           "; border-color: ", config$colors$accent)),
                value = F)))
   })
   

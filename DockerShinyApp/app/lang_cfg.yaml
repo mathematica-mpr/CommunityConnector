@@ -9,6 +9,7 @@ titles:
   method_read_more: "Read more about the methodology"
   method_modal: "Methodology"
   data_read_more: "Read more about the data sources"
+  density_read_more: "Interpreting the density plots"
   data_source_modal: "Data Sources"
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
@@ -22,7 +23,6 @@ landing:
   comp_county_instr: 'Under the "My Most Similar Counties" tab, explore which counties are most similar to your county based on a machine learning algorithm.'
   radar_overlay_instr: "Compare your social needs to that of another county."
   density_instr: 'Under the "Health Outcomes" tab, compare your county’s health outcome rates to those in counties most similar to yours. </br> A) Filter the outcomes you would like to see. </br> B) Toggle between views of outcome rates.'
-density_howto: "A density plot visualizes the distribution of data (in this case, the health outcomes across counties). The chart is essentially a smoothed histogram. The peaks of a density plot show where the health outcome value is most frequent across counties."
 method: "Under development (method)"
 my_matches_tab: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
 my_matches: "These are the social determinants of health of 20 counties in your state that are most similar to yours in terms of demographics and social needs, as identified by a machine learning algorithm."
