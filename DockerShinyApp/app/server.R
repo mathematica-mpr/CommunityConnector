@@ -203,7 +203,7 @@ server <- function(input, output) {
     tagList(
       fluidRow(
         column(width = 12, 
-               checkboxGroupInput('demo_filter', label = 'Add or filter by demographic categories:', 
+               checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
