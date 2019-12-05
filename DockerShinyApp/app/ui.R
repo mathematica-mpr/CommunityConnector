@@ -32,7 +32,9 @@ ui <- bootstrapPage(
                                                 "; background-color: ", config$colors$white100,
                                                 "; border-color: ", config$colors$accent))),
              column(width = 12,
-                    align = 'left',
+                    align = 'center',
+                    br(),
+                    #br(),
                     h4(lang_cfg$titles$links),
                     uiOutput("health_plans_url"),
                     uiOutput("diab_prev_prog")
