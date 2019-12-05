@@ -16,6 +16,7 @@ RUN R -e "devtools::install_version('plotly', version = '4.9.0', repos='http://c
 RUN R -e "devtools::install_version('shinyBS', repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('aws.signature', 'aws.ec2metadata', 'aws.s3'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages(c('shinycssloaders'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('shinyjs'), repos='http://cran.rstudio.com/')"
 
 
 EXPOSE 8787
