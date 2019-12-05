@@ -15,7 +15,6 @@ titles:
   density_y_axis: "Frequency of Counties"
 intro: "Examine how your county compares with others in terms of social needs and health outcomes, and explore possible intervention areas that might improve health outcomes."
 browser: "This website works best in a Google Chrome browser."
-density_howto: "A density plot visualizes the distribution of data (in this case, the health outcomes across counties). The chart is essentially a smoothed histogram. The peaks of a density plot show where the health outcome value is most frequent across counties."
 method: "Under development (method)"
 my_matches_tab: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of demographics and social needs that impact obesity, as identified by a machine learning algorithm."
 my_matches: "These are the social determinants of health of 20 counties in your state that are most similar to yours in terms of demographics and social needs that impact obesity, as identified by a machine learning algorithm."
