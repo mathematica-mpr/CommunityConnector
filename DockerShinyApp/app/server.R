@@ -1,10 +1,5 @@
 server <- function(input, output, session) {
   
-  # mathematica logo
-  output$logo <- renderUI({
-    img(src='logo.png', height = '50px')
-  })
-  
   options(DT.options = list(dom = "t", ordering = F))
   
   # hide tabs ------------------------------------------------------------------
