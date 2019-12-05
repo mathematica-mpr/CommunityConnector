@@ -46,7 +46,7 @@ ui <- bootstrapPage(
                                            h4(HTML(lang_cfg$intro)),
                                            actionButton(inputId = "fromlandingtoapp", label = "Go to app",
                                                         class = "btn-primary btn-lg green-button",
-                                                        width = '30%'),
+                                                        width = '100%'),
                                            style = paste0("background: ",config$colors$tan25)))
                         ),
                         fluidRow(
@@ -82,6 +82,14 @@ ui <- bootstrapPage(
                                  HTML('<img src="density_instr.png" width="70%" max-width="10px">'),
                                  br(),
                                  HTML(lang_cfg$landing$density_instr))
+                        ),
+                        br(),
+                        # go to app button at bottom
+                        fluidRow(
+                          column(width = 12, align = "center",
+                                 actionButton(inputId = "fromlandingtoapp2", label = "Go to app",
+                                              class = "btn-primary btn-lg green-button",
+                                              width = '100%'))
                         )
                       )
                       

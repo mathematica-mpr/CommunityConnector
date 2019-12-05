@@ -12,6 +12,10 @@ server <- function(input, output, session) {
     updateTabsetPanel(session, "parenttabs",
                       selected = "main_page")
   })
+  observeEvent(input$fromlandingtoapp2, {
+    updateTabsetPanel(session, "parenttabs",
+                      selected = "main_page")
+  })
 
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
