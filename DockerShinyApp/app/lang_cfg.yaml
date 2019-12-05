@@ -10,6 +10,7 @@ titles:
   data_read_more: "Read more about the data sources"
   density_read_more: "Interpreting the density plots"
   data_source_modal: "Data sources"
+  external_links: "<b>Additional resources:</b>"
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
   density_y_axis: "Frequency of Counties"

@@ -123,6 +123,7 @@ ui <- bootstrapPage(
                                  br(),
                                  br(),
                                  column(width = 12,
+                                        HTML(lang_cfg$titles$external_links),
                                         uiOutput("health_plans_url"),
                                         uiOutput("diab_prev_prog")
                                  )
