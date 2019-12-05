@@ -1,7 +1,9 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
   theme = "style.css",
-  navbarPage(useShinyjs(), id = 'parenttabs', position = 'static-top',
+  tags$head(tags$style(HTML(type="text/css", "body {padding-top: 70px;}"))),
+  navbarPage(useShinyjs(), id = 'parenttabs', 
+             position = 'fixed-top',
              # landing page --------------------------------------------------------------------------------------------
              tabPanel(icon("info-circle", lib = "font-awesome"),
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
