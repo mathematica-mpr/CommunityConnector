@@ -3,7 +3,7 @@ ui <- bootstrapPage(
   theme = "style.css",
   navbarPage(useShinyjs(), id = 'parenttabs', position = 'static-top',
              # landing page --------------------------------------------------------------------------------------------
-             tabPanel(icon("home", lib = "font-awesome"),
+             tabPanel(icon("info-circle", lib = "font-awesome"),
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
                                                                                        .navbar-default .navbar-nav>li>a{
                                                                                        color: #046B5C;
