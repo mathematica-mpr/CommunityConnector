@@ -932,6 +932,7 @@ density_plot_overlay <- function(data, comparedata) {
     
   return(p %>% config(displaylogo = FALSE,
                       modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")) )
 }
 
@@ -1117,7 +1118,8 @@ density_plot <- function(data, comparedata) {
   }
   
   return(p %>% config(displaylogo = FALSE,
-                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d",  
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
