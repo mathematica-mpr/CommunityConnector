@@ -1,7 +1,10 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
   theme = "style.css",
-  tags$head(tags$style(HTML(type="text/css", "body {padding-top: 70px;}"))),
+  # padding such that nav bar does not cover body 
+  tags$head(tags$style(HTML("body {padding-top: 70px;}"))),
+  # hack to hide ghost first tab that appears when include title 
+  tags$head(tags$style(HTML('#parenttabs > li:first-child { display: none; }'))),
   navbarPage(useShinyjs(), id = 'parenttabs', 
              position = 'fixed-top',
              selected = "landing",
