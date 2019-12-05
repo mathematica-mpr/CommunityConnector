@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 options = Options()
-options.add_argument('--headless')
+# options.add_argument('--headless')
 # options to try to improve performance
 options.add_argument("--proxy-server='direct://'")
 options.add_argument("--proxy-bypass-list=*")
@@ -49,6 +49,13 @@ data['hosp_pp_rate'] = data['f0886817']
 data['adm_pp_rate'] = data['f0890917']
 data['kidn_hosp_pp_rate'] = data['f1407817']
 # create a variable equal to Total MDs (F11072) + DOs (F14717) in general practice conducting patient care/ total population (F11984)
+
+# MDS:  F12129-17 
+# DOs:  F13882-17 
+# compare with PCPs = primary care provider/physician
+# 
+
+# general practice
 data['mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
 # number of short term general hospitals (F08869) per total population
 data['short_hosp_pp_rate'] = data['f0886917']
@@ -78,12 +85,14 @@ print(new_cols)
 sum_cols = [c for c in new_cols if 'pp_rate' in c]
 sum_cols.append('population')
 mean_cols = list(set(new_cols) - set(sum_cols))
+print("Columns to be summed:")
 print(sum_cols)
+print("Columns to be averaged:")
 print(mean_cols)
 
 grouped_sum = data.groupby(['FIPS']).sum()[sum_cols]
 # TODO: could be a weighted mean to be more accurate
-grouped_mean = data.groupby(['FIPS']).sum()[mean_cols]
+grouped_mean = data.groupby(['FIPS']).mean()[mean_cols]
 
 # then merge them back together
 grouped = pd.merge(grouped_sum, grouped_mean, on = 'FIPS')
