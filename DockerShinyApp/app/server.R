@@ -169,7 +169,7 @@ server <- function(input, output, session) {
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
-      HTML('<center><img src="fingerprint_read_more.jpg" width="100%" max-width="900px"></center>'),
+      HTML('<center><img src="fingerprint_read_more.jpg" width="100%"></center>'),
       br(),
       actionButton("method_read_more_in_radar", 
                    label = lang_cfg$titles$method_read_more,

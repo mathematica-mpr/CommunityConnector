@@ -1,11 +1,16 @@
 # Define UI for app that draws a histogram ----
 ui <- bootstrapPage(
   theme = "style.css",
-  tags$head(tags$style(HTML(type="text/css", "body {padding-top: 70px;}"))),
+  # padding such that nav bar does not cover body 
+  tags$head(tags$style(HTML("body {padding-top: 70px;}"))),
+  # hack to hide ghost first tab that appears when include title 
+  tags$head(tags$style(HTML('#parenttabs > li:first-child { display: none; }'))),
   navbarPage(useShinyjs(), id = 'parenttabs', 
              position = 'fixed-top',
+             selected = "landing",
+             title = span("Community Connector", style = "color: #000000"),
              # landing page --------------------------------------------------------------------------------------------
-             tabPanel(icon("info-circle", lib = "font-awesome"),
+             tabPanel(icon("info-circle", lib = "font-awesome"), value = "landing",
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
                                                                                        .navbar-default .navbar-nav>li>a{
                                                                                        color: #046B5C;
@@ -58,33 +63,7 @@ ui <- bootstrapPage(
                         ),
                         # upper row
                         fluidRow(
-                          column(width = 4, align = "center",
-                                 HTML('<img src="get_started_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$get_started_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="my_county_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$my_county_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="demo_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$demo_instr))
-                        ),
-                        # bottom row
-                        fluidRow(
-                          column(width = 4, align = "center",
-                                 HTML('<img src="comp_county_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$comp_county_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="radar_overlay_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$radar_overlay_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="density_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$density_instr))
+                          HTML('<center><img style=\"min-width:900px;\" src="landing_page.jpg" width= "75%"></center>')
                         ),
                         br(),
                         # go to app button at bottom
