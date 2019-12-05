@@ -6,13 +6,13 @@ ui <- bootstrapPage(
              tabPanel(icon("home", lib = "font-awesome"),
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
                                                                                        .navbar-default .navbar-nav>li>a{
-                                                                                       color: #000000;
+                                                                                       color: #046B5C;
                                                                                        font-size:24px;
                                                                                        font-weight:600;}
 
                                                                                        .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus,
                                                                                        .navbar-default .navbar-nav>li>a:focus{
-                                                                                       color: #000000;
+                                                                                       color: #046B5C;
                                                                                        background-color: #f7f4ec;
                                                                                        font-size:24px;
                                                                                        font-weight:600
