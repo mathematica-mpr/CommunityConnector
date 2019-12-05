@@ -88,14 +88,22 @@ server <- function(input, output, session) {
   })
   
   ## methodology modal dialogue ------------------------------------------------
+  methodology_modal <- modalDialog(
+    title = lang_cfg$titles$method_modal,
+    HTML(lang_cfg$method),
+    size = "l",
+    footer = modalButton("Close"),
+    easyClose = T
+  )
+  
+  # modal based on button in main page
   observeEvent(input$method_read_more, {
-    showModal(modalDialog(
-      title = lang_cfg$titles$method_modal,
-      HTML(lang_cfg$method),
-      size = "l",
-      footer = modalButton("Close"),
-      easyClose = T
-    ))
+    showModal(methodology_modal)
+  })
+  
+  # modal based on button in radar modal
+  observeEvent(input$method_read_more_in_radar, {
+    showModal(methodology_modal)
   })
   
   ## data sources modal dialogue -----------------------------------------------
@@ -163,6 +171,12 @@ server <- function(input, output, session) {
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
       HTML('<center><img src="fingerprint_read_more.jpg" width="100%" max-width="900px"></center>'),
+      br(),
+      actionButton("method_read_more_in_radar", 
+                   label = lang_cfg$titles$method_read_more,
+                   style = paste0("color: ", config$colors$accent,
+                                  "; background-color: ", config$colors$white100,
+                                  "; border-color: ", config$colors$accent)),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
