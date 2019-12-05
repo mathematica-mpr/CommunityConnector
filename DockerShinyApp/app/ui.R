@@ -2,6 +2,7 @@
 ui <- bootstrapPage(
   theme = "style.css",
   navbarPage(useShinyjs(), id = 'parenttabs', position = 'static-top',
+             # landing page --------------------------------------------------------------------------------------------
              tabPanel(icon("home", lib = "font-awesome"),
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
                                                                                        .navbar-default .navbar-nav>li>a{
@@ -94,6 +95,7 @@ ui <- bootstrapPage(
                       )
                       
              ),
+             # main page with tool --------------------------------------------------------------------------------------------------
              tabPanel("Main Page", value = "main_page",
                       fluidPage(
                         fluidRow(
