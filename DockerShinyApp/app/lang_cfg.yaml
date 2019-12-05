@@ -1,6 +1,5 @@
 welcome: "Welcome to the Community Connector!"
 titles:
-  county_selection_type: '1. Search for my county by:'
   county_selection: '1. Select my county:'
   comparison_county_selection: "2. Select comparison county*:"
   comparison_county_footnote: "*sorted by similarity to my county"
@@ -9,13 +8,22 @@ titles:
   method_read_more: "Read more about the methodology"
   method_modal: "Methodology"
   data_read_more: "Read more about the data sources"
+  density_read_more: "Interpreting the density plots"
   data_source_modal: "Data sources"
+  external_links: "<b>Additional resources:</b>"
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
   density_y_axis: "Frequency of Counties"
   links: "Additional Information"
 intro: "Examine how your county compares with others in terms of social needs and health outcomes, and explore possible intervention areas that might improve health outcomes."
-browser: "This website works best in a Google Chrome browser."
+landing: 
+  browser: '<i class="fa fa-exclamation-triangle" style="color:#17A673"></i>This website is most compatible with Google Chrome, but can also work on other web browsers'
+  get_started_instr: 'Start by selecting your county by typing the county name or selecting it from the drop down menu under "1. Select my county:".'
+  my_county_instr: "View your county’s social needs through our six social determinants of health scores."
+  demo_instr: 'Under the "Demographics" tab, see which variables were used to create the scores. </br> A) Filter and select the categories of variables you would like to see.'
+  comp_county_instr: 'Under the "My Most Similar Counties" tab, explore which counties are most similar to your county based on a machine learning algorithm.'
+  radar_overlay_instr: "Compare your social needs to that of another county."
+  density_instr: 'Under the "Health Outcomes" tab, compare your county’s health outcome rates to those in counties most similar to yours. </br> A) Filter the outcomes you would like to see. </br> B) Toggle between views of outcome rates.'
 method: "Under development (method)"
 my_matches_tab: "This tab displays the radar charts of 20 counties in your state that are most similar to yours in terms of non-modifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm."
 my_matches: "These are the social determinants of health of 20 counties in your state that are most similar to yours in terms of non-modifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm."
