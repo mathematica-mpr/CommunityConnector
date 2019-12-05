@@ -1,4 +1,4 @@
-welcome: "Welcome to the Community Connector App!"
+welcome: "Welcome to the Community Connector!"
 titles:
   county_selection: '1. Select my county:'
   comparison_county_selection: "2. Select comparison county*:"
