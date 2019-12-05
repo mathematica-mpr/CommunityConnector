@@ -13,6 +13,7 @@ titles:
   health_plans: "Explore public health plans"
   diab_prev_prog: "Explore diabetes prevention programs"
   density_y_axis: "Frequency of Counties"
+  links: "Additional Information"
 intro: "Examine how your county compares with others in terms of social needs and health outcomes, and explore possible intervention areas that might improve health outcomes."
 browser: "This website works best in a Google Chrome browser."
 method: "Under development (method)"
