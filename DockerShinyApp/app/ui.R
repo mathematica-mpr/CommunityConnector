@@ -63,33 +63,7 @@ ui <- bootstrapPage(
                         ),
                         # upper row
                         fluidRow(
-                          column(width = 4, align = "center",
-                                 HTML('<img src="get_started_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$get_started_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="my_county_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$my_county_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="demo_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$demo_instr))
-                        ),
-                        # bottom row
-                        fluidRow(
-                          column(width = 4, align = "center",
-                                 HTML('<img src="comp_county_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$comp_county_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="radar_overlay_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$radar_overlay_instr)),
-                          column(width = 4, align = "center",
-                                 HTML('<img src="density_instr.png" width="70%" max-width="10px">'),
-                                 br(),
-                                 HTML(lang_cfg$landing$density_instr))
+                          HTML('<center><img style=\"min-width:900px;\" src="landing_page.jpg" width= "75%"></center>')
                         ),
                         br(),
                         # go to app button at bottom
