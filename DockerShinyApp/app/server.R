@@ -199,7 +199,7 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 12, 
+        column(width = 6, 
                checkboxGroupInput('demo_filter', label = 'Add or filter by demographic categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
