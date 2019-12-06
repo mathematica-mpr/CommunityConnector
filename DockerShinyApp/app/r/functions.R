@@ -127,12 +127,12 @@ radar_chart <- function(df, dictionary) {
       fill = 'toself',
       fillcolor = paste0(config$colors$yellow50, "CC"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$red100), 
+                  color = paste0(config$colors$yellow100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$red100),
+                    color = paste0(config$colors$yellow100),
                     opacity = 1),
       opacity = .9,
       hovertemplate = paste("<b>%{theta} Score:</b>", 
@@ -161,7 +161,7 @@ radar_chart <- function(df, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$red50),
+        bgcolor = paste0(config$colors$yellow50),
         namelength = -1
       ),
       margin = list(t=70),
@@ -201,14 +201,14 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       r = radar_points2,
       theta = radar_names,
       fill = "toself",
-      fillcolor = paste0(config$colors$teal100, "70"),
+      fillcolor = paste0(config$colors$green100, "70"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$teal100), 
+                  color = paste0(config$colors$green100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$teal100),
+                    color = paste0(config$colors$green100),
                     opacity = 1),
       #opacity = .6,
       hoverinfo = 'none',
@@ -223,12 +223,12 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       fill = 'toself',
       fillcolor = paste0(config$colors$yellow50, "CC"),
       line = list(dash = "solid", 
-                  color = paste0(config$colors$red100), 
+                  color = paste0(config$colors$yellow100), 
                   width = .8, 
                   shape = 'spline', 
                   smoothing = .9),
       marker = list(size = 7,
-                    color = paste0(config$colors$red100),
+                    color = paste0(config$colors$yellow100),
                     opacity = 1),
       opacity = .9,
       #hover label
@@ -256,7 +256,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$red50)
+        bgcolor = paste0(config$colors$yellow50)
       ),
       showlegend = T,
       dragmode = F
