@@ -823,7 +823,7 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$purple100)
+            color = paste0(config$colors$accent)
           ),
           xref = 'paper',
           x = '0'
@@ -886,7 +886,7 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$purple100)
+            color = paste0(config$colors$accent)
           ),
           xref = 'paper',
           x = '0'
@@ -1009,7 +1009,7 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$purple100)
+            color = paste0(config$colors$accent)
           ),
           xref = 'paper',
           x = '0'
@@ -1072,7 +1072,7 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$purple100)
+            color = paste0(config$colors$accent)
           ),
           xref = 'paper',
           x = '0'

@@ -17,6 +17,7 @@ RUN apt update \
     && R -e "devtools::install_version('shinyBS', repos='http://cran.rstudio.com/')" \
     && R -e "install.packages(c('aws.signature', 'aws.ec2metadata', 'aws.s3'), repos = c(cloudyr = 'http://cloudyr.github.io/drat', getOption('repos')))" \
     && R -e "install.packages(c('shinycssloaders'), repos='http://cran.rstudio.com/')"
+    && R -e "install.packages(c('shinyjs'), repos='http://cran.rstudio.com/')"
 
 RUN printf 'run_as shiny;\n\
 server {\n\

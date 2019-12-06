@@ -20,6 +20,7 @@ library(shinycssloaders, quietly = TRUE, warn.conflicts = FALSE)
 library(aws.signature)
 library(aws.ec2metadata)
 library(aws.s3)
+library(shinyjs, quietly = TRUE, warn.conflicts = FALSE)
 
 # setting aws profile for credentials
 if (!is_ec2() & !is_ecs()) {
