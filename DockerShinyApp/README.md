@@ -14,11 +14,27 @@ PASSWORD=mystrongpassword
 
 ## Deployment
 To create an image ready for hosting the app
-1. Build the image
-```
-docker build -f web.Dockerfile -t community-connector .
-```
-2. Push to the approprtiate remote. If using Amazon ECR, instructions can be
-found on the dashboard.
+1. Build the image. If you need to add commands to to the Dockerfile, be sure to
+add `\` at the end of multiline commands.
 
-3. TODO
+Also, make sure you're versioning your image. Pick a new version. Look at the repo
+in AWS and pick the next version up.
+
+```
+docker build -f web.Dockerfile -t community-connector:<version> .
+```
+2. Sign into the AWS DSE account, and ensure the CLI is fitted to use the DSE
+account.
+
+3. Push to the approprtiate remote repo. It is recommended to select another tag
+in addition to `latest`, however the application will pull that tag.
+```
+$(aws ecr get-login --no-include-email --region us-east-1)
+docker tag community_connector_app:<version> community_connector_app:latest
+
+docker tag community_connector_app:<version> 059577207107.dkr.ecr.us-east-1.amazonaws.com/community_connector_app:<version>
+dokcer push 059577207107.dkr.ecr.us-east-1.amazonaws.com/community_connector_app:<version>
+
+docker tag community_connector_app:latest 059577207107.dkr.ecr.us-east-1.amazonaws.com/community_connector_app:latest
+docker push 059577207107.dkr.ecr.us-east-1.amazonaws.com/community_connector_app:latest
+```
