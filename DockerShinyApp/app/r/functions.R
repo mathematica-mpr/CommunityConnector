@@ -823,7 +823,8 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -868,7 +869,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 13,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -886,7 +889,8 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -917,7 +921,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1010,7 +1016,8 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -1055,7 +1062,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1073,7 +1082,8 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -1104,7 +1114,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
