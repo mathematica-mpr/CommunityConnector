@@ -31,20 +31,22 @@ ui <- bootstrapPage(
                                                                                        background-color:#e0d4b5;
                                                                                        font-size:24px;
                                                                                        font-weight:600 }
+                                                                                       
                                                                                        .green-button {
                                                                                        background-color: #17A673;
                                                                                        color: #ffffff;
                                                                                        border-color: #ccc
                                                                                        }
 
-                                                                                       .green-button:hover, .green-button:focus, .green-button:visited, .green-button:focus-within{
+                                                                                       .green-button:hover, .green-button:active, .green-button:focus, .green-button:visited, .green-button:focus-within{
                                                                                        background-color: #046B5C;
                                                                                        color: #ffffff;
                                                                                        }
-
-                                                                                       .green-button:active{
-                                                                                       background-color: #17A673;
-                                                                                       color: #ffffff;
+                                                                                      
+                                                                                       .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+                                                                                        color: #fff;
+                                                                                        background-color: #046B5C;
+                                                                                        border-color: #046B5C;
                                                                                        }'))),
                       tags$script(HTML("var header = $('.navbar > .container-fluid');
                                              header.append('<div style=\"float:right\"><img src = logo.png height=50px></img></div>');"
