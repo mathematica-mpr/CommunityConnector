@@ -140,6 +140,16 @@ ui <- bootstrapPage(
                                                                column(width = 12, h1(" "))
                                                              ),
                                                              fluidRow(column(width = 12, 
+                                                                             #uiOutput('demo_tables_header'),
+                                                                             uiOutput('essentials_tables')
+                                                                             
+                                                             ))
+                                                    ),
+                                                    tabPanel(span("Social Determinants of Health", title = lang_cfg$sdoh_tab),
+                                                             fluidRow(
+                                                               column(width = 12, h1(" "))
+                                                             ),
+                                                             fluidRow(column(width = 12, 
                                                                              h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                                              uiOutput('demo_tables_header'),
                                                                              uiOutput('demo_tables')
