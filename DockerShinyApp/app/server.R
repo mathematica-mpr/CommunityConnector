@@ -146,10 +146,6 @@ server <- function(input, output, session) {
           href = "https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#",
           target = "_blank"),
         tags$br(),
-        a("Colorado Department of Public Health and Environment", 
-          href = "https://www.colorado.gov/pacific/cdphe/data",
-          target = "_blank"),
-        tags$br(),
         a("Healthcare Cost and Utilization Project (HCUP)", 
           href = "https://hcupnet.ahrq.gov",
           target = "_blank"),
@@ -237,8 +233,8 @@ server <- function(input, output, session) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, 
-               checkboxGroupInput('demo_filter', label = 'Add or filter by demographic categories:', 
+        column(width = 12, 
+               checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
