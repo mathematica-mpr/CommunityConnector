@@ -5,10 +5,12 @@ ui <- bootstrapPage(
   tags$head(tags$style(HTML("body {padding-top: 70px;}"))),
   # hack to hide ghost first tab that appears when include title 
   tags$head(tags$style(HTML('#parenttabs > li:first-child { display: none; }'))),
+  tags$head(tags$style(HTML('.navbar-default .navbar-brand {color: #000000;}'))),
+  tags$head(tags$style(HTML('.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {color: #000000;}'))),
   navbarPage(useShinyjs(), id = 'parenttabs', 
              position = 'fixed-top',
              selected = "landing",
-             title = span("Community Connector", style = "color: #000000"),
+             title = "Community Connector",
              # landing page --------------------------------------------------------------------------------------------
              tabPanel(icon("info-circle", lib = "font-awesome"), value = "landing",
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
