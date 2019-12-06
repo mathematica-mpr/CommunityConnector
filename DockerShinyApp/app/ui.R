@@ -132,17 +132,16 @@ ui <- bootstrapPage(
                                           ))),
                                  column(width = 6,
                                         tabsetPanel(type = 'pills', id = "tabs",
-                                                    tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
+                                                    tabPanel(span(HTML("<br/>Demographics<br/>"), title = lang_cfg$demographics_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
                                                              fluidRow(column(width = 12, 
-                                                                             #uiOutput('demo_tables_header'),
                                                                              uiOutput('essentials_tables')
                                                                              
                                                              ))
                                                     ),
-                                                    tabPanel(span("Social Determinants \n of Health", title = lang_cfg$sdoh_tab),
+                                                    tabPanel(span(HTML("Social Determinants<br/>of Health"), title = lang_cfg$sdoh_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -153,7 +152,7 @@ ui <- bootstrapPage(
                                                                              
                                                              ))
                                                     ),
-                                                    tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
+                                                    tabPanel(span(HTML("My Most Similar<br/>Counties*"), title = lang_cfg$my_matches_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -165,7 +164,7 @@ ui <- bootstrapPage(
                                                                            color = getOption("spinner.color", default = "#046B5C")),
                                                              br()
                                                     ),
-                                                    tabPanel(span("County Map", title = lang_cfg$map_tab),
+                                                    tabPanel(span(HTML("<br/>County Map<br/>"), title = lang_cfg$map_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -174,7 +173,7 @@ ui <- bootstrapPage(
                                                                                     color = getOption("spinner.color", default = "#046B5C"))
                                                              )
                                                     ),
-                                                    tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
+                                                    tabPanel(span(HTML("<br/>Health Outcomes<br/>"), title = lang_cfg$health_outcomes_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
