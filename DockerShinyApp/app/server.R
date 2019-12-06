@@ -334,24 +334,24 @@ server <- function(input, output, session) {
     # Remove selected county from consideration in popups, and plot separately
     selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
     selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
-      mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
-                       labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
-                       include.lowest = TRUE))
+      mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+      mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+      mutate_at(vars(quantile_distance), ~(. / 2))
     
     county_label <- sprintf(
-      "<strong>Comparison County:</strong> %s County (%s) <br/>
-      <strong>Similarity to %s County: </strong> %s <br/>",
-      selected_state_shp$NAME, selected_state_shp$GEOID,
-      selected_geo$NAME[1], selected_state_shp$cat
-    ) %>%
+      "<strong>Comparison County:</strong> %s <br/>
+      <strong>Selected County: </strong> %s <br/>",
+      selected_state_shp$NAME, selected_geo$NAME[1]
+      ) %>%
       lapply(htmltools::HTML)
     selected_county_label <- sprintf(
       "<strong>Selected County:</strong> %s (%s) <br/>",
       selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
       lapply(htmltools::HTML)
     
-    # Always 4 quantile breaks
-    color_pal <- colorFactor("magma", selected_state_shp$cat, na.color = "gray")
+    color_pal <- colorFactor(palette = color_mapping$hex_color,
+                             levels = color_mapping$rounded_distance,
+                             na.color = config$colors$grey50)
     
     leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
       setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
@@ -361,9 +361,10 @@ server <- function(input, output, session) {
                    lat2 = y_max) %>%
       addProviderTiles(providers$Stamen.TonerLite) %>%
       addPolygons(data = selected_state_shp,
-                  color = ~color_pal(selected_state_shp$cat),
+                  color = ~color_pal(selected_state_shp$quantile_distance),
                   weight = 1,
                   smoothFactor = 1,
+                  fillOpacity = 0.6,
                   label = county_label,
                   labelOptions = labelOptions(
                     style = list("font-weight" = "normal", padding = "3 px 8 px"),
@@ -372,11 +373,29 @@ server <- function(input, output, session) {
                   highlightOptions = highlightOptions(color = "black",
                                                       weight =  2,
                                                       bringToFront = TRUE)) %>%
-      addLegend(pal = color_pal, values = selected_state_shp$cat, position = "topright",
-                title = "Similarity to selected county") %>%
+      addLegend(colors = c(config$colors$yellow50),
+                labels = paste0("Selected County: ", selected_geo$NAME),
+                opacity = 0.6) %>%
+      addLegend(colors = c(color_mapping$hex_color[1],
+                           color_mapping$hex_color[34],
+                           color_mapping$hex_color[68],
+                           color_mapping$hex_color[101],
+                           color_mapping$hex_color[134],
+                           color_mapping$hex_color[168],
+                           color_mapping$hex_color[201]),
+                labels = c("Most similar",
+                           "",
+                           "",
+                           "",
+                           "",
+                           "",
+                           "Least similar"),
+                opacity = 0.6) %>%
       addPolygons(data = selected_geo,
+                  fillColor = config$colors$yellow50,
+                  stroke = TRUE,
                   color = "black",
-                  fillOpacity = 0.7,
+                  fillOpacity = 0.9,
                   weight = 2,
                   smoothFactor = 1,
                   label = selected_county_label,
@@ -385,7 +404,7 @@ server <- function(input, output, session) {
                     textsize = "15px",
                     direction = "auto"),
                   highlightOptions = highlightOptions(color = "black",
-                                                      weight =  2,
+                                                      weight =  4,
                                                       bringToFront = TRUE))
   })
   

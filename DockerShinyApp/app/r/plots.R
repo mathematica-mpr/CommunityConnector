@@ -48,26 +48,28 @@ y_max <- co_box[4]
 # Plot counties with proximity score
 # Remove selected county from consideration in popups, and plot separately
 selected_geo <- co %>% filter(GEOID == str_pad(county_fips, width = 5, side = "left", pad = "0"))
-co <- co %>% filter(GEOID != str_pad(county_fips, width = 5, side = "left", pad = "0"))
+
+co <- co %>% filter(GEOID != str_pad(county_fips, width = 5, side = "left", pad = "0")) %>%
+  # Generate percentile from distance
+  # Round to nearest 0.5 s.t. we can snap to color palette in global.R
+  mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+  mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+  mutate_at(vars(quantile_distance), ~(. / 2))
+
 county_label <- sprintf(
-  "<strong>Comparison County:</strong> %s County (%s) <br/>
-  <strong>Similarity to %s County:</strong> %s <br/>",
-  co$NAME, co$GEOID, selected_geo$NAME[1], co$cat
+  "<strong>Comparison County:</strong> %s <br/>
+  <strong>Selected County: </strong> %s <br/>",
+  co$NAME, selected_geo$NAME[1]
 ) %>%
   lapply(htmltools::HTML)
 selected_county_label <- sprintf(
   "<strong>Selected County:</strong> %s (%s) <br/>",
   selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
   lapply(htmltools::HTML)
-# Add labels for hospitals / overlap here
 
-# Always 4 quantile breaks
-co <- co %>%
-  mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
-    labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
-    include.lowest = TRUE))
-
-color_pal <- colorFactor("magma", co$cat, na.color = "gray")
+color_pal <- colorFactor(palette = color_mapping$hex_color,
+                         levels = color_mapping$rounded_distance,
+                         na.color = config$colors$grey50)
 
 map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
   setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
@@ -77,9 +79,10 @@ map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
                lat2 = y_max) %>%
   addProviderTiles(providers$Stamen.TonerLite) %>%
   addPolygons(data = co,
-              color = ~color_pal(co$cat),
+              color = ~color_pal(co$quantile_distance),
               weight = 1,
               smoothFactor = 1,
+              fillOpacity = 0.6,
               label = county_label,
               labelOptions = labelOptions(
                 style = list("font-weight" = "normal", padding = "3 px 8 px"),
@@ -88,11 +91,49 @@ map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
               highlightOptions = highlightOptions(color = "black",
                                                   weight =  2,
                                                   bringToFront = TRUE)) %>%
-  addLegend(pal = color_pal, values = co$cat, position = "topright",
-            title = "Similarity to selected county") %>%
+  # Hacky way to combine into one
+  # addLegend(colors = c(config$colors$yellow50,
+  #                      "#FFFFFF",
+  #                      "#189394",
+  #                      "#3CA4A5",
+  #                      "#64B6B7",
+  #                      "#8BC9C9",
+  #                      "#B0DADA",
+  #                      "#D7ECEC",
+  #                      "#FFFFFF"),
+  #           labels = c("Selected county",
+  #                      "",
+  #                      "Most similar",
+  #                      "",
+  #                      "",
+  #                      "",
+  #                      "",
+  #                      "",
+  #                      "Least similar"),
+  #           opacity = 0.6) %>%
+  addLegend(colors = c(config$colors$yellow50),
+            labels = paste0("Selected County: ", selected_geo$NAME),
+            opacity = 0.6) %>%
+  addLegend(colors = c(color_mapping$hex_color[1],
+                       color_mapping$hex_color[34],
+                       color_mapping$hex_color[68],
+                       color_mapping$hex_color[101],
+                       color_mapping$hex_color[134],
+                       color_mapping$hex_color[168],
+                       color_mapping$hex_color[201]),
+            labels = c("Most similar",
+                       "",
+                       "",
+                       "",
+                       "",
+                       "",
+                       "Least similar"),
+            opacity = 0.6) %>%
   addPolygons(data = selected_geo,
+              fillColor = config$colors$yellow50,
+              stroke = TRUE,
               color = "black",
-              fillOpacity = 0.7,
+              fillOpacity = 0.9,
               weight = 2,
               smoothFactor = 1,
               label = selected_county_label,
@@ -101,7 +142,7 @@ map <- leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
                 textsize = "15px",
                 direction = "auto"),
               highlightOptions = highlightOptions(color = "black",
-                                                  weight =  2,
+                                                  weight =  4,
                                                   bringToFront = TRUE))
 
 # single outcome density ----------------------------------
