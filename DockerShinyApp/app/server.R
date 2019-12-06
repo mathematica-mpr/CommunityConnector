@@ -270,6 +270,26 @@ server <- function(input, output, session) {
     )
   })
   
+  output$essentials_tables <- renderUI({
+    req(county_check())
+    req(input$comparison_county_selection)
+    #req(input$demo_filter)
+    
+    demo_tables_list <- lapply("demographic", function(x) 
+      tagList(
+        make_demo_dt(county_dat = county_dat(),
+                     comp_county_dat = comp_county_dat(),
+                     comp_county_select = input$comparison_county_selection,
+                     demo_select = x,
+                     dd = dd)
+      )
+    )
+    
+    tagList(
+      demo_tables_list
+    )
+  })
+  
   ## selected comparison county info -------------------------------------------
   output$select_comparison_county <- renderUI({
     req(my_matches())
