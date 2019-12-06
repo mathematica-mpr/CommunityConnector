@@ -20,10 +20,17 @@ library(shinycssloaders, quietly = TRUE, warn.conflicts = FALSE)
 library(aws.signature)
 library(aws.ec2metadata)
 library(aws.s3)
+library(shinyjs, quietly = TRUE, warn.conflicts = FALSE)
 
 # setting aws profile for credentials
 if (!is_ec2() & !is_ecs()) {
   use_credentials(profile = "ahrq")
+} else {
+  creds <- locate_credentials()
+  Sys.setenv("AWS_ACCESS_KEY_ID" = creds$key,
+           "AWS_SECRET_ACCESS_KEY" = creds$secret,
+           "AWS_DEFAULT_REGION" = creds$region,
+           "AWS_SESSION_TOKEN" = creds$session_token)
 }
 
 # read in config files
@@ -67,3 +74,10 @@ demo_cols <- dd %>%
 
 dat <- dat %>% 
   mutate_at(demo_cols, format_dat)
+
+# color gradient for similar counties
+max_distance <- max(dist_mat %>% 
+                      select(-sim_county))
+palette <- colorRampPalette(c(config$colors$yellow50, config$colors$teal100))
+color_mapping <- data.frame('rounded_distance' = seq(0, ceiling(max_distance), by = 0.5))
+color_mapping$hex_color <- palette(nrow(color_mapping))

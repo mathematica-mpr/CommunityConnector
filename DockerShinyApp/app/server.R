@@ -1,38 +1,36 @@
-server <- function(input, output) {
-  
-  # mathematica logo
-  output$logo <- renderUI({
-    img(src='logo.png', height = '50px')
-  })
+server <- function(input, output, session) {
   
   options(DT.options = list(dom = "t", ordering = F))
+  
+  # hide tabs ------------------------------------------------------------------
+  observe({
+    hide(selector = "#parenttabs li a[data-value=main_page]")
+  })
+  
+  # move around buttons --------------------------------------------------------
+  observeEvent(input$fromlandingtoapp, {
+    updateTabsetPanel(session, "parenttabs",
+                      selected = "main_page")
+  })
+  observeEvent(input$fromlandingtoapp2, {
+    updateTabsetPanel(session, "parenttabs",
+                      selected = "main_page")
+  })
 
   # error handling checks ------------------------------------------------------
   county_check <- reactive({
-    if (input$county_selection_type == "fips") {
-      gsub("^0", "", input$county_selection) %in% dat$fips
-    } else if (input$county_selection_type == "name") {
       input$county_selection %in% dat$county
-    }
   })
   
   # reactive values and data frames --------------------------------------------
   county_fips <- reactive({
     req(county_check())
-    if (input$county_selection_type == "fips") {
-      gsub("^0", "", input$county_selection)
-    } else if (input$county_selection_type == "name") {
-      dat %>% filter(county == input$county_selection) %>% pull(fips)
-    }
+    dat %>% filter(county == input$county_selection) %>% pull(fips)
   })
   
   county_name <- reactive({
     req(county_check())
-    if (input$county_selection_type == "name") {
       input$county_selection
-    } else if (input$county_selection_type == "fips") {
-      dat %>% filter(fips == gsub("^0", "", input$county_selection)) %>% pull(county)
-    }
   })
   
   county_state <- reactive({
@@ -83,26 +81,28 @@ server <- function(input, output) {
   
   # output ---------------------------------------------------------------------
   output$select_my_county <- renderUI({
-    req(input$county_selection_type)
-    
-    if (input$county_selection_type == "fips") {
-      choice_list <- sort(str_pad(dat$fips, width = 5, pad = "0"))
-    } else if (input$county_selection_type == "name") {
-      choice_list <- sort(dat$county)
-    }
+    choice_list <- sort(dat$county)
     selectizeInput('county_selection', label = lang_cfg$titles$county_selection,
                    choices = choice_list)
   })
   
   ## methodology modal dialogue ------------------------------------------------
+  methodology_modal <- modalDialog(
+    title = lang_cfg$titles$method_modal,
+    HTML(lang_cfg$method),
+    size = "l",
+    footer = modalButton("Close"),
+    easyClose = T
+  )
+  
+  # modal based on button in main page
   observeEvent(input$method_read_more, {
-    showModal(modalDialog(
-      title = lang_cfg$titles$method_modal,
-      HTML(lang_cfg$method),
-      size = "l",
-      footer = modalButton("Close"),
-      easyClose = T
-    ))
+    showModal(methodology_modal)
+  })
+  
+  # modal based on button in radar modal
+  observeEvent(input$method_read_more_in_radar, {
+    showModal(methodology_modal)
   })
   
   ## data sources modal dialogue -----------------------------------------------
@@ -131,8 +131,8 @@ server <- function(input, output) {
           href = "https://data.hrsa.gov/topics/health-workforce/ahrf",
           target = "_blank"),
         tags$br(),
-        a("Budget data link (WIP)", 
-          href = "",
+        a("Colorado Department of Public Health and Environment", 
+          href = "https://www.colorado.gov/pacific/cdphe/data",
           target = "_blank"),
         tags$br(),
         a("Walk Score", 
@@ -145,12 +145,9 @@ server <- function(input, output) {
         a("Centers for Disease Control and Prevention's (CDC) Diabetes Atlas", 
           href = "https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#",
           target = "_blank"),
-        a("Colorado Department of Public Health and Environment", 
-          href = "https://www.colorado.gov/pacific/cdphe/data",
-          target = "_blank"),
         tags$br(),
-        a("Healthcare Cost and Utilization Project (HCUP) link (WIP)", 
-          href = "",
+        a("Healthcare Cost and Utilization Project (HCUP)", 
+          href = "https://hcupnet.ahrq.gov",
           target = "_blank"),
         tags$br(),
         a("Centers for Medicare and Medicaid Services (CMS)", 
@@ -168,7 +165,23 @@ server <- function(input, output) {
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
-      HTML('<center><img src="radar_read_more.jpg" width="100%" max-width="900px"></center>'),
+      HTML('<center><img src="fingerprint_read_more.jpg" width="100%"></center>'),
+      br(),
+      actionButton("method_read_more_in_radar", 
+                   label = lang_cfg$titles$method_read_more,
+                   style = paste0("color: ", config$colors$accent,
+                                  "; background-color: ", config$colors$white100,
+                                  "; border-color: ", config$colors$accent)),
+      size = "l",
+      footer = modalButton("Close"),
+      easyClose = T
+    ))
+  })
+  
+  ## radar chart description modal dialogue ------------------------------------
+  observeEvent(input$density_read_more, {
+    showModal(modalDialog(
+      HTML('<center><img src="density_read_more.jpg" width="100%" max-width="900px"></center>'),
       size = "l",
       footer = modalButton("Close"),
       easyClose = T
@@ -188,7 +201,6 @@ server <- function(input, output) {
               href = " https://nccd.cdc.gov/DDT_DPRP/CitiesList.aspx?STATE=CO", 
               target = "_blank"))
   })
-  
   
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
@@ -221,7 +233,8 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 12, selectizeInput('demo_filter', label = 'Add or filter by demographic categories:', 
+        column(width = 12, 
+               checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
                                       choices = c(
                                                   'Essential Facts' = 'demographic',  
                                                   'Economic Stability' = 'used_sdoh_1',
@@ -230,7 +243,7 @@ server <- function(input, output) {
                                                   'Food' = 'used_sdoh_4',
                                                   'Community' = 'used_sdoh_5',
                                                   'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'), multiple = T)
+                                      selected = c('demographic'))
         ))
       )
   })
@@ -382,14 +395,22 @@ server <- function(input, output) {
     req(county_check())
     tagList(
       fluidRow(
-        column(width = 6, selectizeInput('outcome_filter', label = 'Add or filter by health conditions:', 
-                           choices = c('Diabetes' = 'diab',  
-                                       'Kidney Disease' = 'kidney',
-                                       'Obesity' = 'obes'),
-                           selected = c('diab', 'kidney', 'obes'), multiple = T)
+        column(width = 6, 
+               checkboxGroupInput('outcome_filter', label = 'Filter by health conditions:', 
+                                  choices = c('Diabetes' = 'diab',  
+                                              'Kidney Disease' = 'kidney',
+                                              'Obesity' = 'obes'),
+                                  selected = c('diab', 'kidney', 'obes')
+               )
         ),
-        column(width = 6, checkboxInput(inputId = 'show_matches', 
-                                        label = 'Compare to my most similar counties'),
+        column(width = 6, 
+               checkboxInput(inputId = 'show_matches', 
+                             label = 'Compare to my most similar counties'),
+               actionButton("density_read_more", 
+                            label = lang_cfg$titles$density_read_more,
+                            style = paste0("color: ", config$colors$accent,
+                                           "; background-color: ", config$colors$white100,
+                                           "; border-color: ", config$colors$accent)),
                value = F)))
   })
   

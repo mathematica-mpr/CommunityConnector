@@ -5,12 +5,11 @@ import requests
 import json
 import re
 import pandas as pd
-from IPython.display import display
-from IPython.display import Image
 
 #FIND THE codes
-file_path = 'N:/Transfer/KSkvoretz/AHRQ/data/01_Demographic/Walkability'
+file_path = 'data/raw/'
 
+# location files for mapping from zip code --> FIPS code
 uszips_path = file_path + 'uszips.csv'
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
 ZIP_COUNTY_FIPS_path = file_path + 'ZIP-COUNTY-FIPS_2017-06.csv'
@@ -31,17 +30,18 @@ ZIP_COUNTY_FIPS_df.columns = map(str.lower, ZIP_COUNTY_FIPS_df.columns)
 #selecting state == CO
 ZIP_COUNTY_FIPS_df = ZIP_COUNTY_FIPS_df.query('state == "CO"')
 
-#ACS
-def api_pull(variable):
+#ACS - using this to get population to find largest city within a fips code
+def api_pull(key, variable):
     url = f'https://api.census.gov/data/2017/acs/acs5?key={key}&get=NAME,group({variable})&for=tract:*&in=state:08'
+    print(url)
     response = requests.get(url)
     formattedResponse = json.loads(response.text)
     data = pd.DataFrame(formattedResponse)
     return data
 
-key = 'e2675475712b1694b49a734a05e1ece105f45be4'
+key = os.environ['ACS_KEY']
 variable = 'B01003'
-co = api_pull(variable)
+co = api_pull(key, variable)
 co = pd.DataFrame(co[1:])              
 co.columns = ["NAME","GEO_ID","B01003_001E","B01003_001M","NAME_2","B01003_001MA","B01003_001EA","state","county","tract"]
 
@@ -59,7 +59,7 @@ tract_county_pop = pd.merge(tract_county, census_pop_df, on = 'tract')
 largest_tract = tract_county_pop.sort_values('population', ascending=False).drop_duplicates(['stcountyfp'])
 largest_tract = pd.merge(largest_tract, uszips_df, on = 'zip')
 
-#Creating URLS 
+#Creating URLS to scrape from for each city
 fips_urls_df = largest_tract [['stcountyfp', 'city']]
 fips_urls_df.columns = ['fips', 'city']
 fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
@@ -68,7 +68,7 @@ fips_urls_df['urls'] = "https://www.walkscore.com/CO/"+ fips_urls_df['city']
 #URLS come from the top
 
 #OUTFILE
-out_scores_path= "N:/Transfer/KSkvoretz/AHRQ/data/03_Outcome/Walkscore/" + 'out_scores.csv'
+out_scores_path= "data/cleaned/02_SDoH/" + 'out_scores.csv'
 
 #this is the dictionary
 fips_scores = {}
@@ -121,5 +121,6 @@ for row in fips_urls_df.iterrows():
 
 #writing outfile
 df = pd.DataFrame(fips_scores).T
+df.sort_index(inplace = True)
 
-df.to_csv(out_scores)
+df.to_csv(out_scores_path)
