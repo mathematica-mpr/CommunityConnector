@@ -140,7 +140,7 @@ ui <- bootstrapPage(
                                                                column(width = 12, h1(" "))
                                                              ),
                                                              fluidRow(column(width = 12, 
-                                                                             h4(lang_cfg$titles$sdoh_table_title, align = "center")
+                                                                             h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                                              uiOutput('demo_tables_header'),
                                                                              uiOutput('demo_tables')
                                                                              
@@ -181,7 +181,6 @@ ui <- bootstrapPage(
                           )
                         )
                       )
->>>>>>> develop
              )
   )
   
