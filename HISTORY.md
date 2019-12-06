@@ -1,4 +1,11 @@
 # Project History
+## v0.6.0 (12/06/2019)
+-----------------------
+* add landing page at start
+* navigation bar for user to access landing page
+* how to pop up for denisty plot
+* aesthetic updates
+
 ## v0.5.0 (12/02/2019)
 -----------------------
 * include .jpg for how to read fingerprint plot
