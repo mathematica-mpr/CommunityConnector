@@ -235,15 +235,14 @@ server <- function(input, output, session) {
       fluidRow(
         column(width = 12, 
                checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
-                                      choices = c(
-                                                  'Essential Facts' = 'demographic',  
-                                                  'Economic Stability' = 'used_sdoh_1',
+                                      choices = c('Economic Stability' = 'used_sdoh_1',
                                                   'Neighborhood & Physical Environment' = 'used_sdoh_2',
                                                   'Education' = 'used_sdoh_3',
                                                   'Food' = 'used_sdoh_4',
                                                   'Community' = 'used_sdoh_5',
                                                   'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'))
+                                      selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
+                                                   'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
         ))
       )
   })
