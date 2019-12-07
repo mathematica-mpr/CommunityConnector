@@ -7,7 +7,7 @@ output: html_document
 
 #### Overview
 
-The Community Connector App uses a variety of data sources to develop standardized Social Determinants of Health (SDoH) scores for the 6 domains of SDoH:[^1]
+The Community Connector App uses a variety of data sources to develop standardized scores for the 6 domains of SDoH:[^1]
 
 1. **Economic Stability**—includes factors like employment, income, expenses, debt, medical bills, and support.
 
