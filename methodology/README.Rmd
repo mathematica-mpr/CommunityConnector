@@ -33,8 +33,8 @@ To determine which variables would be used in the defined SDOH Scores, we used s
 
 #### Final SDoH Scoring Algorithm
 
-We assigned a direction of association to each of the variables selected by SPCA and normalized each variable’s distributions. The scores are a weighted average of the normalized variables. The weights were determined by each variable’s percentage of variance explained and SPCA loading. The final scores for each of the six SDoH domains are on a 0 (worst) to 1 (best) scale. For example, a score of 1 in the Education domain indicates the best possible distribution of variables in the education score. 
-Below is a link to the code used to create the scores, the data dictionary, and the full data set we used in the Community Connector app. The data dictionary includes an indicator for which SDoH score each variable was assigned to, if any. It also lists the direction assigned to each variable, as well as each variable’s percent variation explained, SPCA loading, and final weight.
+We assigned a direction of association to each of the variables selected by SPCA to health outcomes and normalized each variable’s distribution. The scores are a weighted average of the normalized variables. The weights were determined by each variable’s percentage of variance explained and SPCA loading. The final scores for each of the six SDoH domains are on a 0 (worst) to 1 (best) scale. For example, a score of 1 in the Education domain indicates the best possible distribution of variables in the education score. 
+Below is a link to the code used to create the scores in the Community Connector app. The data dictionary includes an indicator for which SDoH score each variable was assigned to, if any. It also lists the direction assigned to each variable, as well as each variable’s percent variation explained, SPCA loading, and final weight.
 
 **_LINK TO GITHUB_**
 
