@@ -37,7 +37,7 @@ We assigned a direction of association to each of the variables selected by SPCA
 
 ## Methods for Identifying Matched Counties
 
-The Community Connector provides a list of counties that are similar to the selected county of interest. The goal of this matching approach is to provide a list of counties with similar demographics and nonmodifiable social needs. Peer counties that have implemented programs to improve modifiable SDoH characteristics can serve as exemplar counties. We implemented a Lasso model[^3] to predict obesity rates using the demographic variables and all the SDoH variables. We used the demographic and nonmodifiable variables, along with their standardized coefficients as weights to calculate the Euclidean distance between counties. The closest counties in terms of Euclidean distance are listed in the My Matched Counties tab. 
+The Community Connector provides a list of counties that are similar to the selected county of interest. The goal of this matching approach is to provide a list of counties with similar demographics and nonmodifiable social needs. Peer counties that have implemented programs to improve modifiable SDoH characteristics can serve as exemplar counties. We implemented a Lasso model[^3] to predict obesity rates using the demographic variables and all the SDoH variables. We used the demographic and nonmodifiable variables, along with their standardized coefficients as weights to calculate the Euclidean distance between counties. The closest counties in terms of Euclidean distance are listed in the My Most Similar Counties tab. 
 
 
 ## References
