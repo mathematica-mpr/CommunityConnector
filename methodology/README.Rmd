@@ -29,7 +29,7 @@ We collected county-level SDoH data from several sources to use as potential var
 
 #### SDoH Variable Selection
 
-To determine which variables would be used in determining SDOH Scores, we used sparse principal component analysis (SPCA) [^2]. This method is an unsupervised learning approach to dimension reduction; it finds a linear combination of variables that best represents the data while also forcing some of the variable coefficients to zero. This effectively served as a variable selection technique. After reviewing all of the variables selected by SPCA for the scores, we assigned a few additional variables that were not selected based on prior knowledge, a strong association with health outcomes, or both (for example, percentage of adults reporting that they are physically active).  
+To determine which variables would be used in the defined SDOH Scores, we used sparse principal component analysis (SPCA) [^2]. This method is an unsupervised learning approach to dimension reduction; it finds a linear combination of variables that best represents the data while also forcing some of the variable coefficients to zero. This effectively served as a variable selection technique. After reviewing all of the variables selected by SPCA for each of the scores, we assigned a few additional variables that were not selected based on prior knowledge, a strong association with health outcomes, or both (for example, percentage of adults reporting that they are physically active is an important variable to include regardless of its selection by SPCA).  
 
 #### Final SDoH Scoring Algorithm
 
