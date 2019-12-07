@@ -1,11 +1,11 @@
 ---
-title: "Social Determinants of Health Scoring and County Matching"
+title: "Social Determinants of Health (SDoH) Scoring and County Matching"
 output: html_document
 ---
 
-## Methods for Social Determinants of Health Scores
+## Methods for SDoH Scores
 
-#### Social Determinants of Health Overview
+#### Overview
 
 The Community Connector App uses a variety of data sources to develop standardized Social Determinants of Health (SDoH) scores for the 6 domains of SDoH:[^1]
 
