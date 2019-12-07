@@ -1,9 +1,9 @@
 ---
-title: "SDoH Scoring and County Matching"
+title: "Social Determinants of Health Scoring and County Matching"
 output: html_document
 ---
 
-## Methods for SDoH Scores
+## Methods for Social Determinants of Health Scores
 
 #### Social Determinants of Health Overview
 
