@@ -24,7 +24,7 @@ The Community Connector App uses a variety of data sources to develop standardiz
 
 #### Data Sources
 
-We collected county-level data from several sources as well as data on county demographics and health outcomes to use as potential variables in the scores for each of the six SDoH domains. We assigned variables to one of the six SDoH domains based on a review of SDoH literature. For a list of data sources used in the Community Connector app, see the **_Read More About the Data Sources tab_**.
+We collected county-level SDoH data from several sources to use as potential variables in the scores for each of the six SDoH domains. We assigned variables to one of the six SDoH domains based on a review of SDoH literature. For a list of data sources used in the Community Connector app, see the **_Read More About the Data Sources tab_**.
 
 
 #### SDoH Variable Selection
