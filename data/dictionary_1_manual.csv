@@ -32,7 +32,7 @@ pct_severe_housing_problems,"% Households with at least 1 of 4 housing problems:
 pct_singleparent_households,% Children that live in a household headed by single parent,1,0,0,0,percentage,0,0,0,0,1,0,RWJF,0,,,
 pct_smokers,% Adults who are current smokers,0,1,0,0,percentage,0,0,0,0,1,0,RWJF,0,,,
 pct_some_college,% Adults with more than high school education,0,1,0,0,percentage,0,0,1,0,0,0,RWJF,1,,,
-pct_unemployed,% Unemployed,1,0,0,0,percentage,1,0,0,0,0,0,RWJF,0,,,
+pct_unemployed,% Unemployed,0,0,0,0,percentage,1,0,0,0,0,0,RWJF,0,,,
 pct_uninsured,% Uninsured (< age 65),0,1,0,0,percentage,0,0,0,0,0,1,RWJF,0,1,,
 diabetes_incidence_5_year_diff,5-Year Change in % Adults with Newly Diagnosed Diabetes,0,0,1,0,rate,0,0,0,0,0,0,CDC,0,,,
 diabetes_pct,% Diabetes in Medicare age 65+,0,0,1,0,percentage,0,0,0,0,0,0,CMS,0,,,
