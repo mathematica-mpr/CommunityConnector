@@ -26,12 +26,6 @@ library(ClustOfVar)
 sdohallorig <- read.csv('../data/data_2_selected_variables.csv')
 dictionaryorig <- read.csv("../data/dictionary_1_manual.csv")
 
-#quick fixes for data dictionary
-dictionaryorig[which(dictionaryorig$column_name=="pct_not_proficient_in_english"), c(10,12)] <- 0
-dictionaryorig[which(dictionaryorig$column_name=="pct_excessive_drinking"),12] <- 0
-dictionaryorig[which(dictionaryorig$column_name=="pct_with_access"), 12] <- 0
-dictionaryorig[which(dictionaryorig$column_name=="pct_physically_inactive"), 12] <- 0
-
 #removing score and county/state data
 toremove <- c("sdoh_score_1", "sdoh_score_2", "sdoh_score_3", "sdoh_score_4", "sdoh_score_5", "sdoh_score_6", "state", "county")
 dictionary <- dictionaryorig[!dictionaryorig$column_name %in% toremove,]  
