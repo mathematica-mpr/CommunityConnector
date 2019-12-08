@@ -108,6 +108,7 @@ grouped['mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
 # grouped['gen_mds_dos_pp_rate'] = grouped['gen_mds_dos_pp_rate'] * 100000
 # print(grouped['gen_mds_dos_pp_rate'])
 print(grouped['mds_dos_pp_rate'])
+mean_cols.append("FIPS")
 print(grouped[mean_cols])
 
 add_cols = grouped.columns.values
