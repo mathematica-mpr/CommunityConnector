@@ -48,15 +48,13 @@ data['population'] = data['f1198418']
 data['hosp_pp_rate'] = data['f0886817']
 data['adm_pp_rate'] = data['f0890917']
 data['kidn_hosp_pp_rate'] = data['f1407817']
+
 # create a variable equal to Total MDs (F11072) + DOs (F14717) in general practice conducting patient care/ total population (F11984)
-
-# MDS:  F12129-17 
-# DOs:  F13882-17 
+data['gen_mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
+# we discovered that general practice numbers are really low, so looking at totals now
+data['mds_dos_pp_rate'] = (data['f1212917'] + data['f1388217'])
 # compare with PCPs = primary care provider/physician
-# 
 
-# general practice
-data['mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
 # number of short term general hospitals (F08869) per total population
 data['short_hosp_pp_rate'] = data['f0886917']
 # number of community health centers (F15253) per total population
