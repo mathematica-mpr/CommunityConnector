@@ -255,7 +255,6 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
 
     # keep only variables needed and output final data
     data = pd.read_csv(input)
-    print(final_dict['column_name'])
     final_data = data[final_dict['column_name']]
 
     final_data.to_csv(output, index = False)

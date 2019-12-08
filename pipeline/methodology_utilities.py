@@ -71,12 +71,9 @@ def FinalDictionary(spca_dictionary, output_data_dictionary, input_data_dictiona
     # all should be one!
     print(spca_dict.groupby(['sdoh_Category']).sum().reset_index()['weight'])
 
-    data_dictionary.column_name = [custom_replace(col) for col in data_dictionary.column_name]
-
     # merge and output data dictionary
     inter_dict = pd.merge(data_dictionary, spca_dict, left_on = 'column_name', right_on = 'Variable_Name', how = 'left')
     inter_dict.drop(['Variable_Name','total_loading','pct_loading','total_variance_explained','pct_var','Loading_abs'], axis = 1, inplace = True)
-    print(inter_dict.columns.values)
     
     inter_dict.to_csv(output_data_dictionary, index = False)
 
@@ -101,7 +98,6 @@ def SdohScores(input, input_data_dictionary, output):
     cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
     print(cor)
     econ_cor = cor['sdoh_score_1']
-    print(econ_cor)
 
     # adjust for economic score
     for i in range(2,7):
@@ -109,9 +105,5 @@ def SdohScores(input, input_data_dictionary, output):
     # check new correlations
     cor = data[[f'sdoh_score_{i}' for i in range(1,7)]].corr()
     print(cor)
-
-    data.columns = [custom_replace(col) for col in data.columns.values]
-    print(data.columns.values[:5])
-    print(data_dictionary.column_name[:5])
-
+    
     data.to_csv(output, index = False)
