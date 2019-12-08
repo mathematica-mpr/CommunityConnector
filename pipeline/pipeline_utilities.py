@@ -125,16 +125,11 @@ def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH'
                 data['FIPS'] = [int(str(fips)[-3:]) for fips in data['FIPS']]
                 # make sure the file is unique by FIPS
                 print(data['FIPS'].drop_duplicates().shape)
-                data_columns = pd.DataFrame({'column_name': data.columns.values,
-                    'type': t
-                    })
 
                 if count == 0:
                     full_data = data
-                    columns = data_columns
                 else:
                     full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
-                    columns = columns.append(data_columns)
                 print(f"Completed {file}")
                 print(full_data.shape)
                 print('')
@@ -151,11 +146,6 @@ def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH'
     print(full_data.shape)
     # Custom check for Colorado
     assert(full_data.shape[0] == 64)
-
-    # add sdoh_score1-6 to columns
-    sdoh_score_names = [f'sdoh_score{i}' for i in range(1,7)]
-    columns = columns.append(pd.DataFrame({'column_name': sdoh_score_names,
-    'type': ['aggregate']*6}))
 
     full_data.to_csv(output, index = False)
 
