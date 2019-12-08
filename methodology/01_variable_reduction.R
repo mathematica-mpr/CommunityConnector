@@ -198,5 +198,3 @@ Dictionary_PostSPCA[remove_index, 2:5] <- NA
 
 #outputting new dictionary
 write.csv(Dictionary_PostSPCA, "../data/DictionaryPostSPCA", na = "", row.names = F)
-
-S2PC
