@@ -197,4 +197,4 @@ remove_index <- which(Dictionary_PostSPCA$Variable_Name %in% remove)
 Dictionary_PostSPCA[remove_index, 2:5] <- NA
 
 #outputting new dictionary
-write.csv(Dictionary_PostSPCA, "../data/DictionaryPostSPCA", na = "", row.names = F)
+write.csv(Dictionary_PostSPCA, "../data/DictionaryPostSPCA.csv", na = "", row.names = F)
