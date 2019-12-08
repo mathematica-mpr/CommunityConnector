@@ -50,6 +50,10 @@ def click_button(driver, element_type, element_name, time_to_wait = 10):
     button.click()
 
 def move_from_downloads(orig_path, search_term, new_path, new_name):
+    """
+    Move downloaded file to data path
+    """
+
     files = os.listdir(orig_path)
     files = [x for x in files if re.search(search_term, x)] 
     entries = (os.path.join(orig_path, fn) for fn in os.listdir(orig_path))
@@ -69,13 +73,16 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
 
     shutil.move(orig_path + filename, os.path.join(new_path, new_name))
 
-# TODO: fix selenium.common.exceptions.SessionNotCreatedException: Message: session not created: This version
-# of ChromeDriver only supports Chrome version 76
-# https://stackoverflow.com/questions/57600228/sessionnotcreatedexception-message-session-not-created-this-version-of-chrome
+# these next to functions 
 
 def GeographicPUF(outdir, downloads = 'C:/Users/kskvoretz/Downloads/',
     website = "https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Geographic-Variation/GV_PUF.html"):
+    """
+    Scrape Geographic Variation data
 
+    Args: 
+        outdir (string): name of output directory
+    """
     driver = webdriver.Chrome(options=options)
     driver.delete_all_cookies()
     driver.get(website)
@@ -88,6 +95,10 @@ def GeographicPUF(outdir, downloads = 'C:/Users/kskvoretz/Downloads/',
 def OppAtlas(output, input = 'data/raw/opp_atlas_stay.csv',
     url="https://opportunityinsights.org/wp-content/uploads/2018/12/cty_covariates.csv"):
     
+    """
+    Scrape Opportunity Atlas 
+    """
+
     s=requests.get(url).text
 
     data = pd.read_csv(StringIO(s), sep=",")
