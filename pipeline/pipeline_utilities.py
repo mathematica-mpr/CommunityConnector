@@ -237,7 +237,7 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     'pop_dens','pct_nonhispanic_white','pct_rural','life_expectancy',
     'race_estimate_total_black_or_african_american_alone','median_income',
     # KS adds:
-    'pct_staying_in_same_tract_as_adults_rp_gp_pall', 'pct_only_english', 'pct_good_air', 'mds_dos_pp_rate']
+    'pct_staying_in_same_tract_as_adults_rp_gp_pall', 'pct_only_english', 'pct_good_air', 'mds_dos_pp_rate','population']
     race_vars = [col for col in final_dict.column_name if 'race_estimate' in col]
     other_keep_vars.extend(race_vars)
     other_keep_vars = list(set(other_keep_vars))
