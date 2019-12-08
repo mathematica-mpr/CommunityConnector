@@ -1,6 +1,5 @@
 ```{r Set up}
 rm(list = ls())
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source('utilities.R')
 ```
 
