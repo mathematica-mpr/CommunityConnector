@@ -1,4 +1,4 @@
-us,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6,source,higher_better,modifiable,Notes,Interventions
+column_name,description,demographic,sdoh_raw,outcome,sdoh_score,data_type,used_sdoh_1,used_sdoh_2,used_sdoh_3,used_sdoh_4,used_sdoh_5,used_sdoh_6,source,higher_better,modifiable,Notes,Interventions
 pct_lt_18,% Under age 18,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,
 pct_65_and_over,% Age 65 and over,1,0,0,0,percentage,0,0,0,0,0,0,RWJF,,,,
 pct_alcoholimpaired,% Driving deaths involving alcohol,0,1,0,0,percentage,0,1,0,0,0,0,RWJF,0,1,Does not have the same relationship to income as % excessive drinking,
