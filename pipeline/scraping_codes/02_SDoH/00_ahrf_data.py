@@ -105,6 +105,9 @@ grouped.reset_index(inplace = True)
 # change to per 100,000 people for certain variables used
 grouped['hosp_pp_rate'] = grouped['hosp_pp_rate'] * 100000
 grouped['mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
+grouped['gen_mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
+print(grouped['gend_mds_dos_pp_rate'])
+print(grouped['mds_dos_pp_rate'])
 
 add_cols = grouped.columns.values
 add_cols = [c for c in add_cols if c != "FIPS"]
