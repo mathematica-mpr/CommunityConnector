@@ -200,6 +200,7 @@ def SelectVariables(input, output, data_dictionary):
     print("Number of columns from data dictionary: " + str(len(keep_cols)))
 
     # doing this because I messed up the data dictionary - not sure if this is needed anymore
+    print(data.columns.values)
     data.columns = [custom_replace(col) for col in data.columns.values]
 
     data = data[keep_cols]
