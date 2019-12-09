@@ -41,6 +41,7 @@ For more detail on the final methodology used, see the README.
 
 ```{r}
 results <- implement_methodology(opts, outcomes, data, data_dictionary)
+# returns: evaluation results, distance matrix, coefficients
 
 results[1][[1]] %>% 
   dplyr::select(use_outcome, methodology, alpha, min_lambda) %>% 
