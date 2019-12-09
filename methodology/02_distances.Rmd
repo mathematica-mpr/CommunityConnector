@@ -37,6 +37,8 @@ Do we want to remove variables manually that we wouldn't expect would be causing
 
 We decided not to remove variables manually based on previous analysis - it would not be impactful, at least for overobese_pct outcome. If we decide to use another outcome, may want to test again
 
+For more detail on the final methodology used, see the README.
+
 ```{r}
 results <- implement_methodology(opts, outcomes, data, data_dictionary)
 
