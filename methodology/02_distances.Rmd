@@ -33,9 +33,9 @@ if(method %in% c("lasso euclidean all","lasso euclidean dem")){
 
 Methodology Notes:
 
-Do we want to remove variables manually? We would consider this because, for example, elevation shows up in some of the models. Elevation is not causal, but there must be a correlation. We worry that elevation is correlated to other variables, perhaps a modifiable (walkability) and another nonmodifiable, or something. Elevation is sucking up the impact of these variables, which is fine for prediction. However, we want to use the coefficients of the modifiable and nonmodifiable variables differently. If this is the case, keeping elevation would remove our ability to parse out these two impacts.
+Do we want to remove variables manually that we wouldn't expect would be causing the outcome in question? We would consider this because, for example, elevation shows up in some of the models. Elevation is not causal, but there must be a correlation. We worry that elevation is correlated to other variables, perhaps a modifiable (walkability) and another nonmodifiable, or something. Elevation is accounting for the impact of these variables, which is fine for prediction. However, we want to use the coefficients of the modifiable and nonmodifiable variables differently. If this is the case, keeping elevation would remove our ability to parse out these two impacts.
 
-We decided not to remove variables manually based on previous analysis - not impactful at least for overobese_pct outcome. If we decide to use another outcome, may want to test again
+We decided not to remove variables manually based on previous analysis - it would not be impactful, at least for overobese_pct outcome. If we decide to use another outcome, may want to test again
 
 ```{r}
 results <- implement_methodology(opts, outcomes, data, data_dictionary)
