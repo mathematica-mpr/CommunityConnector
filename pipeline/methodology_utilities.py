@@ -15,32 +15,32 @@ def use_sdoh_normalize(data_dictionary, data, sdoh_score_num):
         sdoh_score_num (integer)
 
     """        
-        spca_dict_data = data_dictionary[data_dictionary['sdoh_Category'] == sdoh_score_num]
+    spca_dict_data = data_dictionary[data_dictionary['sdoh_Category'] == sdoh_score_num]
 
-        cols = list(spca_dict_data['column_name'])
-        print(cols)
-        weights = list(spca_dict_data['weight'])
+    cols = list(spca_dict_data['column_name'])
+    print(cols)
+    weights = list(spca_dict_data['weight'])
 
-        # make sure all columns are found in dictionary and data
-        assert(len(cols) == len(list(set(data_dictionary['column_name']).intersection(cols))) == len(list(set(data.columns.values).intersection(cols))))
+    # make sure all columns are found in dictionary and data
+    assert(len(cols) == len(list(set(data_dictionary['column_name']).intersection(cols))) == len(list(set(data.columns.values).intersection(cols))))
 
-        # standardize/normalize the variables
-        # x = (data[cols] - data[cols].mean())/data[cols].std()
-        x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
-        
-        # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
-        flip_cols = list(data_dictionary[data_dictionary['higher_better'] == 0]['column_name'])
-        flip_cols = list(set(flip_cols).intersection(cols))
-        print("Lower is stronger cols:")
-        print(flip_cols)
-        
-        if len(flip_cols) > 0:
-            x[flip_cols] = 1-x[flip_cols]
-        
-        # weight them
-        avgs = np.dot(x, weights)
+    # standardize/normalize the variables
+    # x = (data[cols] - data[cols].mean())/data[cols].std()
+    x = (data[cols] - data[cols].min())/(data[cols].max() - data[cols].min())
+    
+    # because higher is better, need to make sure that larger numbers mean the county is stronger in that area
+    flip_cols = list(data_dictionary[data_dictionary['higher_better'] == 0]['column_name'])
+    flip_cols = list(set(flip_cols).intersection(cols))
+    print("Lower is stronger cols:")
+    print(flip_cols)
+    
+    if len(flip_cols) > 0:
+        x[flip_cols] = 1-x[flip_cols]
+    
+    # weight them
+    avgs = np.dot(x, weights)
 
-        return avgs
+    return avgs
 
 def econ_adjust(econ_cor, data, i):
     """

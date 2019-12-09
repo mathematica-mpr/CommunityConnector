@@ -102,4 +102,4 @@ class ReduceDisplayVars(ParameterDefinitions, luigi.Task):
                              output_data_dictionary = os.path.join(self.final_output, 'final_data_dictionary.csv'))
 
 if __name__ == '__main__':
-    luigi.build([ReduceDisplayVars()], local_scheduler=True)
+    luigi.build([SelectVariables()], local_scheduler=True)
