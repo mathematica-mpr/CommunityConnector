@@ -49,6 +49,7 @@ co.columns = ["NAME","GEO_ID","B01003_001E","B01003_001M","NAME_2","B01003_001MA
 co['tract'] = co['state'].astype(str)+ co['county'].astype(str)+ co['tract'].astype(str)
 census_pop_df = co[['tract','B01003_001E', "NAME"]]
 census_pop_df.columns = ["tract","population","NAME"]
+census_pop_df['population'] = census_pop_df['population'].astype(float)
 
 #MERGE
 tract_county = pd.merge(ZIP_COUNTY_FIPS_df, ZIP_TRACT_092019_df, on='zip')
@@ -56,7 +57,9 @@ tract_county['tract']= tract_county['tract'].astype(str)
 tract_county_pop = pd.merge(tract_county, census_pop_df, on = 'tract')
 
 #FIND LARGEST ZIP
+print(tract_county_pop.sort_values('population', ascending=False))
 largest_tract = tract_county_pop.sort_values('population', ascending=False).drop_duplicates(['stcountyfp'])
+print(largest_tract)
 largest_tract = pd.merge(largest_tract, uszips_df, on = 'zip')
 
 #Creating URLS to scrape from for each city
