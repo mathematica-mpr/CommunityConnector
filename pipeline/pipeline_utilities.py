@@ -269,6 +269,8 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     # this could be adjusted based on the health outcomes in question
     final_dict['keep'] = 0
     final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'keep'] = 1
+    # also make sure variables selected for sdoh category do not show up in the demographics
+    final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'demographic'] = 0 
     final_dict.loc[final_dict['outcome'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['sdoh_score'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['data_type'] == 'ID', 'keep'] = 1
