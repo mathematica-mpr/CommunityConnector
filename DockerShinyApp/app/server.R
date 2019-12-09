@@ -318,9 +318,9 @@ server <- function(input, output, session) {
 
   ## comparison counties info --------------------------------------------------
   output$comp_radar_header <- renderUI({
-    req(my_matches())
+    req(county_check())
     tagList(
-      HTML(paste0("<h4>What Counties are Most Similar to ", county_name(), ", ", county_state(), "</h4>"))
+      fluidRow(HTML(lang_cfg$my_matches), align = "center")
     )
   })
   

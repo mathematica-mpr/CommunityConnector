@@ -155,7 +155,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(lang_cfg$my_matches, align = "center"),
+                                                             uiOutput('comp_radar_header'),
                                                              br(),
                                                              plotlyOutput("compare_county_radars"
                                                              ) %>% 
