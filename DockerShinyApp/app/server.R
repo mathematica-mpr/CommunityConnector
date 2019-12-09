@@ -234,16 +234,15 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(
         column(width = 12, 
-               checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
-                                      choices = c(
-                                                  'Essential Facts' = 'demographic',  
-                                                  'Economic Stability' = 'used_sdoh_1',
+               checkboxGroupInput('demo_filter', label = 'Filter by categories:', 
+                                      choices = c('Economic Stability' = 'used_sdoh_1',
                                                   'Neighborhood & Physical Environment' = 'used_sdoh_2',
                                                   'Education' = 'used_sdoh_3',
                                                   'Food' = 'used_sdoh_4',
                                                   'Community' = 'used_sdoh_5',
                                                   'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'))
+                                      selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
+                                                   'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
         ))
       )
   })
@@ -256,6 +255,26 @@ server <- function(input, output, session) {
     req(input$demo_filter)
     
     demo_tables_list <- lapply(input$demo_filter, function(x) 
+      tagList(
+        make_demo_dt(county_dat = county_dat(),
+                     comp_county_dat = comp_county_dat(),
+                     comp_county_select = input$comparison_county_selection,
+                     demo_select = x,
+                     dd = dd)
+      )
+    )
+    
+    tagList(
+      demo_tables_list
+    )
+  })
+  
+  output$essentials_tables <- renderUI({
+    req(county_check())
+    req(input$comparison_county_selection)
+    #req(input$demo_filter)
+    
+    demo_tables_list <- lapply("demographic", function(x) 
       tagList(
         make_demo_dt(county_dat = county_dat(),
                      comp_county_dat = comp_county_dat(),

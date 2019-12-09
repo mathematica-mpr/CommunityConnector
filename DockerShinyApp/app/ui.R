@@ -116,12 +116,6 @@ ui <- bootstrapPage(
                           column(width = 10,
                                  column(width = 6, 
                                         fluidRow(
-                                          column(width = 12, h1(" "))
-                                        ), 
-                                        fluidRow(
-                                          column(width = 12, h1(" "))
-                                        ),
-                                        fluidRow(
                                           column(width = 12, align = "center", htmlOutput("my_county_header"))),
                                         fluidRow(
                                           column(width = 12, align = "center",
@@ -130,7 +124,10 @@ ui <- bootstrapPage(
                                                               size = "sm",
                                                               style = paste0("color: ", config$colors$accent,
                                                                              "; background-color: ", config$colors$white100,
-                                                                             "; border-color: ", config$colors$accent)))),
+                                                                             "; border-color: ", config$colors$accent)),
+                                                 br(),
+                                                 br(),
+                                                 br())),
                                         fluidRow(
                                           column(width = 12, plotlyOutput("my_county_radar",
                                                                           height = "80%") %>%
@@ -139,7 +136,16 @@ ui <- bootstrapPage(
                                           ))),
                                  column(width = 6,
                                         tabsetPanel(type = 'pills', id = "tabs",
-                                                    tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
+                                                    tabPanel(span(HTML("<br/><center>Demographics</center>"), title = lang_cfg$demographics_tab),
+                                                             fluidRow(
+                                                               column(width = 12, h1(" "))
+                                                             ),
+                                                             fluidRow(column(width = 12, 
+                                                                             uiOutput('essentials_tables')
+                                                                             
+                                                             ))
+                                                    ),
+                                                    tabPanel(span(HTML("<center>Social Determinants<br/>of Health</center>"), title = lang_cfg$sdoh_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -150,7 +156,7 @@ ui <- bootstrapPage(
                                                                              
                                                              ))
                                                     ),
-                                                    tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
+                                                    tabPanel(span(HTML("<center>My Most Similar<br/>Counties*</center>"), title = lang_cfg$my_matches_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -162,7 +168,7 @@ ui <- bootstrapPage(
                                                                            color = getOption("spinner.color", default = "#046B5C")),
                                                              br()
                                                     ),
-                                                    tabPanel(span("County Map", title = lang_cfg$map_tab),
+                                                    tabPanel(span(HTML("<br/><center>County Map</center>"), title = lang_cfg$map_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
@@ -171,7 +177,7 @@ ui <- bootstrapPage(
                                                                                     color = getOption("spinner.color", default = "#046B5C"))
                                                              )
                                                     ),
-                                                    tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
+                                                    tabPanel(span(HTML("<br/><center>Health Outcomes</center>"), title = lang_cfg$health_outcomes_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
