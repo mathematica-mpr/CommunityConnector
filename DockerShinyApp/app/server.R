@@ -88,7 +88,6 @@ server <- function(input, output, session) {
   
   ## methodology modal dialogue ------------------------------------------------
   methodology_modal <- modalDialog(
-    title = lang_cfg$titles$method_modal,
     HTML(lang_cfg$method),
     size = "l",
     footer = modalButton("Close"),
