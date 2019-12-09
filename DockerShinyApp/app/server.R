@@ -326,88 +326,19 @@ server <- function(input, output, session) {
     )
   })
   
-  output$map <- renderLeaflet({
+  output$map <- renderLeaflet ({
     req(county_check())
-    
-    df <- find_my_matches(county_fips(), dat)[[1]] %>%
-      mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
-      mutate(NAME = str_replace(county, " County", ""))
-    
-    st_fips <- str_sub(df$GEOID, 1, 2)[1]
-    cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
-    
-    selected_state_shp <- st_shp %>%
-      filter(str_sub(GEOID, 1, 2) == st_fips) %>%
-      left_join(., df)
-    
-    # Compute approximate centroid and edges of study area
-    selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
-    x_min <- selected_state_shp_box[1]
-    x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
-    x_max <- selected_state_shp_box[3]
-    y_min <- selected_state_shp_box[2]
-    y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
-    y_max <- selected_state_shp_box[4]
-    
-    # Plot counties with proximity score
-    # Remove selected county from consideration in popups, and plot separately
-    selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
-    selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
-      mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
-                       labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
-                       include.lowest = TRUE))
-    
-    county_label <- sprintf(
-      "<strong>Comparison County:</strong> %s County (%s) <br/>
-      <strong>Similarity to %s County: </strong> %s <br/>",
-      selected_state_shp$NAME, selected_state_shp$GEOID,
-      selected_geo$NAME[1], selected_state_shp$cat
-    ) %>%
-      lapply(htmltools::HTML)
-    selected_county_label <- sprintf(
-      "<strong>Selected County:</strong> %s (%s) <br/>",
-      selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
-      lapply(htmltools::HTML)
-    
-    # Always 4 quantile breaks
-    color_pal <- colorFactor("magma", selected_state_shp$cat, na.color = "gray")
-    
-    leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
-      setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
-      setMaxBounds(lng1 = x_min,
-                   lat1 = y_min,
-                   lng2 = x_max,
-                   lat2 = y_max) %>%
-      addProviderTiles(providers$Stamen.TonerLite) %>%
-      addPolygons(data = selected_state_shp,
-                  color = ~color_pal(selected_state_shp$cat),
-                  weight = 1,
-                  smoothFactor = 1,
-                  label = county_label,
-                  labelOptions = labelOptions(
-                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
-                    textsize = "15px",
-                    direction = "auto"),
-                  highlightOptions = highlightOptions(color = "black",
-                                                      weight =  2,
-                                                      bringToFront = TRUE)) %>%
-      addLegend(pal = color_pal, values = selected_state_shp$cat, position = "topright",
-                title = "Similarity to selected county") %>%
-      addPolygons(data = selected_geo,
-                  color = "black",
-                  fillOpacity = 0.7,
-                  weight = 2,
-                  smoothFactor = 1,
-                  label = selected_county_label,
-                  labelOptions = labelOptions(
-                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
-                    textsize = "15px",
-                    direction = "auto"),
-                  highlightOptions = highlightOptions(color = "black",
-                                                      weight =  2,
-                                                      bringToFront = TRUE))
+
+      df <- find_my_matches(county_fips(), dat)[[1]] %>%
+        mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
+        mutate(NAME = str_replace(county, " County", ""))
+      
+      st_fips <- str_sub(df$GEOID, 1, 2)[1]
+      cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
+
+      county_map(df, st_fips, cty_fips)
   })
-  
+
   # dynamic number of density graphs -------------------------------------------
 
   output$health_outcomes_header <- renderUI({
