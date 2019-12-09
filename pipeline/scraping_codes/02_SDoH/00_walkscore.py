@@ -33,7 +33,7 @@ ZIP_COUNTY_FIPS_df.columns = map(str.lower, ZIP_COUNTY_FIPS_df.columns)
 #selecting state == CO
 ZIP_COUNTY_FIPS_df = ZIP_COUNTY_FIPS_df.query('state == "CO"')
 
-#ACS - using this to get population to find largest city within a fips code
+#ACS - using this to get population to find largest census tract in a county and use it's city
 def api_pull(key, variable):
     url = f'https://api.census.gov/data/2017/acs/acs5?key={key}&get=NAME,group({variable})&for=tract:*&in=state:08'
     print(url)
@@ -52,17 +52,18 @@ co.columns = ["NAME","GEO_ID","B01003_001E","B01003_001M","NAME_2","B01003_001MA
 co['tract'] = co['state'].astype(str)+ co['county'].astype(str)+ co['tract'].astype(str)
 census_pop_df = co[['tract','B01003_001E', "NAME"]]
 census_pop_df.columns = ["tract","population","NAME"]
+# change to float so sorting works
 census_pop_df['population'] = census_pop_df['population'].astype(float)
 
-#MERGE
+#MERGE to get zip - tract - county
 tract_county = pd.merge(ZIP_COUNTY_FIPS_df, ZIP_TRACT_092019_df, on='zip')
 tract_county['tract']= tract_county['tract'].astype(str) 
+# merge to get zip - tract - county - population
 tract_county_pop = pd.merge(tract_county, census_pop_df, on = 'tract')
 
-#FIND LARGEST ZIP
-print(tract_county_pop.sort_values('population', ascending=False))
+#FIND LARGEST tract
 largest_tract = tract_county_pop.sort_values('population', ascending=False).drop_duplicates(['stcountyfp'])
-print(largest_tract)
+# merge to get city associated with that zip code
 largest_tract = pd.merge(largest_tract, uszips_df, on = 'zip')
 
 #Creating URLS to scrape from for each city
