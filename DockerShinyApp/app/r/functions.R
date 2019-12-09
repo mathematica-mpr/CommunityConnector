@@ -1140,3 +1140,95 @@ get_compare_value <- function(data, comparison_name) {
     select(c(county, value))
   return(val)
 }
+
+# map function
+county_map <- function(df, st_fips, cty_fips) {
+  selected_state_shp <- st_shp %>%
+    filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+    left_join(., df)
+  
+  # Compute approximate centroid and edges of study area
+  selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+  x_min <- selected_state_shp_box[1]
+  x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+  x_max <- selected_state_shp_box[3]
+  y_min <- selected_state_shp_box[2]
+  y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+  y_max <- selected_state_shp_box[4]
+  
+  # Plot counties with proximity score
+  # Remove selected county from consideration in popups, and plot separately
+  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
+    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+    mutate_at(vars(quantile_distance), ~(. / 2))
+  
+  county_label <- sprintf(
+    "<strong>Comparison County:</strong> %s <br/>
+      <strong>Selected County: </strong> %s <br/>",
+    selected_state_shp$NAME, selected_geo$NAME[1]
+  ) %>%
+    lapply(htmltools::HTML)
+  selected_county_label <- sprintf(
+    "<strong>Selected County:</strong> %s <br/>",
+    selected_geo$NAME[1]) %>%
+    lapply(htmltools::HTML)
+  
+  color_pal <- colorFactor(palette = color_mapping$hex_color,
+                           levels = color_mapping$rounded_distance,
+                           na.color = config$colors$grey50)
+  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+    setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+    setMaxBounds(lng1 = x_min,
+                 lat1 = y_min,
+                 lng2 = x_max,
+                 lat2 = y_max) %>%
+    addProviderTiles(providers$Stamen.TonerLite) %>%
+    addPolygons(data = selected_state_shp,
+                color = ~color_pal(selected_state_shp$quantile_distance),
+                weight = 1,
+                smoothFactor = 1,
+                fillOpacity = 0.6,
+                label = county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE)) %>%
+    addLegend(colors = c(config$colors$yellow50),
+              labels = paste0("Selected County: ", selected_geo$NAME),
+              opacity = 0.6) %>%
+    addLegend(colors = c(color_mapping$hex_color[1],
+                         color_mapping$hex_color[34],
+                         color_mapping$hex_color[68],
+                         color_mapping$hex_color[101],
+                         color_mapping$hex_color[134],
+                         color_mapping$hex_color[168],
+                         color_mapping$hex_color[201]),
+              labels = c("Most similar",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "Least similar"),
+              opacity = 0.6) %>%
+    addPolygons(data = selected_geo,
+                fillColor = config$colors$yellow50,
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.9,
+                weight = 2,
+                smoothFactor = 1,
+                label = selected_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  4,
+                                                    bringToFront = TRUE))
+}
