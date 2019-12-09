@@ -10,7 +10,7 @@ import pandas as pd
 file_path = 'data/raw/'
 
 # location files for mapping from zip code --> FIPS code
-# zip - city - state - fips
+# city - zip
 uszips_path = file_path + 'uszips.csv'
 # zip - tract
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
