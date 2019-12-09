@@ -82,7 +82,18 @@ ui <- bootstrapPage(
              ),
              # main page with tool --------------------------------------------------------------------------------------------------
              tabPanel("Main Page", value = "main_page",
-                      fluidPage(
+                      fluidPage(tagList(tags$head(tags$style(HTML(
+                        "
+                        .multicol { 
+                                   height: 150px;
+                                   -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
+                                   -moz-column-count: 2;    /* Firefox */ 
+                                   column-count: 2; 
+                                   -moz-column-fill: auto;
+                                   -column-fill: auto;
+                        } 
+                        "
+                      )))),
                         fluidRow(
                           column(width = 2,
                                  wellPanel(
@@ -149,9 +160,12 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(column(width = 12, 
+                                                             fluidRow(column(width = 12,
                                                                              h4(lang_cfg$titles$sdoh_table_title, align = "center"),
-                                                                             uiOutput('demo_tables_header'),
+                                                                             h5(HTML("<b>Filter by categories:</b>")),
+                                                                             tags$div(align = 'left', 
+                                                                                      class = 'multicol',
+                                                                                      uiOutput('demo_tables_header')),
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
