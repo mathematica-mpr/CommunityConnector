@@ -110,7 +110,8 @@ ui <- bootstrapPage(
                                         br(),
                                         HTML(lang_cfg$titles$external_links),
                                         uiOutput("health_plans_url"),
-                                        uiOutput("diab_prev_prog")
+                                        uiOutput("diab_prev_prog"),
+                                        uiOutput("github")
                                  )
                           ),
                           column(width = 10,

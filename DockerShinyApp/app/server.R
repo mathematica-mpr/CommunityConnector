@@ -202,6 +202,13 @@ server <- function(input, output, session) {
               target = "_blank"))
   })
   
+  ## github url ----------------------------------------------------------------
+  output$github <- renderUI({
+    tagList(a(lang_cfg$titles$github, 
+              href = " https://github.com/mathematica-mpr/CommunityConnector", 
+              target = "_blank"))
+  })
+  
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
