@@ -62,8 +62,8 @@ county_map <- function(df, st_fips, cty_fips) {
   ) %>%
     lapply(htmltools::HTML)
   selected_county_label <- sprintf(
-    "<strong>Selected County:</strong> %s (%s) <br/>",
-    selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
+    "<strong>Selected County:</strong> %s <br/>",
+    selected_geo$NAME[1]) %>%
     lapply(htmltools::HTML)
   
   color_pal <- colorFactor(palette = color_mapping$hex_color,
