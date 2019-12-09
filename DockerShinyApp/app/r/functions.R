@@ -67,7 +67,7 @@ make_demo_dt <- function(county_dat, comp_county_dat,
         rename(`Health Care System` = name)
     }
     
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
+    DT::datatable(df, rownames = FALSE, class = "stripe", options = list(paging = F)) %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
 }
