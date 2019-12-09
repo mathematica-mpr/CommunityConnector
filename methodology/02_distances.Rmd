@@ -4,7 +4,8 @@ source('utilities.R')
 ```
 
 ```{r Read data}
-data <- read.csv('../data/data_3_sdoh_scores.csv')
+data <- read.csv('../data/data_3_sdoh_scores.csv') %>% 
+  mutate(fips = as.character(fips))
 data_dictionary <- read.csv('../data/dictionary_2_sdoh_scores.csv')
 
 # We are going to run the model on only the overobese_pct outcome, because it is the most broad
@@ -29,6 +30,10 @@ if(method %in% c("lasso euclidean all","lasso euclidean dem")){
   print("Standardizing data")
   data <- rapply(data, scale, c("numeric","integer"), how = "replace")
 }
+
+# check to make sure these didn't get standardized
+head(data$fips)
+head(data$county)
 ```
 
 Methodology Notes:
