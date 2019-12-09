@@ -27,14 +27,8 @@ opts <- data.frame("use_sdoh_scores" = 0,
 # Need to standardize variables prior to input for certain methodologies
 if(method %in% c("lasso euclidean all","lasso euclidean dem")){
   print("Standardizing data")
-  num_cols <- unlist(lapply(data, is.numeric))
-  print(num_cols)
-  data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols], scale = TRUE)
+  data <- rapply(data, scale, c("numeric","integer"), how = "replace")
 }
-
-
-print(head(data))
-
 ```
 
 Methodology Notes:
