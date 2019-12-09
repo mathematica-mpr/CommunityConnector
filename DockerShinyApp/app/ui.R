@@ -42,6 +42,14 @@ ui <- bootstrapPage(
                                                                                        background-color: #046B5C;
                                                                                        color: #ffffff;
                                                                                        }
+                                                                                       
+                                                                                       .multicol {
+                                                                                       -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
+                                                                                       -moz-column-count: 2;    /* Firefox */ 
+                                                                                       column-count: 2; 
+                                                                                       -moz-column-fill: auto;
+                                                                                       -column-fill: auto;
+                                                                                       }
                                                                                       
                                                                                        .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
                                                                                         color: #fff;
@@ -82,18 +90,7 @@ ui <- bootstrapPage(
              ),
              # main page with tool --------------------------------------------------------------------------------------------------
              tabPanel("Main Page", value = "main_page",
-                      fluidPage(tagList(tags$head(tags$style(HTML(
-                        "
-                        .multicol { 
-                                   height: 150px;
-                                   -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
-                                   -moz-column-count: 2;    /* Firefox */ 
-                                   column-count: 2; 
-                                   -moz-column-fill: auto;
-                                   -column-fill: auto;
-                        } 
-                        "
-                      )))),
+                      fluidPage(
                         fluidRow(
                           column(width = 2,
                                  wellPanel(
