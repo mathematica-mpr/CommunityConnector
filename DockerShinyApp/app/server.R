@@ -251,6 +251,7 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(
         column(width = 12, 
+               h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                checkboxGroupInput('demo_filter', label = 'Filter by categories:', 
                                       choices = c('Economic Stability' = 'used_sdoh_1',
                                                   'Neighborhood & Physical Environment' = 'used_sdoh_2',
