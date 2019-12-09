@@ -52,6 +52,7 @@ keep_cols = ['State and County FIPS Code','Beneficiaries with Part A and Part B'
 data = data[keep_cols]
 # rename them
 data.columns = ['FIPS','Medicare_beneficiaries','Medicare_avg_age','Medicare_pct_female','Medicare_avg_hcc','Medicare_std_adj_cost_pp']
+# removeing the space and %
 data['Medicare_pct_female'] = [pct[:-2] for pct in data['Medicare_pct_female']]
 
 # normalize # of beneficiaries
