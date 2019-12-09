@@ -280,7 +280,7 @@ evaluate_methodology <- function(data, use_outcome){
   # median of top 5 outcomes
   med_top5 <- median(top5[, use_outcome])
   # how different is the median from my county?
-  pct_diff_from_county_med <- 100*abs(med_top5-this_county)/this_county
+  pct_diff_from_county_med <- 100*abs(med_top5-county_outcome)/county_outcome
   
   # standard deviation of other key variables of top 5 counties
   sds <- sapply(top5[,c("median_income","frac_coll_plus2010",
