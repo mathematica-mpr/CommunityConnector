@@ -131,6 +131,7 @@ for row in fips_urls_df.iterrows():
 #writing outfile
 df = pd.DataFrame(fips_scores).T
 df.sort_index(inplace = True)
+df['fips'] = df.index.values
 print(df)
 
 df.to_csv(out_scores_path)
