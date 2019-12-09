@@ -87,7 +87,8 @@ def num_extraction (score_string, scr_full_text):
         return score[0]
 
 def imagine_to_score_convert (url):
-    '''takes url and outputs the three scores'''    
+    '''takes url and outputs the three scores'''  
+    print(url)  
     #gets the website
     result = requests.get(url)
     #stores the content of website
@@ -118,6 +119,7 @@ def imagine_to_score_convert (url):
 
     #main
 for row in fips_urls_df.iterrows():
+    print(row)
     fips_code = row[1]["fips"]
     website = row[1]["urls"]
     walk_score, trans_score, bike_score = imagine_to_score_convert (website)
@@ -129,5 +131,6 @@ for row in fips_urls_df.iterrows():
 #writing outfile
 df = pd.DataFrame(fips_scores).T
 df.sort_index(inplace = True)
+print(df)
 
 df.to_csv(out_scores_path)
