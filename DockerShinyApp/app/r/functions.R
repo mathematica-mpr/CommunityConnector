@@ -164,7 +164,6 @@ radar_chart <- function(df, dictionary) {
         bgcolor = paste0(config$colors$yellow50),
         namelength = -1
       ),
-      margin = list(t=70),
       showlegend = T,
       dragmode = F
     )
@@ -823,7 +822,8 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -868,7 +868,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -886,7 +888,8 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -917,7 +920,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -932,6 +937,7 @@ density_plot_overlay <- function(data, comparedata) {
     
   return(p %>% config(displaylogo = FALSE,
                       modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")) )
 }
 
@@ -1009,7 +1015,8 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -1054,7 +1061,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1072,7 +1081,8 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
@@ -1103,7 +1113,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1117,7 +1129,8 @@ density_plot <- function(data, comparedata) {
   }
   
   return(p %>% config(displaylogo = FALSE,
-                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d",  
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
