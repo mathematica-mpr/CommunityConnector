@@ -13,6 +13,9 @@ outcomes <- c("overobese_pct")
 ```
 
 ```{r Methodology Parameters}
+
+# This is set up so that we can run different iterations of a methodology - using different data or methods
+# To run & evaluate multiple methodologies, add additional rows with the respective parameters
 method <- "lasso euclidean all"
 opts <- data.frame("use_sdoh_scores" = 0,
                    "use_sdoh_raw" = 1,
@@ -23,9 +26,14 @@ opts <- data.frame("use_sdoh_scores" = 0,
 
 # Need to standardize variables prior to input for certain methodologies
 if(method %in% c("lasso euclidean all","lasso euclidean dem")){
+  print("Standardizing data")
   num_cols <- unlist(lapply(data, is.numeric))
-  data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols])
+  print(num_cols)
+  data[,names(data) %in% num_cols] <- scale(data[,names(data) %in% num_cols], scale = TRUE)
 }
+
+
+print(head(data))
 
 ```
 
