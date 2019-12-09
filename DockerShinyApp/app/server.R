@@ -162,6 +162,16 @@ server <- function(input, output, session) {
   })
   
   
+  output$radar_read_button <- renderUI({
+    req(county_check())
+    actionButton("radar_read_more", 
+                 label = lang_cfg$titles$radar_read_more,
+                 size = "sm",
+                 style = paste0("color: ", config$colors$accent,
+                                "; background-color: ", config$colors$white100,
+                                "; border-color: ", config$colors$accent))
+  })
+  
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(

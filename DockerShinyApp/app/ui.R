@@ -120,12 +120,7 @@ ui <- bootstrapPage(
                                           column(width = 12, align = "center", htmlOutput("my_county_header"))),
                                         fluidRow(
                                           column(width = 12, align = "center",
-                                                 actionButton("radar_read_more", 
-                                                              label = lang_cfg$titles$radar_read_more,
-                                                              size = "sm",
-                                                              style = paste0("color: ", config$colors$accent,
-                                                                             "; background-color: ", config$colors$white100,
-                                                                             "; border-color: ", config$colors$accent)),
+                                                 uiOutput('radar_read_button'),
                                                  br(),
                                                  br(),
                                                  br())),
