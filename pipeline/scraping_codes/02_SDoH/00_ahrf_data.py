@@ -48,15 +48,13 @@ data['population'] = data['f1198418']
 data['hosp_pp_rate'] = data['f0886817']
 data['adm_pp_rate'] = data['f0890917']
 data['kidn_hosp_pp_rate'] = data['f1407817']
+
 # create a variable equal to Total MDs (F11072) + DOs (F14717) in general practice conducting patient care/ total population (F11984)
-
-# MDS:  F12129-17 
-# DOs:  F13882-17 
+# data['gen_mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
+# we discovered that general practice numbers are really low, so looking at totals now
+data['mds_dos_pp_rate'] = (data['f1212917'] + data['f1388217'])
 # compare with PCPs = primary care provider/physician
-# 
 
-# general practice
-data['mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
 # number of short term general hospitals (F08869) per total population
 data['short_hosp_pp_rate'] = data['f0886917']
 # number of community health centers (F15253) per total population
@@ -107,6 +105,11 @@ grouped.reset_index(inplace = True)
 # change to per 100,000 people for certain variables used
 grouped['hosp_pp_rate'] = grouped['hosp_pp_rate'] * 100000
 grouped['mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
+# grouped['gen_mds_dos_pp_rate'] = grouped['gen_mds_dos_pp_rate'] * 100000
+# print(grouped['gen_mds_dos_pp_rate'])
+print(grouped['mds_dos_pp_rate'])
+mean_cols.append("FIPS")
+print(grouped[mean_cols])
 
 add_cols = grouped.columns.values
 add_cols = [c for c in add_cols if c != "FIPS"]

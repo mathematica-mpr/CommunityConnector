@@ -11,7 +11,7 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Vi
 * methodology/
   * for calculating county-level SDoH scores and similarities
 * DockerShinyApp/
-  * for building the Docker container and launching the app
+  * for building the Docker container and launching the [Community Connector app](communityconnector.mathematica.org)
 
 # Authors
 * **Kelsey Skvoretz** - *back-end lead*
