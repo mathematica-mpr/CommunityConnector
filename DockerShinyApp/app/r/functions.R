@@ -164,7 +164,6 @@ radar_chart <- function(df, dictionary) {
         bgcolor = paste0(config$colors$yellow50),
         namelength = -1
       ),
-      #margin = list(t=70),
       showlegend = T,
       dragmode = F
     )
@@ -869,7 +868,7 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 13,
+            font = list(size = 12,
                         family = "Arial",
                         color = paste(config$colors$accent))
           ),
