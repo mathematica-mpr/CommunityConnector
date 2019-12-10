@@ -709,25 +709,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
 
 }
 
-make_radar_data <- function(county_df, dd) {
-  df <- rbind(rep(1, 6), rep(0, 6),
-              # 50% circle color
-              rep(.5, 6),
-              # 100 % circle color
-              rep(1, 6),
-              county_df) %>%
-    rename_at(vars(dd$column_name), ~ dd$descrip_new)
-  df
-}
-
-
-make_density_graph <- function(data) {
-  ggplot(data, aes(x=value)) + geom_density() + 
-    geom_vline(data = filter(data, type != "other"),
-               aes(xintercept = value, color = as.factor(type))) +
-    ggtitle(first(str_wrap(data$description, 80)))
-}
-
 #density plot overlay function-------------------
 density_plot_overlay <- function(data, comparedata) {
   #function to output density plot for specific outcome
