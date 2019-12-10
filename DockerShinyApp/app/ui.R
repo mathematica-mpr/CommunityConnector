@@ -42,6 +42,14 @@ ui <- bootstrapPage(
                                                                                        background-color: #046B5C;
                                                                                        color: #ffffff;
                                                                                        }
+                                                                                       
+                                                                                       .multicol {
+                                                                                       -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
+                                                                                       -moz-column-count: 2;    /* Firefox */ 
+                                                                                       column-count: 2; 
+                                                                                       -moz-column-fill: auto;
+                                                                                       -column-fill: auto;
+                                                                                       }
                                                                                       
                                                                                        .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
                                                                                         color: #fff;
@@ -145,8 +153,11 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(column(width = 12, 
+                                                             fluidRow(column(width = 12,
                                                                              uiOutput('demo_tables_header'),
+                                                                             tags$div(align = 'left', 
+                                                                                      class = 'multicol',
+                                                                                      uiOutput('demo_tables_checkboxes')),
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
