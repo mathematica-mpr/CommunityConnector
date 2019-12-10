@@ -1,47 +1,25 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd('../../../data/raw')
 
-# prevalence
-diab_prev_2011 <- read.csv("DiabetesAtlasCountyData_Prev2011.csv", header=FALSE)
+library(assertthat)
 
-diab_prev_2011=diab_prev_2011[-c(1,2,3,68),]
-diab_prev_2011=diab_prev_2011[,-c(2,5,6)]
+process_atlas <- function(csv, metric){
+  data <- read.csv(csv, skip = 2)
+  print(names(data))
+  # remove junk rows
+  rate_col <- ifelse("Percentage" %in% names(data),"Percentage","Rate.per.1000")
+  data=data[!is.na(data$CountyFIPS),c("County","CountyFIPS",rate_col)]
+  names(data)<-c("county", "FIPS", metric)
+  print(head(data))
+  print(assert_that(nrow(data) == 64))
+  return(data)
+}
 
-
-names(diab_prev_2011)<-c("county", "FIPS", "diabetes_prevalence_2011")
-
-diab_prev_2016 <- read.csv("DiabetesAtlasCountyData_Prev2016.csv", header=FALSE)
-
-
-diab_prev_2016=diab_prev_2016[-c(1,2,3,68),]
-diab_prev_2016=diab_prev_2016[,-c(2,5,6)]
-
-names(diab_prev_2016)<-c("county", "FIPS", "diabetes_prevalence_2016")
-
-## incidence
-diab_inc_2011 <- read.csv("DiabetesAtlasCountyData_Inc2011.csv", header=FALSE)
-
-diab_inc_2011=diab_inc_2011[-c(1,2,3,68),]
-diab_inc_2011=diab_inc_2011[,-c(2,5,6)]
-
-names(diab_inc_2011)<-c("county", "FIPS","diabetes_incidence_2011")
-
-diab_inc_2016 <- read.csv("DiabetesAtlasCountyData_Inc2016.csv", header=FALSE)
-
-
-diab_inc_2016=diab_inc_2016[-c(1,2,3,68),]
-diab_inc_2016=diab_inc_2016[,-c(2,5,6)]
-
-names(diab_inc_2016)<-c("county", "FIPS","diabetes_incidence_2016")
-
-
-# obesity
-obese_prev_2011 <- read.csv("DiabetesAtlasCountyData_Obes2011.csv", header=FALSE)
-
-obese_prev_2011=obese_prev_2011[-c(1,2,3,68),]
-obese_prev_2011=obese_prev_2011[,-c(2,5,6)]
-
-names(obese_prev_2011)<-c("county", "FIPS", "obesity_prevalence_2011")
+diab_prev_2011 <- process_atlas("DiabetesAtlasCountyData_Prev2011.csv","diabetes_prevalence_2011")
+diab_prev_2016 <- process_atlas("DiabetesAtlasCountyData_Prev2016.csv", "diabetes_prevalence_2016")
+diab_inc_2011 <- process_atlas("DiabetesAtlasCountyData_Inc2011.csv", "diabetes_incidence_2011")
+diab_inc_2016 <- process_atlas("DiabetesAtlasCountyData_Inc2016.csv", "diabetes_incidence_2016")
+obese_prev_2011 <- process_atlas("DiabetesAtlasCountyData_Obes2011.csv", "obesity_prevalence_2011")
 
 obese_prev_2016 <- read.csv("DiabetesAtlasCountyData_Obes2016.csv", header=FALSE)
 
