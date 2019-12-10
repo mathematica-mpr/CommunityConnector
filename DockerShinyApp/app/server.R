@@ -336,7 +336,15 @@ server <- function(input, output, session) {
   output$comp_radar_header <- renderUI({
     req(county_check())
     tagList(
-      fluidRow(HTML(lang_cfg$my_matches), align = "center")
+      fluidRow(
+        box(align = "center",
+            width = '100%',
+            height = '100%',
+            HTML(lang_cfg$my_matches),
+            style = paste0("background-color: ", config$colors$greenaccent, "40",
+                           "; border-color: ", config$colors$greenaccent, "40",
+                           "; padding: 10px"))
+        )
     )
   })
   
