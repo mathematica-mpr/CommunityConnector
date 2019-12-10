@@ -291,6 +291,8 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     print(final_dict[final_dict['keep'] == 0]['column_name'])
 
     final_dict = final_dict[final_dict.keep == 1]
+    # reorder the data dictionary for the order of the demographic tables
+    final_dict.sort_values(['Sort_order'], inplace = True)
 
     # keep only variables needed and output final data
     data = pd.read_csv(input)
