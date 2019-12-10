@@ -2,6 +2,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd('../../../data/raw')
 
 library(assertthat)
+library(dplyr)
 
 process_atlas <- function(csv, metric){
   data <- read.csv(csv, skip = 2)
@@ -39,7 +40,8 @@ head(colorado)
 
 ## keep only 2016 and 5 year difference
 colorado <- colorado %>% 
-  select(-ends_with("2011"), -county) 
+  select(-ends_with("2011")) %>% 
+  select(-county)
 head(colorado)
 
 setwd('../cleaned/')
