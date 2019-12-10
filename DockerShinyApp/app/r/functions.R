@@ -182,8 +182,8 @@ radar_chart <- function(df, dictionary) {
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # function for two county radar plot -------------------------------------------
@@ -284,8 +284,8 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # multiple radar chart grid ----------------------------------------------------
