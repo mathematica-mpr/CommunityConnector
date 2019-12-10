@@ -1,5 +1,5 @@
-setwd("~/AHRQ SDOH")
-
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd('../../../data/raw')
 
 # prevalence
 diab_prev_2011 <- read.csv("DiabetesAtlasCountyData_Prev2011.csv", header=FALSE)
@@ -67,5 +67,6 @@ colorado$obesity_prevalence_5_year_diff<-colorado$obesity_prevalence_2016-colora
 ## keep only 2016 and 5 year difference
 colorado<-colorado[,c(1,2,4,6,8:11)]
 
+setwd('../cleaned/')
 write.csv(colorado, "CDC_Diabetes_Outcome_Data.csv", row.names=F)
 
