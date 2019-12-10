@@ -128,12 +128,7 @@ ui <- bootstrapPage(
                                           column(width = 12, align = "center", htmlOutput("my_county_header"))),
                                         fluidRow(
                                           column(width = 12, align = "center",
-                                                 actionButton("radar_read_more", 
-                                                              label = lang_cfg$titles$radar_read_more,
-                                                              size = "sm",
-                                                              style = paste0("color: ", config$colors$accent,
-                                                                             "; background-color: ", config$colors$white100,
-                                                                             "; border-color: ", config$colors$accent)),
+                                                 uiOutput('radar_read_button'),
                                                  br(),
                                                  br(),
                                                  br())),
@@ -158,12 +153,17 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+<<<<<<< HEAD
                                                              fluidRow(column(width = 12,
                                                                              h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                                              h5(HTML("<b>Filter by categories:</b>")),
                                                                              tags$div(align = 'left', 
                                                                                       class = 'multicol',
                                                                                       uiOutput('demo_tables_header')),
+=======
+                                                             fluidRow(column(width = 12, 
+                                                                             uiOutput('demo_tables_header'),
+>>>>>>> e17e743b0cbf6ca3ba39189a54095a730c86b610
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
@@ -172,7 +172,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(lang_cfg$my_matches, align = "center"),
+                                                             uiOutput('comp_radar_header'),
                                                              br(),
                                                              plotlyOutput("compare_county_radars"
                                                              ) %>% 
