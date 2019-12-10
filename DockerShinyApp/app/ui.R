@@ -155,7 +155,6 @@ ui <- bootstrapPage(
                                                              ),
                                                              fluidRow(column(width = 12,
                                                                              uiOutput('demo_tables_header'),
-                                                                             #h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                                              tags$div(align = 'left', 
                                                                                       class = 'multicol',
                                                                                       uiOutput('demo_tables_checkboxes')),
