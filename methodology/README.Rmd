@@ -24,7 +24,7 @@ The Community Connector uses a variety of data sources to develop standardized s
 
 #### Data Sources
 
-We collected county-level SDoH data from several sources to use as potential variables in the scores for each of the six SDoH domains. We assigned variables to one of the six SDoH domains based on a review of SDoH literature. For a list of data sources used in the Community Connector, see the **_Read More About the Data Sources tab_**.
+We collected county-level SDoH data from several sources to use as potential variables in the scores for each of the six SDoH domains. We assigned variables to one of the six SDoH domains based on a review of SDoH literature. For a list of data sources used in the Community Connector, see the **_Data Sources link_**.
 
 
 #### SDoH Variable Selection
@@ -37,7 +37,10 @@ We assigned a direction of association to each of the variables selected by SPCA
 
 ## Methods for Identifying Similar Counties
 
-The Community Connector provides a list of counties that are similar to the selected county of interest. The goal of this matching approach is to provide a list of counties with similar demographics and nonmodifiable social needs. Peer counties that have implemented programs to improve modifiable SDoH characteristics can serve as exemplar counties. We implemented a Lasso model[^3] to predict obesity rates using the demographic variables and all the SDoH variables. We used the demographic and nonmodifiable variables, along with their standardized coefficients as weights to calculate the Euclidean distance between counties. The closest counties in terms of Euclidean distance are listed in the My Most Similar Counties tab. 
+The Community Connector provides a list of counties that are similar to the selected county of interest. The goal of this matching approach is to provide a list of counties with similar demographics and nonmodifiable social needs. Peer counties that have implemented programs to improve modifiable SDoH characteristics can serve as exemplar counties. We implemented a Lasso model[^3], based on the following equation:
+
+$$y_i = \alpha + \beta*X_i + \gamma*nonmodifiable SDoH_i + \theta*modifiable SDoH_i + \epsilon_i $$ 
+where *y* is a health outcome (in this case, percent overweight or obese) for county *i*, and *X* are their demographic characteristics. We then use the demographic and nonmodifiable variables, along with their coefficients as weights, to calculate the Euclidean distance between counties. This returns a measure of similarity between counties using only the characteristics they cannot change and weighting them by their importance to the health outcome in question. The closest counties in terms of Euclidean distance are listed in the My Most Similar Counties tab. 
 
 
 ## References
