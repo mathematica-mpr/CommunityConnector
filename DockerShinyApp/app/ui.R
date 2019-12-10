@@ -153,17 +153,12 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-<<<<<<< HEAD
                                                              fluidRow(column(width = 12,
-                                                                             h4(lang_cfg$titles$sdoh_table_title, align = "center"),
-                                                                             h5(HTML("<b>Filter by categories:</b>")),
+                                                                             uiOutput('demo_tables_header'),
+                                                                             #h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                                                                              tags$div(align = 'left', 
                                                                                       class = 'multicol',
-                                                                                      uiOutput('demo_tables_header')),
-=======
-                                                             fluidRow(column(width = 12, 
-                                                                             uiOutput('demo_tables_header'),
->>>>>>> e17e743b0cbf6ca3ba39189a54095a730c86b610
+                                                                                      uiOutput('demo_tables_checkboxes')),
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
