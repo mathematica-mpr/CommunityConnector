@@ -258,6 +258,7 @@ server <- function(input, output, session) {
                          style = paste0("background-color: ", config$colors$greenaccent, "40",
                                         "; border-color: ", config$colors$greenaccent, "40",
                                         "; padding: 10px")),
+               br(),
                h5(HTML("<b>Filter by categories:</b>"))
         ))
       )
@@ -306,7 +307,6 @@ server <- function(input, output, session) {
   output$essentials_tables <- renderUI({
     req(county_check())
     req(input$comparison_county_selection)
-    #req(input$demo_filter)
     
     demo_tables_list <- lapply("demographic", function(x) 
       tagList(
@@ -337,14 +337,15 @@ server <- function(input, output, session) {
     req(county_check())
     tagList(
       fluidRow(
-        box(align = "center",
-            width = '100%',
-            height = '100%',
-            HTML(lang_cfg$my_matches),
-            style = paste0("background-color: ", config$colors$greenaccent, "40",
-                           "; border-color: ", config$colors$greenaccent, "40",
-                           "; padding: 10px"))
-        )
+        column(width = 12,
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$my_matches),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px"))
+        ))
     )
   })
   
