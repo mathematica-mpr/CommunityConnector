@@ -1,3 +1,5 @@
+# inputs downloaded directly from here: https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 setwd('../../../data/raw')
 
