@@ -251,11 +251,13 @@ server <- function(input, output, session) {
       fluidRow(
         column(width = 12, 
                h4(lang_cfg$titles$sdoh_table_title, align = "center"),
-               wellPanel(align = "center",
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
                          HTML(lang_cfg$sdoh_tab_description),
                          style = paste0("background-color: ", config$colors$greenaccent, "40",
                                         "; border-color: ", config$colors$greenaccent, "40",
-                                        "; padding: 7px")),
+                                        "; padding: 10px")),
                h5(HTML("<b>Filter by categories:</b>"))
         ))
       )
