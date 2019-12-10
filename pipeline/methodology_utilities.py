@@ -77,6 +77,7 @@ def FinalDictionary(spca_dictionary, output_data_dictionary, input_data_dictiona
     spca_dict = spca_dict[pd.notnull(spca_dict.sdoh_Category)]
     spca_dict['Loading_abs'] = spca_dict['Loading'].abs()
     # find percentage of total loading in each sdoh/PC grouping
+    # because we removed some variables, they don't necessarily add to one
     tot_loadings = spca_dict.groupby(['sdoh_Category','PC_Number']).sum().reset_index()[['sdoh_Category','PC_Number','Loading_abs']]
     tot_loadings.rename(columns = {"Loading_abs": "total_loading"}, inplace = True)
     spca_dict = pd.merge(spca_dict, tot_loadings, on = ['sdoh_Category',"PC_Number"])
