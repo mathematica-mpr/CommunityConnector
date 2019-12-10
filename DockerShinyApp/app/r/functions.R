@@ -123,15 +123,6 @@ radar_chart <- function(df, dictionary) {
   # df is my county; columns: county, state, sdoh_score 1:6
   # dictionary is data dictionary
   
-  #vector of score names
-  #radar_names <- get_dd(dictionary, "sdoh_score") %>% 
-  #  dplyr::pull(3)
-  #radar_names <- append(radar_names, radar_names[1])
-  ##vector of score values
-  #radar_points <- select(df, starts_with("sdoh"))
-  #radar_points <- append(radar_points, radar_points[1]) %>% 
-  #unlist()
-  
   #vector of scores and names
   axis_info <- get_score_and_name(df, dictionary)
   radar_names <- axis_info$descrip_new
@@ -213,6 +204,15 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
   radar_points2 <- append(radar_points2, radar_points2[1]) %>% 
     unlist()
   
+  #vector of scores and names
+  axis_info1 <- get_score_and_name(df1, dictionary)
+  axis_info2 <- get_score_and_name(df2, dictionary)
+  radar_names1 <- axis_info1$descrip_new
+  radar_points1 <- axis_info1$value
+  radar_names2 <- axis_info2$descrip_new
+  radar_points2 <- axis_info2$value
+  
+  
   #plotting radar chart
   p <- plot_ly(
   ) %>%     
@@ -220,7 +220,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points2,
-      theta = radar_names,
+      theta = radar_names2,
       fill = "toself",
       fillcolor = paste0(config$colors$green100, "70"),
       line = list(dash = "solid", 
@@ -239,7 +239,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points1,
-      theta = radar_names,
+      theta = radar_names1,
       #aesthetics
       fill = 'toself',
       fillcolor = paste0(config$colors$yellow50, "CC"),
