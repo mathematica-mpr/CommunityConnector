@@ -250,22 +250,30 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(
         column(width = 12, 
-<<<<<<< HEAD
-               checkboxGroupInput('demo_filter', label = NULL, 
-=======
                h4(lang_cfg$titles$sdoh_table_title, align = "center"),
-               checkboxGroupInput('demo_filter', label = 'Filter by categories:', 
->>>>>>> e17e743b0cbf6ca3ba39189a54095a730c86b610
-                                      choices = c('Economic Stability' = 'used_sdoh_1',
-                                                  'Neighborhood & Physical Environment' = 'used_sdoh_2',
-                                                  'Education' = 'used_sdoh_3',
-                                                  'Food' = 'used_sdoh_4',
-                                                  'Community' = 'used_sdoh_5',
-                                                  'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
-                                                   'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
+               h5(HTML("<b>Filter by categories:</b>"))
         ))
       )
+  })
+  
+  output$demo_tables_checkboxes <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               #h4(lang_cfg$titles$sdoh_table_title, align = "center"),
+               #h5(HTML("<b>Filter by categories:</b>")),
+               checkboxGroupInput('demo_filter', label = NULL, 
+                                  choices = c('Economic Stability' = 'used_sdoh_1',
+                                              'Neighborhood & Physical Environment' = 'used_sdoh_2',
+                                              'Education' = 'used_sdoh_3',
+                                              'Food' = 'used_sdoh_4',
+                                              'Community' = 'used_sdoh_5',
+                                              'Health Care System' = 'used_sdoh_6'),
+                                  selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
+                                               'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
+        ))
+    )
   })
   
   
