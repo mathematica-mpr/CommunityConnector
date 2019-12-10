@@ -88,7 +88,6 @@ server <- function(input, output, session) {
   
   ## methodology modal dialogue ------------------------------------------------
   methodology_modal <- modalDialog(
-    title = lang_cfg$titles$method_modal,
     HTML(lang_cfg$method),
     size = "l",
     footer = modalButton("Close"),
@@ -162,6 +161,16 @@ server <- function(input, output, session) {
   })
   
   
+  output$radar_read_button <- renderUI({
+    req(county_check())
+    actionButton("radar_read_more", 
+                 label = lang_cfg$titles$radar_read_more,
+                 size = "sm",
+                 style = paste0("color: ", config$colors$accent,
+                                "; background-color: ", config$colors$white100,
+                                "; border-color: ", config$colors$accent))
+  })
+  
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
     showModal(modalDialog(
@@ -202,6 +211,13 @@ server <- function(input, output, session) {
               target = "_blank"))
   })
   
+  ## github url ----------------------------------------------------------------
+  output$github <- renderUI({
+    tagList(a(lang_cfg$titles$github, 
+              href = " https://github.com/mathematica-mpr/CommunityConnector", 
+              target = "_blank"))
+  })
+  
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
@@ -234,6 +250,7 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(
         column(width = 12, 
+               h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                checkboxGroupInput('demo_filter', label = 'Filter by categories:', 
                                       choices = c('Economic Stability' = 'used_sdoh_1',
                                                   'Neighborhood & Physical Environment' = 'used_sdoh_2',
@@ -300,9 +317,9 @@ server <- function(input, output, session) {
 
   ## comparison counties info --------------------------------------------------
   output$comp_radar_header <- renderUI({
-    req(my_matches())
+    req(county_check())
     tagList(
-      HTML(paste0("<h4>What Counties are Most Similar to ", county_name(), ", ", county_state(), "</h4>"))
+      fluidRow(HTML(lang_cfg$my_matches), align = "center")
     )
   })
   
