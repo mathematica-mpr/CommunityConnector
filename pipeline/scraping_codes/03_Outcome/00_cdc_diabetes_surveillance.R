@@ -39,7 +39,7 @@ head(colorado)
 
 ## keep only 2016 and 5 year difference
 colorado <- colorado %>% 
-  select(-ends_with("2011"))
+  select(-ends_with("2011"), -county) 
 head(colorado)
 
 setwd('../cleaned/')
