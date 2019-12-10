@@ -44,5 +44,5 @@ colorado <- colorado %>%
   select(-county)
 head(colorado)
 
-setwd('../cleaned/')
+setwd('../cleaned/03_Outcome/')
 write.csv(colorado, "CDC_Diabetes_Outcome_Data.csv", row.names=F)
