@@ -110,7 +110,8 @@ get_score_and_name <- function(df, dictionary) {
   radar_points <- select(df, starts_with("sdoh")) %>% 
     t() %>% 
     as.data.frame() %>% 
-    tibble::rownames_to_column()
+    tibble::rownames_to_column() %>% 
+    rename("value" = V1)
   #match score value with score category name by score number
   names_and_points <- merge(radar_names, radar_points, by.x = "column_name", by.y = "rowname")
   names_and_points[dim(names_and_points)[1]+1,] <- names_and_points[1,]
@@ -123,13 +124,18 @@ radar_chart <- function(df, dictionary) {
   # dictionary is data dictionary
   
   #vector of score names
-  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
-    dplyr::pull(3)
-  radar_names <- append(radar_names, radar_names[1])
-  #vector of score values
-  radar_points <- select(df, starts_with("sdoh"))
-  radar_points <- append(radar_points, radar_points[1]) %>% 
-    unlist()
+  #radar_names <- get_dd(dictionary, "sdoh_score") %>% 
+  #  dplyr::pull(3)
+  #radar_names <- append(radar_names, radar_names[1])
+  ##vector of score values
+  #radar_points <- select(df, starts_with("sdoh"))
+  #radar_points <- append(radar_points, radar_points[1]) %>% 
+  #unlist()
+  
+  #vector of scores and names
+  axis_info <- get_score_and_name(df, dictionary)
+  radar_names <- axis_info$descrip_new
+  radar_points <- axis_info$value
   
   #plotting radar chart
   p <- plot_ly(
