@@ -250,7 +250,6 @@ server <- function(input, output, session) {
     tagList(
       fluidRow(
         column(width = 12, 
-               h4(lang_cfg$titles$sdoh_table_title, align = "center"),
                box(align = "center",
                    width = '100%',
                    height = '100%',
