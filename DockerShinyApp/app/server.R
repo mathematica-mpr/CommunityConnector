@@ -245,6 +245,23 @@ server <- function(input, output, session) {
   })
   
   ## demographics tables filter ------------------------------------------------
+  output$general_demo_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$demographics_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
   output$demo_tables_header <- renderUI({
     req(county_check())
     tagList(
