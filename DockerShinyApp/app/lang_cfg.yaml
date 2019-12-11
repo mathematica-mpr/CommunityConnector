@@ -74,7 +74,7 @@ method: '<div class="container-fluid main-container">
 </div>
 </div>'
 my_matches_tab: "This tab displays the radar charts of 20 counties in your state that are most similar to yours (sorted by similarity) in terms of non-modifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm."
-my_matches: "<b>These are the social determinants of health of 20 counties in your state that are most similar to yours (sorted by similarity) in terms of non-modifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm.</b>"
+my_matches: "<b>These are the social determinants of health scores of 20 counties in your state that are most similar to yours (sorted by similarity) in terms of non-modifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm.</b>"
 sdoh_tab: "This tab displays social determinant of health metrics for the selected county and (optional) comparison county."
 sdoh_tab_description: "<b>Which factors make up each social determinant of health score? Examine which metrics determine how strong your county is in each area on a scale of 0 to 1, as indicated by the fingerprint plot.</b>"
 demographics_tab: "This tab displays the essential demographic information for the selected county and (optional) comparison county"
