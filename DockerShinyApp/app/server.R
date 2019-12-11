@@ -281,6 +281,23 @@ server <- function(input, output, session) {
     )
   })
   
+  output$map_tab_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML("Description for map tab"),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
   
   ## render demo DTs based on selected input -----------------------------------
   output$demo_tables <- renderUI({
