@@ -101,19 +101,32 @@ filter_category <- function(data, outcome_filter) {
   data %>% filter(grepl(paste(outcome_filter, collapse = "|"), unique(column_name)))
 }
 
+# function to match sdoh score with sdoh category name
+get_score_and_name <- function(df, dictionary) {
+  #pull sdoh category number and sdoh category name from dictionary
+  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
+    dplyr::select(column_name, descrip_new)
+  #pull sdoh category number and sdoh score from selected county data frame
+  radar_points <- select(df, starts_with("sdoh")) %>% 
+    t() %>% 
+    as.data.frame() %>% 
+    tibble::rownames_to_column() %>% 
+    rename("value" = V1)
+  #match sdoh score with sdoh category name by sdoh category number
+  names_and_points <- merge(radar_names, radar_points, by.x = "column_name", by.y = "rowname")
+  names_and_points[dim(names_and_points)[1]+1,] <- names_and_points[1,]
+  return(names_and_points)
+}
+
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
   # df is my county; columns: county, state, sdoh_score 1:6
   # dictionary is data dictionary
   
-  #vector of score names
-  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
-    dplyr::pull(3)
-  radar_names <- append(radar_names, radar_names[1])
-  #vector of score values
-  radar_points <- select(df, starts_with("sdoh"))
-  radar_points <- append(radar_points, radar_points[1]) %>% 
-    unlist()
+  #vector of scores and names
+  axis_info <- get_score_and_name(df, dictionary)
+  radar_names <- axis_info$descrip_new
+  radar_points <- axis_info$value
   
   #plotting radar chart
   p <- plot_ly(
@@ -169,8 +182,8 @@ radar_chart <- function(df, dictionary) {
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # function for two county radar plot -------------------------------------------
@@ -191,6 +204,15 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
   radar_points2 <- append(radar_points2, radar_points2[1]) %>% 
     unlist()
   
+  #vector of scores and names
+  axis_info1 <- get_score_and_name(df1, dictionary)
+  axis_info2 <- get_score_and_name(df2, dictionary)
+  radar_names1 <- axis_info1$descrip_new
+  radar_points1 <- axis_info1$value
+  radar_names2 <- axis_info2$descrip_new
+  radar_points2 <- axis_info2$value
+  
+  
   #plotting radar chart
   p <- plot_ly(
   ) %>%     
@@ -198,7 +220,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points2,
-      theta = radar_names,
+      theta = radar_names2,
       fill = "toself",
       fillcolor = paste0(config$colors$green100, "70"),
       line = list(dash = "solid", 
@@ -217,7 +239,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points1,
-      theta = radar_names,
+      theta = radar_names1,
       #aesthetics
       fill = 'toself',
       fillcolor = paste0(config$colors$yellow50, "CC"),
@@ -262,8 +284,8 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # multiple radar chart grid ----------------------------------------------------
@@ -685,25 +707,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
                   modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
                                              "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 
-}
-
-make_radar_data <- function(county_df, dd) {
-  df <- rbind(rep(1, 6), rep(0, 6),
-              # 50% circle color
-              rep(.5, 6),
-              # 100 % circle color
-              rep(1, 6),
-              county_df) %>%
-    rename_at(vars(dd$column_name), ~ dd$descrip_new)
-  df
-}
-
-
-make_density_graph <- function(data) {
-  ggplot(data, aes(x=value)) + geom_density() + 
-    geom_vline(data = filter(data, type != "other"),
-               aes(xintercept = value, color = as.factor(type))) +
-    ggtitle(first(str_wrap(data$description, 80)))
 }
 
 #density plot overlay function-------------------
