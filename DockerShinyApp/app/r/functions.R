@@ -103,16 +103,16 @@ filter_category <- function(data, outcome_filter) {
 
 # function to match sdoh score with sdoh category name
 get_score_and_name <- function(df, dictionary) {
-  #pull score number and score category name from dictionary
+  #pull sdoh category number and sdoh category name from dictionary
   radar_names <- get_dd(dictionary, "sdoh_score") %>% 
     dplyr::select(column_name, descrip_new)
-  #pull score number and score value from selected county data frame
+  #pull sdoh category number and sdoh score from selected county data frame
   radar_points <- select(df, starts_with("sdoh")) %>% 
     t() %>% 
     as.data.frame() %>% 
     tibble::rownames_to_column() %>% 
     rename("value" = V1)
-  #match score value with score category name by score number
+  #match sdoh score with sdoh category name by sdoh category number
   names_and_points <- merge(radar_names, radar_points, by.x = "column_name", by.y = "rowname")
   names_and_points[dim(names_and_points)[1]+1,] <- names_and_points[1,]
   return(names_and_points)
