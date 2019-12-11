@@ -144,6 +144,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput('general_demo_header'),
                                                              fluidRow(column(width = 12, 
                                                                              uiOutput('essentials_tables')
                                                                              
