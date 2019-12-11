@@ -190,6 +190,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput("outcomes_tab_header"),
                                                              column(width = 12,
                                                                     fluidRow(uiOutput('health_outcomes_header')),
                                                                     fluidRow(
