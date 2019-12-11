@@ -178,19 +178,23 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(leafletOutput("map") %>% 
+                                                             fluidRow(
+                                                               column(width = 12, 
+                                                                      leafletOutput("map") %>% 
                                                                         withSpinner(type = getOption("spinner.type", default = 1),
                                                                                     color = getOption("spinner.color", default = "#046B5C"))
-                                                             )
+                                                               ))
                                                     ),
                                                     tabPanel(span(HTML("<br/><center>Health Outcomes</center>"), title = lang_cfg$health_outcomes_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(uiOutput('health_outcomes_header')),
-                                                             fluidRow(
-                                                               div(id = "density_plot_container",
-                                                                   uiOutput(outputId = "density_graphs_ui")))
+                                                             column(width = 12,
+                                                                    fluidRow(uiOutput('health_outcomes_header')),
+                                                                    fluidRow(
+                                                                      div(id = "density_plot_container",
+                                                                          uiOutput(outputId = "density_graphs_ui")))
+                                                             )
                                                     )
                                         )
                                  )
