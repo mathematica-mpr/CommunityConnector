@@ -64,13 +64,13 @@ final_distance <- as.data.frame(as.matrix(results[2][[1]][[1]]))
 final_distance$sim_county <- rownames(final_distance)
 head(final_distance)
 
-# find the minimum distance for each county that is not 0
+# find the minimum distance for each county that is not 0 to see if there are any counties that are hard to match
 min_not_0 <- function(x){
   x <- as.numeric(x)
   x <- x[x!=0]
   min(x)
 }
-apply(final_distance, 1, min_not_0)
+data.frame(apply(final_distance, 1, min_not_0))
 
 # output distance matrix with FIPS code as identifier
 write.csv(final_distance, '../DockerShinyApp/app/data/final_distance.csv')

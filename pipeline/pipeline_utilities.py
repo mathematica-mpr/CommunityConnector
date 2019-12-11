@@ -139,20 +139,15 @@ def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH'
         for file in cleaned_files:
             if "csv" in file:
                 data = pd.read_csv(os.path.join(cleaned_drive, t, file))
-                print(file)
-                print(data.shape)
-
                 data['FIPS'] = [int(str(fips)[-3:]) for fips in data['FIPS']]
                 # make sure the file is unique by FIPS
-                print(data['FIPS'].drop_duplicates().shape)
+                assert(data.shape[0] == data['FIPS'].drop_duplicates().shape[0])
 
                 if count == 0:
                     full_data = data
                 else:
                     full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
                 print(f"Completed {file}")
-                print(full_data.shape)
-                print('')
 
                 count += 1
 
@@ -240,6 +235,7 @@ def SelectVariables(input, output, data_dictionary):
     data.columns = [custom_replace(col) for col in data.columns.values]
     # keep only the columns that are in the data dictionary
     data = data[keep_cols]
+    print(data.columns[data.columns.duplicated()])
     assert(data.shape[1] == len(keep_cols))
 
     # are there any variables that don't have a ton of data? drop them if low coverage
@@ -269,6 +265,8 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     # this could be adjusted based on the health outcomes in question
     final_dict['keep'] = 0
     final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'keep'] = 1
+    # also make sure variables selected for sdoh category do not show up in the demographics
+    final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'demographic'] = 0 
     final_dict.loc[final_dict['outcome'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['sdoh_score'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['data_type'] == 'ID', 'keep'] = 1
@@ -293,6 +291,8 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     print(final_dict[final_dict['keep'] == 0]['column_name'])
 
     final_dict = final_dict[final_dict.keep == 1]
+    # reorder the data dictionary for the order of the demographic tables
+    final_dict.sort_values(['Sort_order'], inplace = True)
 
     # keep only variables needed and output final data
     data = pd.read_csv(input)
