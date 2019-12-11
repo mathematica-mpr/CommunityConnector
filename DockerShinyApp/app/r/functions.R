@@ -101,6 +101,12 @@ filter_category <- function(data, outcome_filter) {
   data %>% filter(grepl(paste(outcome_filter, collapse = "|"), unique(column_name)))
 }
 
+# plotly styles ----------------------------------------------------------------
+## hoverlabel font
+hoverfont <- list(
+  family = "Arial"
+)
+
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
   # df is my county; columns: county, state, sdoh_score 1:6
@@ -162,7 +168,8 @@ radar_chart <- function(df, dictionary) {
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$yellow50),
-        namelength = -1
+        namelength = -1,
+        font = hoverfont
       ),
       showlegend = T,
       dragmode = F
@@ -255,7 +262,8 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$yellow50)
+        bgcolor = paste0(config$colors$yellow50),
+        font = hoverfont
       ),
       showlegend = T,
       dragmode = F
@@ -342,7 +350,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       ),
       hoverlabel = list(
         namelength = -1,
-        bgcolor = paste0(config$colors$teal100)
+        bgcolor = paste0(config$colors$teal100),
+        font = hoverfont
       ),
       margin = list(t = 7, l = 1, r = 7),
       annotations = c(list(
@@ -829,7 +838,8 @@ density_plot_overlay <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county and selected county
         shapes = list(
@@ -895,7 +905,8 @@ density_plot_overlay <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county
         shapes = list(
@@ -1022,7 +1033,8 @@ density_plot <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county and selected county
         shapes = list(
@@ -1088,7 +1100,8 @@ density_plot <- function(data, comparedata) {
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county
         shapes = list(
