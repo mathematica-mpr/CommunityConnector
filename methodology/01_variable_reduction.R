@@ -1,18 +1,18 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-library(ggplot2)                 #graphing
-library(ggcorrplot)              #correlations graphs
-library(GGally)                  #correlations graphs
-library(corrr)                   #correlations graphs
-library(Amelia)                  #visualizing missing data
-library(missForest)              #imputing missing data
-library(randomForest)            #For random forests and VarImpPlots
-library(grid)                    #organizing plots in one figure
-library(gridExtra)               #organizing plots in one figure
-library(glmnet)                  #for running lasso and ridge regression
-library(dplyr)                   #rownames to col
+library(ggplot2)                 
+library(ggcorrplot)              
+library(GGally)                  
+library(corrr)                   
+library(Amelia)                  
+library(missForest)              
+library(randomForest)            
+library(grid)                    
+library(gridExtra)               
+library(glmnet)                 
+library(dplyr)                   
 library(devtools)       
-library(ggbiplot)                #pca plots
+library(ggbiplot)                
 library(tidyverse)
 library(rlang)
 library(lazyeval)
@@ -94,34 +94,6 @@ varreduc_uni <- function(list, num.comp) {
   return(unique)
 }
 
-#Testing Tuning Parameter-----
-alpmin20 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-20)
-cum_var_exp <- summary(test2)[4,]
-plot(cum_var_exp, pch = 20, ylim = c(0,1), main = "Testing Parameters for Score 6")
-
-alpmin10<- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-10)
-cum_var_exp <- summary(test1)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "red")
-
-alpmin4 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .0001)
-cum_var_exp <- summary(test2)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = " green", lty = 2)
-
-alp005 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .005)
-cum_var_exp <- summary(test3)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "pink")
-
-alp01 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .01)
-cum_var_exp <- summary(test4)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "blue")
-
-alp05 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .05)
-cum_var_exp <- summary(test5)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "purple")
-
-alp1 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .1)
-cum_var_exp <- summary(test6)[4,]
-points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "orange")
 
 #Results-----
 
@@ -133,7 +105,7 @@ S4PC <- varreduc_spca(Score4, .01) #2
 S5PC <- varreduc_spca(Score5, .01) #8
 S6PC <- varreduc_spca(Score6, .01) #8
 
-#number of principal components used. 
+#number of principal components used
 num1 <- 5
 num2 <- 13
 num3 <- 3
@@ -161,12 +133,12 @@ all <- c(S1PC, S2PC, S3PC, S4PC, S5PC, S6PC) %>%
 
 #Post SPCA manually selected variables
 varadd <- c("budget_water", "pct_physically_inactive")
-test <- function(varname, df) {
+add_var <- function(varname, df) {
   index <- which(df$Variable_Name==varname)
   PCinfo <- df[index,]
   return(PCinfo)
 }
-pc_add <- lapply(varadd, test, df = all)
+pc_add <- lapply(varadd, add_var, df = all)
 
 #combining spca and manually selected variables
 all_selected <- c(S1PC[1:num1],S2PC[1:num2],S3PC[1:num3],S4PC[1:num4],S5PC[1:num5],S6PC[1:num6]) %>% 

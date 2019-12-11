@@ -1,39 +1,19 @@
 
-##############
-###PACKAGES###
-##############
+#packages-----
 
-install.packages("ggplot2")                 
-install.packages("ggcorrplot")              
-install.packages("GGally")                  
-install.packages("corrr")                   
-install.packages("Amelia")                  
-install.packages("missForest")
-install.packages("randomForest")            
-install.packages("grid")                    
-install.packages("gridExtra")               
-install.packages("glmnet")                  
-install.packages("dplyr")
-install.packages("devtools")
-devtools::install_github("vqv/ggbiplot")
-install.packages("tidyverse")
-install.packages("sparsepca")
-install.package("elasticnet")
-#install.packages("psycho")
-
-library(ggplot2)                 #graphing
-library(ggcorrplot)              #correlations graphs
-library(GGally)                  #correlations graphs
-library(corrr)                   #correlations graphs
-library(Amelia)                  #visualizing missing data
-library(missForest)              #imputing missing data
-library(RandomForest)            #For random forests and VarImpPlots
-library(grid)                    #organizing plots in one figure
-library(gridExtra)               #organizing plots in one figure
-library(glmnet)                  #for running lasso and ridge regression
-library(dplyr)                   #rownames to col
+library(ggplot2)                 
+library(ggcorrplot)              
+library(GGally)                  
+library(corrr)                   
+library(Amelia)                  
+library(missForest)              
+library(RandomForest)            
+library(grid)                    
+library(gridExtra)               
+library(glmnet)                  
+library(dplyr)                   
 library(devtools)            
-library(ggbiplot)                #pca plots
+library(ggbiplot)                
 library(tidyverse)
 library(rlang)
 library(lazyeval)
@@ -41,14 +21,13 @@ library(purrr)
 library(sparsepca)
 library(ClustOfVar)
 
-##########
-###DATA###
-##########
+#data-----
 
 #data sets
 
 sdohall <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data.csv")
 dictionary <- read.csv("C:/Users/ECody/Desktop/AHRQProj/CommunityConnector/data/final_data_dictionary.csv")
+
 #removing score
 dictionary <- dictionary[-(89:94),] 
 sdohall <- sdohall[-65,-(119:124)]  
@@ -70,6 +49,7 @@ sdoh_numeric <- missForest(sdohall)
 sdoh_numeric <- sdoh_numeric$ximp
 
 #removed index and doubles of demographics
+#!!inaccurate numbers for new data
 sdoh_numeric <- sdoh_numeric[,-c(3, 5, 6, 26, 27)]  
 dictionary <- dictionary[-c(3, 5, 6, 26, 27),]
 names(sdoh_numeric)[103] <- "Gini.Index.Income.Inequal"
@@ -91,9 +71,7 @@ for (i in seq(datlist)) {
   assign(paste0("Score", i), datlist[[i]])
 }
 
-############
-###GRAPHS###
-############
+#graphs-----
 
 #Checking Doubles
 p1 <- ggplot(sdohall, aes(x = diabetes_pct, y = P.diabetic)) +
@@ -273,6 +251,7 @@ GraphScatter(sdoh_numeric, quo(P.insufficient.sleep), "% Insufficient Sleep Scat
 GraphScatter(sdoh_numeric, quo(P.drive.alone), "% Drives Alone Scatter Plot for All Outcomes")
 GraphScatter(sdoh_numeric, quo(graduation.rate), "% Graduation Rate Scatter Plot for All Outcomes")
 
+#!! prints 68 graphs
 #checking for non linear relationships
 #for (i in 1:68) {
 #  a <- ggplot(sdoh_numeric, aes(x = sdoh_numeric[,i], y = life.expectancy)) +
@@ -287,9 +266,7 @@ GraphScatter(sdoh_numeric, quo(graduation.rate), "% Graduation Rate Scatter Plot
 #  gridExtra::grid.arrange(a, b, c, d)
 #}
 
-###################################
-###POST VARIABLE SELECTION PLOTS###
-###################################
+#post variable selection plots----
 
 ggplot(sdoh_numeric, aes(x = median.income, y = pct.staying.in.same.tract.as.adults.rp.gp.pall)) +
   geom_point() + 
@@ -372,9 +349,7 @@ grid.arrange(m, n)
 
 ggplot(sdoh_numeric, aes(x = median.income, y = budget.environmental)) + geom_point()
 
-##################
-###DEMOGRAPHICS###
-##################
+#demographics----
 
 demographics <- sdoh_numeric[,which(dictionary$demographic==1)]
 
@@ -384,15 +359,9 @@ ggcorr(demographics, geom = "blank", label = TRUE, hjust = 1, label_size = 3) +
   scale_alpha_manual(values = c("TRUE" = 0.25, "FALSE" = 0)) +
   guides(color = FALSE, alpha = FALSE)
 
+#variable reduction testing----
 
-
-
-########################
-###VARIABLE REDUCTION###
-########################
-
-###PCA
-
+#PCA
 varreduc_spca <- function(data, alpha) {
   spca <- robspca(data, center = T, scale = T, verbose = F, alpha = alpha)
   #cum <- cumsum(spca$sdev^2/sum(spca$sdev^2))
@@ -440,69 +409,32 @@ varreduc_uni(S6PC, 7)
 
 #Testing Tuning Parameter
 
-test2 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-20)
-cum_var_exp <- summary(test2)[4,]
+alphat1 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-20)
+cum_var_exp <- summary(alphat1)[4,]
 plot(cum_var_exp, pch = 20, ylim = c(0,1), main = "Testing Parameters for Score 6")
 
-test1 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-10)
-cum_var_exp <- summary(test1)[4,]
+alphat2 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = 1e-10)
+cum_var_exp <- summary(alphat2)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "red")
 
-test2 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .0001)
-cum_var_exp <- summary(test2)[4,]
+alphat3 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .0001)
+cum_var_exp <- summary(alphat3)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = " green", lty = 2)
 
-test3 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .005)
-cum_var_exp <- summary(test3)[4,]
+alphat4 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .005)
+cum_var_exp <- summary(alphat4)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "pink")
 
-test4 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .01)
-cum_var_exp <- summary(test4)[4,]
+alphat5 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .01)
+cum_var_exp <- summary(alphat5)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "blue")
 
-test5 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .05)
-cum_var_exp <- summary(test5)[4,]
+alphat6 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .05)
+cum_var_exp <- summary(alphat6)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "purple")
 
-test6 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .1)
-cum_var_exp <- summary(test6)[4,]
+alphat7 <- robspca(Score6, center = T, scale = T, verbose = F, alpha = .1)
+cum_var_exp <- summary(alphat7)[4,]
 points(cum_var_exp, pch = 20, type = "l", lwd = 2, col = "orange")
 
-#cluster of variance
 
-tree1 <- hclustvar(Score1)
-tree2 <- hclustvar(Score2)
-tree3 <- hclustvar(Score3)
-tree4 <- hclustvar(Score4)
-tree5 <- hclustvar(Score5)
-tree6 <- hclustvar(Score6)
-
-test <- stability(tree1, B = 100)
-test2 <- clValid(Score1, 2:4)
-plot(test2)
-
-p1 <- ggdendrogram(tree1) +
-  ggtitle("Clustering for Score 1") +
-  coord_flip()
-p2 <- ggdendrogram(tree2) +
-  ggtitle("Clustering for Score 2") +
-  coord_flip()
-p3 <- ggdendrogram(tree3) +
-  ggtitle("Clustering for Score 3") +
-  coord_flip()
-p4 <- ggdendrogram(tree4) +
-  ggtitle("Clustering for Score 4") +
-  coord_flip()
-p5 <- ggdendrogram(tree5) +
-  ggtitle("Clustering for Score 5") +
-  coord_flip()
-p6 <- ggdendrogram(tree6) +
-  ggtitle("Clustering for Score 6") +
-  coord_flip()
-gridExtra::grid.arrange(p1, p2, p3, top = "Clustering", ncol = 2)
-gridExtra::grid.arrange(p4, p5, p6, top = "Clustering", ncol = 2)
-
-cutree(tree1, 2)
-g <- cutree(tree2, 4)
-which(g==3)
->>>>>>> feature/plots
