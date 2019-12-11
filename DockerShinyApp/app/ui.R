@@ -178,6 +178,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput('map_tab_header'),
                                                              fluidRow(
                                                                column(width = 12, 
                                                                       leafletOutput("map") %>% 
