@@ -33,7 +33,7 @@ method: '<div class="container-fluid main-container">
 <h2>Methods for SDoH Scores</h2>
 <div id="overview" class="section level4">
 <h4>Overview</h4>
-<p>The Community Connector uses a variety of data sources to develop standardized scores for the 6 domains of SDoH:<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>The Community Connector uses a variety of data sources to develop standardized scores for the six domains of SDoH:<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Economic Stability</strong>—includes factors like employment, income, expenses, debt, medical bills, and support.</p></li>
 <li><p><strong>Neighborhood and Physical Environment</strong>—includes factors like housing, transportation, safety, parks, playgrounds, walkability, and geography.</p></li>
