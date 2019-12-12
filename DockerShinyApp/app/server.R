@@ -227,7 +227,7 @@ server <- function(input, output, session) {
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>Social Determinants of Health in <br>", county_name(), ", ", county_state(), "</h3>"))
+    HTML(paste0("<h3>Social Determinants of Health Scores <br> for ", county_name(), ", ", county_state(), "</h3>"))
   })
   
   
@@ -251,6 +251,23 @@ server <- function(input, output, session) {
   })
   
   ## demographics tables filter ------------------------------------------------
+  output$general_demo_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$demographics_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
   output$demo_tables_header <- renderUI({
     req(county_check())
     tagList(
@@ -259,7 +276,7 @@ server <- function(input, output, session) {
                box(align = "center",
                    width = '100%',
                    height = '100%',
-                         HTML(lang_cfg$sdoh_tab_description),
+                         HTML(lang_cfg$tab_headers$sdoh_tab_description),
                          style = paste0("background-color: ", config$colors$greenaccent, "40",
                                         "; border-color: ", config$colors$greenaccent, "40",
                                         "; padding: 10px")),
@@ -283,6 +300,40 @@ server <- function(input, output, session) {
                                               'Health Care System' = 'used_sdoh_6'),
                                   selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
                                                'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
+        ))
+    )
+  })
+  
+  output$map_tab_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$map_tab_description, lang_cfg$tab_headers$similarity_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
+  output$outcomes_tab_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$outcomes_tab),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
         ))
     )
   })
@@ -346,7 +397,7 @@ server <- function(input, output, session) {
                box(align = "center",
                    width = '100%',
                    height = '100%',
-                   HTML(lang_cfg$my_matches),
+                   HTML(lang_cfg$tab_headers$matches_tab_description, lang_cfg$tab_headers$similarity_description),
                    style = paste0("background-color: ", config$colors$greenaccent, "40",
                                   "; border-color: ", config$colors$greenaccent, "40",
                                   "; padding: 10px"))

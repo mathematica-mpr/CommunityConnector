@@ -144,6 +144,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput('general_demo_header'),
                                                              fluidRow(column(width = 12, 
                                                                              uiOutput('essentials_tables')
                                                                              
@@ -178,6 +179,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput('map_tab_header'),
                                                              fluidRow(
                                                                column(width = 12, 
                                                                       leafletOutput("map") %>% 
@@ -189,6 +191,7 @@ ui <- bootstrapPage(
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput("outcomes_tab_header"),
                                                              column(width = 12,
                                                                     fluidRow(uiOutput('health_outcomes_header')),
                                                                     fluidRow(
