@@ -9,7 +9,7 @@ RUN apt update \
     libgdal-dev \
     curl \
     awscli \
-    && R -e "install.packages(c('shiny', 'DT', 'forcats', 'shinytest', 'yaml', 'shinyWidgets', 'Rcpp', 'sf', 'leaflet', 'shinyjs', 'shinyBS', 'shinycssloaders', 'aws.s3', 'aws.ec2metadata', 'aws.signature'), repos='http://cran.rstudio.com/')"
+    && R -e "install.packages(c('shiny', 'DT', 'forcats', 'shinytest', 'yaml', 'shinyWidgets', 'Rcpp', 'sf', 'leaflet', 'shinyjs', 'shinyBS', 'shinycssloaders', 'aws.s3', 'aws.ec2metadata', 'aws.signature'), repos='http://cran.rstudio.com/')" \
     && R -e "install.packages('git2r', type='source', configure.vars='autobrew=yes')" \
     && R -e "devtools::install_github('rstudio/renv')" \
     && R -e "devtools::install_version('plotly', version = '4.9.0', repos='http://cran.rstudio.com/')" 
