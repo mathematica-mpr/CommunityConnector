@@ -8,7 +8,7 @@ RUN apt-get update \
     libudunits2-dev \
     libgdal-dev
 
-RUN R -e "install.packages(c('shiny', 'DT', 'forcats', 'shinytest', 'yaml', 'shinyWidgets', 'Rcpp', 'sf', 'leaflet', 'shinyjs', 'shinyBS', 'shinycssloaders', 'aws.s3', 'aws.ec2metadata', 'aws.signature'), repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('shiny', 'shinydashboard', 'DT', 'forcats', 'shinytest', 'yaml', 'shinyWidgets', 'Rcpp', 'sf', 'leaflet', 'shinyjs', 'shinyBS', 'shinycssloaders', 'aws.s3', 'aws.ec2metadata', 'aws.signature'), repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('git2r', type='source', configure.vars='autobrew=yes')"
 RUN R -e "devtools::install_github('rstudio/renv')"
 RUN R -e "devtools::install_version('plotly', version = '4.9.0', repos='http://cran.rstudio.com/')"
