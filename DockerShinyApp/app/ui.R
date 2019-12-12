@@ -159,6 +159,7 @@ ui <- bootstrapPage(
                                                                              tags$div(align = 'left', 
                                                                                       class = 'multicol',
                                                                                       uiOutput('demo_tables_checkboxes')),
+                                                                             br(),
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
@@ -194,6 +195,7 @@ ui <- bootstrapPage(
                                                              uiOutput("outcomes_tab_header"),
                                                              column(width = 12,
                                                                     fluidRow(uiOutput('health_outcomes_header')),
+                                                                    br(),
                                                                     fluidRow(
                                                                       div(id = "density_plot_container",
                                                                           uiOutput(outputId = "density_graphs_ui")))
