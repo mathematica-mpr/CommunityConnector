@@ -74,7 +74,7 @@ method: '<div class="container-fluid main-container">
 </div>
 </div>'
 tab_headers:
-  demographics_description: "<b>View the general demographics used in determining similarity between your county and other counties in your state. Select a comparison county to compare demographics.</b>"
+  demographics_description: "<b>View the demographics used to help determine the similarity between your county and other counties. Select another county to see the comparison.</b>"
   sdoh_tab_description: "<b>Which factors make up each social determinant of health score? Examine which metrics determine how strong your county is in each area on a scale of 0 to 1, as indicated by the fingerprint plot.</b>"
   matches_tab_description: "<b>These are the social determinants of health scores for the 20 counties in your state that are most similar to yours (sorted by similarity).</b>"
   map_tab_description: "<b>Counties are shaded according to similarity to your county.</b>"
