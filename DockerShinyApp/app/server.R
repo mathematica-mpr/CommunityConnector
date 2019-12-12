@@ -48,6 +48,12 @@ server <- function(input, output, session) {
     dat %>% filter(county == input$comparison_county_selection)
   })
   
+  comp_county_fips <- reactive({
+    req(county_check())
+    req(input$comparison_county_selection)
+    dat %>% filter(county == input$comparison_county_selection) %>% pull(fips)
+  })
+  
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
@@ -370,15 +376,22 @@ server <- function(input, output, session) {
   
   output$map <- renderLeaflet ({
     req(county_check())
-
-      df <- find_my_matches(county_fips(), dat)[[1]] %>%
+    req(input$comparison_county_selection)
+    
+    df <- find_my_matches(county_fips(), dat)[[1]] %>%
         mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
         mutate(NAME = str_replace(county, " County", ""))
-      
-      st_fips <- str_sub(df$GEOID, 1, 2)[1]
-      cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
-
+    
+    st_fips <- str_sub(df$GEOID, 1, 2)[1]
+    cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
+    comparison_cty_fips <- str_pad(comp_county_fips(), width = 5, side = "left", pad = "0")
+    
+    if (input$comparison_county_selection == "None") {
       county_map(df, st_fips, cty_fips)
+    } else {
+      county_map_comp(df, st_fips, cty_fips, comparison_cty_fips)
+    }
+    
   })
 
   # dynamic number of density graphs -------------------------------------------

@@ -1158,11 +1158,28 @@ get_compare_value <- function(data, comparison_name) {
   return(val)
 }
 
+# Custom legend function for selected and comparison counties
+addLegendCustom <- function(map, colors, labels, borders, opacity = 0.6){
+  make_shapes <- function(colors, borders) {
+    paste0(colors, "; width: 15px; height: 15px; border:2px solid ", borders, "; border-radius: 0%")
+  }
+  make_labels <- function(labels) {
+    paste0("<div style='display: inline-block;height: 15px;margin-top: 4px;line-height: 15px;'>", labels, "</div>")
+  }
+  legend_colors <- make_shapes(colors, borders)
+  legend_labels <- make_labels(labels)
+  return(addLegend(map, colors = legend_colors, labels = legend_labels, opacity = opacity))
+}
+
 # map function
 county_map <- function(df, st_fips, cty_fips) {
+  
   selected_state_shp <- st_shp %>%
     filter(str_sub(GEOID, 1, 2) == st_fips) %>%
-    left_join(., df)
+    left_join(., df) %>%
+    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+    mutate_at(vars(quantile_distance), ~(. / 2))
   
   # Compute approximate centroid and edges of study area
   selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
@@ -1173,28 +1190,23 @@ county_map <- function(df, st_fips, cty_fips) {
   y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
   y_max <- selected_state_shp_box[4]
   
-  # Plot counties with proximity score
-  # Remove selected county from consideration in popups, and plot separately
-  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
-  selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
-    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
-    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
-    mutate_at(vars(quantile_distance), ~(. / 2))
-  
-  county_label <- sprintf(
-    "<strong>Comparison County:</strong> %s <br/>
-      <strong>Selected County: </strong> %s <br/>",
-    selected_state_shp$NAME, selected_geo$NAME[1]
-  ) %>%
-    lapply(htmltools::HTML)
-  selected_county_label <- sprintf(
-    "<strong>Selected County:</strong> %s <br/>",
-    selected_geo$NAME[1]) %>%
-    lapply(htmltools::HTML)
-  
-  color_pal <- colorFactor(palette = color_mapping$hex_color,
-                           levels = color_mapping$rounded_distance,
+  # Factor color palette
+  color_pal <- colorFactor(palette  = color_mapping$hex_color,
+                           levels   = color_mapping$rounded_distance,
                            na.color = config$colors$grey50)
+  
+  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips)
+  
+  county_label <- sprintf("%s", selected_state_shp$NAME) %>%
+    lapply(htmltools::HTML)
+  selected_county_label <- sprintf("%s", selected_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  
+  legend_color <- config$colors$yellow50
+  legend_label <- paste0("Selected County: ", selected_geo$NAME)
+  legend_border <- "black"
+  
   leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
     setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
     setMaxBounds(lng1 = x_min,
@@ -1215,9 +1227,7 @@ county_map <- function(df, st_fips, cty_fips) {
                 highlightOptions = highlightOptions(color = "black",
                                                     weight =  2,
                                                     bringToFront = TRUE)) %>%
-    addLegend(colors = c(config$colors$yellow50),
-              labels = paste0("Selected County: ", selected_geo$NAME),
-              opacity = 0.6) %>%
+    addLegendCustom(legend_color, legend_label, legend_border) %>%
     addLegend(colors = c(color_mapping$hex_color[1],
                          color_mapping$hex_color[34],
                          color_mapping$hex_color[68],
@@ -1249,3 +1259,201 @@ county_map <- function(df, st_fips, cty_fips) {
                                                     weight =  4,
                                                     bringToFront = TRUE))
 }
+
+county_map_comp <- function(df, st_fips, cty_fips, comparison_cty_fips) {
+  
+  selected_state_shp <- st_shp %>%
+    filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+    left_join(., df) %>%
+    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+    mutate_at(vars(quantile_distance), ~(. / 2))
+  
+  # Compute approximate centroid and edges of study area
+  selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+  x_min <- selected_state_shp_box[1]
+  x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+  x_max <- selected_state_shp_box[3]
+  y_min <- selected_state_shp_box[2]
+  y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+  y_max <- selected_state_shp_box[4]
+  
+  # Factor color palette
+  color_pal <- colorFactor(palette  = color_mapping$hex_color,
+                           levels   = color_mapping$rounded_distance,
+                           na.color = config$colors$grey50)
+  
+  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  comparison_geo <- selected_state_shp %>% filter(GEOID == comparison_cty_fips)
+  selected_state_shp <- selected_state_shp %>% filter(!(GEOID %in% c(cty_fips, comparison_cty_fips)))
+  
+  county_label <- sprintf("%s", selected_state_shp$NAME) %>%
+    lapply(htmltools::HTML)
+  selected_county_label <- sprintf("%s", selected_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  comparison_county_label <- sprintf("%s", comparison_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  
+  legend_color <- c(config$colors$yellow50, color_pal(comparison_geo$quantile_distance))
+  legend_label <- c(paste0("Selected County: ", selected_geo$NAME),
+                    paste0("Comparison County: ", comparison_geo$NAME))
+  legend_border <- c("black", "black")
+  
+  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+    setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+    setMaxBounds(lng1 = x_min,
+                 lat1 = y_min,
+                 lng2 = x_max,
+                 lat2 = y_max) %>%
+    addProviderTiles(providers$Stamen.TonerLite) %>%
+    addPolygons(data = selected_state_shp,
+                color = ~color_pal(selected_state_shp$quantile_distance),
+                weight = 1,
+                smoothFactor = 1,
+                fillOpacity = 0.6,
+                label = county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE)) %>%
+    addLegendCustom(legend_color, legend_label, legend_border) %>%
+    addLegend(colors = c(color_mapping$hex_color[1],
+                         color_mapping$hex_color[34],
+                         color_mapping$hex_color[68],
+                         color_mapping$hex_color[101],
+                         color_mapping$hex_color[134],
+                         color_mapping$hex_color[168],
+                         color_mapping$hex_color[201]),
+              labels = c("Most similar",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "Least similar"),
+              opacity = 0.6) %>%
+    addPolygons(data = selected_geo,
+                fillColor = config$colors$yellow50,
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.9,
+                weight = 2,
+                smoothFactor = 1,
+                label = selected_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  4,
+                                                    bringToFront = TRUE)) %>%
+    addPolygons(data = comparison_geo,
+                fillColor = ~color_pal(comparison_geo$quantile_distance),
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.6,
+                weight = 2,
+                smoothFactor = 1,
+                label = comparison_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE))
+}
+
+
+  
+  # selected_state_shp <- st_shp %>%
+  #   filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+  #   left_join(., df)
+  # 
+  # # Compute approximate centroid and edges of study area
+  # selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+  # x_min <- selected_state_shp_box[1]
+  # x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+  # x_max <- selected_state_shp_box[3]
+  # y_min <- selected_state_shp_box[2]
+  # y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+  # y_max <- selected_state_shp_box[4]
+  # 
+  # # Plot counties with proximity score
+  # # Remove selected county from consideration in popups, and plot separately
+  # selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  # selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
+  #   mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+  #   mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+  #   mutate_at(vars(quantile_distance), ~(. / 2))
+  # 
+  # county_label <- sprintf(
+  #   "<strong>Comparison County:</strong> %s <br/>
+  #     <strong>Selected County: </strong> %s <br/>",
+  #   selected_state_shp$NAME, selected_geo$NAME[1]
+  # ) %>%
+  #   lapply(htmltools::HTML)
+  # selected_county_label <- sprintf(
+  #   "<strong>Selected County:</strong> %s <br/>",
+  #   selected_geo$NAME[1]) %>%
+  #   lapply(htmltools::HTML)
+  # 
+  # color_pal <- colorFactor(palette = color_mapping$hex_color,
+  #                          levels = color_mapping$rounded_distance,
+  #                          na.color = config$colors$grey50)
+  # leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+  #   setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+  #   setMaxBounds(lng1 = x_min,
+  #                lat1 = y_min,
+  #                lng2 = x_max,
+  #                lat2 = y_max) %>%
+  #   addProviderTiles(providers$Stamen.TonerLite) %>%
+  #   addPolygons(data = selected_state_shp,
+  #               color = ~color_pal(selected_state_shp$quantile_distance),
+  #               weight = 1,
+  #               smoothFactor = 1,
+  #               fillOpacity = 0.6,
+  #               label = county_label,
+  #               labelOptions = labelOptions(
+  #                 style = list("font-weight" = "normal", padding = "3 px 8 px"),
+  #                 textsize = "15px",
+  #                 direction = "auto"),
+  #               highlightOptions = highlightOptions(color = "black",
+  #                                                   weight =  2,
+  #                                                   bringToFront = TRUE)) %>%
+  #   addLegend(colors = c(config$colors$yellow50),
+  #             labels = paste0("Selected County: ", selected_geo$NAME),
+  #             opacity = 0.6) %>%
+  #   addLegend(colors = c(color_mapping$hex_color[1],
+  #                        color_mapping$hex_color[34],
+  #                        color_mapping$hex_color[68],
+  #                        color_mapping$hex_color[101],
+  #                        color_mapping$hex_color[134],
+  #                        color_mapping$hex_color[168],
+  #                        color_mapping$hex_color[201]),
+  #             labels = c("Most similar",
+  #                        "",
+  #                        "",
+  #                        "",
+  #                        "",
+  #                        "",
+  #                        "Least similar"),
+  #             opacity = 0.6) %>%
+  #   addPolygons(data = selected_geo,
+  #               fillColor = config$colors$yellow50,
+  #               stroke = TRUE,
+  #               color = "black",
+  #               fillOpacity = 0.9,
+  #               weight = 2,
+  #               smoothFactor = 1,
+  #               label = selected_county_label,
+  #               labelOptions = labelOptions(
+  #                 style = list("font-weight" = "normal", padding = "3 px 8 px"),
+  #                 textsize = "15px",
+  #                 direction = "auto"),
+  #               highlightOptions = highlightOptions(color = "black",
+  #                                                   weight =  4,
+  #                                                   bringToFront = TRUE))
