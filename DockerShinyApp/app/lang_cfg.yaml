@@ -82,7 +82,7 @@ tab_headers:
   similarity_description: "<b>Similarity is determined in terms of the nonmodifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm.</b>"
 my_matches_tab: "This tab displays the radar charts of twenty counties in your state that are most similar to yours (sorted by similarity) in terms of nonmodifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm."
 sdoh_tab: "This tab displays social determinant of health metrics for the selected county and (optional) comparison county."
-demographics_tab: "This tab displays the essential demographic information for the selected county and (optional) comparison county"
+demographics_tab: "This tab displays the essential demographic information for the selected county and (optional) comparison county."
 health_outcomes_tab: "This tab displays the distribution of health outcomes across all counties. The dots along the x-axis indicate where the top twenty most similar counties lie on the distribution, and a colored line to indicates how the selected county compares to the rest of the distribution."
 map_tab: "This tab displays a map of all counties, shaded by level of similarity to the selected county."
 density_hoverlabel_all: "Distribution of outcomes\nacross all counties"
