@@ -312,7 +312,7 @@ server <- function(input, output, session) {
                box(align = "center",
                    width = '100%',
                    height = '100%',
-                   HTML(paste(lang_cfg$tab_headers$map_tab_description, lang_cfg$tab_headers$similarity_description)),
+                   HTML(lang_cfg$tab_headers$map_tab_description, lang_cfg$tab_headers$similarity_description),
                    style = paste0("background-color: ", config$colors$greenaccent, "40",
                                   "; border-color: ", config$colors$greenaccent, "40",
                                   "; padding: 10px")),
