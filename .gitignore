@@ -8,8 +8,10 @@ codes/.ipynb_checkpoints/
 *.log
 
 data/*
+!data/dictionary_1_manual.csv
 
 methodology/.Rhistory
+methodology/compare_data.R
 data-insights/.Rhstory
 DockerShinyApp/app/data/*
 

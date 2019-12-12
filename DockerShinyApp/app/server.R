@@ -48,6 +48,12 @@ server <- function(input, output, session) {
     dat %>% filter(county == input$comparison_county_selection)
   })
   
+  comp_county_fips <- reactive({
+    req(county_check())
+    req(input$comparison_county_selection)
+    dat %>% filter(county == input$comparison_county_selection) %>% pull(fips)
+  })
+  
   # creates list of matched counties
   my_matches <- reactive({
     req(county_check())
@@ -88,7 +94,6 @@ server <- function(input, output, session) {
   
   ## methodology modal dialogue ------------------------------------------------
   methodology_modal <- modalDialog(
-    title = lang_cfg$titles$method_modal,
     HTML(lang_cfg$method),
     size = "l",
     footer = modalButton("Close"),
@@ -142,15 +147,15 @@ server <- function(input, output, session) {
         tags$br(),
         "Outcomes data:",
         tags$br(),
-        a("Centers for Disease Control and Prevention's (CDC) Diabetes Atlas", 
+        a("Centers for Disease Control and Prevention's (CDC) Diabetes Atlas, 2016", 
           href = "https://gis.cdc.gov/grasp/diabetes/DiabetesAtlas.html#",
           target = "_blank"),
         tags$br(),
-        a("Healthcare Cost and Utilization Project (HCUP)", 
+        a("Healthcare Cost and Utilization Project (HCUP), 2016", 
           href = "https://hcupnet.ahrq.gov",
           target = "_blank"),
         tags$br(),
-        a("Centers for Medicare and Medicaid Services (CMS)", 
+        a("Centers for Medicare and Medicaid Services (CMS), 2017", 
           href = "https://www.cms.gov/Research-Statistics-Data-and-Systems/Research-Statistics-Data-and-Systems",
           target = "_blank"),
         tags$br(),
@@ -161,6 +166,16 @@ server <- function(input, output, session) {
     ))
   })
   
+  
+  output$radar_read_button <- renderUI({
+    req(county_check())
+    actionButton("radar_read_more", 
+                 label = lang_cfg$titles$radar_read_more,
+                 size = "sm",
+                 style = paste0("color: ", config$colors$accent,
+                                "; background-color: ", config$colors$white100,
+                                "; border-color: ", config$colors$accent))
+  })
   
   ## radar chart description modal dialogue ------------------------------------
   observeEvent(input$radar_read_more, {
@@ -202,10 +217,17 @@ server <- function(input, output, session) {
               target = "_blank"))
   })
   
+  ## github url ----------------------------------------------------------------
+  output$github <- renderUI({
+    tagList(a(lang_cfg$titles$github, 
+              href = " https://github.com/mathematica-mpr/CommunityConnector", 
+              target = "_blank"))
+  })
+  
   ## selected county information -----------------------------------------------
   output$my_county_header <- renderUI({
     req(county_check())
-    HTML(paste0("<h3>Social Determinants of Health in <br>", county_name(), ", ", county_state(), "</h3>"))
+    HTML(paste0("<h3>Social Determinants of Health Scores <br> for ", county_name(), ", ", county_state(), "</h3>"))
   })
   
   
@@ -229,23 +251,91 @@ server <- function(input, output, session) {
   })
   
   ## demographics tables filter ------------------------------------------------
+  output$general_demo_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$demographics_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
   output$demo_tables_header <- renderUI({
     req(county_check())
     tagList(
       fluidRow(
         column(width = 12, 
-               checkboxGroupInput('demo_filter', label = 'Add or filter by categories:', 
-                                      choices = c(
-                                                  'Essential Facts' = 'demographic',  
-                                                  'Economic Stability' = 'used_sdoh_1',
-                                                  'Neighborhood & Physical Environment' = 'used_sdoh_2',
-                                                  'Education' = 'used_sdoh_3',
-                                                  'Food' = 'used_sdoh_4',
-                                                  'Community' = 'used_sdoh_5',
-                                                  'Health Care System' = 'used_sdoh_6'),
-                                      selected = c('demographic'))
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                         HTML(lang_cfg$tab_headers$sdoh_tab_description),
+                         style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                        "; border-color: ", config$colors$greenaccent, "40",
+                                        "; padding: 10px")),
+               br(),
+               h5(HTML("<b>Filter by categories:</b>"))
         ))
       )
+  })
+  
+  output$demo_tables_checkboxes <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               checkboxGroupInput('demo_filter', label = NULL, 
+                                  choices = c('Economic Stability' = 'used_sdoh_1',
+                                              'Neighborhood & Physical Environment' = 'used_sdoh_2',
+                                              'Education' = 'used_sdoh_3',
+                                              'Food' = 'used_sdoh_4',
+                                              'Community' = 'used_sdoh_5',
+                                              'Health Care System' = 'used_sdoh_6'),
+                                  selected = c('used_sdoh_1', 'used_sdoh_2', 'used_sdoh_3',
+                                               'used_sdoh_4', 'used_sdoh_5', 'used_sdoh_6'))
+        ))
+    )
+  })
+  
+  output$map_tab_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$map_tab_description, lang_cfg$tab_headers$similarity_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
+  })
+  
+  output$outcomes_tab_header <- renderUI({
+    req(county_check())
+    tagList(
+      fluidRow(
+        column(width = 12, 
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$outcomes_tab),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px")),
+               br()
+        ))
+    )
   })
   
   
@@ -256,6 +346,25 @@ server <- function(input, output, session) {
     req(input$demo_filter)
     
     demo_tables_list <- lapply(input$demo_filter, function(x) 
+      tagList(
+        make_demo_dt(county_dat = county_dat(),
+                     comp_county_dat = comp_county_dat(),
+                     comp_county_select = input$comparison_county_selection,
+                     demo_select = x,
+                     dd = dd)
+      )
+    )
+    
+    tagList(
+      demo_tables_list
+    )
+  })
+  
+  output$essentials_tables <- renderUI({
+    req(county_check())
+    req(input$comparison_county_selection)
+    
+    demo_tables_list <- lapply("demographic", function(x) 
       tagList(
         make_demo_dt(county_dat = county_dat(),
                      comp_county_dat = comp_county_dat(),
@@ -281,9 +390,18 @@ server <- function(input, output, session) {
 
   ## comparison counties info --------------------------------------------------
   output$comp_radar_header <- renderUI({
-    req(my_matches())
+    req(county_check())
     tagList(
-      HTML(paste0("<h4>What Counties are Most Similar to ", county_name(), ", ", county_state(), "</h4>"))
+      fluidRow(
+        column(width = 12,
+               box(align = "center",
+                   width = '100%',
+                   height = '100%',
+                   HTML(lang_cfg$tab_headers$matches_tab_description, lang_cfg$tab_headers$similarity_description),
+                   style = paste0("background-color: ", config$colors$greenaccent, "40",
+                                  "; border-color: ", config$colors$greenaccent, "40",
+                                  "; padding: 10px"))
+        ))
     )
   })
   
@@ -307,88 +425,26 @@ server <- function(input, output, session) {
     )
   })
   
-  output$map <- renderLeaflet({
+  output$map <- renderLeaflet ({
     req(county_check())
+    req(input$comparison_county_selection)
     
     df <- find_my_matches(county_fips(), dat)[[1]] %>%
-      mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
-      mutate(NAME = str_replace(county, " County", ""))
+        mutate(GEOID = str_pad(fips, width = 5, side = "left", pad = "0")) %>%
+        mutate(NAME = str_replace(county, " County", ""))
     
     st_fips <- str_sub(df$GEOID, 1, 2)[1]
     cty_fips <- str_pad(county_fips(), width = 5, side = "left", pad = "0")
+    comparison_cty_fips <- str_pad(comp_county_fips(), width = 5, side = "left", pad = "0")
     
-    selected_state_shp <- st_shp %>%
-      filter(str_sub(GEOID, 1, 2) == st_fips) %>%
-      left_join(., df)
+    if (input$comparison_county_selection == "None") {
+      county_map(df, st_fips, cty_fips)
+    } else {
+      county_map_comp(df, st_fips, cty_fips, comparison_cty_fips)
+    }
     
-    # Compute approximate centroid and edges of study area
-    selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
-    x_min <- selected_state_shp_box[1]
-    x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
-    x_max <- selected_state_shp_box[3]
-    y_min <- selected_state_shp_box[2]
-    y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
-    y_max <- selected_state_shp_box[4]
-    
-    # Plot counties with proximity score
-    # Remove selected county from consideration in popups, and plot separately
-    selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
-    selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips) %>%
-      mutate(cat = cut(distance, breaks = c(quantile(distance, probs = seq(0, 1, by = 0.25))),
-                       labels = c("Very similar", "Somewhat similar", "Somewhat different", "Very different"),
-                       include.lowest = TRUE))
-    
-    county_label <- sprintf(
-      "<strong>Comparison County:</strong> %s County (%s) <br/>
-      <strong>Similarity to %s County: </strong> %s <br/>",
-      selected_state_shp$NAME, selected_state_shp$GEOID,
-      selected_geo$NAME[1], selected_state_shp$cat
-    ) %>%
-      lapply(htmltools::HTML)
-    selected_county_label <- sprintf(
-      "<strong>Selected County:</strong> %s (%s) <br/>",
-      selected_geo$NAME[1], selected_geo$GEOID[1]) %>%
-      lapply(htmltools::HTML)
-    
-    # Always 4 quantile breaks
-    color_pal <- colorFactor("magma", selected_state_shp$cat, na.color = "gray")
-    
-    leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
-      setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
-      setMaxBounds(lng1 = x_min,
-                   lat1 = y_min,
-                   lng2 = x_max,
-                   lat2 = y_max) %>%
-      addProviderTiles(providers$Stamen.TonerLite) %>%
-      addPolygons(data = selected_state_shp,
-                  color = ~color_pal(selected_state_shp$cat),
-                  weight = 1,
-                  smoothFactor = 1,
-                  label = county_label,
-                  labelOptions = labelOptions(
-                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
-                    textsize = "15px",
-                    direction = "auto"),
-                  highlightOptions = highlightOptions(color = "black",
-                                                      weight =  2,
-                                                      bringToFront = TRUE)) %>%
-      addLegend(pal = color_pal, values = selected_state_shp$cat, position = "topright",
-                title = "Similarity to selected county") %>%
-      addPolygons(data = selected_geo,
-                  color = "black",
-                  fillOpacity = 0.7,
-                  weight = 2,
-                  smoothFactor = 1,
-                  label = selected_county_label,
-                  labelOptions = labelOptions(
-                    style = list("font-weight" = "normal", padding = "3 px 8 px"),
-                    textsize = "15px",
-                    direction = "auto"),
-                  highlightOptions = highlightOptions(color = "black",
-                                                      weight =  2,
-                                                      bringToFront = TRUE))
   })
-  
+
   # dynamic number of density graphs -------------------------------------------
 
   output$health_outcomes_header <- renderUI({

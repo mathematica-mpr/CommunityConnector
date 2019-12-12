@@ -1,5 +1,6 @@
 # not sure how to scrape a tableau page? 
 # downloaded the data manually for now
+# https://www.colorado.gov/pacific/cdphe/expenditures-county-and-division-cdphe-fy-2019
 
 import pandas as pd
 pd.set_option('display.max_colwidth', -1)

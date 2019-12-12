@@ -67,7 +67,7 @@ make_demo_dt <- function(county_dat, comp_county_dat,
         rename(`Health Care System` = name)
     }
     
-    DT::datatable(df, rownames = FALSE, class = "stripe") %>%
+    DT::datatable(df, rownames = FALSE, class = "stripe", options = list(paging = F)) %>%
       DT::formatStyle(columns = colnames(df), fontSize = "9pt")
   })
 }
@@ -101,19 +101,39 @@ filter_category <- function(data, outcome_filter) {
   data %>% filter(grepl(paste(outcome_filter, collapse = "|"), unique(column_name)))
 }
 
+
+# function to match sdoh score with sdoh category name
+get_score_and_name <- function(df, dictionary) {
+  #pull sdoh category number and sdoh category name from dictionary
+  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
+    dplyr::select(column_name, descrip_new)
+  #pull sdoh category number and sdoh score from selected county data frame
+  radar_points <- select(df, starts_with("sdoh")) %>% 
+    t() %>% 
+    as.data.frame() %>% 
+    tibble::rownames_to_column() %>% 
+    rename("value" = V1)
+  #match sdoh score with sdoh category name by sdoh category number
+  names_and_points <- merge(radar_names, radar_points, by.x = "column_name", by.y = "rowname")
+  names_and_points[dim(names_and_points)[1]+1,] <- names_and_points[1,]
+  return(names_and_points)
+}
+
+# plotly styles ----------------------------------------------------------------
+## hoverlabel font
+hoverfont <- list(
+  family = "Arial"
+)
+
 # function for one county radar plot -------------------------------------------
 radar_chart <- function(df, dictionary) {
   # df is my county; columns: county, state, sdoh_score 1:6
   # dictionary is data dictionary
   
-  #vector of score names
-  radar_names <- get_dd(dictionary, "sdoh_score") %>% 
-    dplyr::pull(3)
-  radar_names <- append(radar_names, radar_names[1])
-  #vector of score values
-  radar_points <- select(df, starts_with("sdoh"))
-  radar_points <- append(radar_points, radar_points[1]) %>% 
-    unlist()
+  #vector of scores and names
+  axis_info <- get_score_and_name(df, dictionary)
+  radar_names <- axis_info$descrip_new
+  radar_points <- axis_info$value
   
   #plotting radar chart
   p <- plot_ly(
@@ -162,16 +182,16 @@ radar_chart <- function(df, dictionary) {
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
         bgcolor = paste0(config$colors$yellow50),
-        namelength = -1
+        namelength = -1,
+        font = hoverfont
       ),
-      margin = list(t=70),
       showlegend = T,
       dragmode = F
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # function for two county radar plot -------------------------------------------
@@ -192,6 +212,15 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
   radar_points2 <- append(radar_points2, radar_points2[1]) %>% 
     unlist()
   
+  #vector of scores and names
+  axis_info1 <- get_score_and_name(df1, dictionary)
+  axis_info2 <- get_score_and_name(df2, dictionary)
+  radar_names1 <- axis_info1$descrip_new
+  radar_points1 <- axis_info1$value
+  radar_names2 <- axis_info2$descrip_new
+  radar_points2 <- axis_info2$value
+  
+  
   #plotting radar chart
   p <- plot_ly(
   ) %>%     
@@ -199,7 +228,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points2,
-      theta = radar_names,
+      theta = radar_names2,
       fill = "toself",
       fillcolor = paste0(config$colors$green100, "70"),
       line = list(dash = "solid", 
@@ -218,7 +247,7 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       type = 'scatterpolar',
       mode = 'markers+lines',
       r = radar_points1,
-      theta = radar_names,
+      theta = radar_names1,
       #aesthetics
       fill = 'toself',
       fillcolor = paste0(config$colors$yellow50, "CC"),
@@ -256,15 +285,16 @@ radar_chart_overlay <- function(df1, df2, dictionary) {
       #hover label aesthetics
       hoverlabel = list(
         bordercolor = paste0(config$colors$black, '100'),
-        bgcolor = paste0(config$colors$yellow50)
+        bgcolor = paste0(config$colors$yellow50),
+        font = hoverfont
       ),
       showlegend = T,
       dragmode = F
     )
   return(p %>% 
            config(displaylogo = FALSE,
-                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
-                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
+                  modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", "hoverClosest3d",
+                                             "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines", "toggleHover")))
 }
 
 # multiple radar chart grid ----------------------------------------------------
@@ -343,7 +373,8 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
       ),
       hoverlabel = list(
         namelength = -1,
-        bgcolor = paste0(config$colors$teal100)
+        bgcolor = paste0(config$colors$teal100),
+        font = hoverfont
       ),
       margin = list(t = 7, l = 1, r = 7),
       annotations = c(list(
@@ -688,25 +719,6 @@ grid_radar <- function(df, dd, n_matches = 20, t = .003, ty = .025, txa = .125) 
 
 }
 
-make_radar_data <- function(county_df, dd) {
-  df <- rbind(rep(1, 6), rep(0, 6),
-              # 50% circle color
-              rep(.5, 6),
-              # 100 % circle color
-              rep(1, 6),
-              county_df) %>%
-    rename_at(vars(dd$column_name), ~ dd$descrip_new)
-  df
-}
-
-
-make_density_graph <- function(data) {
-  ggplot(data, aes(x=value)) + geom_density() + 
-    geom_vline(data = filter(data, type != "other"),
-               aes(xintercept = value, color = as.factor(type))) +
-    ggtitle(first(str_wrap(data$description, 80)))
-}
-
 #density plot overlay function-------------------
 density_plot_overlay <- function(data, comparedata) {
   #function to output density plot for specific outcome
@@ -823,13 +835,15 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county and selected county
         shapes = list(
@@ -868,7 +882,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -886,13 +902,15 @@ density_plot_overlay <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county
         shapes = list(
@@ -917,7 +935,9 @@ density_plot_overlay <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -932,6 +952,7 @@ density_plot_overlay <- function(data, comparedata) {
     
   return(p %>% config(displaylogo = FALSE,
                       modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")) )
 }
 
@@ -1009,13 +1030,15 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county and selected county
         shapes = list(
@@ -1054,7 +1077,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1072,13 +1097,15 @@ density_plot <- function(data, comparedata) {
           text = data$description[1],
           font = list(
             size = 18,
-            color = paste0(config$colors$accent)
+            color = paste0(config$colors$accent),
+            family = "Arial"
           ),
           xref = 'paper',
           x = '0'
         ),
         hoverlabel = list(
-          namelength = -1
+          namelength = -1,
+          font = hoverfont
         ),
         #line for my county
         shapes = list(
@@ -1103,7 +1130,9 @@ density_plot <- function(data, comparedata) {
         yaxis = list(
           title = list(
             text = lang_cfg$titles$density_y_axis,
-            font = list(size = 12)
+            font = list(size = 12,
+                        family = "Arial",
+                        color = paste(config$colors$accent))
           ),
           showgrid = F,
           showline = T, 
@@ -1117,7 +1146,8 @@ density_plot <- function(data, comparedata) {
   }
   
   return(p %>% config(displaylogo = FALSE,
-                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d", 
+                      modeBarButtonsToRemove = c("zoom2d", "pan2d", "select2d", "lasso2d", "autoScale2d",  
+                                                 "zoomIn2d", "zoomOut2d", "resetScale2d", 
                                                  "hoverClosestCartesian", "hoverCompareCartesian", "toggleSpikelines")))
 }
 
@@ -1126,4 +1156,213 @@ get_compare_value <- function(data, comparison_name) {
   val <- filter(data, county==comparison_name) %>% 
     select(c(county, value))
   return(val)
+}
+
+# Custom legend function for selected and comparison counties
+addLegendCustom <- function(map, colors, labels, borders, opacity = 0.6){
+  make_shapes <- function(colors, borders) {
+    paste0(colors, "; width: 17px; height: 17px; border:2px solid ", borders, "; border-radius: 0%")
+  }
+  make_labels <- function(labels) {
+    paste0("<div style='display: inline-block;height: 15px;margin-top: 2px;line-height: 15px;'>", labels, "</div>")
+  }
+  legend_colors <- make_shapes(colors, borders)
+  legend_labels <- make_labels(labels)
+  return(addLegend(map, colors = legend_colors, labels = legend_labels, opacity = opacity))
+}
+
+# map function
+county_map <- function(df, st_fips, cty_fips) {
+  
+  selected_state_shp <- st_shp %>%
+    filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+    left_join(., df) %>%
+    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+    mutate_at(vars(quantile_distance), ~(. / 2))
+  
+  # Compute approximate centroid and edges of study area
+  selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+  x_min <- selected_state_shp_box[1]
+  x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+  x_max <- selected_state_shp_box[3]
+  y_min <- selected_state_shp_box[2]
+  y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+  y_max <- selected_state_shp_box[4]
+  
+  # Factor color palette
+  color_pal <- colorFactor(palette  = color_mapping$hex_color,
+                           levels   = color_mapping$rounded_distance,
+                           na.color = config$colors$grey50)
+  
+  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  selected_state_shp <- selected_state_shp %>% filter(GEOID != cty_fips)
+  
+  county_label <- sprintf("%s County", selected_state_shp$NAME) %>%
+    lapply(htmltools::HTML)
+  selected_county_label <- sprintf("%s County", selected_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  
+  legend_color <- config$colors$yellow50
+  legend_label <- paste0("Selected County: ", selected_geo$NAME)
+  legend_border <- "black"
+  
+  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+    setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+    setMaxBounds(lng1 = x_min,
+                 lat1 = y_min,
+                 lng2 = x_max,
+                 lat2 = y_max) %>%
+    addProviderTiles(providers$Stamen.TonerLite) %>%
+    addPolygons(data = selected_state_shp,
+                color = ~color_pal(selected_state_shp$quantile_distance),
+                weight = 1,
+                smoothFactor = 1,
+                fillOpacity = 0.6,
+                label = county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE)) %>%
+    addLegendCustom(legend_color, legend_label, legend_border) %>%
+    addLegend(colors = c(color_mapping$hex_color[1],
+                         color_mapping$hex_color[34],
+                         color_mapping$hex_color[68],
+                         color_mapping$hex_color[101],
+                         color_mapping$hex_color[134],
+                         color_mapping$hex_color[168],
+                         color_mapping$hex_color[201]),
+              labels = c("Most similar",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "Least similar"),
+              opacity = 0.6) %>%
+    addPolygons(data = selected_geo,
+                fillColor = config$colors$yellow50,
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.9,
+                weight = 2,
+                smoothFactor = 1,
+                label = selected_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  4,
+                                                    bringToFront = TRUE))
+}
+
+county_map_comp <- function(df, st_fips, cty_fips, comparison_cty_fips) {
+  
+  selected_state_shp <- st_shp %>%
+    filter(str_sub(GEOID, 1, 2) == st_fips) %>%
+    left_join(., df) %>%
+    mutate(quantile_distance = ecdf(distance)(distance) * 100) %>%
+    mutate_at(vars(quantile_distance), ~round(. * 2, digits = 0)) %>%
+    mutate_at(vars(quantile_distance), ~(. / 2))
+  
+  # Compute approximate centroid and edges of study area
+  selected_state_shp_box <- as.numeric(st_bbox(selected_state_shp))
+  x_min <- selected_state_shp_box[1]
+  x_mid <- (selected_state_shp_box[3] - selected_state_shp_box[1]) / 2 + selected_state_shp_box[1]
+  x_max <- selected_state_shp_box[3]
+  y_min <- selected_state_shp_box[2]
+  y_mid <- (selected_state_shp_box[4] - selected_state_shp_box[2]) / 2 + selected_state_shp_box[2]
+  y_max <- selected_state_shp_box[4]
+  
+  # Factor color palette
+  color_pal <- colorFactor(palette  = color_mapping$hex_color,
+                           levels   = color_mapping$rounded_distance,
+                           na.color = config$colors$grey50)
+  
+  selected_geo <- selected_state_shp %>% filter(GEOID == cty_fips)
+  comparison_geo <- selected_state_shp %>% filter(GEOID == comparison_cty_fips)
+  selected_state_shp <- selected_state_shp %>% filter(!(GEOID %in% c(cty_fips, comparison_cty_fips)))
+  
+  county_label <- sprintf("%s County", selected_state_shp$NAME) %>%
+    lapply(htmltools::HTML)
+  selected_county_label <- sprintf("%s County", selected_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  comparison_county_label <- sprintf("%s County", comparison_geo$NAME) %>%
+    lapply(htmltools::HTML)
+  
+  legend_color <- c(config$colors$yellow50, color_pal(comparison_geo$quantile_distance))
+  legend_label <- c(paste0("Selected County: ", selected_geo$NAME),
+                    paste0("Comparison County: ", comparison_geo$NAME))
+  legend_border <- c("black", "black")
+  
+  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+    setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
+    setMaxBounds(lng1 = x_min,
+                 lat1 = y_min,
+                 lng2 = x_max,
+                 lat2 = y_max) %>%
+    addProviderTiles(providers$Stamen.TonerLite) %>%
+    addPolygons(data = selected_state_shp,
+                color = ~color_pal(selected_state_shp$quantile_distance),
+                weight = 1,
+                smoothFactor = 1,
+                fillOpacity = 0.6,
+                label = county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE)) %>%
+    addLegendCustom(legend_color, legend_label, legend_border) %>%
+    addLegend(colors = c(color_mapping$hex_color[1],
+                         color_mapping$hex_color[34],
+                         color_mapping$hex_color[68],
+                         color_mapping$hex_color[101],
+                         color_mapping$hex_color[134],
+                         color_mapping$hex_color[168],
+                         color_mapping$hex_color[201]),
+              labels = c("Most similar",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "Least similar"),
+              opacity = 0.6) %>%
+    addPolygons(data = selected_geo,
+                fillColor = config$colors$yellow50,
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.9,
+                weight = 2,
+                smoothFactor = 1,
+                label = selected_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  4,
+                                                    bringToFront = TRUE)) %>%
+    addPolygons(data = comparison_geo,
+                fillColor = ~color_pal(comparison_geo$quantile_distance),
+                stroke = TRUE,
+                color = "black",
+                fillOpacity = 0.6,
+                weight = 2,
+                smoothFactor = 1,
+                label = comparison_county_label,
+                labelOptions = labelOptions(
+                  style = list("font-weight" = "normal", padding = "3 px 8 px"),
+                  textsize = "15px",
+                  direction = "auto"),
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight =  2,
+                                                    bringToFront = TRUE))
 }

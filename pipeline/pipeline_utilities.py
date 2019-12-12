@@ -50,6 +50,10 @@ def click_button(driver, element_type, element_name, time_to_wait = 10):
     button.click()
 
 def move_from_downloads(orig_path, search_term, new_path, new_name):
+    """
+    Move downloaded file to data path
+    """
+
     files = os.listdir(orig_path)
     files = [x for x in files if re.search(search_term, x)] 
     entries = (os.path.join(orig_path, fn) for fn in os.listdir(orig_path))
@@ -69,13 +73,15 @@ def move_from_downloads(orig_path, search_term, new_path, new_name):
 
     shutil.move(orig_path + filename, os.path.join(new_path, new_name))
 
-# TODO: fix selenium.common.exceptions.SessionNotCreatedException: Message: session not created: This version
-# of ChromeDriver only supports Chrome version 76
-# https://stackoverflow.com/questions/57600228/sessionnotcreatedexception-message-session-not-created-this-version-of-chrome
-
+# these next two functions are a start to a scraping pipeline
 def GeographicPUF(outdir, downloads = 'C:/Users/kskvoretz/Downloads/',
     website = "https://www.cms.gov/Research-Statistics-Data-and-Systems/Statistics-Trends-and-Reports/Medicare-Geographic-Variation/GV_PUF.html"):
+    """
+    Scrape Geographic Variation data
 
+    Args: 
+        outdir (string): name of output directory
+    """
     driver = webdriver.Chrome(options=options)
     driver.delete_all_cookies()
     driver.get(website)
@@ -88,6 +94,13 @@ def GeographicPUF(outdir, downloads = 'C:/Users/kskvoretz/Downloads/',
 def OppAtlas(output, input = 'data/raw/opp_atlas_stay.csv',
     url="https://opportunityinsights.org/wp-content/uploads/2018/12/cty_covariates.csv"):
     
+    """
+    Scrape Opportunity Atlas 
+
+    Args:
+        output (string): file path to output data
+    """
+
     s=requests.get(url).text
 
     data = pd.read_csv(StringIO(s), sep=",")
@@ -111,7 +124,14 @@ def OppAtlas(output, input = 'data/raw/opp_atlas_stay.csv',
     data.to_csv(output, index = False)
 
 def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH','03_Outcome']):
+    """
+    Merge all data in the cleaned data folder by FIPS code and make some other manual adjustments
 
+    Args:
+        cleaned_drive (string): location of cleaned data
+        output (string): location for merged data file
+        data_types (list): names of subfolders within cleaned_drive
+    """
     count = 0
     for t in data_types:
         cleaned_files = os.listdir(os.path.join(cleaned_drive, t))
@@ -119,25 +139,15 @@ def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH'
         for file in cleaned_files:
             if "csv" in file:
                 data = pd.read_csv(os.path.join(cleaned_drive, t, file))
-                print(file)
-                print(data.shape)
-
                 data['FIPS'] = [int(str(fips)[-3:]) for fips in data['FIPS']]
                 # make sure the file is unique by FIPS
-                print(data['FIPS'].drop_duplicates().shape)
-                data_columns = pd.DataFrame({'column_name': data.columns.values,
-                    'type': t
-                    })
+                assert(data.shape[0] == data['FIPS'].drop_duplicates().shape[0])
 
                 if count == 0:
                     full_data = data
-                    columns = data_columns
                 else:
                     full_data = pd.merge(full_data, data, on = 'FIPS', how = 'outer')
-                    columns = columns.append(data_columns)
                 print(f"Completed {file}")
-                print(full_data.shape)
-                print('')
 
                 count += 1
 
@@ -152,18 +162,15 @@ def MergeCleaned(cleaned_drive, output, data_types = ['01_Demographic','02_SDoH'
     # Custom check for Colorado
     assert(full_data.shape[0] == 64)
 
-    # add sdoh_score1-6 to columns
-    sdoh_score_names = [f'sdoh_score{i}' for i in range(1,7)]
-    columns = columns.append(pd.DataFrame({'column_name': sdoh_score_names,
-    'type': ['aggregate']*6}))
-
     full_data.to_csv(output, index = False)
 
 def custom_replace(col):
     return col.replace("% ","pct_").replace("< ","lt_").replace("/","_").replace("%","pct").replace(" ", "_").replace("(","").replace(")","").replace("-","").replace("__","_")
 
 def fix_percentages(data_dictionary, data):
-
+    """
+    Make sure all percentages are on a 0-100 scale, rather than 0-1
+    """
     pct_vars = data_dictionary[data_dictionary['data_type'] == 'percentage']['column_name']
     for col in pct_vars:
         if max(data[col]) < 1:
@@ -174,6 +181,9 @@ def fix_percentages(data_dictionary, data):
     return data
 
 def check_negatives(data_dictionary, data):
+    """
+    Check where the negatives in the data are
+    """
     print("Any negative values in data?")
     for col in data_dictionary[data_dictionary['data_type'] != 'ID']['column_name']:
         if 'sdoh_score' not in col:
@@ -181,6 +191,9 @@ def check_negatives(data_dictionary, data):
                 print(col)
 
 def check_low_coverage(data):
+    """
+    Remove variables from the data that have a low coverage rate across counties
+    """
     nrows = data.shape[0]
     count = 0
     for var in data.columns.values:
@@ -193,6 +206,14 @@ def check_low_coverage(data):
     return data, count
 
 def SelectVariables(input, output, data_dictionary):
+    """
+    Select variables to keep according to the data dictionary and make some other small, manual adjustments
+
+    Args:
+        input (string): location of input data
+        output (string): location for output data
+        data_dictionary (dataframe)
+    """
 
     data = pd.read_csv(input)
     print("Original shape of data: " + str(data.shape))
@@ -209,10 +230,12 @@ def SelectVariables(input, output, data_dictionary):
 
     print("Number of columns from data dictionary: " + str(len(keep_cols)))
 
-    # doing this because I messed up the data dictionary - not sure if this is needed anymore
+    # make some adjustments so the names are the same from the dictionary to the data
+    # the dictionary currently has variable names that are easier to work with
     data.columns = [custom_replace(col) for col in data.columns.values]
-
+    # keep only the columns that are in the data dictionary
     data = data[keep_cols]
+    print(data.columns[data.columns.duplicated()])
     assert(data.shape[1] == len(keep_cols))
 
     # are there any variables that don't have a ton of data? drop them if low coverage
@@ -225,13 +248,16 @@ def SelectVariables(input, output, data_dictionary):
     # checked rates too, none of those need adjusting as of now
     data = fix_percentages(data_dictionary, data)
 
+    # check any data values with negatives make sense
     check_negatives(data_dictionary, data)
     data.loc[data['budget_health_info'] < 0,'budget_health_info'] = 0
 
     data.to_csv(output, index = False)
 
 def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictionary):
-    
+    """
+    Reduce variables that we are going to display in the app
+    """
     final_dict = pd.read_csv(input_data_dictionary)
     pd.set_option('max_rows', final_dict.shape[0])
 
@@ -239,6 +265,8 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     # this could be adjusted based on the health outcomes in question
     final_dict['keep'] = 0
     final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'keep'] = 1
+    # also make sure variables selected for sdoh category do not show up in the demographics
+    final_dict.loc[pd.notnull(final_dict['sdoh_Category']), 'demographic'] = 0 
     final_dict.loc[final_dict['outcome'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['sdoh_score'] == 1, 'keep'] = 1
     final_dict.loc[final_dict['data_type'] == 'ID', 'keep'] = 1
@@ -246,9 +274,9 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     # others to keep from Keri
     other_keep_vars = ['pct_lt_18','pct_65_and_over','pct_female','pct_hispanic',
     'pop_dens','pct_nonhispanic_white','pct_rural','life_expectancy',
-    'race_estimate_total_black_or_african_american_alone','median_income',
+    'race_estimate_total_black_or_african_american_alone','median_income', 'population',
     # KS adds:
-    'pct_staying_in_same_tract_as_adults_rp_gp_pall', 'pct_only_english']
+    'pct_staying_in_same_tract_as_adults_rp_gp_pall', 'pct_only_english', 'pct_good_air', 'mds_dos_pp_rate']
     race_vars = [col for col in final_dict.column_name if 'race_estimate' in col]
     other_keep_vars.extend(race_vars)
     other_keep_vars = list(set(other_keep_vars))
@@ -263,10 +291,11 @@ def ReduceDisplayVars(input, input_data_dictionary, output, output_data_dictiona
     print(final_dict[final_dict['keep'] == 0]['column_name'])
 
     final_dict = final_dict[final_dict.keep == 1]
+    # reorder the data dictionary for the order of the demographic tables
+    final_dict.sort_values(['Sort_order'], inplace = True)
 
     # keep only variables needed and output final data
     data = pd.read_csv(input)
-    print(final_dict['column_name'])
     final_data = data[final_dict['column_name']]
 
     final_data.to_csv(output, index = False)

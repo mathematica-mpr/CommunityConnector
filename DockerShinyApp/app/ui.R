@@ -5,10 +5,12 @@ ui <- bootstrapPage(
   tags$head(tags$style(HTML("body {padding-top: 70px;}"))),
   # hack to hide ghost first tab that appears when include title 
   tags$head(tags$style(HTML('#parenttabs > li:first-child { display: none; }'))),
+  tags$head(tags$style(HTML('.navbar-default .navbar-brand {color: #000000;}'))),
+  tags$head(tags$style(HTML('.navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover {color: #000000;}'))),
   navbarPage(useShinyjs(), id = 'parenttabs', 
              position = 'fixed-top',
              selected = "landing",
-             title = span("Community Connector", style = "color: #000000"),
+             title = "Community Connector",
              # landing page --------------------------------------------------------------------------------------------
              tabPanel(icon("info-circle", lib = "font-awesome"), value = "landing",
                       tags$head(tags$style(HTML('.navbar-default{background-color:#f7f4ec}
@@ -29,20 +31,30 @@ ui <- bootstrapPage(
                                                                                        background-color:#e0d4b5;
                                                                                        font-size:24px;
                                                                                        font-weight:600 }
+                                                                                       
                                                                                        .green-button {
                                                                                        background-color: #17A673;
                                                                                        color: #ffffff;
                                                                                        border-color: #ccc
                                                                                        }
 
-                                                                                       .green-button:hover, .green-button:focus, .green-button:visited, .green-button:focus-within{
+                                                                                       .green-button:hover, .green-button:active, .green-button:focus, .green-button:visited, .green-button:focus-within{
                                                                                        background-color: #046B5C;
                                                                                        color: #ffffff;
                                                                                        }
-
-                                                                                       .green-button:active{
-                                                                                       background-color: #17A673;
-                                                                                       color: #ffffff;
+                                                                                       
+                                                                                       .multicol {
+                                                                                       -webkit-column-count: 2; /* Chrome, Safari, Opera */ 
+                                                                                       -moz-column-count: 2;    /* Firefox */ 
+                                                                                       column-count: 2; 
+                                                                                       -moz-column-fill: auto;
+                                                                                       -column-fill: auto;
+                                                                                       }
+                                                                                      
+                                                                                       .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+                                                                                        color: #fff;
+                                                                                        background-color: #046B5C;
+                                                                                        border-color: #046B5C;
                                                                                        }'))),
                       tags$script(HTML("var header = $('.navbar > .container-fluid');
                                              header.append('<div style=\"float:right\"><img src = logo.png height=50px></img></div>');"
@@ -106,27 +118,20 @@ ui <- bootstrapPage(
                                         br(),
                                         HTML(lang_cfg$titles$external_links),
                                         uiOutput("health_plans_url"),
-                                        uiOutput("diab_prev_prog")
+                                        uiOutput("diab_prev_prog"),
+                                        uiOutput("github")
                                  )
                           ),
                           column(width = 10,
                                  column(width = 6, 
                                         fluidRow(
-                                          column(width = 12, h1(" "))
-                                        ), 
-                                        fluidRow(
-                                          column(width = 12, h1(" "))
-                                        ),
-                                        fluidRow(
                                           column(width = 12, align = "center", htmlOutput("my_county_header"))),
                                         fluidRow(
                                           column(width = 12, align = "center",
-                                                 actionButton("radar_read_more", 
-                                                              label = lang_cfg$titles$radar_read_more,
-                                                              size = "sm",
-                                                              style = paste0("color: ", config$colors$accent,
-                                                                             "; background-color: ", config$colors$white100,
-                                                                             "; border-color: ", config$colors$accent)))),
+                                                 uiOutput('radar_read_button'),
+                                                 br(),
+                                                 br(),
+                                                 br())),
                                         fluidRow(
                                           column(width = 12, plotlyOutput("my_county_radar",
                                                                           height = "80%") %>%
@@ -135,22 +140,34 @@ ui <- bootstrapPage(
                                           ))),
                                  column(width = 6,
                                         tabsetPanel(type = 'pills', id = "tabs",
-                                                    tabPanel(span("Demographics", title = lang_cfg$demographics_tab),
+                                                    tabPanel(span(HTML("<br/><center>Demographics</center>"), title = lang_cfg$demographics_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
+                                                             uiOutput('general_demo_header'),
                                                              fluidRow(column(width = 12, 
-                                                                             h4(lang_cfg$titles$sdoh_table_title, align = "center"),
+                                                                             uiOutput('essentials_tables')
+                                                                             
+                                                             ))
+                                                    ),
+                                                    tabPanel(span(HTML("<center>Social Determinants<br/>of Health</center>"), title = lang_cfg$sdoh_tab),
+                                                             fluidRow(
+                                                               column(width = 12, h1(" "))
+                                                             ),
+                                                             fluidRow(column(width = 12,
                                                                              uiOutput('demo_tables_header'),
+                                                                             tags$div(align = 'left', 
+                                                                                      class = 'multicol',
+                                                                                      uiOutput('demo_tables_checkboxes')),
                                                                              uiOutput('demo_tables')
                                                                              
                                                              ))
                                                     ),
-                                                    tabPanel(span("My Most Similar Counties*", title = lang_cfg$my_matches_tab),
+                                                    tabPanel(span(HTML("<center>My Most Similar<br/>Counties*</center>"), title = lang_cfg$my_matches_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(lang_cfg$my_matches, align = "center"),
+                                                             uiOutput('comp_radar_header'),
                                                              br(),
                                                              plotlyOutput("compare_county_radars"
                                                              ) %>% 
@@ -158,23 +175,29 @@ ui <- bootstrapPage(
                                                                            color = getOption("spinner.color", default = "#046B5C")),
                                                              br()
                                                     ),
-                                                    tabPanel(span("County Map", title = lang_cfg$map_tab),
+                                                    tabPanel(span(HTML("<br/><center>County Map</center>"), title = lang_cfg$map_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(leafletOutput("map") %>% 
+                                                             uiOutput('map_tab_header'),
+                                                             fluidRow(
+                                                               column(width = 12, 
+                                                                      leafletOutput("map") %>% 
                                                                         withSpinner(type = getOption("spinner.type", default = 1),
                                                                                     color = getOption("spinner.color", default = "#046B5C"))
-                                                             )
+                                                               ))
                                                     ),
-                                                    tabPanel(span("Health Outcomes", title = lang_cfg$health_outcomes_tab),
+                                                    tabPanel(span(HTML("<br/><center>Health Outcomes</center>"), title = lang_cfg$health_outcomes_tab),
                                                              fluidRow(
                                                                column(width = 12, h1(" "))
                                                              ),
-                                                             fluidRow(uiOutput('health_outcomes_header')),
-                                                             fluidRow(
-                                                               div(id = "density_plot_container",
-                                                                   uiOutput(outputId = "density_graphs_ui")))
+                                                             uiOutput("outcomes_tab_header"),
+                                                             column(width = 12,
+                                                                    fluidRow(uiOutput('health_outcomes_header')),
+                                                                    fluidRow(
+                                                                      div(id = "density_plot_container",
+                                                                          uiOutput(outputId = "density_graphs_ui")))
+                                                             )
                                                     )
                                         )
                                  )

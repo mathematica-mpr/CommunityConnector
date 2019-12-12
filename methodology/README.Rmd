@@ -1,0 +1,53 @@
+---
+title: "Social Determinants of Health (SDoH) Scoring and County Matching"
+output: html_document
+---
+
+## Methods for SDoH Scores
+
+#### Overview
+
+The Community Connector uses a variety of data sources to develop standardized scores for the 6 domains of SDoH:[^1]
+
+1. **Economic Stability**—includes factors like employment, income, expenses, debt, medical bills, and support.
+
+2. **Neighborhood and Physical Environment**—includes factors like housing, transportation, safety, parks, playgrounds, walkability, and geography.
+
+3. **Education**—includes factors like literacy, language, early childhood education, vocational training, and higher education.
+
+4. **Food**—includes factors like hunger and access to healthy options.
+
+5. **Community and Social Context**—includes factors like social integration, support systems, community engagement, discrimination, and stress.
+
+6. **Health Care System**—includes factors like health coverage, provider availability, provider linguistic and cultural competency, and quality of care.
+
+
+#### Data Sources
+
+We collected county-level SDoH data from several sources to use as potential variables in the scores for each of the six SDoH domains. We assigned variables to one of the six SDoH domains based on a review of SDoH literature. For a list of data sources used in the Community Connector, see the **_Data Sources link_**.
+
+
+#### SDoH Variable Selection
+
+To determine which variables would be used in the defined SDOH Scores, we used sparse principal component analysis (SPCA) [^2]. This method is an unsupervised learning approach to dimension reduction; it finds a linear combination of variables that best represents the variation in the data while also forcing some of the variable loadings to zero. This effectively served as a variable selection technique. After reviewing all of the variables selected by SPCA for each of the scores, we assigned a few additional variables that were not selected based on prior knowledge, a strong association with health outcomes, or both (for example, percentage of adults reporting that they are physically active is an important variable to include regardless of its selection by SPCA).  
+
+#### Final SDoH Scoring Algorithm
+
+We assigned a direction of association to each of the variables selected by SPCA to health outcomes and normalized each variable’s distribution. The scores are a weighted average of the normalized variables. The weights were determined by each variable’s percentage of variance explained and SPCA loading. The final scores for each of the six SDoH domains are on a 0 (worst) to 1 (best) scale and are independent of the health outcome in question. For example, a score of 1 in the Education domain indicates the best possible distribution of variables in the education score. The scores are also adjusted for the economics status of the county.
+
+## Methods for Identifying Similar Counties
+
+The Community Connector provides a list of counties that are similar to the selected county of interest. The goal of this matching approach is to provide a list of similar counties using only the characteristcs a county cannot easily change, such as demographics and nonmodifiable social needs. Peer counties that have implemented programs to improve modifiable SDoH characteristics can serve as exemplar counties. We implemented a Lasso model[^3], based on the following equation:
+
+$$y_i = \alpha + \beta*X_i + \gamma*nonmodifiable SDoH_i + \theta*modifiable SDoH_i + \epsilon_i $$ 
+where *y* is a health outcome (in this case, percent overweight or obese) for county *i*, and *X* are their demographic characteristics. We then use the demographic and nonmodifiable variables, along with their coefficients as weights, to calculate the Euclidean distance between counties. This returns a measure of similarity between counties using only the characteristics they cannot change and weighting them by their importance to the health outcome in question. The closest counties in terms of Euclidean distance are listed in the My Most Similar Counties tab. 
+
+
+## References
+
+[^1]: Samantha Artiga and Elizabeth Hinton. "Beyond Health Care: The Role of Social Determinants in Promoting Health and Health Equity." The Henry J. Kaiser Family Foundation (blog), May 10, 2018. https://www.kff.org/disparities-policy/issue-brief/beyond-health-care-the-role-of-social-determinants-in-promoting-health-and-health-equity/.
+
+[^2]: Zou, Hui, Trevor Hastie, and Robert Tibshirani. “Sparse Principal Component Analysis.” *Journal of Computational and Graphical Statistics*, vol. 15, no. 2, June 1, 2006, pp. 265–86. https://doi.org/10.1198/106186006X113430
+
+[^3]: Hans, Chris. “Bayesian Lasso Regression.” *Biometrika*, vol. 96, no. 4, December 1, 2009, pp. 835–45. https://doi.org/10.1093/biomet/asp047
+

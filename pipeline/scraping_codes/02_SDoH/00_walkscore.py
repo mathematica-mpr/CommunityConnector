@@ -10,8 +10,11 @@ import pandas as pd
 file_path = 'data/raw/'
 
 # location files for mapping from zip code --> FIPS code
+# city - zip
 uszips_path = file_path + 'uszips.csv'
+# zip - tract
 ZIP_TRACT_092019_path = file_path + 'ZIP_TRACT_092019.csv'
+# zip - county
 ZIP_COUNTY_FIPS_path = file_path + 'ZIP-COUNTY-FIPS_2017-06.csv'
 
 #reading in Data
@@ -30,7 +33,7 @@ ZIP_COUNTY_FIPS_df.columns = map(str.lower, ZIP_COUNTY_FIPS_df.columns)
 #selecting state == CO
 ZIP_COUNTY_FIPS_df = ZIP_COUNTY_FIPS_df.query('state == "CO"')
 
-#ACS - using this to get population to find largest city within a fips code
+#ACS - using this to get population to find largest census tract in a county and use it's city
 def api_pull(key, variable):
     url = f'https://api.census.gov/data/2017/acs/acs5?key={key}&get=NAME,group({variable})&for=tract:*&in=state:08'
     print(url)
@@ -49,14 +52,18 @@ co.columns = ["NAME","GEO_ID","B01003_001E","B01003_001M","NAME_2","B01003_001MA
 co['tract'] = co['state'].astype(str)+ co['county'].astype(str)+ co['tract'].astype(str)
 census_pop_df = co[['tract','B01003_001E', "NAME"]]
 census_pop_df.columns = ["tract","population","NAME"]
+# change to float so sorting works
+census_pop_df['population'] = census_pop_df['population'].astype(float)
 
-#MERGE
+#MERGE to get zip - tract - county
 tract_county = pd.merge(ZIP_COUNTY_FIPS_df, ZIP_TRACT_092019_df, on='zip')
 tract_county['tract']= tract_county['tract'].astype(str) 
+# merge to get zip - tract - county - population
 tract_county_pop = pd.merge(tract_county, census_pop_df, on = 'tract')
 
-#FIND LARGEST ZIP
+#FIND LARGEST tract
 largest_tract = tract_county_pop.sort_values('population', ascending=False).drop_duplicates(['stcountyfp'])
+# merge to get city associated with that zip code
 largest_tract = pd.merge(largest_tract, uszips_df, on = 'zip')
 
 #Creating URLS to scrape from for each city
@@ -80,7 +87,8 @@ def num_extraction (score_string, scr_full_text):
         return score[0]
 
 def imagine_to_score_convert (url):
-    '''takes url and outputs the three scores'''    
+    '''takes url and outputs the three scores'''  
+    print(url)  
     #gets the website
     result = requests.get(url)
     #stores the content of website
@@ -111,6 +119,7 @@ def imagine_to_score_convert (url):
 
     #main
 for row in fips_urls_df.iterrows():
+    print(row)
     fips_code = row[1]["fips"]
     website = row[1]["urls"]
     walk_score, trans_score, bike_score = imagine_to_score_convert (website)
@@ -122,5 +131,7 @@ for row in fips_urls_df.iterrows():
 #writing outfile
 df = pd.DataFrame(fips_scores).T
 df.sort_index(inplace = True)
+df['FIPS'] = df.index.values
+print(df)
 
 df.to_csv(out_scores_path)

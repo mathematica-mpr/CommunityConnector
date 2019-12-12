@@ -7,8 +7,10 @@ lapply(list.of.packages, library, character.only = TRUE)
 
 select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw, outcome, dem = TRUE){
   
+  # list of columns that will be used
   cols <- c()
   
+  # default to always use demographic columns
   if(dem){
     add_cols <- data_dictionary %>% 
       filter(demographic == 1) %>% 
@@ -36,8 +38,10 @@ select_distance_columns <- function(data, data_dictionary, sdoh_scores, sdoh_raw
     cols <- c(cols, add_cols)
   }
   
+  # add outcome column
   cols <- c(outcome, unique(cols))
   
+  # limit data to the columns we are using
   use_data <- data %>% 
     dplyr::select(one_of(cols))
   
@@ -58,20 +62,16 @@ replace_nas_rf <- function(use_data, outcome){
   return(use_data)
 }
 
-get.elbow.points.indices <- function(x, y, threshold) {
-  d1 <- diff(y) / diff(x) # first derivative
-  d2 <- diff(d1) / diff(x[-1]) # second derivative
-  indices <- which(abs(d2) > threshold)  
-  return(indices)
-}
-
+# find modifiable variables - these ones will be replaced with the worst possible outcome in the data, assuming the county did nothing
 replace_modifiable <- function(coefs_df, data_dictionary, use_data){
-  # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
   replace_cols <- coefs_df %>% 
     merge(data_dictionary, by.x = "name", by.y = "column_name", all.x = TRUE) %>% 
     filter(modifiable == 1) %>% 
     dplyr::select(name, modifiable, higher_better)
+  
+  # columns that are better lower, we replace with the max - this is the worst possible outcome
   replace_cols_max <- replace_cols %>% filter(higher_better == 0) %>% dplyr::select(name) %>% pull() %>% as.character()
+  # columns that are better higher, we replace with the min - this is the worst possible outcome
   replace_cols_min <- replace_cols %>% filter(higher_better == 1) %>% dplyr::select(name) %>% pull() %>% as.character()
   
   set_max <- function(x, na.rm = TRUE){
@@ -83,7 +83,6 @@ replace_modifiable <- function(coefs_df, data_dictionary, use_data){
     return(min)
   }
   
-  # TODO: could actually use all data here, including those that have an NA outcome
   # replace modifiable variables in data
   use_data <- use_data %>% 
     mutate_at(replace_cols_max, set_max) %>% 
@@ -91,8 +90,7 @@ replace_modifiable <- function(coefs_df, data_dictionary, use_data){
   return(use_data)
 }
 
-# TODO: option to remove modifiable, relevant SDoH scores or inputs to get a prediction. Similarity score = distance between predictions
-# TODO: ideally if we had more data, we would split the data into train and test sets to build the models
+# TODO: ideally if we had more data, we would split the data into train and test sets to build the models, but this is just a use case
 county_distance <- function(use_data, fips, data_dictionary, method, outcome, remove_modifiable, model_params = NA, show_deets = FALSE){
   mse <- NA
   mtry <- NA
@@ -104,15 +102,18 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   
   set.seed(1234)
   
+  # unweighted euclidean distance using all columns besides the outcome - most basic methodology
   if(method == "euclidean"){
     use_data <- replace_nas_mean(use_data)
     distancem <- as.matrix(dist(use_data %>% 
                                   dplyr::select(-!!rlang::sym(outcome)),
                                 method = 'euclidean'))
+  # Random forest methodologies include finding the difference between predictions or using the RF proximity matrix
   } else if(grepl("rf",method)){
     meth <- "rf"
     use_data <- replace_nas_rf(use_data, outcome)
     
+    # If we don't have model parameters, tune the model
     if(length(n_rows) == 0){
       # cross-validation on mtry
       # TODO: could change back to repeatedcv later but changing for sake of time
@@ -120,7 +121,8 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
       trControl <- trainControl(method="cv", number=10, search="grid")
       tunegrid <- expand.grid(.mtry=c(ceiling(sqrt(ncol(use_data))):ncol(use_data)-1))
       rf <- train(formula, data=use_data, method=meth, metric=metric, tuneGrid=tunegrid, trControl=trControl)
-      mtry <- rf$bestTune$mtry  
+      mtry <- rf$bestTune$mtry 
+    # Otherwise, use the model parameters we saved
     } else {
       mtry <- model_params$mtry
     }
@@ -135,7 +137,7 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
     }
     
     if(remove_modifiable){
-      # find modifiable variables - these ones will be replaced with the worst possible outcome in the data
+      # find modifiable variables - these ones will be replaced with the worst possible outcome in the data to assume the county did nothing
       coefs_df <- as.data.frame(colnames(use_data))
       colnames(coefs_df)[1] <- "name"
       use_data <- replace_modifiable(coefs_df, data_dictionary, use_data)
@@ -148,12 +150,12 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
     } else {
       distancem <- abs(outer(pred, pred, '-'))
     }
-    
+  
+  # Lasso methodology options: distance between predictions or euclidean distance using coefficients as weights
   } else if(grepl("lasso",method)){
-    # TODO: other way to replace missing?
     use_data <- replace_nas_rf(use_data, outcome)
     
-    # cross validation for alpha and lambda
+    # cross validation for alpha and lambda if we don't have it already
     if(length(n_rows) == 0){
       cva <- glmnetUtils::cva.glmnet(formula, data = use_data)
       
@@ -168,6 +170,7 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
       }
       
       best.params <- cv.glmnet.dt[which.min(cv.glmnet.dt$min_mse)]
+    # Otherwise, use the model parameters we saved
     } else {
       best.params <- model_params
     }
@@ -194,12 +197,14 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
       distancem <- abs(outer(pred, pred, '-'))  
     } else {
       
+      # use only the coefficients of the nonmodifiable variables
       weights <- coefs_df %>% 
         merge(data_dictionary, by.x = "name", by.y = "column_name") %>% 
         dplyr::select(name, coefficient, demographic, sdoh_raw, modifiable) %>% 
         filter(is.na(modifiable)) %>% 
         mutate(abs_coefficient = abs(coefficient))
       
+      # one option is to only use demographics coefficients as weights
       if(method == "lasso euclidean dem"){
         weights <- weights %>% 
           dplyr::filter(demographic == 1)
@@ -216,9 +221,7 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
         as.numeric()
       
       if(length(var_names) > 1){
-        # distancem <- as.matrix(distances(use_data[,var_names], weights = weights)) 
         distancem <- distances(use_data[,var_names], id_variable = fips, weights = weights)
-        # distancem <- OpenRepGrid::distanceSlater(use_data[,var_names])
       } else {
         distancem <- abs(outer(use_data[,var_names], use_data[,var_names], '-')) 
       }
@@ -233,38 +236,30 @@ county_distance <- function(use_data, fips, data_dictionary, method, outcome, re
   return(list(distancem, mse, mtry, alpha, min_lambda, coefs_df))
 }
 
+# select a single county's distances to other counties to evaluate
 select_county <- function(data, distancem, county_num){
   data$distance <- distancem[,county_num]
   data$flag_county <- ifelse(data$fips == tail(head(data$fips, county_num),1), 1, 0)
   return(data)
 }
 
+# A number of ways to evaluate the methodology
 evaluate_methodology <- function(data, use_outcome){
   par(mfrow=c(3,2), 
       mar = c(0, 0,0,0))
+  # select the closest 5 counties
   ordered <- data %>% 
     arrange(distance) %>% 
     mutate(rank = row_number(),
            top5 = ifelse(rank == 1, 'county', ifelse(rank <= 6, 1, 0))) %>% 
     filter(!is.na(!!rlang::sym(use_outcome)))
   
-  # for(i in c(1:6)){
-  #   radar_data <- data[i,]
-  #   county <- radar_data$fips
-  #   radar_data <- radar_data %>% 
-  #     dplyr::select(starts_with("sdoh_score"))
-  #   colnames(radar_data) <- c("econ","env","edu","food","comm","health")
-  #   # I have to add 2 lines to the dataframe: the max and min of each topic to show on the plot!
-  #   radar_data <- rbind(rep(1,6), rep(0,6), radar_data)
-  #   radarchart(radar_data,
-  #              pcol=rgb(0.2,0.5,0.5,0.9), pfcol=rgb(0.2,0.5,0.5,0.5), plwd=4)
-  # }
-  
+  # my county's outcome & fips code
   county_outcome <- ordered[1,use_outcome]
-  
   this_county <- ordered %>% filter(rank == 1) 
   this_county <- this_county$fips
   
+  # rug plot of outcomes of my county vs. top 4 vs. all counties
   # plt <- ggplot(ordered, aes(x = !!rlang::sym(use_outcome))) +
   #   geom_density() +
   #   geom_rug(size = 2, aes(color = top5)) +
@@ -275,13 +270,19 @@ evaluate_methodology <- function(data, use_outcome){
   
   top5 <- ordered[ordered$rank <= 6, ]
   
+  # SD of all outcomes
   sd <- sd(ordered[,use_outcome])
+  # SD of top 5 outcomes should be reduced
   sd_top5 <- sd(top5[, use_outcome])
+  # by how much?
   pct_reduced_sd <- 100*abs(sd-sd_top5)/sd
   
+  # median of top 5 outcomes
   med_top5 <- median(top5[, use_outcome])
-  pct_diff_from_county_med <- 100*abs(med_top5-this_county)/this_county
+  # how different is the median from my county?
+  pct_diff_from_county_med <- 100*abs(med_top5-county_outcome)/county_outcome
   
+  # standard deviation of other key variables of top 5 counties
   sds <- sapply(top5[,c("median_income","frac_coll_plus2010",
                  "pct_physically_inactive","budget_health_svcs",
                  "pct_food_insecure","pct_limited_access",
@@ -303,9 +304,9 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
   methodology <- as.character(row$methodology)
   meth_num <- as.numeric(row$meth_num)
   
-  # check for normal variables
+  # warn to normalize variables
   if(method %in% c("lasso euclidean all","lasso euclidean dem")){
-    message("All variables must be normalized")
+    message("All variables must be normalized. Please fix if not.")
   }
   
   # empty list that will be filled in with distance matrices
@@ -320,6 +321,7 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
   for(use_outcome in outcomes){
     print(paste("Outcome:", use_outcome))
     
+    # only keep data where outcome exists
     orig_data <- data %>% 
       filter(!is.na(!!rlang::sym(use_outcome)))
     
@@ -329,7 +331,7 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
                                         outcome = use_outcome, dem = use_dems)
     
     # this chunk makes the code more efficient so we don't have to tune the same model multiple times for the same outcome/variables
-    # instead, we can input tuning parameters from a past best model
+    # instead, we can input tuning parameters stored in a dataframe from a past best model
     n_rows <- nrow(all_outcome_params)
     model_params <- NA
     if(length(n_rows) != 0){
@@ -340,15 +342,24 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
     
     # Get distance matrix using methodology specified
     dist_results <- county_distance(use_data, orig_data$fips, data_dictionary, methodology, use_outcome, remove_modifiable, model_params)
+    # Function outputs:
+    # distance matrix
     distancem <- dist_results[1][[1]]
+    # mse of model
     mse <- dist_results[2][[1]]
     # best tuning parameters to save in case we need to re-run
     mtry <- dist_results[3][[1]]
     alpha <- dist_results[4][[1]]
     min_lambda <- dist_results[5][[1]]
+    # model coefficients
     coefs_df <- dist_results[6][[1]]
     
-    # use total number of counties if we didn't specify how many to use
+    ## Evaluate the methodology:
+    # Look at the radar charts in order of county similarity
+    # How similar are health outcomes of the top 5 most similar or similar within a certain distance?
+    # They should have a median close to the county in question
+    
+    # use all counties to evaluate if we didn't specify how many to use
     if(is.na(num_counties)){
       n_counties <- dim(distancem)[1]
     } else {
@@ -359,10 +370,6 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
     for(county_num in c(1:n_counties)){
       data <- select_county(orig_data, distancem, county_num)
       
-      ## Evaluate the methodology:
-      # Look at the radar charts in order of county similarity
-      # How similar are health outcomes of the top 5 most similar or similar within a certain distance?
-      # They should have a median close to the county in question
       results <- evaluate_methodology(data, use_outcome)
       results$metric <- rownames(results)
       results_df <- results %>% 
@@ -404,15 +411,4 @@ implement_methodology <- function(row, outcomes, data, data_dictionary, all_outc
   start_time <- end_time
   
   return(list(full_results,distance_list, coefs_all))
-}
-
-check_normal <- function(use_data){
-  # check if variables were normalized prior to entering
-  message("Checking to make sure all variables are normalized")
-  for(var in names(use_data)){
-    shapiro <- shapiro.test(use_data[,var])
-    if(shapiro$p.value > 0.1){
-      print(paste0("Variable ", var, " may not be normalized. P-value: ", shapiro$p.value))
-    }
-  }
 }

@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 options = Options()
-options.add_argument('--headless')
+# options.add_argument('--headless')
 # options to try to improve performance
 options.add_argument("--proxy-server='direct://'")
 options.add_argument("--proxy-bypass-list=*")
@@ -48,8 +48,13 @@ data['population'] = data['f1198418']
 data['hosp_pp_rate'] = data['f0886817']
 data['adm_pp_rate'] = data['f0890917']
 data['kidn_hosp_pp_rate'] = data['f1407817']
+
 # create a variable equal to Total MDs (F11072) + DOs (F14717) in general practice conducting patient care/ total population (F11984)
-data['mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
+# data['gen_mds_dos_pp_rate'] = (data['f1107217'] + data['f1471717'])
+# we discovered that general practice numbers are really low, so looking at totals now
+data['mds_dos_pp_rate'] = (data['f1212917'] + data['f1388217'])
+# compare with PCPs = primary care provider/physician
+
 # number of short term general hospitals (F08869) per total population
 data['short_hosp_pp_rate'] = data['f0886917']
 # number of community health centers (F15253) per total population
@@ -78,12 +83,14 @@ print(new_cols)
 sum_cols = [c for c in new_cols if 'pp_rate' in c]
 sum_cols.append('population')
 mean_cols = list(set(new_cols) - set(sum_cols))
+print("Columns to be summed:")
 print(sum_cols)
+print("Columns to be averaged:")
 print(mean_cols)
 
 grouped_sum = data.groupby(['FIPS']).sum()[sum_cols]
 # TODO: could be a weighted mean to be more accurate
-grouped_mean = data.groupby(['FIPS']).sum()[mean_cols]
+grouped_mean = data.groupby(['FIPS']).mean()[mean_cols]
 
 # then merge them back together
 grouped = pd.merge(grouped_sum, grouped_mean, on = 'FIPS')
@@ -98,6 +105,11 @@ grouped.reset_index(inplace = True)
 # change to per 100,000 people for certain variables used
 grouped['hosp_pp_rate'] = grouped['hosp_pp_rate'] * 100000
 grouped['mds_dos_pp_rate'] = grouped['mds_dos_pp_rate'] * 100000
+# grouped['gen_mds_dos_pp_rate'] = grouped['gen_mds_dos_pp_rate'] * 100000
+# print(grouped['gen_mds_dos_pp_rate'])
+print(grouped['mds_dos_pp_rate'])
+mean_cols.append("FIPS")
+print(grouped[mean_cols])
 
 add_cols = grouped.columns.values
 add_cols = [c for c in add_cols if c != "FIPS"]
