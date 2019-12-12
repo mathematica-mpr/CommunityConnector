@@ -7,7 +7,7 @@ output: html_document
 
 #### Overview
 
-The Community Connector uses a variety of data sources to develop standardized scores for the 6 domains of SDoH:[^1]
+The Community Connector uses a variety of data sources to develop standardized scores for the six domains of SDoH:[^1]
 
 1. **Economic Stability**—includes factors like employment, income, expenses, debt, medical bills, and support.
 
