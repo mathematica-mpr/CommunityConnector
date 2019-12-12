@@ -53,7 +53,7 @@ method: '<div class="container-fluid main-container">
 </div>
 <div id="final-sdoh-scoring-algorithm" class="section level4">
 <h4>Final SDoH Scoring Algorithm</h4>
-<p>We assigned a direction of association to each of the variables selected by SPCA to health outcomes and normalized each variable’s distribution. The scores are a weighted average of the normalized variables. The weights were determined by each variable’s percentage of variance explained and SPCA loading. The final scores for each of the six SDoH domains are on a 0 (worst) to 1 (best) scale and are independent of the health outcome in question. For example, a score of 1 in the Education domain indicates the best possible distribution of variables in the education score. The scores are also adjusted for the economics status of the county.</p>
+<p>We assigned a direction of association to each of the variables selected by SPCA to health outcomes and normalized each variable’s distribution. The scores are a weighted average of the normalized variables. The weights were determined by each variable’s percentage of variance explained and SPCA loading. The final scores for each of the six SDoH domains are on a zero (worst) to one (best) scale and are independent of the health outcome in question. For example, a score of one in the Education domain indicates the best possible distribution of variables in the education score. The scores are also adjusted for the economics status of the county.</p>
 </div>
 </div>
 <div id="methods-for-identifying-similar-counties" class="section level2">
