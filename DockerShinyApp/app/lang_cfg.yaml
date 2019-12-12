@@ -78,7 +78,7 @@ tab_headers:
   sdoh_tab_description: "<b>Which factors make up each social determinant of health score? Examine which metrics determine how strong your county is in each area on a scale of zero to one, as indicated by the fingerprint plot.</b>"
   matches_tab_description: "<b>These are the social determinants of health scores for the twenty counties in your state that are most similar to yours (sorted by similarity).</b>"
   map_tab_description: "<b>Counties are shaded according to similarity to your county.</b>"
-  outcomes_tab: "<b>These density plots show the distribution of health outcome rates accross counties compared to your county, with an option to overlay the density plot of your most similar counties.</b>"
+  outcomes_tab: "<b>These density plots show the distribution of health outcome rates across counties compared to your county, with an option to overlay the density plot of your most similar counties.</b>"
   similarity_description: "<b>Similarity is determined in terms of the nonmodifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm.</b>"
 my_matches_tab: "This tab displays the radar charts of twenty counties in your state that are most similar to yours (sorted by similarity) in terms of nonmodifiable demographics and social needs variables that impact obesity, as identified by a machine learning algorithm."
 sdoh_tab: "This tab displays social determinant of health metrics for the selected county and (optional) comparison county."
