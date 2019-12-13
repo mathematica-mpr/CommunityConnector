@@ -1,6 +1,10 @@
 # Project History
 ## v1.0.0 (12/12/2019)
 -----------------------
+* fix typos in text
+
+## v1.0.0 (12/12/2019)
+-----------------------
 * CO map color scheme match app; highlight selected county and optional comparison county
 * functionalize pulling SDOH scores for fingerprint plots
 * update language in headers, tooltips, pop-ups (user information)
