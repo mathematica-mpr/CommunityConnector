@@ -1207,7 +1207,7 @@ county_map <- function(df, st_fips, cty_fips) {
   legend_label <- paste0("Selected County: ", selected_geo$NAME)
   legend_border <- "black"
   
-  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+  leaflet(options = leafletOptions(minZoom = 5, maxZoom = 13)) %>%
     setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
     setMaxBounds(lng1 = x_min,
                  lat1 = y_min,
@@ -1299,7 +1299,7 @@ county_map_comp <- function(df, st_fips, cty_fips, comparison_cty_fips) {
                     paste0("Comparison County: ", comparison_geo$NAME))
   legend_border <- c("black", "black")
   
-  leaflet(options = leafletOptions(minZoom = 6, maxZoom = 13)) %>%
+  leaflet(options = leafletOptions(minZoom = 5, maxZoom = 13)) %>%
     setView(lng = x_mid, lat = y_mid, zoom = 6) %>%
     setMaxBounds(lng1 = x_min,
                  lat1 = y_min,

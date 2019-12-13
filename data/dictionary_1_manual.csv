@@ -117,7 +117,7 @@ medicare_pct_female,Medicare % Female,1,0,0,0,percentage,0,0,0,0,0,0,CMS,,,,,39
 medicare_avg_hcc,Medicare Average HCC,1,0,0,0,continuous,0,0,0,0,0,0,CMS,,,,,40
 pct_medicare_beneficiaries,% Medicare Beneficiaries,1,0,0,0,percentage,0,0,0,0,0,0,CMS,,,,,41
 medicare_std_adj_cost_pp,Medicare Standardized Adjusted Cost per Person,0,1,0,0,continuous,1,0,0,0,0,1,CMS,0,1,,,
-med_2br_rent_per_med_inc,Ratio of 2 bdrm apartment median rent to median income,1,0,0,0,rate,0,1,0,0,0,0,ACS & Opportunity Atlas,0,,,,42
+med_2br_rent_per_med_inc,Two bedroom apartment rent/Median income (%),1,0,0,0,percentage,0,1,0,0,0,0,ACS & Opportunity Atlas,0,,,,42
 elevation,Elevation Feet,1,0,0,0,continuous,0,0,0,0,0,0,AHRF,,,,,43
 walk_score,Walkability,0,1,0,0,continuous,0,1,0,0,0,0,Walkscore.com,1,1,,,
 diabetes_std_spend,Medicare Diabetes Spending per Capita ($),0,1,1,0,continuous,0,0,0,0,0,0,CMS,0,1,,,
