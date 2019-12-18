@@ -2,10 +2,11 @@
 This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Visualization Resources of Community-Level Social Determinants of Health (SDoH) Challenge](https://www.ahrq.gov/sdoh-challenge/index.html).
 
 # Contents
-* pipeline/
-  * for scraping and cleaning demographic, social determinant of health (SDoH), and outcome data
 * data/
   * for storing intermediate and final datasets and dictionaries
+* pipeline/
+  * for scraping and cleaning demographic, social determinant of health (SDoH), and outcome data
+  * all of the cleaned data is output into the data/cleaned folder, to be picked up, merged, and utilized by pipeline.py
 * data-insights/
   * for examining preliminary insights
 * methodology/
