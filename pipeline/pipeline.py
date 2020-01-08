@@ -1,5 +1,3 @@
-# https://bionics.it/posts/luigi-tutorial
-
 import luigi
 import os
 import sys
@@ -21,6 +19,9 @@ class ParameterDefinitions(object):
 ###### Data scraping & cleaning ######
 ######################################
 
+# as this project scales and more frequent scraping is needed, we would add all of the scraping
+# codes to this section in the pipeline.
+
 # TODO: change this to a parameter
 # raw_output = 'data/raw/'
 # class DemGeographicPUF(luigi.Task):
@@ -39,15 +40,12 @@ class ParameterDefinitions(object):
 #     def run(self):
 #         pu.OppAtlas(output = self.output().path)
 
-# eventually would add all scraping & cleaning codes
-
 class MergeCleaned(ParameterDefinitions, luigi.Task):
-
+        # This task also allows us to pull in data that is stored in the data/cleaned
+        # folder, even if it was pulled manually or wasn't incorporated into this pipeline
     def requires(self):
         # return DemOppAtlas()
         # TODO: eventually will require all of the scraping/data cleaning
-        # This task also allows us to pull in data that is stored in the data/cleaned
-        # folder, even if it was pulled manually or wasn't incorporated into this pipeline
         return None
     def output(self):
         return luigi.LocalTarget(os.path.join(self.output_dir, 'data_1_merged.csv'))
