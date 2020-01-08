@@ -23,7 +23,7 @@ This repository contains code for Mathematica's entry to Phase 2 of the [AHRQ Vi
 
 # Advisors
 * **Keri Calkins** - *research lead, methodology support, & back-end support*
-* **Elena Saavedra Jimenez** - *UX lead*
+* **Elena Saavedra Jimenez** - *UX lead and graphics designer*
 * **Aaron White** - *technical consultant*
 * **George Gallo** - *AWS support*
 * Additional thanks to Stephanie Tuerk, Alex Bohl, and Ravi Goyal
