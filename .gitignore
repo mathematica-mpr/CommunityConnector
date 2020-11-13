@@ -7,7 +7,7 @@ codes/.ipynb_checkpoints/
 .env
 *.log
 pipenv_graph.txt
-*__pycache__/*
+*/__pycache__/*
 
 data/*
 !data/dictionary_1_manual.csv
