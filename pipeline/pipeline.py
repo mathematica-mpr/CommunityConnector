@@ -1,13 +1,11 @@
-# https://bionics.it/posts/luigi-tutorial
-
 import luigi
 import os
-import sys
-sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
 class ParameterDefinitions(object):
+    raw_output = luigi.parameter.Parameter(default = 'data/raw/',
+                                    description = 'Input of raw source files')
     cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
                                      description = 'Input directory of cleaned, scraped data files')
     output_dir = luigi.parameter.Parameter(default = 'data/',
@@ -21,9 +19,10 @@ class ParameterDefinitions(object):
 ###### Data scraping & cleaning ######
 ######################################
 
-# TODO: change this to a parameter
-# raw_output = 'data/raw/'
-# class DemGeographicPUF(luigi.Task):
+# as this project scales and more frequent scraping is needed, we would add all of the scraping
+# codes to this section in the pipeline.
+
+# class DemGeographicPUF(ParameterDefinitions, luigi.Task):
 #     def requires(self):
 #         return None
 #     def output(self):
@@ -39,15 +38,12 @@ class ParameterDefinitions(object):
 #     def run(self):
 #         pu.OppAtlas(output = self.output().path)
 
-# eventually would add all scraping & cleaning codes
-
 class MergeCleaned(ParameterDefinitions, luigi.Task):
-
+        # This task also allows us to pull in data that is stored in the data/cleaned
+        # folder, even if it was pulled manually or wasn't incorporated into this pipeline
     def requires(self):
         # return DemOppAtlas()
         # TODO: eventually will require all of the scraping/data cleaning
-        # This task also allows us to pull in data that is stored in the data/cleaned
-        # folder, even if it was pulled manually or wasn't incorporated into this pipeline
         return None
     def output(self):
         return luigi.LocalTarget(os.path.join(self.output_dir, 'data_1_merged.csv'))
