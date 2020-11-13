@@ -1,11 +1,11 @@
 import luigi
 import os
-import sys
-sys.path.insert(1, 'pipeline')
 import pipeline_utilities as pu
 import methodology_utilities as mu
 
 class ParameterDefinitions(object):
+    raw_output = luigi.parameter.Parameter(default = 'data/raw/',
+                                    description = 'Input of raw source files')
     cleaned_output = luigi.parameter.Parameter(default = 'data/cleaned/',
                                      description = 'Input directory of cleaned, scraped data files')
     output_dir = luigi.parameter.Parameter(default = 'data/',
@@ -22,9 +22,7 @@ class ParameterDefinitions(object):
 # as this project scales and more frequent scraping is needed, we would add all of the scraping
 # codes to this section in the pipeline.
 
-# TODO: change this to a parameter
-# raw_output = 'data/raw/'
-# class DemGeographicPUF(luigi.Task):
+# class DemGeographicPUF(ParameterDefinitions, luigi.Task):
 #     def requires(self):
 #         return None
 #     def output(self):

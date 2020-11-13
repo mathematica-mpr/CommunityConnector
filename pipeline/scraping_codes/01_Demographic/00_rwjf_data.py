@@ -23,12 +23,11 @@ for lkp in states:
     # otherwise, if there isn't a version 2, use version 1_0
     try:
         file = file_template(state, "2")
-        measure_data = pd.read_excel(file, 'Ranked Measure Data')
     except:
         file = file_template(state, "1_0")
-        measure_data = pd.read_excel(file, 'Ranked Measure Data')
-        
-    print(file)    
+    
+    print(file)
+    measure_data = pd.read_excel(file, 'Ranked Measure Data')    
     addtl_data = pd.read_excel(file, 'Additional Measure Data')
     measure_data.to_csv(f'data/raw/Measure_Data_{read_state}.csv')
     addtl_data.to_csv(f'data/raw/Additional_Data{read_state}.csv')
